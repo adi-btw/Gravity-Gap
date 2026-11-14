@@ -130,3 +130,22 @@ Precomputed: `artifacts/bounds/{preset_id}_{metric}.json` for all 6 presets × 5
 | POST | `/ledger` | header `X-Team-Token` must equal env `LEDGER_TEAM_TOKEN`; body {metric, habitat, rationale, author} → appended record |
 | POST | `/ask` | {question, habitat, context_ids[]} → `ask(...)` |
 | GET | `/data/export` | filters + `format=csv|json`; CSV starts with `#` comment lines citing every included investigation DOI |
+
+---
+
+# Phase 3 addendum (M5 Full product → M7 Submission)
+
+## Ownership (phase 3)
+| Role | Owns |
+|---|---|
+| TL (+ PM hat) | `plan/11-demo-pitch.md`, `plan/06-frontend-ux.md` (fix `?g=` units), `plan/STATUS.md`, `docs/SUBMISSION.md`, `docs/DEMO_SCRIPT.md`, `README.md` |
+| DE | `engine/hindcast.py`, `artifacts/validation_saffire.md`, `artifacts/hindcast_saffire.json`, `tests/test_hindcast.py`, `data/clean/README.md` |
+| AI | `api/**`, `Dockerfile.api`, `web.Dockerfile`, `docker-compose.yml`, `.dockerignore`, `render.yaml`, `.github/workflows/**`, `requirements*.txt`, `docs/DEPLOY.md`, `tests/test_api.py`, `scripts/check_ledger_append_only.py` |
+| FE | `web/**`, `docs/media/**` |
+
+Nobody commits or pushes. Do not run `scripts/build_manifest.py` or `engine.ai.answer --build-cache` (the team lead rebuilds them once at the end).
+
+## Interfaces added in phase 3
+- `GET /data/tests` and `/data/export` accept `outcome=` (exact match on the `outcome` column; repeatable or comma-separated).
+- E2E tests live in `web/e2e/` (Playwright). `npm run e2e` starts the API (`python -m uvicorn api.main:app --port 8000` from the repo root) and the web app (`next start` on 3000) through Playwright `webServer`, and runs the scripted demo path online and offline (API stopped / blocked).
+- `docs/media/` holds demo screenshots and the recorded demo video produced by the E2E run.

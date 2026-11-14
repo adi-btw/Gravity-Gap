@@ -1,11 +1,11 @@
 {
   "version": 1,
-  "generated_at": "2026-11-14T18:25:26+00:00",
+  "generated_at": "2026-11-14T19:12:22+00:00",
   "generated_by": "scripts/build_manifest.py",
-  "artifact_set_sha256": "6e3e94e93095b09886a89bebd02e82c1504c69041127f1a77eeeb0bd0ee08908",
+  "artifact_set_sha256": "22a5ab4b9b6991295d434a096f4e00f449266612921edd407802ac1584851da4",
   "files": {
     "ai_cache.json": {
-      "sha256": "129314283f9f0cd5d7b7963d73422882b353bb715632e71eff80c82c3d4ca2a0",
+      "sha256": "73e211f2c5f5ffd4857d062892617ec9405b01fa950f94e1773119562c4cee09",
       "bytes": 46732
     },
     "bounds/earth_M1.json": {
@@ -132,6 +132,10 @@
       "sha256": "e846c760a79abf060836d0ef8a07c3c78e6a914042d95532bae185b5017b080e",
       "bytes": 171827
     },
+    "hindcast_saffire.json": {
+      "sha256": "1a583b7fb4d4c0199826cde6142ec413ed8c00248eb3c3fe4cfb83c68af7e801",
+      "bytes": 49702
+    },
     "planner.json": {
       "sha256": "c3a582ac424a89e46a43bfac3de9b7ff3c7408ef6d3896fe1857b51a80dc613f",
       "bytes": 10402
@@ -147,6 +151,10 @@
     "validation_report.md": {
       "sha256": "c2c3e96b77157b1a490c0366dafc258cf1cbf2c0cfaf0fb004c54dcf32458023",
       "bytes": 5759
+    },
+    "validation_saffire.md": {
+      "sha256": "ddd1dccd66f4c577aecf18858988c19ec98ffbf2b5642d6d76bfa34beb95ef49",
+      "bytes": 8501
     }
   }
 }
