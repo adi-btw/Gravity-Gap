@@ -26,6 +26,10 @@ const SUGGESTED = [
   "What should LUCI test first?",
   "Is the lunar rover safer with the fans off?",
   "Which experiments matter most for a Mars base?",
+  // R1 real-fire replay demo questions (cached per incident by the AI role).
+  "What does Gravity Gap say about the Mir fire?",
+  "What would Gravity Gap say about Apollo 1's cabin air?",
+  "Is Apollo 13 in scope?",
 ];
 
 /**

@@ -1,0 +1,380 @@
+{
+ "generated_at": "2026-11-14T00:00:00Z",
+ "engine_version": "fixture",
+ "incidents": [
+  {
+   "id": "apollo1",
+   "name": "Apollo 1",
+   "date": "1967-01-27",
+   "phase": "pre-launch plugs-out test on the pad",
+   "in_scope": true,
+   "scope_note": null,
+   "g_m_s2": 9.81,
+   "p_psia": 16.7,
+   "o2": 1.0,
+   "u_cm_s": 10,
+   "L_mm": 10,
+   "assumed": [
+    "u_cm_s",
+    "L_mm"
+   ],
+   "summary": "FIXTURE summary for Apollo 1.",
+   "sources": [
+    {
+     "field": "p_psia",
+     "url": "https://www.nasa.gov/",
+     "quote": "FIXTURE quote for p_psia, not a real NASA quote"
+    },
+    {
+     "field": "o2",
+     "url": "https://www.nasa.gov/",
+     "quote": "FIXTURE quote for o2, not a real NASA quote"
+    },
+    {
+     "field": "date",
+     "url": "https://www.nasa.gov/",
+     "quote": "FIXTURE quote for date, not a real NASA quote"
+    }
+   ],
+   "physics": {
+    "u_b_cm_s": 60.0,
+    "ri": 36.0,
+    "regime": "buoyant",
+    "g_star": 1.29,
+    "p_o2_psia": 16.7,
+    "u_eff_cm_s": 61.0
+   },
+   "regime_fractions": {
+    "forced": 0.0,
+    "mixed": 0.05,
+    "buoyant": 0.95
+   },
+   "metrics": {
+    "M1": {
+     "applicable": false,
+     "estimate": null,
+     "band90": null,
+     "reason": "Extrapolation: no evidence (fixture).",
+     "transfer_confidence": null
+    },
+    "M2": {
+     "applicable": false,
+     "estimate": null,
+     "band90": null,
+     "reason": "Extrapolation: no evidence (fixture).",
+     "transfer_confidence": null
+    },
+    "M3": {
+     "applicable": false,
+     "estimate": null,
+     "band90": null,
+     "reason": "Extrapolation: no evidence (fixture).",
+     "transfer_confidence": null
+    },
+    "M4": {
+     "applicable": false,
+     "estimate": null,
+     "band90": null,
+     "reason": "Extrapolation: no evidence (fixture).",
+     "transfer_confidence": null
+    },
+    "M5": {
+     "applicable": false,
+     "estimate": null,
+     "band90": null,
+     "reason": "Extrapolation: no evidence (fixture).",
+     "transfer_confidence": null
+    }
+   },
+   "coverage": {
+    "M1": {
+     "covered": false,
+     "nearest_distance": 13.0
+    },
+    "M2": {
+     "covered": false,
+     "nearest_distance": 13.0
+    },
+    "M3": {
+     "covered": false,
+     "nearest_distance": 13.0
+    },
+    "M4": {
+     "covered": false,
+     "nearest_distance": 13.0
+    },
+    "M5": {
+     "covered": false,
+     "nearest_distance": 13.0
+    }
+   },
+   "findings": [
+    "FIXTURE finding: no metric has evidence at 100% O2 and 16.7 psia."
+   ]
+  },
+  {
+   "id": "mir1997",
+   "name": "Mir",
+   "date": "1997-02-23",
+   "phase": "oxygen generator fire in orbit",
+   "in_scope": true,
+   "scope_note": null,
+   "g_m_s2": 0.0,
+   "p_psia": 14.7,
+   "o2": 0.21,
+   "u_cm_s": 10,
+   "L_mm": 10,
+   "assumed": [
+    "u_cm_s",
+    "L_mm",
+    "p_psia"
+   ],
+   "summary": "FIXTURE summary for Mir.",
+   "sources": [
+    {
+     "field": "g_m_s2",
+     "url": "https://www.nasa.gov/",
+     "quote": "FIXTURE quote for g_m_s2, not a real NASA quote"
+    },
+    {
+     "field": "summary",
+     "url": "https://www.nasa.gov/",
+     "quote": "FIXTURE quote for summary, not a real NASA quote"
+    }
+   ],
+   "physics": {
+    "u_b_cm_s": 0.0,
+    "ri": 0.0,
+    "regime": "forced",
+    "g_star": 0.0,
+    "p_o2_psia": 3.09,
+    "u_eff_cm_s": 10.0
+   },
+   "regime_fractions": {
+    "forced": 1.0,
+    "mixed": 0.0,
+    "buoyant": 0.0
+   },
+   "metrics": {
+    "M1": {
+     "applicable": true,
+     "estimate": 0.2,
+     "band90": [
+      0.05,
+      0.5
+     ],
+     "reason": null,
+     "transfer_confidence": "medium"
+    },
+    "M2": {
+     "applicable": true,
+     "estimate": 3.1,
+     "band90": [
+      2.0,
+      4.5
+     ],
+     "reason": null,
+     "transfer_confidence": "medium"
+    },
+    "M3": {
+     "applicable": true,
+     "estimate": 0.4,
+     "band90": [
+      0.2,
+      0.6
+     ],
+     "reason": null,
+     "transfer_confidence": "medium"
+    },
+    "M4": {
+     "applicable": true,
+     "estimate": "smaller",
+     "band90": [
+      "smaller",
+      "similar"
+     ],
+     "reason": null,
+     "transfer_confidence": "medium"
+    },
+    "M5": {
+     "applicable": false,
+     "estimate": null,
+     "band90": null,
+     "reason": "Extrapolation: no evidence (fixture).",
+     "transfer_confidence": null
+    }
+   },
+   "coverage": {
+    "M1": {
+     "covered": true,
+     "nearest_distance": 0.5
+    },
+    "M2": {
+     "covered": true,
+     "nearest_distance": 0.5
+    },
+    "M3": {
+     "covered": true,
+     "nearest_distance": 0.5
+    },
+    "M4": {
+     "covered": true,
+     "nearest_distance": 0.5
+    },
+    "M5": {
+     "covered": true,
+     "nearest_distance": 0.5
+    }
+   },
+   "findings": [
+    "FIXTURE finding: forced-flow regime."
+   ]
+  },
+  {
+   "id": "artemis2",
+   "name": "Artemis II",
+   "date": "2026-04-03",
+   "phase": "smoke alarm in transit",
+   "in_scope": true,
+   "scope_note": null,
+   "g_m_s2": 0.0,
+   "p_psia": 14.7,
+   "o2": 0.21,
+   "u_cm_s": 5,
+   "L_mm": 10,
+   "assumed": [
+    "u_cm_s",
+    "L_mm",
+    "p_psia",
+    "o2"
+   ],
+   "summary": "FIXTURE summary for Artemis II.",
+   "sources": [
+    {
+     "field": "summary",
+     "url": "https://www.nasa.gov/",
+     "quote": "FIXTURE quote for summary, not a real NASA quote"
+    },
+    {
+     "field": "summary",
+     "source": "2026 NASA Space Apps Challenge brief",
+     "quote": "FIXTURE brief quote"
+    }
+   ],
+   "physics": {
+    "u_b_cm_s": 0.0,
+    "ri": 0.0,
+    "regime": "forced",
+    "g_star": 0.0,
+    "p_o2_psia": 3.09,
+    "u_eff_cm_s": 5.0
+   },
+   "regime_fractions": {
+    "forced": 1.0,
+    "mixed": 0.0,
+    "buoyant": 0.0
+   },
+   "metrics": {
+    "M1": {
+     "applicable": true,
+     "estimate": 0.2,
+     "band90": [
+      0.05,
+      0.5
+     ],
+     "reason": null,
+     "transfer_confidence": "medium"
+    },
+    "M2": {
+     "applicable": true,
+     "estimate": 3.1,
+     "band90": [
+      2.0,
+      4.5
+     ],
+     "reason": null,
+     "transfer_confidence": "medium"
+    },
+    "M3": {
+     "applicable": true,
+     "estimate": 0.4,
+     "band90": [
+      0.2,
+      0.6
+     ],
+     "reason": null,
+     "transfer_confidence": "medium"
+    },
+    "M4": {
+     "applicable": false,
+     "estimate": null,
+     "band90": null,
+     "reason": "Extrapolation: no evidence (fixture).",
+     "transfer_confidence": null
+    },
+    "M5": {
+     "applicable": false,
+     "estimate": null,
+     "band90": null,
+     "reason": "Extrapolation: no evidence (fixture).",
+     "transfer_confidence": null
+    }
+   },
+   "coverage": {
+    "M1": {
+     "covered": true,
+     "nearest_distance": 0.5
+    },
+    "M2": {
+     "covered": true,
+     "nearest_distance": 0.5
+    },
+    "M3": {
+     "covered": true,
+     "nearest_distance": 0.5
+    },
+    "M4": {
+     "covered": true,
+     "nearest_distance": 0.5
+    },
+    "M5": {
+     "covered": true,
+     "nearest_distance": 0.5
+    }
+   },
+   "findings": [
+    "FIXTURE finding."
+   ],
+   "assumed_note": "FIXTURE: cabin fans were off, so airflow was likely lower than assumed."
+  },
+  {
+   "id": "apollo13",
+   "name": "Apollo 13",
+   "date": "1970-04-13",
+   "phase": "oxygen tank failure in transit",
+   "in_scope": false,
+   "scope_note": "FIXTURE: a high-pressure oxygen tank failure, not a cabin fire.",
+   "g_m_s2": null,
+   "p_psia": null,
+   "o2": null,
+   "u_cm_s": null,
+   "L_mm": null,
+   "assumed": [],
+   "summary": "FIXTURE summary for Apollo 13.",
+   "sources": [
+    {
+     "field": "summary",
+     "url": "https://www.nasa.gov/",
+     "quote": "FIXTURE quote for summary, not a real NASA quote"
+    }
+   ],
+   "physics": null,
+   "regime_fractions": null,
+   "metrics": null,
+   "coverage": null,
+   "findings": [
+    "FIXTURE: outside the tool's scope."
+   ]
+  }
+ ]
+}

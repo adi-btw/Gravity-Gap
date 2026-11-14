@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { HomePicker } from "@/components/HomePicker";
 
 export default function Home() {
@@ -12,6 +13,17 @@ export default function Home() {
         <p className="mt-2 max-w-3xl text-muted">
           Gravity Gap bridges that gap with transparent scaling laws and tells you which evidence applies to your
           habitat, with honest uncertainty.
+        </p>
+        <p className="mt-3">
+          <Link
+            href="/replay"
+            className="inline-flex items-center gap-1 rounded-md border border-normal px-3 py-1.5 text-sm text-normal hover:bg-surface-2"
+          >
+            Start with a real fire <span aria-hidden="true">→</span>
+          </Link>
+          <span className="ml-3 text-xs text-muted">
+            The conditions of real spacecraft fires, and what today&apos;s data can and cannot say about them.
+          </span>
         </p>
       </section>
       <HomePicker />

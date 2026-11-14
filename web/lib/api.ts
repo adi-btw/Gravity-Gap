@@ -13,6 +13,8 @@ import type {
   AskAnswer,
   BoundsResult,
   CatalogRecord,
+  Incident,
+  IncidentsArtifact,
   MetricInfo,
   PlannerArtifact,
   PlannerItem,
@@ -128,6 +130,17 @@ export function normalizeCatalog(raw: unknown): CatalogRecord[] {
   if (Array.isArray(raw)) return raw as CatalogRecord[];
   const inv = (raw as { investigations?: unknown } | null)?.investigations;
   return Array.isArray(inv) ? (inv as CatalogRecord[]) : [];
+}
+
+/** Accept {incidents: [...]} (the artifact / GET /incidents) or a bare list. */
+export function normalizeIncidents(raw: unknown): IncidentsArtifact {
+  const o = (Array.isArray(raw) ? { incidents: raw } : (raw ?? {})) as Record<string, unknown>;
+  const list = Array.isArray(o.incidents) ? (o.incidents as Incident[]) : [];
+  return {
+    incidents: list.map((i) => ({ ...i, assumed: Array.isArray(i.assumed) ? i.assumed : [], sources: Array.isArray(i.sources) ? i.sources : [] })),
+    generated_at: typeof o.generated_at === "string" ? o.generated_at : undefined,
+    engine_version: typeof o.engine_version === "string" ? o.engine_version : undefined,
+  };
 }
 
 // ------------------------------------------------------------------ offline AI cache matching
@@ -331,6 +344,19 @@ export function createClient(opts: ClientOptions = {}) {
         async () => ({
           data: normalizeCoverage(
             await staticJson(`coverage/${metric}.json`, `API offline and no coverage artifact for ${metric} was bundled.`),
+          ),
+          source: "offline",
+          note: OFFLINE_NOTE,
+        }),
+      ),
+
+    /** R1 real-fire replay: engine results for real spacecraft fire events (artifacts/incidents.json offline). */
+    incidents: () =>
+      withFallback(
+        async () => normalizeIncidents(await liveJson<unknown>("/incidents")),
+        async () => ({
+          data: normalizeIncidents(
+            await staticJson("incidents.json", "API offline and no incidents artifact was bundled."),
           ),
           source: "offline",
           note: OFFLINE_NOTE,

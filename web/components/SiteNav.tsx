@@ -8,6 +8,7 @@ import { ThemeToggle } from "./ThemeToggle";
 
 export const NAV_ITEMS = [
   { href: "/", label: "Home" },
+  { href: "/replay", label: "Replay" },
   { href: "/explore", label: "Spectrum" },
   { href: "/regime", label: "Regime" },
   { href: "/bounds", label: "Bounds" },

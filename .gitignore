@@ -5,3 +5,4 @@ graphify-out/cost.json
 __pycache__/
 .env
 **/graphify-out/cache/
+.omc/

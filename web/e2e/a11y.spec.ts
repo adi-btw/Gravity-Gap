@@ -14,6 +14,7 @@ const ROUTES = [
   "/planner",
   "/data",
   "/about",
+  "/replay",
 ];
 const THEMES = ["dark", "light"] as const;
 type Theme = (typeof THEMES)[number];

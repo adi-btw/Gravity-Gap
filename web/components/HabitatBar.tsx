@@ -1,8 +1,11 @@
 "use client";
 
 import { FIELDS, gFraction, matchPreset, nearestPresetAtmosphere, presetToHabitat } from "@/lib/habitat";
+import { incidentHabitat, incidentYear, matchIncident } from "@/lib/incidents";
 import { PRESETS } from "@/lib/presets";
+import type { Incident } from "@/lib/types";
 import { useHabitat } from "@/lib/useHabitat";
+import { useIncidents } from "@/lib/useIncidents";
 import { NumberField } from "./NumberField";
 
 /** FIELDS specs carry a `key` property; strip it so it is not spread as React's special `key` prop. */
@@ -17,6 +20,15 @@ export function HabitatBar({ compact = false }: { compact?: boolean }) {
   const { habitat, setHabitat, setField } = useHabitat();
   const active = matchPreset(habitat);
   const sourcePreset = active ?? nearestPresetAtmosphere(habitat);
+  const incidentsState = useIncidents();
+  // History chips: in-scope incidents only; the group is hidden when the incidents data is unavailable.
+  const history: Incident[] =
+    incidentsState.status === "ok"
+      ? incidentsState.data.data.incidents.filter((i) => incidentHabitat(i) !== null)
+      : [];
+  // Several incidents can share one habitat (e.g. assumed sea-level air in orbit): all matching chips show pressed.
+  const activeIncident = matchIncident(habitat, history);
+  const activeIds = new Set(history.filter((i) => matchIncident(habitat, [i])).map((i) => i.id));
 
   return (
     <section aria-label="Habitat settings" className={`mx-auto max-w-6xl px-4 ${compact ? "py-0" : "py-3"}`}>
@@ -38,10 +50,34 @@ export function HabitatBar({ compact = false }: { compact?: boolean }) {
             </button>
           );
         })}
-        {active ? null : (
+        {active || activeIncident ? null : (
           <span className="rounded-full border border-partial px-3 py-1 text-xs text-partial">Custom</span>
         )}
       </div>
+
+      {history.length > 0 ? (
+        <div className="mt-2 flex flex-wrap items-center gap-2" role="group" aria-label="Real fire incidents">
+          <span className="text-xs uppercase tracking-wider text-muted">History</span>
+          {history.map((inc) => {
+            const h = incidentHabitat(inc);
+            const on = activeIds.has(inc.id);
+            return (
+              <button
+                key={inc.id}
+                type="button"
+                aria-pressed={on}
+                onClick={() => h && setHabitat(h)}
+                title={`${inc.name} (${inc.date}): ${inc.phase}`}
+                className={`rounded-full border border-dashed px-3 py-1 text-xs transition-colors ${
+                  on ? "border-normal bg-surface-2 text-fg" : "border-line text-muted hover:text-fg"
+                }`}
+              >
+                {inc.name} <span className="num">{incidentYear(inc.date)}</span>
+              </button>
+            );
+          })}
+        </div>
+      ) : null}
 
       <div className="mt-3 flex flex-wrap gap-x-5 gap-y-3">
         <NumberField
@@ -77,7 +113,9 @@ export function HabitatBar({ compact = false }: { compact?: boolean }) {
         <span className="font-medium">Source:</span>{" "}
         {sourcePreset
           ? `${sourcePreset.label}: ${sourcePreset.source}.`
-          : "Custom values entered by the user."}{" "}
+          : activeIncident
+            ? `${activeIncident.name} (${activeIncident.date}): values and sources on the Replay page.`
+            : "Custom values entered by the user."}{" "}
         Vent speed and flame size are engineering assumptions. The link in your address bar reproduces this habitat.
       </p>
     </section>

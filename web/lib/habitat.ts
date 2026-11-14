@@ -34,7 +34,7 @@ export interface FieldSpec {
 /** Slider/input ranges follow plan/03 §1 (typical ranges), widened slightly for exploration. */
 export const FIELDS: Record<HabitatKey, FieldSpec> = {
   g_m_s2: { key: "g_m_s2", label: "Gravity", unit: "m/s²", min: 0, max: 9.81, step: 0.01, decimals: 2 },
-  p_psia: { key: "p_psia", label: "Cabin pressure", unit: "psia", min: 4, max: 15, step: 0.1, decimals: 1 },
+  p_psia: { key: "p_psia", label: "Cabin pressure", unit: "psia", min: 4, max: 20, step: 0.1, decimals: 1 },
   o2: { key: "o2", label: "O₂", unit: "%", min: 0.15, max: 1, step: 0.005, decimals: 3 },
   u_cm_s: { key: "u_cm_s", label: "Vent speed", unit: "cm/s", min: 0, max: 40, step: 0.5, decimals: 1 },
   L_mm: { key: "L_mm", label: "Flame size", unit: "mm", min: 1, max: 100, step: 1, decimals: 0 },

@@ -170,3 +170,60 @@ export interface TestsPage {
   offset: number;
   rows: Record<string, unknown>[];
 }
+
+// ------------------------------------------------------------------ R1 real-fire replay (contracts.md, R1 addendum)
+
+export type IncidentId = "apollo1" | "mir1997" | "artemis2" | "apollo13" | (string & {});
+
+export interface IncidentSource {
+  /** Which field the quote supports: p_psia | o2 | g_m_s2 | summary | date. */
+  field: string;
+  /** Absent for non-web citations (e.g. the challenge brief); then `source` names the document. */
+  url?: string | null;
+  source?: string | null;
+  quote: string;
+}
+
+export interface IncidentMetric {
+  applicable: boolean;
+  estimate: Estimate;
+  band90: Band;
+  reason: string | null;
+  transfer_confidence?: string | null;
+}
+
+export interface IncidentCoverage {
+  covered: boolean;
+  nearest_distance: number | null;
+}
+
+export interface Incident {
+  id: IncidentId;
+  name: string;
+  date: string;
+  phase: string;
+  in_scope: boolean;
+  scope_note: string | null;
+  g_m_s2: number | null;
+  p_psia: number | null;
+  o2: number | null;
+  u_cm_s: number | null;
+  L_mm: number | null;
+  /** Habitat fields that are engineering assumptions rather than sourced values. */
+  assumed: string[];
+  /** Plain-language explanation of the assumed values (may be absent). */
+  assumed_note?: string | null;
+  summary: string;
+  sources: IncidentSource[];
+  physics?: Record<string, unknown> | null;
+  regime_fractions?: { forced: number; mixed: number; buoyant: number } | null;
+  metrics?: Record<string, IncidentMetric> | null;
+  coverage?: Record<string, IncidentCoverage> | null;
+  findings?: string[];
+}
+
+export interface IncidentsArtifact {
+  generated_at?: string;
+  engine_version?: string;
+  incidents: Incident[];
+}
