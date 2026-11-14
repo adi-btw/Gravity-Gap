@@ -1,0 +1,27 @@
+{
+ "metric": "M5",
+ "points": [
+  {
+   "o2": 0.21,
+   "p_atm": 1.0,
+   "investigation_id": "PSI-107",
+   "n": 431,
+   "assumed": "SPICE table records no atmosphere; ISS cabin air (~21% O2, ~1 atm) assumed"
+  }
+ ],
+ "rule": {
+  "type": "box",
+  "o2": [
+   0.19,
+   0.235
+  ],
+  "pressure_atm": [
+   0.9,
+   1.1
+  ],
+  "text": "Covered only inside ISS-cabin-like air (O2 19-23.5%, 0.9-1.1 atm)."
+ },
+ "note": "431 SPICE flames",
+ "n_points": 431,
+ "generated_at": "2026-11-14T19:32:32+00:00"
+}

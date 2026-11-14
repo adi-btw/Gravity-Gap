@@ -4,7 +4,8 @@ import { useState } from "react";
 import { api, type Sourced } from "@/lib/api";
 import { fmtBand, fmtEstimate, fmtSig, humanize } from "@/lib/format";
 import { G0 } from "@/lib/physics";
-import { matchPreset } from "@/lib/habitat";
+import { coverageStatus } from "@/lib/coverage";
+import { matchPreset, type Habitat } from "@/lib/habitat";
 import type { AskAnswer, BoundsResult, MetricInfo, RefPoint, SensitivityRow } from "@/lib/types";
 import { useAsync } from "@/lib/useAsync";
 import { useHabitat } from "@/lib/useHabitat";
@@ -12,6 +13,7 @@ import { useQueryParam } from "@/lib/useQueryParam";
 import { AskAnswerView } from "./AskAnswer";
 import { useAsk } from "./AskDrawer";
 import { BandChart, type BandPoint } from "./charts/BandChart";
+import { CoverageChart } from "./charts/CoverageChart";
 import { RegimeFractionsBar } from "./charts/RegimeFractionsBar";
 import { TornadoChart } from "./charts/TornadoChart";
 import { EvidenceList } from "./EvidenceList";
@@ -79,7 +81,7 @@ export function BoundsPanel() {
       {bounds.status === "loading" ? <Loading label="Computing bounds…" /> : null}
       {bounds.status === "error" ? <ErrorState error={bounds.error} onRetry={bounds.reload} /> : null}
       {bounds.status === "ok" ? (
-        <BoundsView r={bounds.data.data} metricInfo={list.find((m) => m.id === metric)} queryString={queryString} habitatG={habitat.g_m_s2} />
+        <BoundsView r={bounds.data.data} metricInfo={list.find((m) => m.id === metric)} queryString={queryString} habitat={habitat} />
       ) : null}
     </div>
   );
@@ -89,13 +91,14 @@ function BoundsView({
   r,
   metricInfo,
   queryString,
-  habitatG,
+  habitat,
 }: {
   r: BoundsResult;
   metricInfo?: MetricInfo;
   queryString: string;
-  habitatG: number;
+  habitat: Habitat;
 }) {
+  const habitatG = habitat.g_m_s2;
   const kind = r.kind ?? metricInfo?.kind ?? "quantity";
   const isCategory = kind === "category" || typeof r.estimate === "string";
   const gLabel = `${(habitatG / G0).toFixed(3)} g`;
@@ -132,9 +135,11 @@ function BoundsView({
             <p className="text-sm font-semibold">Extrapolation: no evidence</p>
             <p className="mt-1 text-sm">{r.reason ?? "The habitat is outside every tested condition for this metric."}</p>
             <p className="mt-2 text-xs text-muted">
-              No number is shown on purpose. The nearest tested conditions are listed under evidence; the test planner
+              No number is shown on purpose. The chart shows every atmosphere this metric was actually tested in; your
+              habitat (diamond) sits outside the shaded zone where the engine is allowed to estimate. The test planner
               lists experiments that would close this gap.
             </p>
+            <CoverageSection metric={r.metric} habitat={habitat} inline />
           </div>
         ) : isCategory ? (
           <CategoryColumns r={r} gLabel={gLabel} />
@@ -142,6 +147,8 @@ function BoundsView({
           <NumericChart r={r} kind={kind} gLabel={gLabel} trace={trace} />
         )}
       </section>
+
+      {r.applicable ? <CoverageSection metric={r.metric} habitat={habitat} /> : null}
 
       <div className="grid gap-4 md:grid-cols-2">
         <section className="rounded-lg border border-line bg-surface p-4" aria-labelledby="transfer-h">
@@ -424,6 +431,71 @@ function Explain({ r }: { r: BoundsResult }) {
         {state.s === "error" ? <ErrorState error={state.e} onRetry={run} /> : null}
         {state.s === "ok" ? <AskAnswerView answer={state.r.data} source={state.r.source} note={state.r.note} /> : null}
       </div>
+    </section>
+  );
+}
+
+/** "Where does this metric have evidence?" Tested O2 x pressure points vs the habitat (same rule as the engine gate). */
+function CoverageSection({ metric, habitat, inline = false }: { metric: string; habitat: Habitat; inline?: boolean }) {
+  const cov = useAsync(() => api.coverage(metric), `coverage|${metric}`);
+  const label = matchPreset(habitat)?.label ?? "Your habitat";
+  const body =
+    cov.status === "loading" ? (
+      <Loading label="Loading tested conditions…" />
+    ) : cov.status === "error" ? (
+      <ErrorState error={cov.error} onRetry={cov.reload} />
+    ) : (
+      (() => {
+        const c = cov.data.data;
+        const s = coverageStatus(c, habitat.o2, habitat.p_psia);
+        const assumed = c.points.find((p) => p.assumed)?.assumed;
+        return (
+          <>
+            <CoverageChart cov={c} status={s} habitatLabel={label} />
+            <ul className="mt-2 flex flex-wrap gap-x-4 gap-y-1 text-[11px] text-muted" aria-label="Chart legend">
+              <li>
+                <span aria-hidden="true" className="mr-1 inline-block h-2.5 w-2.5 rounded-full bg-micro align-middle" />
+                tested condition (bigger dot = more tests)
+              </li>
+              <li>
+                <span aria-hidden="true" className="mr-1 inline-block h-2.5 w-4 rounded-sm bg-[var(--micro-fill)] align-middle" />
+                zone where the engine gives a number
+              </li>
+              <li>
+                <span aria-hidden="true" className="mr-1 inline-block h-2.5 w-2.5 rotate-45 bg-partial align-middle" />
+                your habitat
+              </li>
+            </ul>
+            <p className="mt-2 text-xs">
+              <span className="font-medium">{c.note}</span> across {c.points.length} tested atmosphere
+              {c.points.length === 1 ? "" : "s"}. {c.rule.text}
+              {s.nearest && s.nearestDistance !== null ? (
+                <>
+                  {" "}
+                  Nearest test: <span className="num">{(s.nearest.o2 * 100).toFixed(1)}% O₂</span> at{" "}
+                  <span className="num">{(s.nearest.p_atm * 14.696).toFixed(1)} psia</span> ({s.nearest.investigation_id}), atmosphere
+                  distance <span className="num">{s.nearestDistance.toFixed(2)}</span>.
+                </>
+              ) : null}
+            </p>
+            {assumed ? <p className="mt-1 text-[11px] text-muted">Hollow dots: {assumed}.</p> : null}
+          </>
+        );
+      })()
+    );
+  if (inline) {
+    return (
+      <div className="mt-3 rounded-md border border-line bg-surface p-3" aria-label="Tested conditions for this metric">
+        {body}
+      </div>
+    );
+  }
+  return (
+    <section className="rounded-lg border border-line bg-surface p-4" aria-labelledby="coverage-h">
+      <h2 id="coverage-h" className="mb-2 text-sm font-semibold">
+        Where this metric has evidence
+      </h2>
+      {body}
     </section>
   );
 }

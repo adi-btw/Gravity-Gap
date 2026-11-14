@@ -1,0 +1,344 @@
+{
+ "metric": "M1",
+ "points": [
+  {
+   "o2": 0.12,
+   "p_atm": 1.0,
+   "investigation_id": "PSI-69",
+   "n": 3,
+   "assumed": null
+  },
+  {
+   "o2": 0.12,
+   "p_atm": 1.01,
+   "investigation_id": "PSI-69",
+   "n": 4,
+   "assumed": null
+  },
+  {
+   "o2": 0.13,
+   "p_atm": 1.0,
+   "investigation_id": "PSI-69",
+   "n": 3,
+   "assumed": null
+  },
+  {
+   "o2": 0.13,
+   "p_atm": 1.01,
+   "investigation_id": "PSI-69",
+   "n": 4,
+   "assumed": null
+  },
+  {
+   "o2": 0.14,
+   "p_atm": 1.0,
+   "investigation_id": "PSI-69",
+   "n": 8,
+   "assumed": null
+  },
+  {
+   "o2": 0.14,
+   "p_atm": 1.01,
+   "investigation_id": "PSI-69",
+   "n": 3,
+   "assumed": null
+  },
+  {
+   "o2": 0.15,
+   "p_atm": 0.7,
+   "investigation_id": "PSI-69",
+   "n": 4,
+   "assumed": null
+  },
+  {
+   "o2": 0.15,
+   "p_atm": 0.99,
+   "investigation_id": "PSI-69",
+   "n": 1,
+   "assumed": null
+  },
+  {
+   "o2": 0.15,
+   "p_atm": 1.0,
+   "investigation_id": "PSI-69",
+   "n": 4,
+   "assumed": null
+  },
+  {
+   "o2": 0.15,
+   "p_atm": 1.01,
+   "investigation_id": "PSI-69",
+   "n": 11,
+   "assumed": null
+  },
+  {
+   "o2": 0.16,
+   "p_atm": 1.0,
+   "investigation_id": "PSI-69",
+   "n": 5,
+   "assumed": null
+  },
+  {
+   "o2": 0.16,
+   "p_atm": 1.01,
+   "investigation_id": "PSI-69",
+   "n": 3,
+   "assumed": null
+  },
+  {
+   "o2": 0.17,
+   "p_atm": 0.7,
+   "investigation_id": "PSI-69",
+   "n": 5,
+   "assumed": null
+  },
+  {
+   "o2": 0.17,
+   "p_atm": 0.71,
+   "investigation_id": "PSI-69",
+   "n": 6,
+   "assumed": null
+  },
+  {
+   "o2": 0.17,
+   "p_atm": 0.99,
+   "investigation_id": "PSI-69",
+   "n": 3,
+   "assumed": null
+  },
+  {
+   "o2": 0.17,
+   "p_atm": 1.0,
+   "investigation_id": "PSI-69",
+   "n": 6,
+   "assumed": null
+  },
+  {
+   "o2": 0.18,
+   "p_atm": 0.69,
+   "investigation_id": "PSI-69",
+   "n": 2,
+   "assumed": null
+  },
+  {
+   "o2": 0.18,
+   "p_atm": 0.7,
+   "investigation_id": "PSI-69",
+   "n": 9,
+   "assumed": null
+  },
+  {
+   "o2": 0.18,
+   "p_atm": 1.0,
+   "investigation_id": "PSI-69",
+   "n": 9,
+   "assumed": null
+  },
+  {
+   "o2": 0.18,
+   "p_atm": 1.01,
+   "investigation_id": "PSI-69",
+   "n": 12,
+   "assumed": null
+  },
+  {
+   "o2": 0.18,
+   "p_atm": 1.02,
+   "investigation_id": "PSI-69",
+   "n": 3,
+   "assumed": null
+  },
+  {
+   "o2": 0.19,
+   "p_atm": 0.99,
+   "investigation_id": "PSI-69",
+   "n": 1,
+   "assumed": null
+  },
+  {
+   "o2": 0.19,
+   "p_atm": 1.0,
+   "investigation_id": "PSI-69",
+   "n": 4,
+   "assumed": null
+  },
+  {
+   "o2": 0.2,
+   "p_atm": 0.69,
+   "investigation_id": "PSI-69",
+   "n": 2,
+   "assumed": null
+  },
+  {
+   "o2": 0.2,
+   "p_atm": 0.7,
+   "investigation_id": "PSI-69",
+   "n": 6,
+   "assumed": null
+  },
+  {
+   "o2": 0.2,
+   "p_atm": 0.71,
+   "investigation_id": "PSI-69",
+   "n": 3,
+   "assumed": null
+  },
+  {
+   "o2": 0.2,
+   "p_atm": 0.72,
+   "investigation_id": "PSI-69",
+   "n": 2,
+   "assumed": null
+  },
+  {
+   "o2": 0.2,
+   "p_atm": 0.99,
+   "investigation_id": "PSI-69",
+   "n": 3,
+   "assumed": null
+  },
+  {
+   "o2": 0.2,
+   "p_atm": 1.0,
+   "investigation_id": "PSI-69",
+   "n": 6,
+   "assumed": null
+  },
+  {
+   "o2": 0.2,
+   "p_atm": 1.01,
+   "investigation_id": "PSI-69",
+   "n": 2,
+   "assumed": null
+  },
+  {
+   "o2": 0.21,
+   "p_atm": 0.7,
+   "investigation_id": "PSI-69",
+   "n": 8,
+   "assumed": null
+  },
+  {
+   "o2": 0.21,
+   "p_atm": 0.71,
+   "investigation_id": "PSI-69",
+   "n": 3,
+   "assumed": null
+  },
+  {
+   "o2": 0.21,
+   "p_atm": 1.0,
+   "investigation_id": "PSI-69",
+   "n": 8,
+   "assumed": null
+  },
+  {
+   "o2": 0.21,
+   "p_atm": 1.01,
+   "investigation_id": "PSI-69",
+   "n": 14,
+   "assumed": null
+  },
+  {
+   "o2": 0.21,
+   "p_atm": 2.04,
+   "investigation_id": "PSI-69",
+   "n": 1,
+   "assumed": null
+  },
+  {
+   "o2": 0.21,
+   "p_atm": 2.7,
+   "investigation_id": "PSI-69",
+   "n": 1,
+   "assumed": null
+  },
+  {
+   "o2": 0.21,
+   "p_atm": 2.72,
+   "investigation_id": "PSI-69",
+   "n": 1,
+   "assumed": null
+  },
+  {
+   "o2": 0.21,
+   "p_atm": 2.73,
+   "investigation_id": "PSI-69",
+   "n": 2,
+   "assumed": null
+  },
+  {
+   "o2": 0.21,
+   "p_atm": 3.05,
+   "investigation_id": "PSI-69",
+   "n": 2,
+   "assumed": null
+  },
+  {
+   "o2": 0.23,
+   "p_atm": 0.7,
+   "investigation_id": "PSI-69",
+   "n": 9,
+   "assumed": null
+  },
+  {
+   "o2": 0.23,
+   "p_atm": 0.71,
+   "investigation_id": "PSI-69",
+   "n": 5,
+   "assumed": null
+  },
+  {
+   "o2": 0.24,
+   "p_atm": 0.7,
+   "investigation_id": "PSI-69",
+   "n": 4,
+   "assumed": null
+  },
+  {
+   "o2": 0.24,
+   "p_atm": 0.71,
+   "investigation_id": "PSI-69",
+   "n": 2,
+   "assumed": null
+  },
+  {
+   "o2": 0.24,
+   "p_atm": 1.01,
+   "investigation_id": "PSI-69",
+   "n": 3,
+   "assumed": null
+  },
+  {
+   "o2": 0.3,
+   "p_atm": 0.71,
+   "investigation_id": "PSI-69",
+   "n": 1,
+   "assumed": null
+  },
+  {
+   "o2": 0.3,
+   "p_atm": 1.01,
+   "investigation_id": "PSI-69",
+   "n": 4,
+   "assumed": null
+  },
+  {
+   "o2": 0.34,
+   "p_atm": 0.71,
+   "investigation_id": "PSI-69",
+   "n": 1,
+   "assumed": null
+  }
+ ],
+ "rule": {
+  "type": "distance",
+  "max_distance": 2.0,
+  "o2_scale": 0.05,
+  "ln_p_scale": 0.3,
+  "text": "Covered when the habitat is within atmosphere distance 2 of a tested point (about +/-0.10 O2 mole fraction, or a factor of ~1.8 in pressure)."
+ },
+ "note": "206 training tests",
+ "n_points": 206,
+ "generated_at": "2026-11-14T19:32:32+00:00"
+}

@@ -1,0 +1,41 @@
+{
+ "metric": "M4",
+ "points": [
+  {
+   "o2": 0.215,
+   "p_atm": 1.0,
+   "investigation_id": "PSI-99",
+   "n": 1,
+   "assumed": "pressure not in the PSI table; ~1 atm assumed"
+  },
+  {
+   "o2": 0.22,
+   "p_atm": 1.0,
+   "investigation_id": "PSI-99",
+   "n": 2,
+   "assumed": "pressure not in the PSI table; ~1 atm assumed"
+  },
+  {
+   "o2": 0.221,
+   "p_atm": 1.0,
+   "investigation_id": "PSI-99",
+   "n": 6,
+   "assumed": "pressure not in the PSI table; ~1 atm assumed"
+  }
+ ],
+ "rule": {
+  "type": "box",
+  "o2": [
+   0.2,
+   0.24
+  ],
+  "pressure_atm": [
+   0.9,
+   1.1
+  ],
+  "text": "Covered only inside the SAFFIRE-II tested box (O2 20-24%, 0.9-1.1 atm)."
+ },
+ "note": "9 SAFFIRE-II samples",
+ "n_points": 9,
+ "generated_at": "2026-11-14T19:32:32+00:00"
+}

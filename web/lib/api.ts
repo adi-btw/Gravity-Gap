@@ -7,6 +7,7 @@
  * matches no preset gets OfflineUnavailableError ("live API needed for custom habitats"), and ranking is never
  * recomputed in the browser.
  */
+import { normalizeCoverage } from "./coverage";
 import { matchPreset, type Habitat } from "./habitat";
 import type {
   AskAnswer,
@@ -321,6 +322,19 @@ export function createClient(opts: ClientOptions = {}) {
           );
           return { data, source: "offline", note: `${OFFLINE_NOTE} (${preset.label} preset)` };
         },
+      ),
+
+    /** Tested O2 x pressure points for a metric (habitat status is computed client-side, same rule as the engine). */
+    coverage: (metric: string) =>
+      withFallback(
+        async () => normalizeCoverage(await liveJson<unknown>(`/coverage/${encodeURIComponent(metric)}`)),
+        async () => ({
+          data: normalizeCoverage(
+            await staticJson(`coverage/${metric}.json`, `API offline and no coverage artifact for ${metric} was bundled.`),
+          ),
+          source: "offline",
+          note: OFFLINE_NOTE,
+        }),
       ),
 
     planner: () =>

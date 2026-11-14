@@ -402,6 +402,22 @@ def bounds(body: BoundsIn) -> dict[str, Any]:
     return _predict(body.metric, body.model_dump(exclude={"weights", "metric"}))
 
 
+@app.get("/coverage/{metric}")
+def coverage(metric: str, p_psia: float | None = Query(None, gt=0, le=20), o2: float | None = Query(None, ge=0, le=1)) -> dict[str, Any]:
+    """Tested O2 x pressure points for a metric plus the engine's applicability rule.
+
+    The Bounds Panel draws this when a habitat is outside the tested range (no estimate).
+    """
+    try:
+        from engine import coverage as coverage_module
+    except ImportError as exc:  # pragma: no cover - engine missing
+        raise HTTPException(status_code=503, detail=f"engine.coverage unavailable: {exc}") from exc
+    try:
+        return to_jsonable(coverage_module.coverage_for(metric.upper(), p_psia, o2))
+    except KeyError as exc:
+        raise HTTPException(status_code=404, detail=f"unknown metric {metric!r}") from exc
+
+
 @app.get("/planner")
 def planner() -> dict[str, Any]:
     if not PLANNER_PATH.exists():

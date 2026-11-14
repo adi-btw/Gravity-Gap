@@ -1,11 +1,11 @@
 {
   "version": 1,
-  "generated_at": "2026-11-14T19:12:22+00:00",
+  "generated_at": "2026-11-14T19:40:25+00:00",
   "generated_by": "scripts/build_manifest.py",
-  "artifact_set_sha256": "22a5ab4b9b6991295d434a096f4e00f449266612921edd407802ac1584851da4",
+  "artifact_set_sha256": "7981a2a2527756b30e907b4464f8066bf8fefdf8370f8c15b11fc6706a46b9cb",
   "files": {
     "ai_cache.json": {
-      "sha256": "73e211f2c5f5ffd4857d062892617ec9405b01fa950f94e1773119562c4cee09",
+      "sha256": "37447df5132523c253eafe448dab5a7fa564d0eea7203700f6073b3c61960045",
       "bytes": 46732
     },
     "bounds/earth_M1.json": {
@@ -131,6 +131,26 @@
     "catalog.json": {
       "sha256": "e846c760a79abf060836d0ef8a07c3c78e6a914042d95532bae185b5017b080e",
       "bytes": 171827
+    },
+    "coverage/M1.json": {
+      "sha256": "879f5c55a909ba151816981693aa90ec5ad8180ebfb1227a8feb47cca0eb7e12",
+      "bytes": 5639
+    },
+    "coverage/M2.json": {
+      "sha256": "dc41fadf4e6831e3f96008dce17f1c500a938593d83ba0da60f3f3a4fd6e34e0",
+      "bytes": 4967
+    },
+    "coverage/M3.json": {
+      "sha256": "7390b91113aa5f344b87c635414d12a18f88777a7bccbe7dc6f4ce929d45598e",
+      "bytes": 9781
+    },
+    "coverage/M4.json": {
+      "sha256": "ee55a908af47d0ba2428b0df54d42026e824be6045a68139016a3bb3a12b235d",
+      "bytes": 800
+    },
+    "coverage/M5.json": {
+      "sha256": "356a98d878bd424db78e39959be627c49fe159f7eff3df74262d7d6246ffae94",
+      "bytes": 517
     },
     "hindcast_saffire.json": {
       "sha256": "1a583b7fb4d4c0199826cde6142ec413ed8c00248eb3c3fe4cfb83c68af7e801",
