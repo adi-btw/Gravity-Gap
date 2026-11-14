@@ -90,9 +90,52 @@ class TestsPage(BaseModel):
 
 
 class Health(BaseModel):
-    status: str
+    model_config = ConfigDict(extra="allow")
+
+    status: str = Field(..., description='"ok", or "degraded" when artifacts differ from MANIFEST.json')
     artifact_version: str
     engine_version: str
+    manifest_ok: bool | None = Field(None, description="None when artifacts/MANIFEST.json is missing")
+    manifest: dict[str, Any] | None = None
+
+
+# --------------------------------------------------------------------------- phase 2
+
+
+class BoundsIn(HabitatIn):
+    """POST /bounds: habitat state + metric id (see GET /metrics)."""
+
+    metric: str = Field(..., description="Metric id, e.g. M1")
+
+
+class LedgerIn(BaseModel):
+    """POST /ledger: freeze a prediction for a habitat (preset id or explicit inputs)."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    metric: str
+    habitat: str | dict[str, Any] = Field(..., description='Preset id (e.g. "lunar_base") or habitat fields')
+    rationale: str = Field(..., min_length=10, max_length=4000)
+    author: str = Field(..., min_length=2, max_length=200)
+
+
+class AskIn(BaseModel):
+    model_config = ConfigDict(extra="ignore")
+
+    question: str = Field(..., min_length=3, max_length=1000)
+    habitat: str | dict[str, Any] | None = Field(None, description="Preset id or habitat fields; inferred if omitted")
+    context_ids: list[str] = Field(default_factory=list, max_length=50,
+                                   description="Ids to include: PSI-xx, rec:..., M1..M5")
+
+
+class AskOut(BaseModel):
+    model_config = ConfigDict(extra="allow")
+
+    answer_markdown: str
+    citations: list[str]
+    numbers_used: list[float]
+    validated: bool
+    mode: str = Field(..., description='"claude" | "cached" | "template"')
 
 
 class Problem(BaseModel):

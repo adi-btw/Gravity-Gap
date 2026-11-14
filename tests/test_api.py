@@ -72,7 +72,8 @@ def test_health_ok(client):
     r = client.get("/health")
     assert r.status_code == 200
     body = r.json()
-    assert body["status"] == "ok"
+    # "degraded" only when artifacts/MANIFEST.json exists and no longer matches the artifacts.
+    assert body["status"] == ("degraded" if body["manifest_ok"] is False else "ok")
     assert isinstance(body["artifact_version"], str) and body["artifact_version"]
     assert "engine_version" in body
 
@@ -222,3 +223,185 @@ def test_data_tests_filter(client):
 
 def test_data_tests_bad_limit_problem_json(client):
     _assert_problem(client.get("/data/tests", params={"limit": 0}), 422)
+
+
+# =========================================================================== phase 2
+
+
+@pytest.fixture(scope="module")
+def bounds_ready():
+    return pytest.importorskip("engine.bounds", reason="engine/bounds.py (TL) not present yet")
+
+
+LUNAR_BASE = {"g_m_s2": 1.62, "p_psia": 8.2, "o2": 0.34, "u_cm_s": 10, "L_mm": 10}
+
+
+def test_health_manifest_mismatch_is_degraded_not_crash(client, tmp_path, monkeypatch):
+    import api.main as main_mod
+
+    (tmp_path / "a.json").write_text("{}", encoding="utf-8")
+    (tmp_path / "MANIFEST.json").write_text(json.dumps({"files": {"a.json": {"sha256": "0" * 64}}}),
+                                            encoding="utf-8")
+    monkeypatch.setattr(main_mod, "ARTIFACTS_DIR", tmp_path)
+    monkeypatch.setattr(main_mod, "MANIFEST_PATH", tmp_path / "MANIFEST.json")
+    body = client.get("/health").json()
+    assert body["status"] == "degraded" and body["manifest_ok"] is False
+    assert body["manifest"]["changed"] == ["a.json"]
+
+
+def test_health_manifest_match_ok(client, tmp_path, monkeypatch):
+    import hashlib
+
+    import api.main as main_mod
+
+    (tmp_path / "a.json").write_text("{}", encoding="utf-8")
+    sha = hashlib.sha256(b"{}").hexdigest()
+    (tmp_path / "MANIFEST.json").write_text(json.dumps({"files": {"a.json": {"sha256": sha}}}), encoding="utf-8")
+    monkeypatch.setattr(main_mod, "ARTIFACTS_DIR", tmp_path)
+    monkeypatch.setattr(main_mod, "MANIFEST_PATH", tmp_path / "MANIFEST.json")
+    body = client.get("/health").json()
+    assert body["status"] == "ok" and body["manifest_ok"] is True
+
+
+def test_metrics(client, bounds_ready):
+    r = client.get("/metrics")
+    assert r.status_code == 200
+    m = r.json()
+    assert {"M1", "M2", "M3"} <= set(m)
+    for meta in m.values():
+        assert {"label", "unit", "kind", "flow_dependent"} <= meta.keys()
+
+
+def test_bounds_lunar_base_m1(client, bounds_ready):
+    r = client.post("/bounds", json={**LUNAR_BASE, "metric": "M1"})
+    assert r.status_code == 200, r.text
+    data = json.loads(r.text, parse_constant=lambda c: pytest.fail(f"non-finite JSON token {c}"))
+    for key in ("metric", "applicable", "estimate", "band90", "ref_0g", "regime_fractions", "transfer",
+                "evidence", "sensitivity", "n_train", "model_version"):
+        assert key in data
+    assert data["metric"] == "M1"
+    if data["applicable"]:
+        lo, hi = data["band90"]
+        assert lo <= data["estimate"] <= hi
+        assert data["transfer"]["confidence"] in {"high", "medium", "low"}
+
+
+def test_bounds_unknown_metric_problem_json(client, bounds_ready):
+    _assert_problem(client.post("/bounds", json={**LUNAR_BASE, "metric": "M99"}), 422)
+
+
+def test_bounds_missing_module_503(client, monkeypatch):
+    import api.main as main_mod
+
+    def boom(name):
+        raise main_mod.HTTPException(status_code=503, detail=f"engine.{name} unavailable")
+
+    monkeypatch.setattr(main_mod, "engine_module", boom)
+    _assert_problem(client.post("/bounds", json={**LUNAR_BASE, "metric": "M1"}), 503)
+
+
+def test_planner(client):
+    r = client.get("/planner")
+    if not (ROOT / "artifacts" / "planner.json").exists():
+        _assert_problem(r, 503)
+        return
+    assert r.status_code == 200
+    assert "items" in r.json() or "tests" in r.json()
+
+
+def test_ledger_get_verifies(client):
+    r = client.get("/ledger")
+    assert r.status_code == 200
+    body = r.json()
+    assert set(body) == {"predictions", "verification"}
+    assert len(body["predictions"]) == len(body["verification"])
+    assert all(v["ok"] for v in body["verification"])
+
+
+LEDGER_BODY = {"metric": "M1", "habitat": "lunar_base", "rationale": "test rationale for the API", "author": "pytest"}
+
+
+def test_ledger_post_disabled_without_env(client, monkeypatch):
+    monkeypatch.delenv("LEDGER_TEAM_TOKEN", raising=False)
+    _assert_problem(client.post("/ledger", json=LEDGER_BODY, headers={"X-Team-Token": "x"}), 403)
+
+
+def test_ledger_post_wrong_token(client, monkeypatch):
+    monkeypatch.setenv("LEDGER_TEAM_TOKEN", "secret-test-token")
+    _assert_problem(client.post("/ledger", json=LEDGER_BODY, headers={"X-Team-Token": "nope"}), 401)
+    _assert_problem(client.post("/ledger", json=LEDGER_BODY), 401)
+
+
+def test_ledger_post_appends(client, monkeypatch, tmp_path, bounds_ready):
+    from engine import ledger
+
+    path = tmp_path / "predictions.jsonl"
+    monkeypatch.setattr(ledger, "LEDGER_PATH", path)
+    monkeypatch.setenv("LEDGER_TEAM_TOKEN", "secret-test-token")
+    r = client.post("/ledger", json=LEDGER_BODY, headers={"X-Team-Token": "secret-test-token"})
+    assert r.status_code == 201, r.text
+    rec = r.json()
+    assert rec["metric"] == "M1" and rec["habitat"]["preset_id"] == "lunar_base" and rec["sha256"]
+    assert ledger.verify(path) == [{"id": rec["id"], "ok": True, "line": 1}]
+    listed = client.get("/ledger").json()
+    assert [p["id"] for p in listed["predictions"]] == [rec["id"]]
+
+
+def test_ask_template_no_key(client, monkeypatch):
+    import api.main as main_mod
+
+    monkeypatch.delenv("ANTHROPIC_API_KEY", raising=False)
+    main_mod.ask_limiter.reset()
+    r = client.post("/ask", json={"question": "Why is the lunar base in the mixed regime?", "habitat": "lunar_base"})
+    assert r.status_code == 200, r.text
+    body = r.json()
+    assert body["mode"] in {"template", "cached"}
+    assert body["validated"] is True
+    assert body["answer_markdown"] and isinstance(body["citations"], list)
+
+
+def test_ask_bad_habitat_problem_json(client):
+    import api.main as main_mod
+
+    main_mod.ask_limiter.reset()
+    _assert_problem(client.post("/ask", json={"question": "Why so?", "habitat": "atlantis"}), 422)
+
+
+def test_ask_rate_limited(client, monkeypatch):
+    import api.main as main_mod
+
+    limiter = main_mod.RateLimiter(2)
+    monkeypatch.setattr(main_mod, "ask_limiter", limiter)
+    q = {"question": "Can you predict rocket engine fires?"}
+    assert client.post("/ask", json=q).status_code == 200
+    assert client.post("/ask", json=q).status_code == 200
+    r = client.post("/ask", json=q)
+    _assert_problem(r, 429)
+    assert int(r.headers["retry-after"]) >= 1
+
+
+def test_export_csv_cites_dois(client, catalog_ready):
+    r = client.get("/data/export", params={"investigation_id": "PSI-69", "format": "csv"})
+    assert r.status_code == 200
+    assert r.headers["content-type"].startswith("text/csv")
+    lines = r.text.splitlines()
+    comments = [ln for ln in lines if ln.startswith("#")]
+    assert any("PSI-69" in ln and "doi.org/10.60555/mbq8-0451" in ln for ln in comments)
+    assert any("CLEANING_REPORT" in ln for ln in comments)
+    header = lines[len(comments)]
+    assert header.startswith("record_id,")
+    assert all(ln.startswith("PSI-69:") for ln in lines[len(comments) + 1:] if ln)
+
+
+def test_export_json_all_dois(client, catalog_ready):
+    r = client.get("/data/export", params={"format": "json", "o2_min": 0.3})
+    assert r.status_code == 200
+    body = r.json()
+    inv = {row["investigation_id"] for row in body["rows"]}
+    cited = {c["investigation_id"] for c in body["citations"]}
+    assert inv == cited and body["total"] == len(body["rows"])
+    assert all(c["doi"] for c in body["citations"])
+
+
+def test_export_bad_format(client):
+    _assert_problem(client.get("/data/export", params={"format": "xml"}), 422)

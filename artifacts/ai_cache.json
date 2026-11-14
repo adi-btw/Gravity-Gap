@@ -1,0 +1,1572 @@
+{
+  "version": "v1",
+  "generated_at": "2026-11-14T18:25:25+00:00",
+  "generated_by": "python -m engine.ai.answer --build-cache",
+  "entries": [
+    {
+      "question": "Why is the lunar base in the mixed regime?",
+      "question_key": "why is the lunar base in the mixed regime",
+      "habitat": "lunar_base",
+      "fingerprint": "734cca1bf4f8ff4ec24d6ce28c94a2396d59831fd78a1852c0bafe709a5d3163",
+      "intent": "regime",
+      "mode_generated": "template",
+      "answer_markdown": "Lunar base: 1.62 m/s² (0.165 g), 8.2 psia, 34% O₂, vent 10 cm/s, flame size 10 mm.\n\n**Regime: mixed.** For Lunar base the buoyant velocity is 25.5 cm/s against a vent flow of 10 cm/s, so the Richardson number Ri = u_b²/u_f² is 6.48 (forced Ri < 0.1, buoyant Ri > 10) [eng:physics]. Sampling the uncertain constants gives 0% forced, 71.7% mixed and 28.3% buoyant flames [eng:physics].\n\nIn the mixed regime neither the 0 g (ISS, forced-flow) data nor 1 g (buoyant) data apply directly: buoyancy and the vent flow are comparable, which is exactly the condition PSI never tested.\n\nDesign implication: At lunar gravity a 10 mm flame stays forced-flow dominated (Ri < 0.1, where microgravity evidence transfers) only above about 80 cm/s of vent flow at the median coefficients, and above 139 cm/s to cover 95% of the Monte Carlo samples (u_b p50 25.4 cm/s, p95 43.8 cm/s). Typical cabin vents (5-20 cm/s) are far below this, so lunar fires are mixed or buoyancy-dominated. [eng:design:1]\n\nConsequence for the predictions: **M1 – P(droplet flame self-extinguishes before burnout)**: estimate 20.1%, 90% band 1.25% to 68.4% [eng:M1]. The microgravity-only band is 3.9% to 48.2%. Transfer confidence: **low**.",
+      "citations": [
+        "eng:physics",
+        "eng:design:1",
+        "eng:M1"
+      ],
+      "numbers_used": [
+        1.62,
+        0.165,
+        8.2,
+        34.0,
+        10.0,
+        10.0,
+        25.5,
+        10.0,
+        6.48,
+        0.1,
+        10.0,
+        0.0,
+        71.7,
+        28.3,
+        0.0,
+        1.0,
+        10.0,
+        0.1,
+        80.0,
+        139.0,
+        95.0,
+        25.4,
+        43.8,
+        5.0,
+        20.0,
+        20.1,
+        90.0,
+        1.25,
+        68.4,
+        3.9,
+        48.2
+      ],
+      "validated": true,
+      "validation": {
+        "ok": true,
+        "errors": [],
+        "numbers": [
+          {
+            "text": "1.62",
+            "value": 1.62,
+            "source": "habitat.g_m_s2"
+          },
+          {
+            "text": "0.165",
+            "value": 0.165,
+            "source": "habitat.g_over_g0"
+          },
+          {
+            "text": "8.2",
+            "value": 8.2,
+            "source": "habitat.p_psia"
+          },
+          {
+            "text": "34%",
+            "value": 34.0,
+            "source": "habitat.o2_percent"
+          },
+          {
+            "text": "10",
+            "value": 10.0,
+            "source": "habitat.u_cm_s"
+          },
+          {
+            "text": "10",
+            "value": 10.0,
+            "source": "habitat.u_cm_s"
+          },
+          {
+            "text": "25.5",
+            "value": 25.5,
+            "source": "physics.u_b_cm_s"
+          },
+          {
+            "text": "10",
+            "value": 10.0,
+            "source": "habitat.u_cm_s"
+          },
+          {
+            "text": "6.48",
+            "value": 6.48,
+            "source": "physics.ri"
+          },
+          {
+            "text": "0.1",
+            "value": 0.1,
+            "source": "design_implications[0]~text"
+          },
+          {
+            "text": "10",
+            "value": 10.0,
+            "source": "habitat.u_cm_s"
+          },
+          {
+            "text": "0%",
+            "value": 0.0,
+            "source": "physics.mc.regime_fractions.forced"
+          },
+          {
+            "text": "71.7%",
+            "value": 71.7,
+            "source": "predictions.M1.transfer.basis~text"
+          },
+          {
+            "text": "28.3%",
+            "value": 28.3,
+            "source": "physics.mc.regime_fractions.buoyant"
+          },
+          {
+            "text": "0",
+            "value": 0.0,
+            "source": "physics.mc.regime_fractions.forced"
+          },
+          {
+            "text": "1",
+            "value": 1.0,
+            "source": "metrics.M4.label~text"
+          },
+          {
+            "text": "10",
+            "value": 10.0,
+            "source": "habitat.u_cm_s"
+          },
+          {
+            "text": "0.1",
+            "value": 0.1,
+            "source": "design_implications[0]~text"
+          },
+          {
+            "text": "80",
+            "value": 80.0,
+            "source": "design_implications[0]~text"
+          },
+          {
+            "text": "139",
+            "value": 139.0,
+            "source": "design_implications[0]~text"
+          },
+          {
+            "text": "95%",
+            "value": 95.0,
+            "source": "design_implications[0]~text"
+          },
+          {
+            "text": "25.4",
+            "value": 25.4,
+            "source": "physics.u_b_cm_s"
+          },
+          {
+            "text": "43.8",
+            "value": 43.8,
+            "source": "physics.mc.u_b.p95"
+          },
+          {
+            "text": "5",
+            "value": 5.0,
+            "source": "planner[4].rank"
+          },
+          {
+            "text": "20",
+            "value": 20.0,
+            "source": "predictions.M4.reason~text"
+          },
+          {
+            "text": "20.1%",
+            "value": 20.1,
+            "source": "predictions.M4.reason~text"
+          },
+          {
+            "text": "90%",
+            "value": 90.0,
+            "source": "predictions.M1.transfer.basis~text"
+          },
+          {
+            "text": "1.25%",
+            "value": 1.25,
+            "source": "predictions.M1.band90[0]"
+          },
+          {
+            "text": "68.4%",
+            "value": 68.4,
+            "source": "predictions.M1.band90[1]"
+          },
+          {
+            "text": "3.9%",
+            "value": 3.9,
+            "source": "predictions.M1.ref_0g.band90[0]"
+          },
+          {
+            "text": "48.2%",
+            "value": 48.2,
+            "source": "predictions.M1.ref_0g.band90[1]"
+          }
+        ],
+        "citations": [
+          {
+            "id": "eng:physics",
+            "resolved": true
+          },
+          {
+            "id": "eng:design:1",
+            "resolved": true
+          },
+          {
+            "id": "eng:M1",
+            "resolved": true
+          }
+        ]
+      }
+    },
+    {
+      "question": "Why is the M1 band wide for the lunar base?",
+      "question_key": "why is the m1 band wide for the lunar base",
+      "habitat": "lunar_base",
+      "fingerprint": "9d31b83fb3d1ad56a583eb30df2b398741f96573eb4cac76b25be1ac62ac4089",
+      "intent": "band",
+      "mode_generated": "template",
+      "answer_markdown": "Lunar base: 1.62 m/s² (0.165 g), 8.2 psia, 34% O₂, vent 10 cm/s, flame size 10 mm.\n\n**M1 – P(droplet flame self-extinguishes before burnout)**: estimate 20.1%, 90% band 1.25% to 68.4% [eng:M1]. The microgravity-only band is 3.9% to 48.2%. Transfer confidence: **low**.\n\n**Why the band is wide:** The training tests had no buoyancy, so the band is widened ×1.64 for the 71.7% mixed and 28.3% buoyant share of flames. The largest atmosphere sensitivity is O₂ fraction: moving it from 0.31 to 0.37 moves the estimate from 35.3% to 10.4%. Among the physics constants, buoyancy coefficient C_b matters most: over 0.5 to 1.5 the band width goes from 62.6% to 75.2%. [eng:M1]\n\n**Regime: mixed.** For Lunar base the buoyant velocity is 25.5 cm/s against a vent flow of 10 cm/s, so the Richardson number Ri = u_b²/u_f² is 6.48 (forced Ri < 0.1, buoyant Ri > 10) [eng:physics]. Sampling the uncertain constants gives 0% forced, 71.7% mixed and 28.3% buoyant flames [eng:physics].\n\n**What would narrow it:** Planner rank 4: M1 at 1.62 m/s², 10.2 psia, 26.5% O₂, vent 20 cm/s (score 0.311) [eng:planner:4]. P(droplet flame self-extinguishes before burnout) at Moon gravity (0.165 g), 10.2 psia / 26.5% O2, vent 20 cm/s: the current 90% band is 0.68 wide, 100% of physics samples are in the mixed regime where neither 0 g nor 1 g data apply, and the atmosphere is close to the exploration vehicle 10.2 psia / 26.5% O2 target (weight 0.70). It extends [PSI-69] [PSI-10] [PSI-68] [PSI-159].\n\nNearest evidence [PSI-69]: Methanol, 34% O₂, 0.71 atm, completion [rec:PSI-69:FLEX:20]; Methanol, 30% O₂, 0.707 atm, completion [rec:PSI-69:FLEX:25]; Methanol, 30% O₂, 1.01 atm, completion [rec:PSI-69:FLEX:29].",
+      "citations": [
+        "eng:M1",
+        "eng:physics",
+        "eng:planner:4",
+        "PSI-69",
+        "PSI-10",
+        "PSI-68",
+        "PSI-159",
+        "rec:PSI-69:FLEX:20",
+        "rec:PSI-69:FLEX:25",
+        "rec:PSI-69:FLEX:29"
+      ],
+      "numbers_used": [
+        1.62,
+        0.165,
+        8.2,
+        34.0,
+        10.0,
+        10.0,
+        20.1,
+        90.0,
+        1.25,
+        68.4,
+        3.9,
+        48.2,
+        1.64,
+        71.7,
+        28.3,
+        0.31,
+        0.37,
+        35.3,
+        10.4,
+        0.5,
+        1.5,
+        62.6,
+        75.2,
+        25.5,
+        10.0,
+        6.48,
+        0.1,
+        10.0,
+        0.0,
+        71.7,
+        28.3,
+        4.0,
+        1.62,
+        10.2,
+        26.5,
+        20.0,
+        0.311,
+        0.165,
+        10.2,
+        26.5,
+        20.0,
+        90.0,
+        0.68,
+        100.0,
+        0.0,
+        1.0,
+        10.2,
+        26.5,
+        0.7,
+        34.0,
+        0.71,
+        30.0,
+        0.707,
+        30.0,
+        1.01
+      ],
+      "validated": true,
+      "validation": {
+        "ok": true,
+        "errors": [],
+        "numbers": [
+          {
+            "text": "1.62",
+            "value": 1.62,
+            "source": "habitat.g_m_s2"
+          },
+          {
+            "text": "0.165",
+            "value": 0.165,
+            "source": "habitat.g_over_g0"
+          },
+          {
+            "text": "8.2",
+            "value": 8.2,
+            "source": "habitat.p_psia"
+          },
+          {
+            "text": "34%",
+            "value": 34.0,
+            "source": "habitat.o2_percent"
+          },
+          {
+            "text": "10",
+            "value": 10.0,
+            "source": "habitat.u_cm_s"
+          },
+          {
+            "text": "10",
+            "value": 10.0,
+            "source": "habitat.u_cm_s"
+          },
+          {
+            "text": "20.1%",
+            "value": 20.1,
+            "source": "predictions.M4.reason~text"
+          },
+          {
+            "text": "90%",
+            "value": 90.0,
+            "source": "predictions.M1.transfer.basis~text"
+          },
+          {
+            "text": "1.25%",
+            "value": 1.25,
+            "source": "predictions.M1.band90[0]"
+          },
+          {
+            "text": "68.4%",
+            "value": 68.4,
+            "source": "predictions.M1.band90[1]"
+          },
+          {
+            "text": "3.9%",
+            "value": 3.9,
+            "source": "predictions.M1.ref_0g.band90[0]"
+          },
+          {
+            "text": "48.2%",
+            "value": 48.2,
+            "source": "predictions.M1.ref_0g.band90[1]"
+          },
+          {
+            "text": "1.64",
+            "value": 1.64,
+            "source": "predictions.M1.transfer.basis~text"
+          },
+          {
+            "text": "71.7%",
+            "value": 71.7,
+            "source": "predictions.M1.transfer.basis~text"
+          },
+          {
+            "text": "28.3%",
+            "value": 28.3,
+            "source": "physics.mc.regime_fractions.buoyant"
+          },
+          {
+            "text": "0.31",
+            "value": 0.31,
+            "source": "predictions.M1.sensitivity[0].input_low"
+          },
+          {
+            "text": "0.37",
+            "value": 0.37,
+            "source": "predictions.M1.sensitivity[0].input_high"
+          },
+          {
+            "text": "35.3%",
+            "value": 35.3,
+            "source": "predictions.M1.sensitivity[0].low"
+          },
+          {
+            "text": "10.4%",
+            "value": 10.4,
+            "source": "predictions.M1.sensitivity[0].high"
+          },
+          {
+            "text": "0.5",
+            "value": 0.5,
+            "source": "predictions.M1.sensitivity[2].input_low"
+          },
+          {
+            "text": "1.5",
+            "value": 1.5,
+            "source": "predictions.M1.sensitivity[2].input_high"
+          },
+          {
+            "text": "62.6%",
+            "value": 62.6,
+            "source": "predictions.M1.sensitivity[2].low"
+          },
+          {
+            "text": "75.2%",
+            "value": 75.2,
+            "source": "evidence[22].fuel~text"
+          },
+          {
+            "text": "25.5",
+            "value": 25.5,
+            "source": "physics.u_b_cm_s"
+          },
+          {
+            "text": "10",
+            "value": 10.0,
+            "source": "habitat.u_cm_s"
+          },
+          {
+            "text": "6.48",
+            "value": 6.48,
+            "source": "physics.ri"
+          },
+          {
+            "text": "0.1",
+            "value": 0.1,
+            "source": "design_implications[0]~text"
+          },
+          {
+            "text": "10",
+            "value": 10.0,
+            "source": "habitat.u_cm_s"
+          },
+          {
+            "text": "0%",
+            "value": 0.0,
+            "source": "physics.mc.regime_fractions.forced"
+          },
+          {
+            "text": "71.7%",
+            "value": 71.7,
+            "source": "predictions.M1.transfer.basis~text"
+          },
+          {
+            "text": "28.3%",
+            "value": 28.3,
+            "source": "physics.mc.regime_fractions.buoyant"
+          },
+          {
+            "text": "4",
+            "value": 4.0,
+            "source": "planner[3].rank"
+          },
+          {
+            "text": "1.62",
+            "value": 1.62,
+            "source": "habitat.g_m_s2"
+          },
+          {
+            "text": "10.2",
+            "value": 10.2,
+            "source": "planner[1].p_psia"
+          },
+          {
+            "text": "26.5%",
+            "value": 26.5,
+            "source": "planner[1].rationale~text"
+          },
+          {
+            "text": "20",
+            "value": 20.0,
+            "source": "predictions.M4.reason~text"
+          },
+          {
+            "text": "0.311",
+            "value": 0.311,
+            "source": "predictions.M1.sensitivity[0].input_low"
+          },
+          {
+            "text": "0.165",
+            "value": 0.165,
+            "source": "habitat.g_over_g0"
+          },
+          {
+            "text": "10.2",
+            "value": 10.2,
+            "source": "planner[1].p_psia"
+          },
+          {
+            "text": "26.5%",
+            "value": 26.5,
+            "source": "planner[1].rationale~text"
+          },
+          {
+            "text": "20",
+            "value": 20.0,
+            "source": "predictions.M4.reason~text"
+          },
+          {
+            "text": "90%",
+            "value": 90.0,
+            "source": "predictions.M1.transfer.basis~text"
+          },
+          {
+            "text": "0.68",
+            "value": 0.68,
+            "source": "planner[3].parts.band_width"
+          },
+          {
+            "text": "100%",
+            "value": 100.0,
+            "source": "planner[0].rationale~text"
+          },
+          {
+            "text": "0",
+            "value": 0.0,
+            "source": "physics.mc.regime_fractions.forced"
+          },
+          {
+            "text": "1",
+            "value": 1.0,
+            "source": "metrics.M4.label~text"
+          },
+          {
+            "text": "10.2",
+            "value": 10.2,
+            "source": "planner[1].p_psia"
+          },
+          {
+            "text": "26.5%",
+            "value": 26.5,
+            "source": "planner[1].rationale~text"
+          },
+          {
+            "text": "0.70",
+            "value": 0.7,
+            "source": "planner[1].parts.habitat_weight"
+          },
+          {
+            "text": "34%",
+            "value": 34.0,
+            "source": "habitat.o2_percent"
+          },
+          {
+            "text": "0.71",
+            "value": 0.71,
+            "source": "predictions.M1.sensitivity[5].high"
+          },
+          {
+            "text": "30%",
+            "value": 30.0,
+            "source": "evidence[8].fuel~text"
+          },
+          {
+            "text": "0.707",
+            "value": 0.707,
+            "source": "predictions.M1.sensitivity[5].high"
+          },
+          {
+            "text": "30%",
+            "value": 30.0,
+            "source": "evidence[8].fuel~text"
+          },
+          {
+            "text": "1.01",
+            "value": 1.01,
+            "source": "predictions.M2.reason~text"
+          }
+        ],
+        "citations": [
+          {
+            "id": "eng:M1",
+            "resolved": true
+          },
+          {
+            "id": "eng:physics",
+            "resolved": true
+          },
+          {
+            "id": "eng:planner:4",
+            "resolved": true
+          },
+          {
+            "id": "PSI-69",
+            "resolved": true
+          },
+          {
+            "id": "PSI-10",
+            "resolved": true
+          },
+          {
+            "id": "PSI-68",
+            "resolved": true
+          },
+          {
+            "id": "PSI-159",
+            "resolved": true
+          },
+          {
+            "id": "rec:PSI-69:FLEX:20",
+            "resolved": true
+          },
+          {
+            "id": "rec:PSI-69:FLEX:25",
+            "resolved": true
+          },
+          {
+            "id": "rec:PSI-69:FLEX:29",
+            "resolved": true
+          }
+        ]
+      }
+    },
+    {
+      "question": "Which experiments matter most for a Mars base?",
+      "question_key": "which experiments matter most for a mars base",
+      "habitat": "mars_base",
+      "fingerprint": "84db6e2c8dc69d6b045d43a4875c387c2dea2911b2af45132a98ad451caced2b",
+      "intent": "experiments",
+      "mode_generated": "template",
+      "answer_markdown": "Mars base: 3.71 m/s² (0.378 g), 8.2 psia, 34% O₂, vent 10 cm/s, flame size 10 mm.\n\n**Most relevant PSI investigations** (relevance score: atmosphere match, fire-safety pillars, fuel realism, outcome data, test count):\n1. FLEX [PSI-69] score 0.692 (atmosphere 0.698, fuel realism 0.6)\n2. ACME CFI-G [PSI-159] score 0.606 (atmosphere 1, fuel realism 0.4)\n3. ACME/Flame Design [PSI-10] score 0.605 (atmosphere 1, fuel realism 0.4)\n4. SAFFIRE-II [PSI-99] score 0.552 (atmosphere 0.215, fuel realism 1)\n5. BASS-II [PSI-25] score 0.445 (atmosphere 0.217, fuel realism 1)\n\n**Data behind the predictions here:** M1 uses [PSI-69] (206 training tests, estimate) [eng:M1]; M2 uses [PSI-69] (158 training tests, no estimate (outside tested atmosphere)) [eng:M2]; M3 uses [PSI-159] (133 training tests, estimate) [eng:M3]; M4 uses [PSI-99] (9 training tests, no estimate (outside tested atmosphere)) [eng:M4]; M5 uses [PSI-107] (407 training tests, no estimate (outside tested atmosphere)) [eng:M5].\n\n**Where new experiments matter most:** Planner rank 2: M2 at 3.71 m/s², 10.2 psia, 26.5% O₂, vent 20 cm/s (score 0.533) [eng:planner:2]. Extinction diameter at Mars gravity (0.378 g), 10.2 psia / 26.5% O2, vent 20 cm/s: the current 90% band is 0.96 wide (relative), 93% of physics samples are in the mixed regime where neither 0 g nor 1 g data apply, and the atmosphere is close to the exploration vehicle 10.2 psia / 26.5% O2 target (weight 0.70). It extends [PSI-69] [PSI-10] [PSI-68] [PSI-159].\n\n**Regime: buoyant.** For Mars base the buoyant velocity is 38.5 cm/s against a vent flow of 10 cm/s, so the Richardson number Ri = u_b²/u_f² is 14.8 (forced Ri < 0.1, buoyant Ri > 10) [eng:physics]. Sampling the uncertain constants gives 0% forced, 32.3% mixed and 67.7% buoyant flames [eng:physics].",
+      "citations": [
+        "PSI-69",
+        "PSI-159",
+        "PSI-10",
+        "PSI-99",
+        "PSI-25",
+        "eng:M1",
+        "eng:M2",
+        "eng:M3",
+        "eng:M4",
+        "PSI-107",
+        "eng:M5",
+        "eng:planner:2",
+        "PSI-68",
+        "eng:physics"
+      ],
+      "numbers_used": [
+        3.71,
+        0.378,
+        8.2,
+        34.0,
+        10.0,
+        10.0,
+        0.692,
+        0.698,
+        0.6,
+        0.606,
+        1.0,
+        0.4,
+        0.605,
+        1.0,
+        0.4,
+        0.552,
+        0.215,
+        1.0,
+        0.445,
+        0.217,
+        1.0,
+        206.0,
+        158.0,
+        133.0,
+        9.0,
+        407.0,
+        2.0,
+        3.71,
+        10.2,
+        26.5,
+        20.0,
+        0.533,
+        0.378,
+        10.2,
+        26.5,
+        20.0,
+        90.0,
+        0.96,
+        93.0,
+        0.0,
+        1.0,
+        10.2,
+        26.5,
+        0.7,
+        38.5,
+        10.0,
+        14.8,
+        0.1,
+        10.0,
+        0.0,
+        32.3,
+        67.7
+      ],
+      "validated": true,
+      "validation": {
+        "ok": true,
+        "errors": [],
+        "numbers": [
+          {
+            "text": "3.71",
+            "value": 3.71,
+            "source": "habitat.g_m_s2"
+          },
+          {
+            "text": "0.378",
+            "value": 0.378,
+            "source": "habitat.g_over_g0"
+          },
+          {
+            "text": "8.2",
+            "value": 8.2,
+            "source": "habitat.p_psia"
+          },
+          {
+            "text": "34%",
+            "value": 34.0,
+            "source": "habitat.o2_percent"
+          },
+          {
+            "text": "10",
+            "value": 10.0,
+            "source": "habitat.u_cm_s"
+          },
+          {
+            "text": "10",
+            "value": 10.0,
+            "source": "habitat.u_cm_s"
+          },
+          {
+            "text": "0.692",
+            "value": 0.692,
+            "source": "rank[0].score"
+          },
+          {
+            "text": "0.698",
+            "value": 0.698,
+            "source": "planner[1].parts.habitat_weight"
+          },
+          {
+            "text": "0.6",
+            "value": 0.6,
+            "source": "rank[0].parts.fuel_realism"
+          },
+          {
+            "text": "0.606",
+            "value": 0.606,
+            "source": "rank[1].score"
+          },
+          {
+            "text": "1",
+            "value": 1.0,
+            "source": "metrics.M4.label~text"
+          },
+          {
+            "text": "0.4",
+            "value": 0.4,
+            "source": "rank[1].parts.fuel_realism"
+          },
+          {
+            "text": "0.605",
+            "value": 0.605,
+            "source": "rank[1].score"
+          },
+          {
+            "text": "1",
+            "value": 1.0,
+            "source": "metrics.M4.label~text"
+          },
+          {
+            "text": "0.4",
+            "value": 0.4,
+            "source": "rank[1].parts.fuel_realism"
+          },
+          {
+            "text": "0.552",
+            "value": 0.552,
+            "source": "rank[3].score"
+          },
+          {
+            "text": "0.215",
+            "value": 0.215,
+            "source": "rank[3].parts.atmosphere"
+          },
+          {
+            "text": "1",
+            "value": 1.0,
+            "source": "metrics.M4.label~text"
+          },
+          {
+            "text": "0.445",
+            "value": 0.445,
+            "source": "predictions.M1.sensitivity[1].input_low"
+          },
+          {
+            "text": "0.217",
+            "value": 0.217,
+            "source": "rank[4].parts.atmosphere"
+          },
+          {
+            "text": "1",
+            "value": 1.0,
+            "source": "metrics.M4.label~text"
+          },
+          {
+            "text": "206",
+            "value": 206.0,
+            "source": "predictions.M1.n_train"
+          },
+          {
+            "text": "158",
+            "value": 158.0,
+            "source": "predictions.M2.n_train"
+          },
+          {
+            "text": "133",
+            "value": 133.0,
+            "source": "predictions.M3.n_train"
+          },
+          {
+            "text": "9",
+            "value": 9.0,
+            "source": "predictions.M4.n_train"
+          },
+          {
+            "text": "407",
+            "value": 407.0,
+            "source": "predictions.M5.transfer.basis~text"
+          },
+          {
+            "text": "2",
+            "value": 2.0,
+            "source": "predictions.M1.transfer.basis~text"
+          },
+          {
+            "text": "3.71",
+            "value": 3.71,
+            "source": "habitat.g_m_s2"
+          },
+          {
+            "text": "10.2",
+            "value": 10.2,
+            "source": "planner[1].p_psia"
+          },
+          {
+            "text": "26.5%",
+            "value": 26.5,
+            "source": "planner[1].rationale~text"
+          },
+          {
+            "text": "20",
+            "value": 20.0,
+            "source": "predictions.M4.reason~text"
+          },
+          {
+            "text": "0.533",
+            "value": 0.533,
+            "source": "planner[1].score"
+          },
+          {
+            "text": "0.378",
+            "value": 0.378,
+            "source": "habitat.g_over_g0"
+          },
+          {
+            "text": "10.2",
+            "value": 10.2,
+            "source": "planner[1].p_psia"
+          },
+          {
+            "text": "26.5%",
+            "value": 26.5,
+            "source": "planner[1].rationale~text"
+          },
+          {
+            "text": "20",
+            "value": 20.0,
+            "source": "predictions.M4.reason~text"
+          },
+          {
+            "text": "90%",
+            "value": 90.0,
+            "source": "predictions.M1.transfer.basis~text"
+          },
+          {
+            "text": "0.96",
+            "value": 0.96,
+            "source": "predictions.M3.ref_0g.band90[1]"
+          },
+          {
+            "text": "93%",
+            "value": 93.0,
+            "source": "planner[1].rationale~text"
+          },
+          {
+            "text": "0",
+            "value": 0.0,
+            "source": "physics.mc.regime_fractions.forced"
+          },
+          {
+            "text": "1",
+            "value": 1.0,
+            "source": "metrics.M4.label~text"
+          },
+          {
+            "text": "10.2",
+            "value": 10.2,
+            "source": "planner[1].p_psia"
+          },
+          {
+            "text": "26.5%",
+            "value": 26.5,
+            "source": "planner[1].rationale~text"
+          },
+          {
+            "text": "0.70",
+            "value": 0.7,
+            "source": "planner[1].parts.habitat_weight"
+          },
+          {
+            "text": "38.5",
+            "value": 38.5,
+            "source": "physics.u_b_cm_s"
+          },
+          {
+            "text": "10",
+            "value": 10.0,
+            "source": "habitat.u_cm_s"
+          },
+          {
+            "text": "14.8",
+            "value": 14.8,
+            "source": "physics.ri"
+          },
+          {
+            "text": "0.1",
+            "value": 0.1,
+            "source": "design_implications[0]~text"
+          },
+          {
+            "text": "10",
+            "value": 10.0,
+            "source": "habitat.u_cm_s"
+          },
+          {
+            "text": "0%",
+            "value": 0.0,
+            "source": "physics.mc.regime_fractions.forced"
+          },
+          {
+            "text": "32.3%",
+            "value": 32.3,
+            "source": "physics.mc.regime_fractions.mixed"
+          },
+          {
+            "text": "67.7%",
+            "value": 67.7,
+            "source": "predictions.M1.transfer.basis~text"
+          }
+        ],
+        "citations": [
+          {
+            "id": "PSI-69",
+            "resolved": true
+          },
+          {
+            "id": "PSI-159",
+            "resolved": true
+          },
+          {
+            "id": "PSI-10",
+            "resolved": true
+          },
+          {
+            "id": "PSI-99",
+            "resolved": true
+          },
+          {
+            "id": "PSI-25",
+            "resolved": true
+          },
+          {
+            "id": "eng:M1",
+            "resolved": true
+          },
+          {
+            "id": "eng:M2",
+            "resolved": true
+          },
+          {
+            "id": "eng:M3",
+            "resolved": true
+          },
+          {
+            "id": "eng:M4",
+            "resolved": true
+          },
+          {
+            "id": "PSI-107",
+            "resolved": true
+          },
+          {
+            "id": "eng:M5",
+            "resolved": true
+          },
+          {
+            "id": "eng:planner:2",
+            "resolved": true
+          },
+          {
+            "id": "PSI-68",
+            "resolved": true
+          },
+          {
+            "id": "eng:physics",
+            "resolved": true
+          }
+        ]
+      }
+    },
+    {
+      "question": "What should LUCI test first?",
+      "question_key": "what should luci test first",
+      "habitat": "lunar_base",
+      "fingerprint": "72e518cdcf6fae8cb42054d498e683fe23ad4cbae41508826f8e2cac7b77f111",
+      "intent": "planner",
+      "mode_generated": "template",
+      "answer_markdown": "**First test:** Planner rank 1: M2 at 1.62 m/s², 8.2 psia, 34% O₂, vent 20 cm/s (score 1) [eng:planner:1]. Extinction diameter at Moon gravity (0.165 g), 8.2 psia / 34% O2, vent 20 cm/s: there is no microgravity evidence at this atmosphere (honesty gate), 100% of physics samples are in the mixed regime where neither 0 g nor 1 g data apply, and the atmosphere is close to the lunar/Mars base 8.2 psia / 34% O2 target (weight 1.00). It extends [PSI-69] [PSI-10] [PSI-159].\n\n**Then:** rank 2: M2 at 3.71 m/s², 10.2 psia, 26.5% O₂, vent 20 cm/s [eng:planner:2]; rank 3: M1 at 3.71 m/s², 8.2 psia, 34% O₂, vent 20 cm/s [eng:planner:3].\n\nRanking = current band width × habitat weight × mixed-regime fraction, so tests sit where the predictions are least certain and the habitat atmosphere matters most.\n\nToday, for Lunar base: **M1 – P(droplet flame self-extinguishes before burnout)**: estimate 20.1%, 90% band 1.25% to 68.4% [eng:M1]. The microgravity-only band is 3.9% to 48.2%. Transfer confidence: **low**.",
+      "citations": [
+        "eng:planner:1",
+        "PSI-69",
+        "PSI-10",
+        "PSI-159",
+        "eng:planner:2",
+        "eng:planner:3",
+        "eng:M1"
+      ],
+      "numbers_used": [
+        1.0,
+        1.62,
+        8.2,
+        34.0,
+        20.0,
+        1.0,
+        0.165,
+        8.2,
+        34.0,
+        20.0,
+        100.0,
+        0.0,
+        1.0,
+        8.2,
+        34.0,
+        1.0,
+        2.0,
+        3.71,
+        10.2,
+        26.5,
+        20.0,
+        3.0,
+        3.71,
+        8.2,
+        34.0,
+        20.0,
+        20.1,
+        90.0,
+        1.25,
+        68.4,
+        3.9,
+        48.2
+      ],
+      "validated": true,
+      "validation": {
+        "ok": true,
+        "errors": [],
+        "numbers": [
+          {
+            "text": "1",
+            "value": 1.0,
+            "source": "metrics.M4.label~text"
+          },
+          {
+            "text": "1.62",
+            "value": 1.62,
+            "source": "habitat.g_m_s2"
+          },
+          {
+            "text": "8.2",
+            "value": 8.2,
+            "source": "habitat.p_psia"
+          },
+          {
+            "text": "34%",
+            "value": 34.0,
+            "source": "habitat.o2_percent"
+          },
+          {
+            "text": "20",
+            "value": 20.0,
+            "source": "predictions.M4.reason~text"
+          },
+          {
+            "text": "1",
+            "value": 1.0,
+            "source": "metrics.M4.label~text"
+          },
+          {
+            "text": "0.165",
+            "value": 0.165,
+            "source": "habitat.g_over_g0"
+          },
+          {
+            "text": "8.2",
+            "value": 8.2,
+            "source": "habitat.p_psia"
+          },
+          {
+            "text": "34%",
+            "value": 34.0,
+            "source": "habitat.o2_percent"
+          },
+          {
+            "text": "20",
+            "value": 20.0,
+            "source": "predictions.M4.reason~text"
+          },
+          {
+            "text": "100%",
+            "value": 100.0,
+            "source": "planner[0].rationale~text"
+          },
+          {
+            "text": "0",
+            "value": 0.0,
+            "source": "physics.mc.regime_fractions.forced"
+          },
+          {
+            "text": "1",
+            "value": 1.0,
+            "source": "metrics.M4.label~text"
+          },
+          {
+            "text": "8.2",
+            "value": 8.2,
+            "source": "habitat.p_psia"
+          },
+          {
+            "text": "34%",
+            "value": 34.0,
+            "source": "habitat.o2_percent"
+          },
+          {
+            "text": "1.00",
+            "value": 1.0,
+            "source": "metrics.M4.label~text"
+          },
+          {
+            "text": "2",
+            "value": 2.0,
+            "source": "predictions.M1.transfer.basis~text"
+          },
+          {
+            "text": "3.71",
+            "value": 3.71,
+            "source": "planner[1].g_m_s2"
+          },
+          {
+            "text": "10.2",
+            "value": 10.2,
+            "source": "planner[1].p_psia"
+          },
+          {
+            "text": "26.5%",
+            "value": 26.5,
+            "source": "planner[1].rationale~text"
+          },
+          {
+            "text": "20",
+            "value": 20.0,
+            "source": "predictions.M4.reason~text"
+          },
+          {
+            "text": "3",
+            "value": 3.0,
+            "source": "predictions.M1.sensitivity[4].input_low"
+          },
+          {
+            "text": "3.71",
+            "value": 3.71,
+            "source": "planner[1].g_m_s2"
+          },
+          {
+            "text": "8.2",
+            "value": 8.2,
+            "source": "habitat.p_psia"
+          },
+          {
+            "text": "34%",
+            "value": 34.0,
+            "source": "habitat.o2_percent"
+          },
+          {
+            "text": "20",
+            "value": 20.0,
+            "source": "predictions.M4.reason~text"
+          },
+          {
+            "text": "20.1%",
+            "value": 20.1,
+            "source": "predictions.M4.reason~text"
+          },
+          {
+            "text": "90%",
+            "value": 90.0,
+            "source": "predictions.M1.transfer.basis~text"
+          },
+          {
+            "text": "1.25%",
+            "value": 1.25,
+            "source": "predictions.M1.band90[0]"
+          },
+          {
+            "text": "68.4%",
+            "value": 68.4,
+            "source": "predictions.M1.band90[1]"
+          },
+          {
+            "text": "3.9%",
+            "value": 3.9,
+            "source": "predictions.M1.ref_0g.band90[0]"
+          },
+          {
+            "text": "48.2%",
+            "value": 48.2,
+            "source": "predictions.M1.ref_0g.band90[1]"
+          }
+        ],
+        "citations": [
+          {
+            "id": "eng:planner:1",
+            "resolved": true
+          },
+          {
+            "id": "PSI-69",
+            "resolved": true
+          },
+          {
+            "id": "PSI-10",
+            "resolved": true
+          },
+          {
+            "id": "PSI-159",
+            "resolved": true
+          },
+          {
+            "id": "eng:planner:2",
+            "resolved": true
+          },
+          {
+            "id": "eng:planner:3",
+            "resolved": true
+          },
+          {
+            "id": "eng:M1",
+            "resolved": true
+          }
+        ]
+      }
+    },
+    {
+      "question": "Is the lunar rover safer with the fans off?",
+      "question_key": "is the lunar rover safer with the fans off",
+      "habitat": "lunar_rover",
+      "fingerprint": "49e841c92d2b0981db543a6fd0dd4ab133ddccfccc213fcc683c62623f901b7e",
+      "intent": "fans_off",
+      "mode_generated": "template",
+      "answer_markdown": "Lunar rover: 1.62 m/s² (0.165 g), 8.2 psia, 34% O₂, vent 5 cm/s, flame size 10 mm.\n\n**With the fans on:** **Regime: buoyant.** For Lunar rover the buoyant velocity is 25.5 cm/s against a vent flow of 5 cm/s, so the Richardson number Ri = u_b²/u_f² is 25.9 (forced Ri < 0.1, buoyant Ri > 10) [eng:physics]. Sampling the uncertain constants gives 0% forced, 11.9% mixed and 88.1% buoyant flames [eng:physics].\n\n**With the fans off:** **Regime: buoyant.** For Lunar rover with fans off the buoyant velocity is 25.5 cm/s against a vent flow of 0 cm/s, so the Richardson number Ri = u_b²/u_f² is unbounded (no forced flow) (forced Ri < 0.1, buoyant Ri > 10) [eng:fans_off:physics]. Sampling the uncertain constants gives 0% forced, 0% mixed and 100% buoyant flames [eng:fans_off:physics].\n\nFans on: **M1 – P(droplet flame self-extinguishes before burnout)**: estimate 20.1%, 90% band 0.727% to 76.2% [eng:M1]. The microgravity-only band is 3.9% to 48.2%. Transfer confidence: **low**.\n\nFans off: **M1 – P(droplet flame self-extinguishes before burnout)**: estimate 20.1%, 90% band 0.653% to 77.6% [eng:fans_off:M1]. The microgravity-only band is 3.9% to 48.2%. Transfer confidence: **low**.\n\n**Not safer by this evidence.** Without ventilation the flame is not microgravity-like: buoyancy takes over and the 90% band gets wider. For M1–M3 the engine never shifts the estimate with gravity or flow (gravity honesty rule), it only widens the band, so 'safer' cannot be claimed from these data.\n\nDesign implication: At lunar gravity a 10 mm flame becomes buoyancy-dominated (Ri > 10) when the vent flow is below about 8.0 cm/s (median coefficients): turning ventilation off does not create a microgravity-like quiescent flame. [eng:design:2]",
+      "citations": [
+        "eng:physics",
+        "eng:fans_off:physics",
+        "eng:M1",
+        "eng:fans_off:M1",
+        "eng:design:2"
+      ],
+      "numbers_used": [
+        1.62,
+        0.165,
+        8.2,
+        34.0,
+        5.0,
+        10.0,
+        25.5,
+        5.0,
+        25.9,
+        0.1,
+        10.0,
+        0.0,
+        11.9,
+        88.1,
+        25.5,
+        0.0,
+        0.1,
+        10.0,
+        0.0,
+        0.0,
+        100.0,
+        20.1,
+        90.0,
+        0.727,
+        76.2,
+        3.9,
+        48.2,
+        20.1,
+        90.0,
+        0.653,
+        77.6,
+        3.9,
+        48.2,
+        90.0,
+        10.0,
+        10.0,
+        8.0
+      ],
+      "validated": true,
+      "validation": {
+        "ok": true,
+        "errors": [],
+        "numbers": [
+          {
+            "text": "1.62",
+            "value": 1.62,
+            "source": "habitat.g_m_s2"
+          },
+          {
+            "text": "0.165",
+            "value": 0.165,
+            "source": "habitat.g_over_g0"
+          },
+          {
+            "text": "8.2",
+            "value": 8.2,
+            "source": "habitat.p_psia"
+          },
+          {
+            "text": "34%",
+            "value": 34.0,
+            "source": "habitat.o2_percent"
+          },
+          {
+            "text": "5",
+            "value": 5.0,
+            "source": "habitat.u_cm_s"
+          },
+          {
+            "text": "10",
+            "value": 10.0,
+            "source": "habitat.L_mm"
+          },
+          {
+            "text": "25.5",
+            "value": 25.5,
+            "source": "physics.u_b_cm_s"
+          },
+          {
+            "text": "5",
+            "value": 5.0,
+            "source": "habitat.u_cm_s"
+          },
+          {
+            "text": "25.9",
+            "value": 25.9,
+            "source": "physics.ri"
+          },
+          {
+            "text": "0.1",
+            "value": 0.1,
+            "source": "design_implications[0]~text"
+          },
+          {
+            "text": "10",
+            "value": 10.0,
+            "source": "habitat.L_mm"
+          },
+          {
+            "text": "0%",
+            "value": 0.0,
+            "source": "physics.mc.regime_fractions.forced"
+          },
+          {
+            "text": "11.9%",
+            "value": 11.9,
+            "source": "physics.mc.regime_fractions.mixed"
+          },
+          {
+            "text": "88.1%",
+            "value": 88.1,
+            "source": "predictions.M1.transfer.basis~text"
+          },
+          {
+            "text": "25.5",
+            "value": 25.5,
+            "source": "physics.u_b_cm_s"
+          },
+          {
+            "text": "0",
+            "value": 0.0,
+            "source": "physics.mc.regime_fractions.forced"
+          },
+          {
+            "text": "0.1",
+            "value": 0.1,
+            "source": "design_implications[0]~text"
+          },
+          {
+            "text": "10",
+            "value": 10.0,
+            "source": "habitat.L_mm"
+          },
+          {
+            "text": "0%",
+            "value": 0.0,
+            "source": "physics.mc.regime_fractions.forced"
+          },
+          {
+            "text": "0%",
+            "value": 0.0,
+            "source": "physics.mc.regime_fractions.forced"
+          },
+          {
+            "text": "100%",
+            "value": 100.0,
+            "source": "scenarios.fans_off.predictions.M1.transfer.basis~text"
+          },
+          {
+            "text": "20.1%",
+            "value": 20.1,
+            "source": "predictions.M4.reason~text"
+          },
+          {
+            "text": "90%",
+            "value": 90.0,
+            "source": "predictions.M1.transfer.basis~text"
+          },
+          {
+            "text": "0.727%",
+            "value": 0.727,
+            "source": "predictions.M1.sensitivity[5].low"
+          },
+          {
+            "text": "76.2%",
+            "value": 76.2,
+            "source": "predictions.M1.band90[1]"
+          },
+          {
+            "text": "3.9%",
+            "value": 3.9,
+            "source": "predictions.M1.ref_0g.band90[0]"
+          },
+          {
+            "text": "48.2%",
+            "value": 48.2,
+            "source": "predictions.M1.ref_0g.band90[1]"
+          },
+          {
+            "text": "20.1%",
+            "value": 20.1,
+            "source": "predictions.M4.reason~text"
+          },
+          {
+            "text": "90%",
+            "value": 90.0,
+            "source": "predictions.M1.transfer.basis~text"
+          },
+          {
+            "text": "0.653%",
+            "value": 0.653,
+            "source": "predictions.M1.sensitivity[2].low"
+          },
+          {
+            "text": "77.6%",
+            "value": 77.6,
+            "source": "scenarios.fans_off.predictions.M1.band90[1]"
+          },
+          {
+            "text": "3.9%",
+            "value": 3.9,
+            "source": "predictions.M1.ref_0g.band90[0]"
+          },
+          {
+            "text": "48.2%",
+            "value": 48.2,
+            "source": "predictions.M1.ref_0g.band90[1]"
+          },
+          {
+            "text": "90%",
+            "value": 90.0,
+            "source": "predictions.M1.transfer.basis~text"
+          },
+          {
+            "text": "10",
+            "value": 10.0,
+            "source": "habitat.L_mm"
+          },
+          {
+            "text": "10",
+            "value": 10.0,
+            "source": "habitat.L_mm"
+          },
+          {
+            "text": "8.0",
+            "value": 8.0,
+            "source": "physics.mc.u_eff.p05"
+          }
+        ],
+        "citations": [
+          {
+            "id": "eng:physics",
+            "resolved": true
+          },
+          {
+            "id": "eng:fans_off:physics",
+            "resolved": true
+          },
+          {
+            "id": "eng:M1",
+            "resolved": true
+          },
+          {
+            "id": "eng:fans_off:M1",
+            "resolved": true
+          },
+          {
+            "id": "eng:design:2",
+            "resolved": true
+          }
+        ]
+      }
+    },
+    {
+      "question": "Can you predict rocket engine fires?",
+      "question_key": "can you predict rocket engine fires",
+      "habitat": "lunar_base",
+      "fingerprint": "232b12e1e6cfeb03ff97e8af372b264f6459f6aded96d15910967b123b79d4f8",
+      "intent": "refusal",
+      "mode_generated": "template",
+      "answer_markdown": "This is outside Gravity Gap's scope. Gravity Gap predicts **cabin fires** in spacecraft and habitats (burning materials, fuel droplets, small gas flames, ventilation and cabin atmosphere) from NASA PSI microgravity combustion experiments. Rocket engines, propellants and propulsion combustion are a different problem and are not covered by this data or model; please consult propulsion-specific resources for that. Within scope you can ask, for example, *Why is the lunar base in the mixed regime?* or *What should LUCI test first?*",
+      "citations": [],
+      "numbers_used": [],
+      "validated": true,
+      "validation": {
+        "ok": true,
+        "errors": [],
+        "numbers": [],
+        "citations": []
+      }
+    }
+  ]
+}

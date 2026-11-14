@@ -1,0 +1,152 @@
+{
+  "version": 1,
+  "generated_at": "2026-11-14T18:25:26+00:00",
+  "generated_by": "scripts/build_manifest.py",
+  "artifact_set_sha256": "6e3e94e93095b09886a89bebd02e82c1504c69041127f1a77eeeb0bd0ee08908",
+  "files": {
+    "ai_cache.json": {
+      "sha256": "129314283f9f0cd5d7b7963d73422882b353bb715632e71eff80c82c3d4ca2a0",
+      "bytes": 46732
+    },
+    "bounds/earth_M1.json": {
+      "sha256": "5dd770573ebab7043a4e119b89914c98b6831b43734406af82969987ae9163d9",
+      "bytes": 5801
+    },
+    "bounds/earth_M2.json": {
+      "sha256": "798f47c611efd1f3c3f689ab403456c50b841651d21943c743a02ed3376fa115",
+      "bytes": 5747
+    },
+    "bounds/earth_M3.json": {
+      "sha256": "d46ae6ee750e20e25c4f6bb961963888d251ef54f3510256265f60acd3257aa3",
+      "bytes": 6074
+    },
+    "bounds/earth_M4.json": {
+      "sha256": "ecbdd7ab1529d68fc7d70f0c7741a067bddb675a8467dfc2bb90bb75ba0e602b",
+      "bytes": 2907
+    },
+    "bounds/earth_M5.json": {
+      "sha256": "5d2afb559aa83684db8c76e9b6ba1e14ad6c60bcaef34569d77da31395211d43",
+      "bytes": 4196
+    },
+    "bounds/exploration_M1.json": {
+      "sha256": "3f012ac38d2778dfc5b74c9367a611455a0bd17c53b092993cc5c8a83d4dbabf",
+      "bytes": 5571
+    },
+    "bounds/exploration_M2.json": {
+      "sha256": "b0c1982f5e09d3c2086ad7952912d913b211c9bd6de8196af6251703fed81554",
+      "bytes": 5514
+    },
+    "bounds/exploration_M3.json": {
+      "sha256": "2d617089d7fe5ef70b157a999b12a6782689760d4d4b644f93f0d36f741f8dda",
+      "bytes": 5820
+    },
+    "bounds/exploration_M4.json": {
+      "sha256": "9215dd8305f3f206c51d3f0854870de5328e772d7c2bbaa488719dfd17867f77",
+      "bytes": 2688
+    },
+    "bounds/exploration_M5.json": {
+      "sha256": "6dfce7aa988d93bb4a943e19c6e187e7631d4f2f30efa10f1df0f8b9d38f422a",
+      "bytes": 4138
+    },
+    "bounds/iss_M1.json": {
+      "sha256": "299cc838cfe79c6669fa2f68c3f445edc4f8a0d0c47665bc86868ae3a793dbbc",
+      "bytes": 5549
+    },
+    "bounds/iss_M2.json": {
+      "sha256": "0056152641e49417a6570325e3301d065c40c7afae680de03074a43f91484ae6",
+      "bytes": 5495
+    },
+    "bounds/iss_M3.json": {
+      "sha256": "55a428392afbb083809d17528323876e9b46e9c0a33100d9ef0d993e1a43d213",
+      "bytes": 5835
+    },
+    "bounds/iss_M4.json": {
+      "sha256": "c818c4267a09fe0e1a0bfeda674c4efbb1f3c15e05ca1b008679d816463fa211",
+      "bytes": 2888
+    },
+    "bounds/iss_M5.json": {
+      "sha256": "2b70cc63eb1bff113dee6eafd0a7e7704948478fe7ea26ff6558dccdb1c6bfae",
+      "bytes": 4086
+    },
+    "bounds/lunar_base_M1.json": {
+      "sha256": "c6ac1c126981e884c62327f6fb8a168253168bddbb75c5fb6a7fa5e9d0b3269e",
+      "bytes": 5802
+    },
+    "bounds/lunar_base_M2.json": {
+      "sha256": "0677a307407c3313ee60b6c366b69206b11e1f8f58bc2b268b0c9d43491211a3",
+      "bytes": 3653
+    },
+    "bounds/lunar_base_M3.json": {
+      "sha256": "134314ff5699237fc7a911dac52425b29ed010927619921f695ebc5087e81a76",
+      "bytes": 6072
+    },
+    "bounds/lunar_base_M4.json": {
+      "sha256": "63d9d16e03b96ec50806fb547d0ad9839fc067913232253f5c150f97d1d2b52a",
+      "bytes": 2732
+    },
+    "bounds/lunar_base_M5.json": {
+      "sha256": "fc4b0fa4a49ceb17e7f1898280d756c179229fb8ef65e7c6a0d034539e479276",
+      "bytes": 4170
+    },
+    "bounds/lunar_rover_M1.json": {
+      "sha256": "d10b9bb8941d5802ec1e477ba5d0dd70283c186ae28c9bde2cd9451379e6f562",
+      "bytes": 5799
+    },
+    "bounds/lunar_rover_M2.json": {
+      "sha256": "fa7b21c5d2360fedc0c0074973c560e223cbd534316c4fd80b53a101eb0158a7",
+      "bytes": 3650
+    },
+    "bounds/lunar_rover_M3.json": {
+      "sha256": "d54b85a276ec0274cb93f36299819fbf055c271b3bb0c05a4c6578f5e3b16135",
+      "bytes": 6060
+    },
+    "bounds/lunar_rover_M4.json": {
+      "sha256": "17a08f176d9c3ebf930afe19c7e05f7b2fe21477459b41340cbc17e5fb9cc498",
+      "bytes": 3278
+    },
+    "bounds/lunar_rover_M5.json": {
+      "sha256": "7b3e739ddca2c6118648f5fb324c8da2a34d1dc3996a0ade96eb67156c06e83a",
+      "bytes": 4165
+    },
+    "bounds/mars_base_M1.json": {
+      "sha256": "391c2dd1ea143e6facffc60072a6fc36d2af2f544bca80bb52e1d0634543489d",
+      "bytes": 5809
+    },
+    "bounds/mars_base_M2.json": {
+      "sha256": "8b74bbeff53433446268ba0d8b08b483332dfe01f02879ff88d8a2ad998c5c3c",
+      "bytes": 3664
+    },
+    "bounds/mars_base_M3.json": {
+      "sha256": "588b9c11081f0b5bd4ea13b15f17251d4f0f98e40c1da32146c5dc59e51a0ba1",
+      "bytes": 6079
+    },
+    "bounds/mars_base_M4.json": {
+      "sha256": "abad5ad6fa2479af2f5fffe98f8def7efc7b8cfd365ac55512de99f3f58879c1",
+      "bytes": 2729
+    },
+    "bounds/mars_base_M5.json": {
+      "sha256": "ce46add9062a5d461d7d69064b4bdf8b5a0907cfbccc90ee57a36be8e3b5602c",
+      "bytes": 4179
+    },
+    "catalog.json": {
+      "sha256": "e846c760a79abf060836d0ef8a07c3c78e6a914042d95532bae185b5017b080e",
+      "bytes": 171827
+    },
+    "planner.json": {
+      "sha256": "c3a582ac424a89e46a43bfac3de9b7ff3c7408ef6d3896fe1857b51a80dc613f",
+      "bytes": 10402
+    },
+    "regime_grid.json": {
+      "sha256": "d4e7f73d4945d7a13bacdaee308150822ef741b8a81fb485a2d73a615da854d9",
+      "bytes": 164174
+    },
+    "rules.json": {
+      "sha256": "25d61816e16d7d3fe3072dcd24fd4fe64d829334c9c8ea04222e3102bc05b376",
+      "bytes": 14340
+    },
+    "validation_report.md": {
+      "sha256": "c2c3e96b77157b1a490c0366dafc258cf1cbf2c0cfaf0fb004c54dcf32458023",
+      "bytes": 5759
+    }
+  }
+}
