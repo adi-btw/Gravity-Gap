@@ -16,6 +16,10 @@ The pack is the *only* source of facts an answer may use. It contains:
 * ``incidents`` real-fire replay incidents named in the question / ``context_ids`` (R1), trimmed from
   ``artifacts/incidents.json``                                          -> cite ``[eng:incident:mir1997]``
   and, for sourced facts, the source URL exactly as written in the incident's ``sources``
+* ``suppression`` R2 curves ``{diluent: trimmed engine.suppression.curve(...)}`` for questions about putting
+  a flame out with CO2 / helium (or ``context_ids`` with ``eng:suppression:co2``) -> cite ``[eng:suppression:co2]``
+  (+ ``[PSI-69]``, the FLEX tests behind M1/M2); ``suppression_reference`` holds the empirical FLEX rows of
+  ``artifacts/suppression_reference.json`` in the habitat's O2 band     -> cite ``[eng:suppression_reference]``
 * ``constants`` physical constants and thresholds the answers may quote
 * ``citable_ids`` every id a citation may use
 * ``missing``   engine pieces that were unavailable (answers must say so, not guess)
@@ -44,6 +48,8 @@ PLANNER_PATH = ARTIFACTS / "planner.json"
 BOUNDS_DIR = ARTIFACTS / "bounds"
 TESTS_CSV = ROOT / "data" / "clean" / "psi_tests.csv"
 INCIDENTS_PATH = ARTIFACTS / "incidents.json"
+SUPPRESSION_DIR = ARTIFACTS / "suppression"
+SUPPRESSION_REFERENCE_PATH = ARTIFACTS / "suppression_reference.json"
 
 PACK_VERSION = "context.v1"
 HABITAT_FIELDS = ("g_m_s2", "p_psia", "o2", "u_cm_s", "L_mm")
@@ -194,6 +200,156 @@ def trim_incident(inc: dict) -> dict:
     if re.match(r"^\d{4}", date):
         out["year"] = int(date[:4])
     out["id"] = f"eng:incident:{inc['id']}"
+    return jsonable(out)
+
+
+# --------------------------------------------------------------------------- suppression (R2)
+
+SUPPRESSION_DILUENTS = ("co2", "he")
+SUPPRESSION_WORDS = ("suppress", "extinguish", "put out", "put it out", "putting out", "snuff", "diluent",
+                     "dilution", "dilute", "inert gas", "carbon dioxide", "co2", "co₂", "helium")
+SUPPRESSION_POINT_FIELDS = ("applicable", "estimate", "band90", "reason")
+SUPPRESSION_REFERENCE_ROWS = 12
+
+
+def wants_suppression(question: str, context_ids: Iterable[str] = ()) -> bool:
+    """True for questions about putting a flame out with CO2 / helium dilution (R2)."""
+    if any(str(c).startswith("eng:suppression") or str(c) == "suppression" for c in context_ids or ()):
+        return True
+    q = (question or "").lower()
+    return any(w in q for w in SUPPRESSION_WORDS)
+
+
+def suppression_diluents(question: str, context_ids: Iterable[str] = ()) -> list[str]:
+    """Diluents a suppression question is about: both when it compares them, CO2 by default."""
+    q = (question or "").lower()
+    ids = {str(c) for c in context_ids or ()}
+    out = [d for d in SUPPRESSION_DILUENTS if f"eng:suppression:{d}" in ids]
+    if any(w in q for w in ("co2", "co₂", "carbon dioxide")) and "co2" not in out:
+        out.append("co2")
+    if "helium" in q and "he" not in out:
+        out.append("he")
+    if any(w in q for w in ("better", "compare", "versus", " vs", "which diluent", "which gas")):
+        out = list(dict.fromkeys(out + list(SUPPRESSION_DILUENTS)))
+    return out or ["co2"]
+
+
+def _suppression_artifact(preset_id: str, diluent: str) -> dict | None:
+    f = SUPPRESSION_DIR / f"{preset_id}_{diluent}.json"
+    if not f.exists():
+        return None
+    try:
+        return json.loads(f.read_text(encoding="utf-8"))
+    except ValueError:
+        return None
+
+
+def suppression_curve(h: dict, diluent: str) -> dict | None:
+    """engine.suppression.curve output (preset artifact first); None when the engine is not available."""
+    if h.get("preset_id"):
+        art = _suppression_artifact(h["preset_id"], diluent)
+        if art is not None:
+            return art
+    mod = _engine("suppression")
+    if mod is None or not hasattr(mod, "curve"):
+        return None
+    return mod.curve(diluent, **_inputs(h))
+
+
+def trim_suppression(curve: dict, diluent: str) -> dict:
+    pts = []
+    for p in curve.get("points") or []:
+        item = {"fraction": p.get("fraction")}
+        for m in ("M1", "M2"):
+            if isinstance(p.get(m), dict):
+                item[m] = {k: p[m].get(k) for k in SUPPRESSION_POINT_FIELDS}
+        pts.append(item)
+    out = {k: curve.get(k) for k in ("diluent", "label", "dose_for_p90", "tested_o2_range", "gate_note",
+                                     "safety_note", "model_version") if k in curve}
+    out["diluent"] = out.get("diluent") or diluent
+    out["points"] = pts
+    tested = [t for t in curve.get("tested") or [] if isinstance(t, dict)]
+    out["n_tested"] = int(sum(float(t.get("n") or 0) for t in tested))
+    out["id"] = f"eng:suppression:{diluent}"
+    return jsonable(out)
+
+
+def load_suppression_reference(path: Path | None = None) -> Any:
+    f = path or SUPPRESSION_REFERENCE_PATH
+    if not f.exists():
+        return None
+    try:
+        return json.loads(f.read_text(encoding="utf-8"))
+    except ValueError:
+        return None
+
+
+_REF_CELL = ("bin", "fraction_lo", "fraction_hi", "n", "extinctions", "completions", "disruptions",
+             "extinction_rate", "interval90")
+_O2_BAND_IDS = {"le_0.17": (None, 0.17), "0.17_0.22": (0.17, 0.22), "gt_0.22": (0.22, None)}
+
+
+def _band_bounds(band_id: str, label: str = "") -> tuple[float | None, float | None]:
+    if band_id in _O2_BAND_IDS:
+        return _O2_BAND_IDS[band_id]
+    nums = [float(x) for x in re.findall(r"\d+\.\d+|\d+(?=\s*%)", f"{band_id} {label}")]
+    nums = [x / 100 if x > 1 else x for x in nums]
+    text = f"{band_id} {label}".lower()
+    if len(nums) >= 2:
+        return nums[0], nums[1]
+    if nums and ("le" in text or "<" in text):
+        return None, nums[0]
+    if nums and ("gt" in text or ">" in text):
+        return nums[0], None
+    return None, None
+
+
+def reference_rows(data: Any, diluent: str) -> list[dict]:
+    """Rows ``{fuel, o2_band, o2_lo, o2_hi, bin, fraction_lo, fraction_hi, n, extinctions, ..., trend}``
+    for one diluent from ``artifacts/suppression_reference.json``
+    (layout ``tables[diluent][fuel][o2_band_id] = {o2_band, n, bins[]}``, engine/suppression_reference.py).
+    """
+    if not isinstance(data, dict) or not isinstance(data.get("tables"), dict):
+        return []
+    fuels = data["tables"].get(diluent) or {}
+    trends = (data.get("trend") or {}).get(diluent) or {}
+    rows: list[dict] = []
+    for fuel, bands in fuels.items():
+        if not isinstance(bands, dict):
+            continue
+        for band_id, cell in bands.items():
+            if not isinstance(cell, dict):
+                continue
+            lo, hi = _band_bounds(str(band_id), str(cell.get("o2_band") or ""))
+            direction = ((trends.get(fuel) or {}).get(band_id) or {}).get("direction")
+            for b in cell.get("bins") or []:
+                if not isinstance(b, dict):
+                    continue
+                row = {"fuel": str(fuel), "o2_band": cell.get("o2_band") or str(band_id), "o2_lo": lo, "o2_hi": hi,
+                       **{k: b.get(k) for k in _REF_CELL if k in b}}
+                if direction:
+                    row["trend"] = direction
+                rows.append(row)
+    return rows
+
+
+def _o2_band_match(row: dict, o2: float) -> bool:
+    lo, hi = row.get("o2_lo"), row.get("o2_hi")
+    return (lo is None or o2 > lo + 1e-9) and (hi is None or o2 <= hi + 1e-9)
+
+
+def suppression_reference_block(h: dict, diluent: str, path: Path | None = None) -> dict | None:
+    """Empirical FLEX rows for ``diluent`` in the habitat's O2 band; None when the artifact is not built."""
+    data = load_suppression_reference(path)
+    if data is None:
+        return None
+    rows = [r for r in reference_rows(data, diluent) if _o2_band_match(r, h["o2"])
+            and isinstance(r.get("n"), (int, float)) and r["n"] > 0]
+    out: dict[str, Any] = {"diluent": diluent, "rows": rows[:SUPPRESSION_REFERENCE_ROWS],
+                           "id": "eng:suppression_reference"}
+    max_o2 = (data.get("max_diluted_o2_by_diluent") or {}).get(diluent) if isinstance(data, dict) else None
+    if isinstance(max_o2, (int, float)):
+        out["max_diluted_o2"] = max_o2
     return jsonable(out)
 
 
@@ -460,6 +616,34 @@ def build_context(
             if isinstance(src, dict) and src.get("url"):
                 citable.add(str(src["url"]).strip())
     pack["incidents"] = incs
+
+    # ---- suppression curves (R2)
+    supp: dict[str, Any] = {}
+    supp_ref: dict[str, Any] = {}
+    if wants_suppression(question, ctx_ids):
+        for dil in suppression_diluents(question, ctx_ids):
+            try:
+                cur = suppression_curve(h, dil)
+            except Exception as exc:  # noqa: BLE001 - engine errors must not break the pack
+                missing.append(f"suppression.curve({dil}): {type(exc).__name__}")
+                continue
+            if cur is None:
+                continue
+            supp[dil] = trim_suppression(cur, dil)
+            citable.add(supp[dil]["id"])
+            ref = suppression_reference_block(h, dil)
+            if ref is None:
+                if "artifacts/suppression_reference.json" not in missing:
+                    missing.append("artifacts/suppression_reference.json")
+            elif ref["rows"]:
+                supp_ref[dil] = ref
+                citable.add(ref["id"])
+        if not supp:
+            missing.append("engine.suppression")
+        else:
+            citable.add("PSI-69")  # FLEX: the M1/M2 models behind every suppression curve
+    pack["suppression"] = supp
+    pack["suppression_reference"] = supp_ref
 
     pack["constants"] = dict(CONSTANTS)
     pack["missing"] = missing

@@ -574,3 +574,159 @@ def test_incidents_real_artifact(client):
             assert rec["physics"] is None and rec["metrics"] is None and rec["scope_note"]
         else:
             assert set(rec["metrics"]) == {"M1", "M2", "M3", "M4", "M5"}
+
+
+# --------------------------------------------------------------------------- R2 suppression calculator
+
+ISS_AIR = {"g_m_s2": 0.0, "p_psia": 14.7, "o2": 0.21, "u_cm_s": 10, "L_mm": 10}
+FAKE_DILUENTS = {"co2": {"label": "Carbon dioxide (CO2)", "max": 0.70}, "he": {"label": "Helium", "max": 0.45}}
+
+
+def _fake_curve(diluent, g_m_s2, p_psia, o2, u_cm_s, L_mm, steps=15, seed=0):
+    """Contract-shaped fake that returns numpy values and NaN/inf to exercise JSON-safety."""
+    import numpy as np
+
+    if o2 > 0.9:
+        raise ValueError("o2 out of range for the fake")
+    mx = FAKE_DILUENTS[diluent]["max"]
+    pts = []
+    for f in np.linspace(0.0, mx, steps):
+        ok = bool(o2 <= 0.25)
+        est = np.float64(0.5 + 0.5 * f) if ok else None
+        pts.append({"fraction": np.float64(f), "n2": float(1 - o2 - f),
+                    "M1": {"applicable": ok, "estimate": est, "band90": np.array([0.3, 0.9]) if ok else None,
+                           "reason": None if ok else "Extrapolation: no evidence."},
+                    "M2": {"applicable": ok, "estimate": float("nan"), "band90": None, "reason": None}})
+    return {"diluent": diluent, "label": FAKE_DILUENTS[diluent]["label"],
+            "habitat": {"g_m_s2": g_m_s2, "p_psia": p_psia, "o2": o2, "u_cm_s": u_cm_s, "L_mm": L_mm},
+            "points": pts, "dose_for_p90": None, "tested": [{"o2": 0.15, "p_atm": 0.7, "fraction": 0.5, "n": np.int64(4),
+                                                             "extinctions": 4}],
+            "tested_o2_range": [0.14, 0.24], "gate_note": "fake", "safety_note": "fake safety",
+            "model_version": "fake", "ratio": float("inf")}
+
+
+@pytest.fixture
+def fake_suppression_engine(monkeypatch):
+    import sys
+    import types
+
+    mod = types.ModuleType("engine.suppression")
+    mod.curve = _fake_curve
+    mod.DILUENTS = FAKE_DILUENTS
+    monkeypatch.setitem(sys.modules, "engine.suppression", mod)
+    return mod
+
+
+def _strict_json(resp):
+    return json.loads(resp.text, parse_constant=lambda c: pytest.fail(f"non-finite JSON token {c}"))
+
+
+def test_suppression_diluents_fake(client, fake_suppression_engine):
+    r = client.get("/suppression/diluents")
+    assert r.status_code == 200 and r.json() == FAKE_DILUENTS
+
+
+def test_suppression_post_fake_json_safe(client, fake_suppression_engine):
+    r = client.post("/suppression", json={**ISS_AIR, "diluent": "co2", "steps": 7})
+    assert r.status_code == 200, r.text
+    body = _strict_json(r)
+    assert body["diluent"] == "co2" and len(body["points"]) == 7
+    assert body["points"][0]["M2"]["estimate"] is None and body["ratio"] is None
+    assert body["points"][1]["M1"]["band90"] == [0.3, 0.9]
+    assert _all_finite_or_null(body)
+
+
+def test_suppression_post_case_insensitive_and_default_steps(client, fake_suppression_engine):
+    r = client.post("/suppression", json={**LUNAR_BASE, "diluent": "HE"})
+    assert r.status_code == 200 and len(r.json()["points"]) == 15
+    assert all(not p["M1"]["applicable"] for p in r.json()["points"])
+
+
+@pytest.mark.parametrize("extra", [{"diluent": "n2"}, {"diluent": "argon"}, {}, {"diluent": "co2", "steps": 4},
+                                   {"diluent": "co2", "steps": 31}])
+def test_suppression_post_bad_body_422(client, fake_suppression_engine, extra):
+    _assert_problem(client.post("/suppression", json={**ISS_AIR, **extra}), 422)
+
+
+def test_suppression_engine_valueerror_is_422(client, fake_suppression_engine):
+    _assert_problem(client.post("/suppression", json={**ISS_AIR, "o2": 0.95, "diluent": "co2"}), 422)
+
+
+def test_suppression_engine_missing_503(client, monkeypatch):
+    import sys
+
+    monkeypatch.setitem(sys.modules, "engine.suppression", None)  # import raises ImportError
+    _assert_problem(client.post("/suppression", json={**ISS_AIR, "diluent": "co2"}), 503)
+    _assert_problem(client.get("/suppression/diluents"), 503)
+
+
+def test_suppression_engine_without_curve_503(client, monkeypatch):
+    import sys
+    import types
+
+    monkeypatch.setitem(sys.modules, "engine.suppression", types.ModuleType("engine.suppression"))
+    _assert_problem(client.post("/suppression", json={**ISS_AIR, "diluent": "co2"}), 503)
+
+
+def test_suppression_reference_fake_and_missing(client, tmp_path, monkeypatch):
+    import api.main as main_mod
+
+    monkeypatch.setattr(main_mod, "SUPPRESSION_REFERENCE_PATH", tmp_path / "missing.json")
+    _assert_problem(client.get("/suppression/reference"), 503)
+    path = tmp_path / "suppression_reference.json"
+    path.write_text('{"tables": {"co2": {}}, "x": NaN}', encoding="utf-8")
+    monkeypatch.setattr(main_mod, "SUPPRESSION_REFERENCE_PATH", path)
+    r = client.get("/suppression/reference")
+    assert r.status_code == 200 and r.json() == {"tables": {"co2": {}}, "x": None}
+    path.write_text("not json", encoding="utf-8")
+    _assert_problem(client.get("/suppression/reference"), 503)
+
+
+def test_suppression_real_engine(client):
+    sup = pytest.importorskip("engine.suppression", reason="engine/suppression.py (TL) not present yet")
+    assert client.get("/suppression/diluents").json() == sup.DILUENTS
+    iss = _strict_json(client.post("/suppression", json={**ISS_AIR, "diluent": "co2", "steps": 5}))
+    assert len(iss["points"]) == 5 and iss["safety_note"]
+    assert any(p["M1"]["applicable"] for p in iss["points"] if p["fraction"] > 0)
+    lunar = _strict_json(client.post("/suppression", json={**LUNAR_BASE, "diluent": "co2", "steps": 5}))
+    assert lunar["dose_for_p90"] is None
+    assert all(not p["M1"]["applicable"] for p in lunar["points"] if p["fraction"] > 0)
+
+
+def test_coverage_dilution_params(client):
+    pytest.importorskip("engine.coverage", reason="engine/coverage.py (TL) not present yet")
+    q = "/coverage/M1?p_psia=8.2&o2=0.34"
+    hab = client.get(q + "&co2=0.05").json()["habitat"]
+    assert hab["covered"] is False and hab["co2"] == 0.05
+    iss = client.get("/coverage/M1?p_psia=14.7&o2=0.21&co2=0.2").json()["habitat"]
+    assert iss["covered"] is True
+    assert client.get(q).status_code == 200  # undiluted query unchanged
+    _assert_problem(client.get(q + "&co2=1.5"), 422)
+    _assert_problem(client.get(q + "&co2=0.5&he=0.3"), 422)
+
+
+def test_coverage_dilution_params_passed_through(client, monkeypatch):
+    import sys
+    import types
+
+    seen = {}
+
+    def coverage_for(metric, p_psia=None, o2=None, co2=None, he=None):
+        seen.update(metric=metric, co2=co2, he=he)
+        return {"metric": metric, "habitat": {"covered": False}}
+
+    mod = types.ModuleType("engine.coverage")
+    mod.coverage_for = coverage_for
+    monkeypatch.setitem(sys.modules, "engine.coverage", mod)
+    import engine
+
+    monkeypatch.setattr(engine, "coverage", mod, raising=False)
+    assert client.get("/coverage/m1?p_psia=8.2&o2=0.34&he=0.1").status_code == 200
+    assert seen == {"metric": "M1", "co2": None, "he": 0.1}
+
+
+def test_suppression_reference_real_artifact(client):
+    if not (ROOT / "artifacts" / "suppression_reference.json").exists():
+        pytest.skip("artifacts/suppression_reference.json (DE) not built yet")
+    body = _strict_json(client.get("/suppression/reference"))
+    assert {"co2", "he"} <= set(body["tables"])

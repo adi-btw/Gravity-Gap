@@ -337,3 +337,194 @@ def test_incident_answers_on_real_artifact(answer_mod, question, iid):
     assert "would have" not in res["answer_markdown"].lower()
     if iid == "apollo13":
         assert "Outside Gravity Gap's scope" in res["answer_markdown"]
+
+
+# --------------------------------------------------------------------------- R2 suppression calculator
+
+import sys  # noqa: E402
+import types  # noqa: E402
+
+SUPPRESSION_QUESTIONS = [
+    ("How much CO₂ would it take to put out a flame in ISS air?", "iss", ["co2"]),
+    ("Why can't Gravity Gap answer suppression for the lunar base?", "lunar_base", ["co2"]),
+    ("Does helium work better than CO₂?", "iss", ["co2", "he"]),
+]
+FAKE_SAFETY = ("CO₂ at these concentrations is dangerous to breathe. Spacecraft use portable CO₂ or water-mist "
+               "extinguishers aimed at the fire, not cabin flooding. This shows how dilution affected flames in "
+               "NASA's tests; it is not an operating procedure.")
+FAKE_REFERENCE = {"version": 1, "max_diluted_o2_by_diluent": {"co2": 0.24, "he": 0.24}, "tables": {
+    "co2": {"Heptane": {"0.17_0.22": {"o2_band": "0.17 < O2 <= 0.22", "n": 12, "bins": [
+        {"bin": "0", "fraction_lo": 0.0, "fraction_hi": 0.0, "n": 5, "extinctions": 2, "completions": 3,
+         "disruptions": 0, "extinction_rate": 0.4, "record_ids": ["PSI-69:FLEX:1"]},
+        {"bin": "(0.1, 0.2]", "fraction_lo": 0.1, "fraction_hi": 0.2, "n": 7, "extinctions": 6, "completions": 1,
+         "disruptions": 0, "extinction_rate": 0.857143, "record_ids": ["PSI-69:FLEX:2"]}]},
+        "gt_0.22": {"o2_band": "O2 > 0.22", "n": 0, "bins": []}}},
+    "he": {"Heptane": {"0.17_0.22": {"o2_band": "0.17 < O2 <= 0.22", "n": 3, "bins": [
+        {"bin": "(0, 0.2]", "fraction_lo": 0.0, "fraction_hi": 0.2, "n": 3, "extinctions": 1, "completions": 2,
+         "disruptions": 0, "extinction_rate": 0.333333, "record_ids": ["PSI-69:FLEX:3"]}]}}}},
+    "trend": {"co2": {"Heptane": {"0.17_0.22": {"direction": "rises"}}}}}
+
+
+def fake_curve(diluent, g_m_s2, p_psia, o2, u_cm_s, L_mm, steps=15, seed=0):
+    """Contract-shaped stand-in for engine.suppression.curve (dilution tested at 14-24% O2, CO2 dose 50%)."""
+    mx = {"co2": 0.70, "he": 0.45}[diluent]
+    rng = [0.14, 0.24]
+    pts, dose = [], None
+    for i in range(steps):
+        f = round(mx * i / (steps - 1), 6)
+        if o2 + f > 1:
+            m = {"applicable": False, "estimate": None, "band90": None, "reason": "composition over 100%"}
+            pts.append({"fraction": f, "M1": m, "M2": m})
+            continue
+        if f > 0 and not rng[0] <= o2 <= rng[1]:
+            m = {"applicable": False, "estimate": None, "band90": None,
+                 "reason": "Extrapolation: no evidence. FLEX tested dilution only between 14% and 24% O2."}
+            pts.append({"fraction": f, "M1": m, "M2": m})
+            continue
+        e = round(min(0.99, 0.3 + (1.2 if diluent == "co2" else 0.6) * f), 6)
+        pts.append({"fraction": f,
+                    "M1": {"applicable": True, "estimate": e,
+                           "band90": [round(e * 0.7, 6), round(min(0.999, e * 1.08), 6)], "reason": None},
+                    "M2": {"applicable": True, "estimate": round(2 + 3 * f, 6), "band90": [1.5, round(3 + 3 * f, 6)],
+                           "reason": None}})
+        if dose is None and e >= 0.9:
+            dose = {"fraction": f, "metric": "M1"}
+    ok = rng[0] <= o2 <= rng[1]
+    note = ("FLEX tested this dilution only between 14% and 24% O₂; "
+            + ("this habitat is inside that range." if ok else "there is no evidence at this oxygen level."))
+    return {"diluent": diluent, "label": {"co2": "Carbon dioxide (CO2)", "he": "Helium"}[diluent],
+            "habitat": {"g_m_s2": g_m_s2, "p_psia": p_psia, "o2": o2, "u_cm_s": u_cm_s, "L_mm": L_mm},
+            "points": pts, "dose_for_p90": dose,
+            "tested": [{"o2": 0.15, "p_atm": 0.7, "fraction": 0.5, "n": 4, "extinctions": 4}],
+            "tested_o2_range": rng, "gate_note": note, "safety_note": FAKE_SAFETY, "model_version": "fake"}
+
+
+@pytest.fixture
+def fake_suppression(tmp_path, monkeypatch):
+    """Fake engine.suppression + reference artifact; preset artifacts are hidden so the fake is used."""
+    from engine.ai import context as ctx
+
+    mod = types.ModuleType("engine.suppression")
+    mod.curve = fake_curve
+    mod.DILUENTS = {"co2": {"label": "Carbon dioxide (CO2)", "max": 0.70}, "he": {"label": "Helium", "max": 0.45}}
+    monkeypatch.setitem(sys.modules, "engine.suppression", mod)
+    monkeypatch.setattr(ctx, "SUPPRESSION_DIR", tmp_path / "no_suppression_artifacts")
+    ref = tmp_path / "suppression_reference.json"
+    ref.write_text(json.dumps(FAKE_REFERENCE), encoding="utf-8")
+    monkeypatch.setattr(ctx, "SUPPRESSION_REFERENCE_PATH", ref)
+    return mod
+
+
+def _check_suppression(res, diluents):
+    assert res["intent"] == "suppression" and res["mode"] == "template"
+    assert res["validated"], res["validation"]["errors"]
+    assert all(n["source"] for n in res["validation"]["numbers"]), "every number must be in the context pack"
+    assert all(c["resolved"] for c in res["validation"]["citations"])
+    for d in diluents:
+        assert f"eng:suppression:{d}" in res["citations"]
+    assert "PSI-69" in res["citations"]
+    md = res["answer_markdown"]
+    assert "**Safety note:**" in md and "dangerous to breathe" in md and "not an operating procedure" in md
+
+
+@pytest.mark.parametrize("question,habitat,diluents", SUPPRESSION_QUESTIONS)
+def test_suppression_answers_validate(answer_mod, fake_suppression, question, habitat, diluents):
+    _check_suppression(answer_mod.ask(question, habitat, use_cache=False), diluents)
+
+
+def test_suppression_iss_co2_has_dose_and_bands(answer_mod, fake_suppression):
+    res = answer_mod.ask(SUPPRESSION_QUESTIONS[0][0], "iss", use_cache=False)
+    md = res["answer_markdown"]
+    assert "about 50% CO₂" in md                                   # fake dose_for_p90
+    assert md.count("90% band") >= 3 and "M2 extinction diameter" in md
+    assert "eng:suppression_reference" in res["citations"] and "6 self-extinguished" in md
+    assert "Helium" not in md
+
+
+def test_suppression_lunar_base_explains_ceiling_without_dose(answer_mod, fake_suppression):
+    res = answer_mod.ask(SUPPRESSION_QUESTIONS[1][0], "lunar_base", use_cache=False)
+    md = res["answer_markdown"]
+    assert "No evidence at any CO₂ fraction above 0" in md
+    assert "24% O₂" in md and "above that ceiling" in md
+    assert "not reached inside tested conditions" in md
+    assert "about" not in md.split("**Dilution")[1].split("\n")[0]   # no dose number
+    assert "M1 estimate" not in md                                   # no curve values at gated points
+
+
+def test_suppression_helium_comparison(answer_mod, fake_suppression):
+    md = answer_mod.ask(SUPPRESSION_QUESTIONS[2][0], "iss", use_cache=False)["answer_markdown"]
+    assert "**CO₂ versus helium:**" in md and "only CO₂ reaches" in md
+    assert "cannot say which works better" in md
+
+
+def test_suppression_invented_dose_rejected(answer_mod, fake_suppression):
+    from engine.ai import context as ctx
+
+    q = SUPPRESSION_QUESTIONS[0][0]
+    pack = ctx.build_context("iss", question=q)
+    res = answer_mod.ask(q, "iss", use_cache=False)
+    assert validate(res["answer_markdown"], pack)["ok"]
+    rep = validate(res["answer_markdown"] + "\n\nAbout 37% CO₂ puts any flame out [eng:suppression:co2].", pack)
+    assert not rep["ok"] and any("37%" in e for e in rep["errors"])
+    rep = validate("See [eng:suppression:n2].", pack)
+    assert "unresolved citation: eng:suppression:n2" in rep["errors"]
+
+
+def test_suppression_citation_needs_curve_in_pack(answer_mod, fake_suppression):
+    from engine.ai import context as ctx
+
+    pack = ctx.build_context("iss", question="Why is the ISS in the forced regime?")
+    assert pack["suppression"] == {} and "eng:suppression:co2" not in pack["citable_ids"]
+
+
+def test_suppression_engine_missing_still_safe(answer_mod, tmp_path, monkeypatch):
+    from engine.ai import context as ctx
+
+    monkeypatch.setitem(sys.modules, "engine.suppression", None)  # import raises ImportError
+    monkeypatch.setattr(ctx, "SUPPRESSION_DIR", tmp_path / "none")
+    res = answer_mod.ask(SUPPRESSION_QUESTIONS[0][0], "iss", use_cache=False)
+    assert res["intent"] == "suppression" and res["validated"], res["validation"]["errors"]
+    md = res["answer_markdown"]
+    assert "not available in this build" in md and answer_mod.SAFETY_NOTE in md
+
+
+def test_suppression_intent_does_not_capture_other_questions(answer_mod):
+    assert answer_mod.classify("Why is the M1 band wide for the lunar base?") == "band"
+    assert answer_mod.classify("Explain the M2 extinction diameter") == "explain"
+    assert answer_mod.classify("Can CO2 put out a rocket propellant fire?") == "refusal"
+    assert answer_mod.classify("Does helium work better than CO₂?") == "suppression"
+
+
+def test_reference_rows_parse_de_layout():
+    from engine.ai import context as ctx
+
+    rows = ctx.reference_rows(FAKE_REFERENCE, "co2")
+    assert [r["bin"] for r in rows] == ["0", "(0.1, 0.2]"]
+    assert rows[0]["fuel"] == "Heptane" and rows[0]["o2_lo"] == 0.17 and rows[1]["trend"] == "rises"
+    assert ctx.reference_rows({"unexpected": []}, "co2") == []
+
+
+def test_demo_questions_include_suppression(answer_mod):
+    qs = dict(answer_mod.DEMO_QUESTIONS)
+    for q, hab, _ in SUPPRESSION_QUESTIONS:
+        assert qs.get(q) == hab
+
+
+def test_suppression_cache_roundtrip(answer_mod, fake_suppression, tmp_path, monkeypatch):
+    path = tmp_path / "ai_cache.json"
+    monkeypatch.setattr(answer_mod, "CACHE_PATH", path)
+    data = answer_mod.build_cache(path, [(q, h) for q, h, _ in SUPPRESSION_QUESTIONS])
+    assert all(e["validated"] and e["intent"] == "suppression" for e in data["entries"])
+    res = answer_mod.ask(SUPPRESSION_QUESTIONS[1][0], "lunar_base")
+    assert res["mode"] == "cached" and res["validated"]
+
+
+@pytest.mark.parametrize("question,habitat,diluents", SUPPRESSION_QUESTIONS)
+def test_suppression_answers_on_real_engine(answer_mod, question, habitat, diluents):
+    pytest.importorskip("engine.suppression", reason="engine/suppression.py (TL) not present yet")
+    res = answer_mod.ask(question, habitat, use_cache=False)
+    _check_suppression(res, diluents)
+    if habitat == "lunar_base":
+        md = res["answer_markdown"]
+        assert "No evidence at any CO₂ fraction above 0" in md and "above that ceiling" in md
+        assert "M1 estimate" not in md

@@ -29,7 +29,8 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse, Response
 from starlette.exceptions import HTTPException as StarletteHTTPException
 
-from api.schemas import AskIn, AskOut, BoundsIn, Health, HabitatIn, LedgerIn, PhysicsOut, RankItem, TestsPage
+from api.schemas import (AskIn, AskOut, BoundsIn, Health, HabitatIn, LedgerIn, PhysicsOut, RankItem,
+                         SuppressionIn, TestsPage)
 
 log = logging.getLogger("gravity_gap.api")
 
@@ -41,6 +42,7 @@ ARTIFACTS_DIR = ROOT / "artifacts"
 MANIFEST_PATH = ARTIFACTS_DIR / "MANIFEST.json"
 PLANNER_PATH = ARTIFACTS_DIR / "planner.json"
 INCIDENTS_PATH = ARTIFACTS_DIR / "incidents.json"
+SUPPRESSION_REFERENCE_PATH = ARTIFACTS_DIR / "suppression_reference.json"
 
 ASK_RATE_PER_MIN = int(os.environ.get("GRAVITY_GAP_ASK_RATE", "20"))
 LEDGER_RATE_PER_MIN = int(os.environ.get("GRAVITY_GAP_LEDGER_RATE", "10"))
@@ -404,17 +406,25 @@ def bounds(body: BoundsIn) -> dict[str, Any]:
 
 
 @app.get("/coverage/{metric}")
-def coverage(metric: str, p_psia: float | None = Query(None, gt=0, le=20), o2: float | None = Query(None, ge=0, le=1)) -> dict[str, Any]:
-    """Tested O2 x pressure points for a metric plus the engine's applicability rule.
+def coverage(metric: str, p_psia: float | None = Query(None, gt=0, le=20), o2: float | None = Query(None, ge=0, le=1),
+             co2: float | None = Query(None, ge=0, le=1, description="CO2 diluent fraction (M1/M2 4-D gate)"),
+             he: float | None = Query(None, ge=0, le=1, description="He diluent fraction (M1/M2 4-D gate)"),
+             ) -> dict[str, Any]:
+    """Tested O2 x pressure (x CO2 x He for M1/M2) points for a metric plus the engine's applicability rule.
 
-    The Bounds Panel draws this when a habitat is outside the tested range (no estimate).
+    The Bounds Panel draws this when a habitat is outside the tested range (no estimate); the suppression page
+    passes `co2`/`he` so "covered" matches the dilution-aware gate (ADR-0006).
     """
+    if (o2 or 0.0) + (co2 or 0.0) + (he or 0.0) > 1 + 1e-9:
+        raise HTTPException(status_code=422, detail="o2 + co2 + he must be <= 1")
     try:
         from engine import coverage as coverage_module
     except ImportError as exc:  # pragma: no cover - engine missing
         raise HTTPException(status_code=503, detail=f"engine.coverage unavailable: {exc}") from exc
     try:
-        return to_jsonable(coverage_module.coverage_for(metric.upper(), p_psia, o2))
+        if co2 is None and he is None:
+            return to_jsonable(coverage_module.coverage_for(metric.upper(), p_psia, o2))
+        return to_jsonable(coverage_module.coverage_for(metric.upper(), p_psia, o2, co2=co2, he=he))
     except KeyError as exc:
         raise HTTPException(status_code=404, detail=f"unknown metric {metric!r}") from exc
 
@@ -452,6 +462,50 @@ def incident_record(incident_id: str) -> dict[str, Any]:
         if isinstance(inc, dict) and str(inc.get("id")) == incident_id:
             return inc
     raise HTTPException(status_code=404, detail=f"Incident '{incident_id}' not found")
+
+
+# --------------------------------------------------------------------------- R2 suppression calculator
+
+
+def suppression_module():
+    mod = engine_module("suppression")
+    if not hasattr(mod, "curve") or not hasattr(mod, "DILUENTS"):
+        raise HTTPException(status_code=503, detail="engine.suppression has no curve/DILUENTS yet")
+    return mod
+
+
+@app.get("/suppression/diluents")
+def suppression_diluents() -> dict[str, Any]:
+    """`engine.suppression.DILUENTS`: `{co2: {label, max}, he: {label, max}}`."""
+    return to_jsonable(suppression_module().DILUENTS)
+
+
+@app.post("/suppression")
+def suppression(body: SuppressionIn) -> dict[str, Any]:
+    """Dilution curve: M1/M2 with 90% bands vs diluent fraction (diluent replaces N2 at fixed O2 and pressure)."""
+    mod = suppression_module()
+    if body.diluent not in mod.DILUENTS:
+        raise HTTPException(status_code=422, detail=f"Unknown diluent '{body.diluent}'; known: {sorted(mod.DILUENTS)}")
+    try:
+        out = mod.curve(body.diluent, body.g_m_s2, body.p_psia, body.o2, body.u_cm_s, body.L_mm, steps=body.steps)
+    except NotImplementedError as exc:
+        raise HTTPException(status_code=503, detail=str(exc)) from exc
+    except ValueError as exc:
+        raise HTTPException(status_code=422, detail=str(exc)) from exc
+    return to_jsonable(out)
+
+
+@app.get("/suppression/reference")
+def suppression_reference() -> Any:
+    """`artifacts/suppression_reference.json`: empirical FLEX outcome rates by diluent bin (no model)."""
+    if not SUPPRESSION_REFERENCE_PATH.exists():
+        raise HTTPException(status_code=503, detail="artifacts/suppression_reference.json is not built yet "
+                                                    "(python -m engine.suppression_reference)")
+    try:
+        data = json.loads(SUPPRESSION_REFERENCE_PATH.read_text(encoding="utf-8"))
+    except ValueError as exc:
+        raise HTTPException(status_code=503, detail="artifacts/suppression_reference.json is not valid JSON") from exc
+    return to_jsonable(data)
 
 
 @app.get("/ledger")

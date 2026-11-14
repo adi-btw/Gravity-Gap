@@ -29,7 +29,8 @@ Number extraction rules (what counts as "a number"):
 
 Citation rules: a citation is any bracketed token, or bare ``PSI-NN`` / ``rec:...`` /
 ``doi:...`` token, with prefix ``PSI-``, ``rec:``, ``doi:`` or ``eng:`` (engine outputs:
-``eng:physics``, ``eng:M1``, ``eng:planner:1``, ``eng:fans_off:M1``, ``eng:incident:mir1997``...),
+``eng:physics``, ``eng:M1``, ``eng:planner:1``, ``eng:fans_off:M1``, ``eng:incident:mir1997``,
+``eng:suppression:co2``, ``eng:suppression:he``, ``eng:suppression_reference``...),
 or an ``http(s)://`` source URL (bracketed or bare; R1 incident sources are cited by their URL exactly
 as written in the incident's ``sources``). Each must be in ``pack["citable_ids"]``. URLs are never
 scanned for numbers. Bracketed text without a citation prefix is scanned for numbers like normal text.

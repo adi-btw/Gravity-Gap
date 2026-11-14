@@ -35,6 +35,9 @@ changed/missing/unlisted files; it never crashes. CORS allows the comma-separate
 | GET | `/planner` | – | `artifacts/planner.json` (`items[]`, `design_implications[]`); 503 if not built |
 | GET | `/incidents` | – | `artifacts/incidents.json` (R1 real-fire replay: `{generated_at, engine_version, incidents[]}`); 503 if not built |
 | GET | `/incidents/{id}` | – | one incident (`apollo1`, `mir1997`, `artemis2`, `apollo13`), 404 problem+json if unknown, 503 if not built |
+| GET | `/suppression/diluents` | – | `engine.suppression.DILUENTS` (`{co2: {label, max: 0.70}, he: {label, max: 0.45}}`); 503 if `engine.suppression` missing |
+| POST | `/suppression` | habitat fields + `diluent` (`co2`\|`he`, case-insensitive) + optional `steps` (5..30, default 15) | `engine.suppression.curve(...)` (JSON-safe): `{diluent, label, habitat, points[{fraction, M1, M2}], dose_for_p90, tested[], tested_o2_range, gate_note, safety_note, model_version}`; 422 bad diluent/steps or engine `ValueError`; 503 problem+json if `engine.suppression` missing |
+| GET | `/suppression/reference` | – | `artifacts/suppression_reference.json` (empirical FLEX rates by diluent bin, no model); 503 if not built |
 | GET | `/ledger` | – | `{predictions[], verification[{id, ok, line}]}` from `ledger/predictions.jsonl` |
 | POST | `/ledger` | header `X-Team-Token`; `{metric, habitat: preset id \| fields, rationale, author}` | 201 + appended record (`id, created_at, habitat, metric, estimate, band90, model_version, artifact_hashes, rationale, author, status, sha256`) |
 | POST | `/ask` | `{question, habitat?: preset id \| fields, context_ids?: [PSI-xx, rec:..., M1]}` | `{answer_markdown, citations[], numbers_used[], validated, mode: "claude"\|"cached"\|"template", intent, habitat, validation}` |
@@ -67,6 +70,16 @@ changed/missing/unlisted files; it never crashes. CORS allows the comma-separate
   source URL exactly as written in the incident's `sources` (the validator resolves both and never reads
   numbers inside URLs). Out-of-scope incidents get an "Outside Gravity Gap's scope" explanation and no
   hindsight wording ("would have prevented") is ever produced.
+- **Suppression calculator (R2).** `POST /suppression` holds the habitat O₂ and pressure and replaces nitrogen
+  with the diluent (`n2 = 1 - o2 - fraction`). Points outside the dilution-aware gate (ADR-0006) have
+  `applicable: false` and `estimate: null` (draw them as gaps). `/ask` treats questions about putting a flame out
+  with CO₂ / helium ("How much CO₂ would it take to put out a flame in ISS air?", "Does helium work better than
+  CO₂?"; or `context_ids: ["eng:suppression:co2"]`) as intent `suppression`. The answer uses only the curve
+  (preset artifact `artifacts/suppression/{preset}_{diluent}.json`, else live `curve(...)`) and the reference rows
+  for the habitat's O₂ band. It cites `[eng:suppression:<co2|he>]`, `[PSI-69]` and `[eng:suppression_reference]`
+  and gives the 90% dose, or "not reached inside tested conditions", plus a few estimates with bands, or the tested
+  O₂ range when the habitat is gated (lunar base, 34% O₂). Every answer ends with the safety note. It gives no
+  operational advice.
 - **Artifact build order:** engine artifacts (incl. `python -m engine.incidents`) -> `python -m engine.ai.answer --build-cache` ->
   `python scripts/build_manifest.py` (last).
 

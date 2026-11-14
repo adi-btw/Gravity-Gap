@@ -4,7 +4,9 @@ from __future__ import annotations
 
 from typing import Any
 
-from pydantic import BaseModel, ConfigDict, Field
+from typing import Literal
+
+from pydantic import BaseModel, ConfigDict, Field, field_validator
 
 
 class HabitatIn(BaseModel):
@@ -137,6 +139,18 @@ class AskOut(BaseModel):
     numbers_used: list[float]
     validated: bool
     mode: str = Field(..., description='"claude" | "cached" | "template"')
+
+
+class SuppressionIn(HabitatIn):
+    """POST /suppression (R2): habitat fields + diluent; the diluent replaces nitrogen at fixed O2 and pressure."""
+
+    diluent: Literal["co2", "he"] = Field(..., description='"co2" (carbon dioxide) or "he" (helium)')
+    steps: int = Field(15, ge=5, le=30, description="Number of diluent fractions from 0 to the diluent's max")
+
+    @field_validator("diluent", mode="before")
+    @classmethod
+    def _lower(cls, v: Any) -> Any:
+        return v.strip().lower() if isinstance(v, str) else v
 
 
 class Problem(BaseModel):

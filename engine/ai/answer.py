@@ -13,6 +13,10 @@ Modes, in order of preference:
   habitat, artifact + engine source hashes) still matches.
 * ``template`` a deterministic answer assembled from engine outputs in the context pack.
 
+Intents: incident (R1), refusal, suppression (R2: CO2 / helium dilution, answered only from
+``engine.suppression.curve`` and ``artifacts/suppression_reference.json`` in the pack, always with
+``SAFETY_NOTE``), fans_off, planner, experiments, band, regime, explain.
+
 Every answer is run through ``engine.ai.validator.validate`` against the context pack.
 
 CLI: ``python -m engine.ai.answer --build-cache`` regenerates ``artifacts/ai_cache.json``;
@@ -54,6 +58,10 @@ DEMO_QUESTIONS: list[tuple[str, str | None]] = [
     ("What does Gravity Gap say about the Mir fire?", None),
     ("What would Gravity Gap say about Apollo 1's cabin air?", None),
     ("Is Apollo 13 in scope?", None),
+    # R2 suppression calculator (intent "suppression"; engine.suppression.curve in the context pack)
+    ("How much CO₂ would it take to put out a flame in ISS air?", "iss"),
+    ("Why can't Gravity Gap answer suppression for the lunar base?", "lunar_base"),
+    ("Does helium work better than CO₂?", "iss"),
 ]
 
 OUT_OF_SCOPE = ("rocket", "propellant", "propulsion", "thruster", "launch vehicle", "booster",
@@ -126,6 +134,8 @@ def classify(question: str, context_ids: Iterable[str] = ()) -> str:
         return "incident"
     if any(w in q for w in OUT_OF_SCOPE):
         return "refusal"
+    if ctx.wants_suppression(question, context_ids):
+        return "suppression"
     if ctx._wants_fans_off(q) or ("fan" in q and ("off" in q or "without" in q)) or "ventilation" in q:
         return "fans_off"
     if any(w in q for w in ("test first", "luci", "fm2", "next test", "which test", "what should", "plan")):
@@ -601,7 +611,184 @@ def t_incident(pack: dict, question: str, metric: str | None) -> str:
     return "\n\n---\n\n".join(parts) + "\n\n" + closing
 
 
-TEMPLATES = {"incident": t_incident, "regime": t_regime, "band": t_band, "experiments": t_experiments, "planner": t_planner,
+# --------------------------------------------------------------------------- suppression (R2)
+
+# Shown with every suppression answer (plan/13-round-2-features.md R2, "Safety note (always visible)").
+# The curve's own ``safety_note`` (engine.suppression.SAFETY_NOTE) is used when present; this fallback is kept
+# word-for-word equal to it so the web page and the answers say the same thing.
+SAFETY_NOTE = ("CO₂ at these concentrations is dangerous to breathe. Spacecraft use portable CO₂ or "
+               "water-mist extinguishers aimed at the fire, not cabin flooding. This shows how dilution affected "
+               "flames in NASA's tests; it is not an operating procedure.")
+DILUENT_SHORT = {"co2": "CO₂", "he": "helium"}
+SUPPRESSION_SAMPLE_POINTS = 4
+
+
+def _supp_name(block: dict) -> str:
+    return DILUENT_SHORT.get(block.get("diluent"), str(block.get("label") or block.get("diluent")))
+
+
+def _supp_points(block: dict) -> tuple[list[dict], list[dict]]:
+    """(applicable points with fraction > 0, gated points with fraction > 0) on M1."""
+    ok, gated = [], []
+    for p in block.get("points") or []:
+        f, m1 = p.get("fraction"), p.get("M1") or {}
+        if not isinstance(f, (int, float)) or f <= 0:
+            continue
+        good = m1.get("applicable") and isinstance(m1.get("estimate"), (int, float))
+        (ok if good else gated).append(p)
+    return ok, gated
+
+
+def _supp_sample(ok: list[dict], dose: float | None) -> list[dict]:
+    if len(ok) <= SUPPRESSION_SAMPLE_POINTS:
+        return ok
+    n = len(ok) - 1
+    idx = {0, n // 3, (2 * n) // 3, n}
+    if dose is not None:
+        idx |= {i for i, p in enumerate(ok) if math.isclose(float(p["fraction"]), dose, abs_tol=1e-9)}
+    return [ok[i] for i in sorted(idx)]
+
+
+def _supp_point_line(pack: dict, block: dict, p: dict) -> str:
+    meta = pack.get("metrics") or {}
+    m1 = p["M1"]
+    s = f"- {pct(p['fraction'])} {_supp_name(block)}: M1 estimate {pct(m1['estimate'])}"
+    if m1.get("band90"):
+        s += f", 90% band {band({'kind': 'probability'}, m1['band90'])}"
+    m2 = p.get("M2") or {}
+    if m2.get("applicable") and isinstance(m2.get("estimate"), (int, float)):
+        info = {**(meta.get("M2") or {"unit": "mm"}), "metric": "M2"}
+        s += f"; M2 extinction diameter {val(info, m2['estimate'])}"
+        if m2.get("band90"):
+            s += f" (90% band {band(info, m2['band90'])})"
+    return s
+
+
+def _supp_tested_range(block: dict) -> str:
+    rng = block.get("tested_o2_range")
+    if not rng or len(rng) != 2 or rng[0] is None or rng[1] is None:
+        return f"FLEX has no {_supp_name(block)}-diluted tests the gate can use"
+    return f"FLEX tested {_supp_name(block)} dilution only between {pct(rng[0])} and {pct(rng[1])} O₂"
+
+
+def _supp_par(pack: dict, block: dict) -> str:
+    h, cite, name = pack["habitat"], f"[{block['id']}]", _supp_name(block)
+    ok, gated = _supp_points(block)
+    dose = block.get("dose_for_p90") or None
+    dose_f = dose.get("fraction") if isinstance(dose, dict) else None
+    out = [f"**{block.get('label') or name}** replacing nitrogen at the habitat's {pct(h['o2'])} O₂ and "
+           f"{fmt(h['p_psia'])} psia {cite}. The curve is the M1 chance that a droplet flame self-extinguishes "
+           f"before burnout, from the FLEX droplet tests [PSI-69]."]
+    if not ok:
+        rng = block.get("tested_o2_range")
+        where = ""
+        if rng and len(rng) == 2 and rng[1] is not None and h["o2"] > rng[1]:
+            where = f", and {pct(h['o2'])} O₂ is above that ceiling"
+        elif rng and len(rng) == 2 and rng[0] is not None and h["o2"] < rng[0]:
+            where = f", and {pct(h['o2'])} O₂ is below that range"
+        out.append(f"**No evidence at any {name} fraction above 0.** {_supp_tested_range(block)}{where} {cite}. "
+                   f"Every diluted point is outside tested conditions, so Gravity Gap gives no estimate, band or "
+                   f"dose here (the chart shows gaps, never interpolated values).")
+        note = (block.get("gate_note") or "").strip()
+        if note:
+            out.append(f"**Tested conditions:** {note} {cite}")
+        out.append(f"**Dilution for 90% self-extinction:** not reached inside tested conditions {cite}.")
+        return "\n\n".join(out)
+    if isinstance(dose_f, (int, float)) and dose_f <= 0:
+        out.append(f"**Dilution for 90% self-extinction:** none needed in the model {cite}. "
+                   + (str(dose["note"]) if dose.get("note") else
+                      f"The M1 estimate is already at or above 90% with no {name}."))
+    elif isinstance(dose_f, (int, float)):
+        out.append(f"**Dilution for 90% self-extinction:** about {pct(dose_f)} {name}, the smallest tested-"
+                   f"condition fraction whose M1 estimate reaches 90% {cite}.")
+    else:
+        out.append(f"**Dilution for 90% self-extinction:** not reached inside tested conditions {cite}.")
+    lines = [_supp_point_line(pack, block, p) for p in _supp_sample(ok, dose_f)]
+    out.append(f"**Estimates along the curve** {cite}:\n" + "\n".join(lines))
+    note = (block.get("gate_note") or "").strip()
+    if note:
+        out.append(f"**Tested conditions:** {note} {cite}")
+    else:
+        extra = ""
+        if gated:
+            extra = f"Above {pct(max(float(p['fraction']) for p in ok))} {name} there is no estimate. "
+        out.append(f"{extra}{_supp_tested_range(block)} {cite}.")
+    return "\n\n".join(out)
+
+
+def _supp_ref_label(block: dict, r: dict) -> str:
+    lo, hi, name = r.get("fraction_lo"), r.get("fraction_hi"), _supp_name(block)
+    if isinstance(lo, (int, float)) and isinstance(hi, (int, float)):
+        return f"no {name}" if hi <= 0 else f"{pct(lo)} to {pct(hi)} {name}"
+    if isinstance(lo, (int, float)):
+        return f"above {pct(lo)} {name}"
+    return f"bin {r.get('bin')}"
+
+
+def _supp_ref_par(pack: dict, block: dict) -> str:
+    ref = (pack.get("suppression_reference") or {}).get(block.get("diluent")) or {}
+    rows = [r for r in ref.get("rows") or [] if isinstance(r.get("extinction_rate"), (int, float))]
+    if not rows:
+        return ""
+    lines = [f"- {r.get('fuel') or 'FLEX'}, {_supp_ref_label(block, r)}: {fmt(r.get('extinctions'))} self-extinguished, "
+             f"{fmt(r.get('completions'))} burned out ({pct(r['extinction_rate'])} self-extinction)"
+             for r in rows[:8]]
+    band_txt = rows[0].get("o2_band")
+    head = f"**Raw FLEX outcomes, {band_txt}**" if band_txt else "**Raw FLEX outcomes**"
+    return (f"{head} (counted from the test records, no model; bins mix pressures and droplet sizes, so they show "
+            f"direction, not magnitude) [{ref['id']}]:\n" + "\n".join(lines))
+
+
+def _dose_text(v: float) -> str:
+    return "with no dilution" if v <= 0 else f"at about {pct(v)}"
+
+
+def _supp_compare(pack: dict) -> str:
+    blocks = pack.get("suppression") or {}
+    if not ("co2" in blocks and "he" in blocks):
+        return ""
+    doses = {}
+    for d, b in blocks.items():
+        dose = b.get("dose_for_p90")
+        doses[d] = dose.get("fraction") if isinstance(dose, dict) else None
+    c, he = doses.get("co2"), doses.get("he")
+    cites = "[eng:suppression:co2] [eng:suppression:he]"
+    if isinstance(c, (int, float)) and isinstance(he, (int, float)):
+        if math.isclose(c, he, abs_tol=1e-9):
+            verdict = (f"both reach a 90% M1 estimate {_dose_text(c)}, so the dose cannot tell them apart; compare "
+                       f"the estimates along the two curves above instead")
+        else:
+            lo_d, hi_d = ("co2", "he") if c < he else ("he", "co2")
+            verdict = (f"{DILUENT_SHORT[lo_d]} reaches a 90% M1 estimate {_dose_text(doses[lo_d])}, "
+                       f"{DILUENT_SHORT[hi_d]} {_dose_text(doses[hi_d])}")
+        return (f"**CO₂ versus helium:** in these models {verdict} {cites}. This compares model curves inside "
+                f"tested conditions only; it is not a ranking of extinguishing agents.")
+    have = [DILUENT_SHORT[d] for d, v in doses.items() if isinstance(v, (int, float))]
+    if have:
+        other = [DILUENT_SHORT[d] for d in ("co2", "he") if DILUENT_SHORT[d] not in have]
+        return (f"**CO₂ versus helium:** only {have[0]} reaches a 90% M1 estimate inside tested conditions; "
+                f"{other[0]} does not, so the data cannot say which works better here {cites}.")
+    return (f"**CO₂ versus helium:** neither reaches a 90% M1 estimate inside tested conditions here, so the "
+            f"data cannot say which works better {cites}.")
+
+
+def t_suppression(pack: dict, question: str, metric: str | None) -> str:
+    blocks = pack.get("suppression") or {}
+    out = [_habitat_line(pack)]
+    if not blocks:
+        out.append("The suppression calculator (engine.suppression) is not available in this build, so Gravity "
+                   "Gap cannot give a dilution curve for these conditions yet.")
+    else:
+        for d in ("co2", "he"):
+            if d in blocks:
+                out += [_supp_par(pack, blocks[d]), _supp_ref_par(pack, blocks[d])]
+        out.append(_supp_compare(pack))
+    note = next((b.get("safety_note") for b in blocks.values() if b.get("safety_note")), None) or SAFETY_NOTE
+    out.append(f"**Safety note:** {note}")
+    return "\n\n".join(o for o in out if o)
+
+
+TEMPLATES = {"suppression": t_suppression, "incident": t_incident, "regime": t_regime, "band": t_band, "experiments": t_experiments, "planner": t_planner,
              "fans_off": t_fans_off, "explain": t_explain}
 
 
