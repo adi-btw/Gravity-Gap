@@ -225,6 +225,84 @@ def test_data_tests_bad_limit_problem_json(client):
     _assert_problem(client.get("/data/tests", params={"limit": 0}), 422)
 
 
+# --------------------------------------------------------------------------- phase 3: outcome filter
+
+
+def test_parse_outcomes_flattens_and_dedupes():
+    from api.main import parse_outcomes
+
+    assert parse_outcomes(None) == []
+    assert parse_outcomes(["extinction, flow_terminated", "extinction", " ", ""]) == ["extinction", "flow_terminated"]
+
+
+def test_data_tests_outcome_single(client):
+    total = client.get("/data/tests", params={"limit": 1}).json()["total"]
+    r = client.get("/data/tests", params={"outcome": "extinction", "limit": 1000})
+    assert r.status_code == 200
+    body = r.json()
+    assert 0 < body["total"] < total
+    assert {row["outcome"] for row in body["rows"]} == {"extinction"}
+
+
+def test_data_tests_outcome_repeated_equals_comma(client):
+    a = client.get("/data/tests", params={"outcome": "extinction", "limit": 1}).json()["total"]
+    b = client.get("/data/tests", params={"outcome": "self_extinguished", "limit": 1}).json()["total"]
+    repeated = client.get("/data/tests", params=[("outcome", "extinction"), ("outcome", "self_extinguished"),
+                                                 ("limit", "1000")]).json()
+    comma = client.get("/data/tests", params={"outcome": "extinction,self_extinguished", "limit": 1000}).json()
+    assert repeated["total"] == comma["total"] == a + b
+    assert {r["outcome"] for r in repeated["rows"]} == {"extinction", "self_extinguished"}
+    assert [r["record_id"] for r in repeated["rows"]] == [r["record_id"] for r in comma["rows"]]
+
+
+def test_data_tests_outcome_exact_and_combined(client):
+    # Exact match: a prefix or different case matches nothing.
+    assert client.get("/data/tests", params={"outcome": "extinct"}).json()["total"] == 0
+    assert client.get("/data/tests", params={"outcome": "EXTINCTION"}).json()["total"] == 0
+    r = client.get("/data/tests", params={"outcome": "extinction", "investigation_id": "PSI-69", "limit": 1000})
+    for row in r.json()["rows"]:
+        assert row["outcome"] == "extinction" and row["investigation_id"] == "PSI-69"
+
+
+def test_data_tests_blank_outcome_is_no_filter(client):
+    total = client.get("/data/tests", params={"limit": 1}).json()["total"]
+    assert client.get("/data/tests", params={"outcome": "", "limit": 1}).json()["total"] == total
+
+
+def test_export_outcome_filter(client, catalog_ready):
+    r = client.get("/data/export", params={"format": "json", "outcome": "extinction,flow_terminated"})
+    assert r.status_code == 200
+    body = r.json()
+    assert body["total"] > 0
+    assert {row["outcome"] for row in body["rows"]} == {"extinction", "flow_terminated"}
+    csv = client.get("/data/export", params=[("outcome", "flow_terminated"), ("format", "csv")])
+    assert csv.status_code == 200
+    import csv as csvmod
+    import io
+
+    body_lines = [ln for ln in csv.text.splitlines() if ln and not ln.startswith("#")]
+    rows = list(csvmod.DictReader(io.StringIO("\n".join(body_lines))))
+    assert len(rows) == client.get("/data/tests", params={"outcome": "flow_terminated"}).json()["total"]
+    assert {row["outcome"] for row in rows} == {"flow_terminated"}
+
+
+# --------------------------------------------------------------------------- phase 3: CORS config
+
+
+def test_parse_cors_origins():
+    from api.main import DEFAULT_CORS_ORIGINS, parse_cors_origins
+
+    assert parse_cors_origins(None) == list(DEFAULT_CORS_ORIGINS)
+    assert parse_cors_origins("  , ") == list(DEFAULT_CORS_ORIGINS)
+    assert parse_cors_origins("https://gravity-gap.vercel.app/, http://localhost:3000") == [
+        "https://gravity-gap.vercel.app", "http://localhost:3000"]
+
+
+def test_cors_rejects_unknown_origin(client):
+    r = client.get("/health", headers={"Origin": "https://evil.example"})
+    assert "access-control-allow-origin" not in r.headers
+
+
 # =========================================================================== phase 2
 
 

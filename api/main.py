@@ -48,7 +48,16 @@ EXPORT_MAX_ROWS = 100_000
 MC_N = 2000
 MC_SEED = 0
 PROBLEM_JSON = "application/problem+json"
-ALLOWED_ORIGINS = ["http://localhost:3000", "http://127.0.0.1:3000"]
+DEFAULT_CORS_ORIGINS = ("http://localhost:3000", "http://127.0.0.1:3000")
+
+
+def parse_cors_origins(raw: str | None) -> list[str]:
+    """Comma-separated origins from env CORS_ORIGINS; blank/unset gives the localhost defaults."""
+    origins = [o.strip().rstrip("/") for o in (raw or "").split(",") if o.strip()]
+    return origins or list(DEFAULT_CORS_ORIGINS)
+
+
+ALLOWED_ORIGINS = parse_cors_origins(os.environ.get("CORS_ORIGINS"))
 
 
 # --------------------------------------------------------------------------- helpers
@@ -271,25 +280,31 @@ def rank(body: HabitatIn) -> list[dict[str, Any]]:
     return to_jsonable(ranked)
 
 
+OUTCOME_DESCRIPTION = ("Exact match on the outcome column, e.g. extinction; repeat the parameter or "
+                       "comma-separate values to match any of them")
+
+
+def parse_outcomes(values: list[str] | None) -> list[str]:
+    """Flatten repeated and comma-separated `outcome=` values; drop blanks, keep order, dedupe."""
+    out: list[str] = []
+    for value in values or []:
+        for part in str(value).split(","):
+            part = part.strip()
+            if part and part not in out:
+                out.append(part)
+    return out
+
+
 @app.get("/data/tests", response_model=TestsPage)
 def data_tests(
     investigation_id: str | None = Query(None, description="e.g. PSI-98"),
     o2_min: float | None = Query(None, ge=0, le=1),
     o2_max: float | None = Query(None, ge=0, le=1),
+    outcome: list[str] | None = Query(None, description=OUTCOME_DESCRIPTION),
     limit: int = Query(100, ge=1, le=1000),
     offset: int = Query(0, ge=0),
 ) -> dict[str, Any]:
-    df = load_tests()
-    if df is None:
-        raise HTTPException(status_code=503, detail="data/clean/psi_tests.csv is missing")
-    mask = pd.Series(True, index=df.index)
-    if investigation_id:
-        mask &= df["investigation_id"].astype(str) == investigation_id
-    if o2_min is not None:
-        mask &= df["o2_mole_fraction"] >= o2_min
-    if o2_max is not None:
-        mask &= df["o2_mole_fraction"] <= o2_max
-    filtered = df[mask]
+    filtered = _filtered_tests(investigation_id, o2_min, o2_max, outcome)
     page = filtered.iloc[offset : offset + limit]
     # to_json turns NaN into null and numpy scalars into JSON numbers.
     rows = json.loads(page.to_json(orient="records"))
@@ -431,7 +446,8 @@ def ask(body: AskIn, request: Request) -> dict[str, Any]:
     return to_jsonable(res)
 
 
-def _filtered_tests(investigation_id: str | None, o2_min: float | None, o2_max: float | None) -> pd.DataFrame:
+def _filtered_tests(investigation_id: str | None, o2_min: float | None, o2_max: float | None,
+                    outcome: list[str] | None = None) -> pd.DataFrame:
     df = load_tests()
     if df is None:
         raise HTTPException(status_code=503, detail="data/clean/psi_tests.csv is missing")
@@ -442,6 +458,9 @@ def _filtered_tests(investigation_id: str | None, o2_min: float | None, o2_max: 
         mask &= df["o2_mole_fraction"] >= o2_min
     if o2_max is not None:
         mask &= df["o2_mole_fraction"] <= o2_max
+    outcomes = parse_outcomes(outcome)
+    if outcomes:
+        mask &= df["outcome"].astype("string").isin(outcomes).fillna(False).astype(bool)
     return df[mask]
 
 
@@ -460,9 +479,10 @@ def data_export(
     investigation_id: str | None = Query(None, description="e.g. PSI-98"),
     o2_min: float | None = Query(None, ge=0, le=1),
     o2_max: float | None = Query(None, ge=0, le=1),
+    outcome: list[str] | None = Query(None, description=OUTCOME_DESCRIPTION),
     format: str = Query("csv", pattern="^(csv|json)$"),
 ) -> Response:
-    filtered = _filtered_tests(investigation_id, o2_min, o2_max).iloc[:EXPORT_MAX_ROWS]
+    filtered = _filtered_tests(investigation_id, o2_min, o2_max, outcome).iloc[:EXPORT_MAX_ROWS]
     catalog = {r.get("id"): r for r in (load_catalog() or {}).get("investigations", [])}
     inv_ids = sorted(set(filtered["investigation_id"].astype(str)), key=lambda i: (len(i), i))
     citations = [{"investigation_id": i, "acronym": (catalog.get(i) or {}).get("acronym"),

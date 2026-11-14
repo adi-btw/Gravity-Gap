@@ -1,0 +1,39 @@
+# Gravity Gap API (FastAPI). Build context: repo root.
+#   docker build -f Dockerfile.api -t gravity-gap-api .
+#   docker run -p 8000:8000 gravity-gap-api
+# Render/Fly inject $PORT; locally it defaults to 8000.
+FROM python:3.13-slim
+
+ENV PYTHONDONTWRITEBYTECODE=1 \
+    PYTHONUNBUFFERED=1 \
+    PIP_NO_CACHE_DIR=1 \
+    PIP_DISABLE_PIP_VERSION_CHECK=1 \
+    PORT=8000
+
+WORKDIR /app
+
+# Set WITH_CLAUDE=0 to skip the optional anthropic SDK (then /ask only uses cached/template answers).
+ARG WITH_CLAUDE=1
+COPY requirements.txt requirements-ai.txt ./
+RUN pip install -r requirements.txt \
+    && if [ "$WITH_CLAUDE" = "1" ]; then pip install -r requirements-ai.txt; fi
+
+RUN useradd --create-home --uid 10001 app
+
+COPY engine ./engine
+COPY api ./api
+COPY data ./data
+COPY artifacts ./artifacts
+COPY ledger ./ledger
+COPY scripts ./scripts
+
+# The API process only needs to write the ledger (POST /ledger); everything else stays root-owned.
+RUN chown -R app:app /app/ledger
+USER app
+
+EXPOSE 8000
+
+HEALTHCHECK --interval=30s --timeout=5s --start-period=20s --retries=3 \
+    CMD python -c "import os, urllib.request; urllib.request.urlopen('http://127.0.0.1:%s/health' % os.environ.get('PORT', '8000'), timeout=4)" || exit 1
+
+CMD ["sh", "-c", "exec uvicorn api.main:app --host 0.0.0.0 --port ${PORT:-8000}"]

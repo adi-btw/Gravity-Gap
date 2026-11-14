@@ -5,24 +5,60 @@ on:
     branches: [main]
   pull_request:
 
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   python:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
+      - uses: actions/checkout@v5
+      - uses: actions/setup-python@v6
         with:
           python-version: "3.13"
           cache: pip
       - name: Install dependencies
-        run: pip install -r requirements.txt
+        run: pip install -r requirements.txt ruff
+      - name: Ruff (syntax errors and undefined names only)
+        run: ruff check --select E9,F63,F7,F82 engine api scripts tests
       - name: Run pytest
         run: pytest
+
+  ledger:
+    # T9 part 2: ledger/predictions.jsonl is append-only.
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.13"
+      - name: Check ledger is append-only
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+          BASE_REF: ${{ github.base_ref }}
+          BEFORE: ${{ github.event.before }}
+        run: |
+          if [ "$EVENT_NAME" = "pull_request" ]; then
+            BASE="$(git merge-base HEAD "origin/$BASE_REF" 2>/dev/null || true)"
+          else
+            BASE="$BEFORE"
+          fi
+          if [ -z "$BASE" ] || [ "$BASE" = "0000000000000000000000000000000000000000" ]; then
+            BASE="$(git rev-parse --verify --quiet HEAD~1 || true)"
+          fi
+          echo "Comparing against base: ${BASE:-<none>}"
+          python scripts/check_ledger_append_only.py --base "$BASE"
 
   web:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - name: Check for web app
         id: check
         run: |
@@ -31,10 +67,12 @@ jobs:
           else
             echo "exists=false" >> "$GITHUB_OUTPUT"
           fi
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v5
         if: steps.check.outputs.exists == 'true'
         with:
           node-version: "22"
+          cache: npm
+          cache-dependency-path: web/package-lock.json
       - name: Install
         if: steps.check.outputs.exists == 'true'
         working-directory: web
@@ -51,3 +89,72 @@ jobs:
         if: steps.check.outputs.exists == 'true'
         working-directory: web
         run: npm run build
+
+  docker:
+    # Docker is not installed on the dev machines, so the images are verified here (no push).
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - name: Build API image
+        run: docker build -f Dockerfile.api -t gravity-gap-api:ci .
+      - name: Smoke-test API image
+        run: |
+          docker run -d --name api -p 8000:8000 gravity-gap-api:ci
+          for i in $(seq 1 30); do
+            if curl -fsS http://127.0.0.1:8000/health; then echo; exit 0; fi
+            sleep 2
+          done
+          docker logs api
+          exit 1
+      - name: Build web image
+        run: docker build -f web.Dockerfile --build-arg NEXT_PUBLIC_API_URL=http://localhost:8000 -t gravity-gap-web:ci .
+
+  e2e:
+    # T7 (demo path, online + offline) and T8 (axe a11y) via Playwright; runs when web/playwright.config.ts exists.
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - name: Check for Playwright config
+        id: check
+        run: |
+          if [ -f web/playwright.config.ts ]; then
+            echo "exists=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "exists=false" >> "$GITHUB_OUTPUT"
+          fi
+      - uses: actions/setup-python@v6
+        if: steps.check.outputs.exists == 'true'
+        with:
+          python-version: "3.13"
+          cache: pip
+      - name: Install Python dependencies
+        if: steps.check.outputs.exists == 'true'
+        run: pip install -r requirements.txt
+      - uses: actions/setup-node@v5
+        if: steps.check.outputs.exists == 'true'
+        with:
+          node-version: "22"
+          cache: npm
+          cache-dependency-path: web/package-lock.json
+      - name: Install web dependencies
+        if: steps.check.outputs.exists == 'true'
+        working-directory: web
+        run: npm ci
+      - name: Install Playwright browser
+        if: steps.check.outputs.exists == 'true'
+        working-directory: web
+        run: npx playwright install --with-deps chromium
+      - name: Run E2E
+        if: steps.check.outputs.exists == 'true'
+        continue-on-error: false
+        working-directory: web
+        run: npm run e2e
+      - name: Upload Playwright report
+        if: failure() && steps.check.outputs.exists == 'true'
+        uses: actions/upload-artifact@v6
+        with:
+          name: playwright-report
+          path: |
+            web/playwright-report
+            web/test-results
+          retention-days: 7

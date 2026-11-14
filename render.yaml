@@ -1,0 +1,22 @@
+# Render Blueprint for the Gravity Gap API (docs/DEPLOY.md, section C).
+# The web app goes on Vercel (root directory `web`). Render injects $PORT; Dockerfile.api honours it.
+services:
+  - type: web
+    name: gravity-gap-api
+    runtime: docker
+    dockerfilePath: ./Dockerfile.api
+    dockerContext: .
+    plan: free
+    region: oregon
+    healthCheckPath: /health
+    autoDeploy: false
+    envVars:
+      # Comma-separated browser origins allowed by CORS, e.g. https://gravity-gap.vercel.app
+      - key: CORS_ORIGINS
+        sync: false
+      # Enables POST /ledger (X-Team-Token). Leave empty to keep the hosted ledger read-only.
+      - key: LEDGER_TEAM_TOKEN
+        sync: false
+      # Optional: live Claude answers in /ask. Without it /ask serves cached/template answers.
+      - key: ANTHROPIC_API_KEY
+        sync: false

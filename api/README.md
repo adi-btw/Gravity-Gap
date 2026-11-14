@@ -16,7 +16,8 @@ At startup the app loads `artifacts/catalog.json` (if present) and `data/clean/p
 `artifact_version` is the first 12 hex chars of the sha256 of `catalog.json` (or `"missing"`).
 `/health` also re-hashes every file in `artifacts/` and compares with `artifacts/MANIFEST.json`
 (`python scripts/build_manifest.py`): a mismatch gives `status: "degraded"` and `manifest_ok: false` with the
-changed/missing/unlisted files; it never crashes. CORS allows `http://localhost:3000` and `http://127.0.0.1:3000`.
+changed/missing/unlisted files; it never crashes. CORS allows the comma-separated origins in env `CORS_ORIGINS`
+(default `http://localhost:3000,http://127.0.0.1:3000`). Deployment: [`docs/DEPLOY.md`](../docs/DEPLOY.md).
 
 ## Endpoints
 
@@ -28,14 +29,18 @@ changed/missing/unlisted files; it never crashes. CORS allows `http://localhost:
 | GET | `/catalog/{id}` | – | one record, 404 problem+json if unknown |
 | POST | `/physics` | `{g_m_s2, p_psia, o2, u_cm_s, L_mm}` | `engine.physics.evaluate(...)` + `mc` |
 | POST | `/rank` | habitat fields + optional `weights` | `engine.rank.rank(...)` |
-| GET | `/data/tests` | `investigation_id?, o2_min?, o2_max?, limit=100 (1..1000), offset=0` | `{total, limit, offset, rows[]}` |
+| GET | `/data/tests` | `investigation_id?, o2_min?, o2_max?, outcome?, limit=100 (1..1000), offset=0` | `{total, limit, offset, rows[]}` |
 | GET | `/metrics` | – | `engine.bounds.METRICS` (`M1`..`M5` -> `{label, unit, kind, data, flow_dependent}`) |
 | POST | `/bounds` | habitat fields + `metric` | `engine.bounds.predict(...)` (JSON-safe; 422 unknown metric; 503 if `engine.bounds`/`engine.rules` missing) |
 | GET | `/planner` | – | `artifacts/planner.json` (`items[]`, `design_implications[]`); 503 if not built |
 | GET | `/ledger` | – | `{predictions[], verification[{id, ok, line}]}` from `ledger/predictions.jsonl` |
 | POST | `/ledger` | header `X-Team-Token`; `{metric, habitat: preset id \| fields, rationale, author}` | 201 + appended record (`id, created_at, habitat, metric, estimate, band90, model_version, artifact_hashes, rationale, author, status, sha256`) |
 | POST | `/ask` | `{question, habitat?: preset id \| fields, context_ids?: [PSI-xx, rec:..., M1]}` | `{answer_markdown, citations[], numbers_used[], validated, mode: "claude"\|"cached"\|"template", intent, habitat, validation}` |
-| GET | `/data/export` | `investigation_id?, o2_min?, o2_max?, format=csv\|json` | CSV with `#` header lines (cleaning-report version + one line per included investigation with its DOI), or JSON `{source, cleaning_report, citations[], total, rows[]}` |
+| GET | `/data/export` | `investigation_id?, o2_min?, o2_max?, outcome?, format=csv\|json` | CSV with `#` header lines (cleaning-report version + one line per included investigation with its DOI), or JSON `{source, cleaning_report, citations[], total, rows[]}` |
+
+`outcome` (phase 3) is an exact, case-sensitive match on the `outcome` column (e.g. `extinction`,
+`self_extinguished`, `flow_terminated`); repeat it (`?outcome=a&outcome=b`) or comma-separate it
+(`?outcome=a,b`) to match any of the values. Blank values are ignored.
 
 ### Phase 2 notes
 

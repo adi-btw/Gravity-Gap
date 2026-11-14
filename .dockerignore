@@ -1,0 +1,25 @@
+# Keep build contexts small and secrets out of images.
+.git
+.github
+.omc
+.claude
+.env
+.env.*
+**/__pycache__
+**/*.pyc
+**/.pytest_cache
+**/.ruff_cache
+.venv
+venv
+graphify-out
+**/graphify-out
+plan
+docs
+
+web/node_modules
+web/.next
+web/public/artifacts
+web/test-results
+web/playwright-report
+web/tsconfig.tsbuildinfo
+**/node_modules
