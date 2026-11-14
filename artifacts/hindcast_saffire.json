@@ -1,0 +1,1832 @@
+{
+  "artifact": "hindcast_saffire",
+  "validation": "V3 SAFFIRE-II hindcast (plan/03-physics-engine.md \u00a75)",
+  "source": "data/clean/psi_saffire_ug_vs_1g.csv (PSI-99 SAFFIRE-II)",
+  "seed": 0,
+  "n_draws": 2000,
+  "conditions": {
+    "p_psia": 14.696,
+    "flow_cm_s": 20.0,
+    "g_earth": 9.81,
+    "g_moon": 1.62,
+    "pressure_note": "not in source table; ~1 atm assumed"
+  },
+  "L_choices_mm": {
+    "thickness": "sample thickness (primary)",
+    "10mm": 10.0,
+    "width_50mm": 50.0
+  },
+  "fallback_thickness_mm": 10.0,
+  "bridge_rule": [
+    "dominant regime at 1 g: forced if forced fraction >= 0.5, buoyant if buoyant >= 0.5, else mixed",
+    "forced -> ug outcome transfers (predict same)",
+    "buoyant -> ug outcome does not transfer (predict more burn at 1 g)",
+    "mixed -> conservative: more burn at 1 g; strict: same",
+    "ceiling: if ug burned completely, 'more at 1 g' becomes 'same'"
+  ],
+  "classes": [
+    "same",
+    "more_at_1g",
+    "more_at_ug"
+  ],
+  "samples": [
+    {
+      "sample": "2-1",
+      "material": "Silicone",
+      "thickness_mm": 0.27,
+      "thickness_assumed": false,
+      "flow_direction": "concurrent",
+      "o2": 0.215,
+      "ug_burned_fraction": 0.0,
+      "1g_burned_fraction": 1.0,
+      "ug_burn_length_raw": "~ 0",
+      "1g_burn_length_raw": "Complete",
+      "actual": "more_at_1g",
+      "flagged": false,
+      "earth": {
+        "thickness": {
+          "g_m_s2": 9.81,
+          "L_mm": 0.27,
+          "u_b_cm_s": {
+            "p05": 5.408097805053907,
+            "p50": 10.271458958271793,
+            "p95": 17.726843879449678
+          },
+          "ri": {
+            "p05": 0.07311880993764185,
+            "p50": 0.263757178264421,
+            "p95": 0.7856025011082111
+          },
+          "regime_fractions": {
+            "forced": 0.114,
+            "mixed": 0.886,
+            "buoyant": 0.0
+          },
+          "dominant_regime": "mixed"
+        },
+        "10mm": {
+          "g_m_s2": 9.81,
+          "L_mm": 10.0,
+          "u_b_cm_s": {
+            "p05": 32.9126351224689,
+            "p50": 62.51010855482194,
+            "p95": 107.88213629052198
+          },
+          "ri": {
+            "p05": 2.7081040717645126,
+            "p50": 9.768784380163739,
+            "p95": 29.096388929933735
+          },
+          "regime_fractions": {
+            "forced": 0.0,
+            "mixed": 0.5105,
+            "buoyant": 0.4895
+          },
+          "dominant_regime": "mixed"
+        },
+        "width_50mm": {
+          "g_m_s2": 9.81,
+          "L_mm": 50.0,
+          "u_b_cm_s": {
+            "p05": 73.59488945248758,
+            "p50": 139.77685200947298,
+            "p95": 241.23179030350414
+          },
+          "ri": {
+            "p05": 13.540520358822567,
+            "p50": 48.843921900818685,
+            "p95": 145.48194464966866
+          },
+          "regime_fractions": {
+            "forced": 0.0,
+            "mixed": 0.01200000000000001,
+            "buoyant": 0.988
+          },
+          "dominant_regime": "buoyant"
+        }
+      },
+      "moon": {
+        "thickness": {
+          "g_m_s2": 1.62,
+          "L_mm": 0.27,
+          "u_b_cm_s": {
+            "p05": 2.1976956105703915,
+            "p50": 4.174025892366943,
+            "p95": 7.203680182471264
+          },
+          "ri": {
+            "p05": 0.012074665861261958,
+            "p50": 0.043556231273023646,
+            "p95": 0.12973252311878714
+          },
+          "regime_fractions": {
+            "forced": 0.8795,
+            "mixed": 0.12050000000000005,
+            "buoyant": 0.0
+          },
+          "dominant_regime": "forced"
+        },
+        "10mm": {
+          "g_m_s2": 1.62,
+          "L_mm": 10.0,
+          "u_b_cm_s": {
+            "p05": 13.374749560438804,
+            "p50": 25.40231263177784,
+            "p95": 43.840201477693796
+          },
+          "ri": {
+            "p05": 0.44720984671340575,
+            "p50": 1.6131937508527274,
+            "p95": 4.804908263658781
+          },
+          "regime_fractions": {
+            "forced": 0.0,
+            "mixed": 1.0,
+            "buoyant": 0.0
+          },
+          "dominant_regime": "mixed"
+        },
+        "width_50mm": {
+          "g_m_s2": 1.62,
+          "L_mm": 50.0,
+          "u_b_cm_s": {
+            "p05": 29.9068491991766,
+            "p50": 56.801297830356845,
+            "p95": 98.02967065141009
+          },
+          "ri": {
+            "p05": 2.2360492335670292,
+            "p50": 8.06596875426364,
+            "p95": 24.024541318293917
+          },
+          "regime_fractions": {
+            "forced": 0.0,
+            "mixed": 0.6054999999999999,
+            "buoyant": 0.3945
+          },
+          "dominant_regime": "mixed"
+        }
+      },
+      "pred": {
+        "thickness": {
+          "conservative": "more_at_1g",
+          "strict": "same",
+          "moon_conservative": "same"
+        },
+        "10mm": {
+          "conservative": "more_at_1g",
+          "strict": "same",
+          "moon_conservative": "more_at_1g"
+        },
+        "width_50mm": {
+          "conservative": "more_at_1g",
+          "strict": "more_at_1g",
+          "moon_conservative": "more_at_1g"
+        }
+      }
+    },
+    {
+      "sample": "2-2",
+      "material": "Silicone",
+      "thickness_mm": 0.61,
+      "thickness_assumed": false,
+      "flow_direction": "concurrent",
+      "o2": 0.221,
+      "ug_burned_fraction": 0.0,
+      "1g_burned_fraction": 0.2620689655172413,
+      "ug_burn_length_raw": "~ 0",
+      "1g_burn_length_raw": "7.6 cm",
+      "actual": "more_at_1g",
+      "flagged": false,
+      "earth": {
+        "thickness": {
+          "g_m_s2": 9.81,
+          "L_mm": 0.61,
+          "u_b_cm_s": {
+            "p05": 8.128821230227123,
+            "p50": 15.43885792290586,
+            "p95": 26.64492212724617
+          },
+          "ri": {
+            "p05": 0.1651943483776353,
+            "p50": 0.5958958471899882,
+            "p95": 1.7748797247259587
+          },
+          "regime_fractions": {
+            "forced": 0.003,
+            "mixed": 0.997,
+            "buoyant": 0.0
+          },
+          "dominant_regime": "mixed"
+        },
+        "10mm": {
+          "g_m_s2": 9.81,
+          "L_mm": 10.0,
+          "u_b_cm_s": {
+            "p05": 32.9126351224689,
+            "p50": 62.51010855482194,
+            "p95": 107.88213629052198
+          },
+          "ri": {
+            "p05": 2.7081040717645126,
+            "p50": 9.768784380163739,
+            "p95": 29.096388929933735
+          },
+          "regime_fractions": {
+            "forced": 0.0,
+            "mixed": 0.5105,
+            "buoyant": 0.4895
+          },
+          "dominant_regime": "mixed"
+        },
+        "width_50mm": {
+          "g_m_s2": 9.81,
+          "L_mm": 50.0,
+          "u_b_cm_s": {
+            "p05": 73.59488945248758,
+            "p50": 139.77685200947298,
+            "p95": 241.23179030350414
+          },
+          "ri": {
+            "p05": 13.540520358822567,
+            "p50": 48.843921900818685,
+            "p95": 145.48194464966866
+          },
+          "regime_fractions": {
+            "forced": 0.0,
+            "mixed": 0.01200000000000001,
+            "buoyant": 0.988
+          },
+          "dominant_regime": "buoyant"
+        }
+      },
+      "moon": {
+        "thickness": {
+          "g_m_s2": 1.62,
+          "L_mm": 0.61,
+          "u_b_cm_s": {
+            "p05": 3.303319462914833,
+            "p50": 6.2739084078106675,
+            "p95": 10.82773102740791
+          },
+          "ri": {
+            "p05": 0.027279800649517762,
+            "p50": 0.0984048188020164,
+            "p95": 0.2930994040831858
+          },
+          "regime_fractions": {
+            "forced": 0.5075,
+            "mixed": 0.49250000000000005,
+            "buoyant": 0.0
+          },
+          "dominant_regime": "forced"
+        },
+        "10mm": {
+          "g_m_s2": 1.62,
+          "L_mm": 10.0,
+          "u_b_cm_s": {
+            "p05": 13.374749560438804,
+            "p50": 25.40231263177784,
+            "p95": 43.840201477693796
+          },
+          "ri": {
+            "p05": 0.44720984671340575,
+            "p50": 1.6131937508527274,
+            "p95": 4.804908263658781
+          },
+          "regime_fractions": {
+            "forced": 0.0,
+            "mixed": 1.0,
+            "buoyant": 0.0
+          },
+          "dominant_regime": "mixed"
+        },
+        "width_50mm": {
+          "g_m_s2": 1.62,
+          "L_mm": 50.0,
+          "u_b_cm_s": {
+            "p05": 29.9068491991766,
+            "p50": 56.801297830356845,
+            "p95": 98.02967065141009
+          },
+          "ri": {
+            "p05": 2.2360492335670292,
+            "p50": 8.06596875426364,
+            "p95": 24.024541318293917
+          },
+          "regime_fractions": {
+            "forced": 0.0,
+            "mixed": 0.6054999999999999,
+            "buoyant": 0.3945
+          },
+          "dominant_regime": "mixed"
+        }
+      },
+      "pred": {
+        "thickness": {
+          "conservative": "more_at_1g",
+          "strict": "same",
+          "moon_conservative": "same"
+        },
+        "10mm": {
+          "conservative": "more_at_1g",
+          "strict": "same",
+          "moon_conservative": "more_at_1g"
+        },
+        "width_50mm": {
+          "conservative": "more_at_1g",
+          "strict": "more_at_1g",
+          "moon_conservative": "more_at_1g"
+        }
+      }
+    },
+    {
+      "sample": "2-3",
+      "material": "Silicone",
+      "thickness_mm": 1.03,
+      "thickness_assumed": false,
+      "flow_direction": "concurrent",
+      "o2": 0.221,
+      "ug_burned_fraction": 0.0,
+      "1g_burned_fraction": 0.0,
+      "ug_burn_length_raw": "~ 0",
+      "1g_burn_length_raw": "~ 0",
+      "actual": "same",
+      "flagged": false,
+      "earth": {
+        "thickness": {
+          "g_m_s2": 9.81,
+          "L_mm": 1.03,
+          "u_b_cm_s": {
+            "p05": 10.562853767926152,
+            "p50": 20.06175237032322,
+            "p95": 34.62327539463151
+          },
+          "ri": {
+            "p05": 0.27893471939174497,
+            "p50": 1.006184791156865,
+            "p95": 2.996928059783175
+          },
+          "regime_fractions": {
+            "forced": 0.0,
+            "mixed": 1.0,
+            "buoyant": 0.0
+          },
+          "dominant_regime": "mixed"
+        },
+        "10mm": {
+          "g_m_s2": 9.81,
+          "L_mm": 10.0,
+          "u_b_cm_s": {
+            "p05": 32.9126351224689,
+            "p50": 62.51010855482194,
+            "p95": 107.88213629052198
+          },
+          "ri": {
+            "p05": 2.7081040717645126,
+            "p50": 9.768784380163739,
+            "p95": 29.096388929933735
+          },
+          "regime_fractions": {
+            "forced": 0.0,
+            "mixed": 0.5105,
+            "buoyant": 0.4895
+          },
+          "dominant_regime": "mixed"
+        },
+        "width_50mm": {
+          "g_m_s2": 9.81,
+          "L_mm": 50.0,
+          "u_b_cm_s": {
+            "p05": 73.59488945248758,
+            "p50": 139.77685200947298,
+            "p95": 241.23179030350414
+          },
+          "ri": {
+            "p05": 13.540520358822567,
+            "p50": 48.843921900818685,
+            "p95": 145.48194464966866
+          },
+          "regime_fractions": {
+            "forced": 0.0,
+            "mixed": 0.01200000000000001,
+            "buoyant": 0.988
+          },
+          "dominant_regime": "buoyant"
+        }
+      },
+      "moon": {
+        "thickness": {
+          "g_m_s2": 1.62,
+          "L_mm": 1.03,
+          "u_b_cm_s": {
+            "p05": 4.292440373244476,
+            "p50": 8.15251992732221,
+            "p95": 14.069904632132122
+          },
+          "ri": {
+            "p05": 0.046062614211480814,
+            "p50": 0.1661589563378309,
+            "p95": 0.49490555115685453
+          },
+          "regime_fractions": {
+            "forced": 0.2775,
+            "mixed": 0.7224999999999999,
+            "buoyant": 0.0
+          },
+          "dominant_regime": "mixed"
+        },
+        "10mm": {
+          "g_m_s2": 1.62,
+          "L_mm": 10.0,
+          "u_b_cm_s": {
+            "p05": 13.374749560438804,
+            "p50": 25.40231263177784,
+            "p95": 43.840201477693796
+          },
+          "ri": {
+            "p05": 0.44720984671340575,
+            "p50": 1.6131937508527274,
+            "p95": 4.804908263658781
+          },
+          "regime_fractions": {
+            "forced": 0.0,
+            "mixed": 1.0,
+            "buoyant": 0.0
+          },
+          "dominant_regime": "mixed"
+        },
+        "width_50mm": {
+          "g_m_s2": 1.62,
+          "L_mm": 50.0,
+          "u_b_cm_s": {
+            "p05": 29.9068491991766,
+            "p50": 56.801297830356845,
+            "p95": 98.02967065141009
+          },
+          "ri": {
+            "p05": 2.2360492335670292,
+            "p50": 8.06596875426364,
+            "p95": 24.024541318293917
+          },
+          "regime_fractions": {
+            "forced": 0.0,
+            "mixed": 0.6054999999999999,
+            "buoyant": 0.3945
+          },
+          "dominant_regime": "mixed"
+        }
+      },
+      "pred": {
+        "thickness": {
+          "conservative": "more_at_1g",
+          "strict": "same",
+          "moon_conservative": "more_at_1g"
+        },
+        "10mm": {
+          "conservative": "more_at_1g",
+          "strict": "same",
+          "moon_conservative": "more_at_1g"
+        },
+        "width_50mm": {
+          "conservative": "more_at_1g",
+          "strict": "more_at_1g",
+          "moon_conservative": "more_at_1g"
+        }
+      }
+    },
+    {
+      "sample": "2-4",
+      "material": "Silicone",
+      "thickness_mm": 0.37,
+      "thickness_assumed": false,
+      "flow_direction": "opposed",
+      "o2": 0.221,
+      "ug_burned_fraction": 0.0,
+      "1g_burned_fraction": 1.0,
+      "ug_burn_length_raw": "~ 0",
+      "1g_burn_length_raw": "Complete",
+      "actual": "more_at_1g",
+      "flagged": false,
+      "earth": {
+        "thickness": {
+          "g_m_s2": 9.81,
+          "L_mm": 0.37,
+          "u_b_cm_s": {
+            "p05": 6.330871770623427,
+            "p50": 12.024059457887677,
+            "p95": 20.751543249417626
+          },
+          "ri": {
+            "p05": 0.10019985065528697,
+            "p50": 0.3614450220660584,
+            "p95": 1.0765663904075486
+          },
+          "regime_fractions": {
+            "forced": 0.05,
+            "mixed": 0.95,
+            "buoyant": 0.0
+          },
+          "dominant_regime": "mixed"
+        },
+        "10mm": {
+          "g_m_s2": 9.81,
+          "L_mm": 10.0,
+          "u_b_cm_s": {
+            "p05": 32.9126351224689,
+            "p50": 62.51010855482194,
+            "p95": 107.88213629052198
+          },
+          "ri": {
+            "p05": 2.7081040717645126,
+            "p50": 9.768784380163739,
+            "p95": 29.096388929933735
+          },
+          "regime_fractions": {
+            "forced": 0.0,
+            "mixed": 0.5105,
+            "buoyant": 0.4895
+          },
+          "dominant_regime": "mixed"
+        },
+        "width_50mm": {
+          "g_m_s2": 9.81,
+          "L_mm": 50.0,
+          "u_b_cm_s": {
+            "p05": 73.59488945248758,
+            "p50": 139.77685200947298,
+            "p95": 241.23179030350414
+          },
+          "ri": {
+            "p05": 13.540520358822567,
+            "p50": 48.843921900818685,
+            "p95": 145.48194464966866
+          },
+          "regime_fractions": {
+            "forced": 0.0,
+            "mixed": 0.01200000000000001,
+            "buoyant": 0.988
+          },
+          "dominant_regime": "buoyant"
+        }
+      },
+      "moon": {
+        "thickness": {
+          "g_m_s2": 1.62,
+          "L_mm": 0.37,
+          "u_b_cm_s": {
+            "p05": 2.5726844452371043,
+            "p50": 4.886232395268921,
+            "p95": 8.432831127644919
+          },
+          "ri": {
+            "p05": 0.016546764328396014,
+            "p50": 0.059688168781550935,
+            "p95": 0.1777816057553749
+          },
+          "regime_fractions": {
+            "forced": 0.7555,
+            "mixed": 0.24450000000000005,
+            "buoyant": 0.0
+          },
+          "dominant_regime": "forced"
+        },
+        "10mm": {
+          "g_m_s2": 1.62,
+          "L_mm": 10.0,
+          "u_b_cm_s": {
+            "p05": 13.374749560438804,
+            "p50": 25.40231263177784,
+            "p95": 43.840201477693796
+          },
+          "ri": {
+            "p05": 0.44720984671340575,
+            "p50": 1.6131937508527274,
+            "p95": 4.804908263658781
+          },
+          "regime_fractions": {
+            "forced": 0.0,
+            "mixed": 1.0,
+            "buoyant": 0.0
+          },
+          "dominant_regime": "mixed"
+        },
+        "width_50mm": {
+          "g_m_s2": 1.62,
+          "L_mm": 50.0,
+          "u_b_cm_s": {
+            "p05": 29.9068491991766,
+            "p50": 56.801297830356845,
+            "p95": 98.02967065141009
+          },
+          "ri": {
+            "p05": 2.2360492335670292,
+            "p50": 8.06596875426364,
+            "p95": 24.024541318293917
+          },
+          "regime_fractions": {
+            "forced": 0.0,
+            "mixed": 0.6054999999999999,
+            "buoyant": 0.3945
+          },
+          "dominant_regime": "mixed"
+        }
+      },
+      "pred": {
+        "thickness": {
+          "conservative": "more_at_1g",
+          "strict": "same",
+          "moon_conservative": "same"
+        },
+        "10mm": {
+          "conservative": "more_at_1g",
+          "strict": "same",
+          "moon_conservative": "more_at_1g"
+        },
+        "width_50mm": {
+          "conservative": "more_at_1g",
+          "strict": "more_at_1g",
+          "moon_conservative": "more_at_1g"
+        }
+      }
+    },
+    {
+      "sample": "2-5",
+      "material": "Cotton-Fiberglass (SIBAL)",
+      "thickness_mm": 0.37,
+      "thickness_assumed": false,
+      "flow_direction": "concurrent",
+      "o2": 0.221,
+      "ug_burned_fraction": 1.0,
+      "1g_burned_fraction": 1.0,
+      "ug_burn_length_raw": "29 cm",
+      "1g_burn_length_raw": "Complete",
+      "actual": "same",
+      "flagged": false,
+      "earth": {
+        "thickness": {
+          "g_m_s2": 9.81,
+          "L_mm": 0.37,
+          "u_b_cm_s": {
+            "p05": 6.330871770623427,
+            "p50": 12.024059457887677,
+            "p95": 20.751543249417626
+          },
+          "ri": {
+            "p05": 0.10019985065528697,
+            "p50": 0.3614450220660584,
+            "p95": 1.0765663904075486
+          },
+          "regime_fractions": {
+            "forced": 0.05,
+            "mixed": 0.95,
+            "buoyant": 0.0
+          },
+          "dominant_regime": "mixed"
+        },
+        "10mm": {
+          "g_m_s2": 9.81,
+          "L_mm": 10.0,
+          "u_b_cm_s": {
+            "p05": 32.9126351224689,
+            "p50": 62.51010855482194,
+            "p95": 107.88213629052198
+          },
+          "ri": {
+            "p05": 2.7081040717645126,
+            "p50": 9.768784380163739,
+            "p95": 29.096388929933735
+          },
+          "regime_fractions": {
+            "forced": 0.0,
+            "mixed": 0.5105,
+            "buoyant": 0.4895
+          },
+          "dominant_regime": "mixed"
+        },
+        "width_50mm": {
+          "g_m_s2": 9.81,
+          "L_mm": 50.0,
+          "u_b_cm_s": {
+            "p05": 73.59488945248758,
+            "p50": 139.77685200947298,
+            "p95": 241.23179030350414
+          },
+          "ri": {
+            "p05": 13.540520358822567,
+            "p50": 48.843921900818685,
+            "p95": 145.48194464966866
+          },
+          "regime_fractions": {
+            "forced": 0.0,
+            "mixed": 0.01200000000000001,
+            "buoyant": 0.988
+          },
+          "dominant_regime": "buoyant"
+        }
+      },
+      "moon": {
+        "thickness": {
+          "g_m_s2": 1.62,
+          "L_mm": 0.37,
+          "u_b_cm_s": {
+            "p05": 2.5726844452371043,
+            "p50": 4.886232395268921,
+            "p95": 8.432831127644919
+          },
+          "ri": {
+            "p05": 0.016546764328396014,
+            "p50": 0.059688168781550935,
+            "p95": 0.1777816057553749
+          },
+          "regime_fractions": {
+            "forced": 0.7555,
+            "mixed": 0.24450000000000005,
+            "buoyant": 0.0
+          },
+          "dominant_regime": "forced"
+        },
+        "10mm": {
+          "g_m_s2": 1.62,
+          "L_mm": 10.0,
+          "u_b_cm_s": {
+            "p05": 13.374749560438804,
+            "p50": 25.40231263177784,
+            "p95": 43.840201477693796
+          },
+          "ri": {
+            "p05": 0.44720984671340575,
+            "p50": 1.6131937508527274,
+            "p95": 4.804908263658781
+          },
+          "regime_fractions": {
+            "forced": 0.0,
+            "mixed": 1.0,
+            "buoyant": 0.0
+          },
+          "dominant_regime": "mixed"
+        },
+        "width_50mm": {
+          "g_m_s2": 1.62,
+          "L_mm": 50.0,
+          "u_b_cm_s": {
+            "p05": 29.9068491991766,
+            "p50": 56.801297830356845,
+            "p95": 98.02967065141009
+          },
+          "ri": {
+            "p05": 2.2360492335670292,
+            "p50": 8.06596875426364,
+            "p95": 24.024541318293917
+          },
+          "regime_fractions": {
+            "forced": 0.0,
+            "mixed": 0.6054999999999999,
+            "buoyant": 0.3945
+          },
+          "dominant_regime": "mixed"
+        }
+      },
+      "pred": {
+        "thickness": {
+          "conservative": "same",
+          "strict": "same",
+          "moon_conservative": "same"
+        },
+        "10mm": {
+          "conservative": "same",
+          "strict": "same",
+          "moon_conservative": "same"
+        },
+        "width_50mm": {
+          "conservative": "same",
+          "strict": "same",
+          "moon_conservative": "same"
+        }
+      }
+    },
+    {
+      "sample": "2-6",
+      "material": "Cotton-Fiberglass (SIBAL)",
+      "thickness_mm": 0.37,
+      "thickness_assumed": false,
+      "flow_direction": "concurrent",
+      "o2": 0.221,
+      "ug_burned_fraction": 1.0,
+      "1g_burned_fraction": 1.0,
+      "ug_burn_length_raw": "29 cm",
+      "1g_burn_length_raw": "Complete",
+      "actual": "same",
+      "flagged": false,
+      "earth": {
+        "thickness": {
+          "g_m_s2": 9.81,
+          "L_mm": 0.37,
+          "u_b_cm_s": {
+            "p05": 6.330871770623427,
+            "p50": 12.024059457887677,
+            "p95": 20.751543249417626
+          },
+          "ri": {
+            "p05": 0.10019985065528697,
+            "p50": 0.3614450220660584,
+            "p95": 1.0765663904075486
+          },
+          "regime_fractions": {
+            "forced": 0.05,
+            "mixed": 0.95,
+            "buoyant": 0.0
+          },
+          "dominant_regime": "mixed"
+        },
+        "10mm": {
+          "g_m_s2": 9.81,
+          "L_mm": 10.0,
+          "u_b_cm_s": {
+            "p05": 32.9126351224689,
+            "p50": 62.51010855482194,
+            "p95": 107.88213629052198
+          },
+          "ri": {
+            "p05": 2.7081040717645126,
+            "p50": 9.768784380163739,
+            "p95": 29.096388929933735
+          },
+          "regime_fractions": {
+            "forced": 0.0,
+            "mixed": 0.5105,
+            "buoyant": 0.4895
+          },
+          "dominant_regime": "mixed"
+        },
+        "width_50mm": {
+          "g_m_s2": 9.81,
+          "L_mm": 50.0,
+          "u_b_cm_s": {
+            "p05": 73.59488945248758,
+            "p50": 139.77685200947298,
+            "p95": 241.23179030350414
+          },
+          "ri": {
+            "p05": 13.540520358822567,
+            "p50": 48.843921900818685,
+            "p95": 145.48194464966866
+          },
+          "regime_fractions": {
+            "forced": 0.0,
+            "mixed": 0.01200000000000001,
+            "buoyant": 0.988
+          },
+          "dominant_regime": "buoyant"
+        }
+      },
+      "moon": {
+        "thickness": {
+          "g_m_s2": 1.62,
+          "L_mm": 0.37,
+          "u_b_cm_s": {
+            "p05": 2.5726844452371043,
+            "p50": 4.886232395268921,
+            "p95": 8.432831127644919
+          },
+          "ri": {
+            "p05": 0.016546764328396014,
+            "p50": 0.059688168781550935,
+            "p95": 0.1777816057553749
+          },
+          "regime_fractions": {
+            "forced": 0.7555,
+            "mixed": 0.24450000000000005,
+            "buoyant": 0.0
+          },
+          "dominant_regime": "forced"
+        },
+        "10mm": {
+          "g_m_s2": 1.62,
+          "L_mm": 10.0,
+          "u_b_cm_s": {
+            "p05": 13.374749560438804,
+            "p50": 25.40231263177784,
+            "p95": 43.840201477693796
+          },
+          "ri": {
+            "p05": 0.44720984671340575,
+            "p50": 1.6131937508527274,
+            "p95": 4.804908263658781
+          },
+          "regime_fractions": {
+            "forced": 0.0,
+            "mixed": 1.0,
+            "buoyant": 0.0
+          },
+          "dominant_regime": "mixed"
+        },
+        "width_50mm": {
+          "g_m_s2": 1.62,
+          "L_mm": 50.0,
+          "u_b_cm_s": {
+            "p05": 29.9068491991766,
+            "p50": 56.801297830356845,
+            "p95": 98.02967065141009
+          },
+          "ri": {
+            "p05": 2.2360492335670292,
+            "p50": 8.06596875426364,
+            "p95": 24.024541318293917
+          },
+          "regime_fractions": {
+            "forced": 0.0,
+            "mixed": 0.6054999999999999,
+            "buoyant": 0.3945
+          },
+          "dominant_regime": "mixed"
+        }
+      },
+      "pred": {
+        "thickness": {
+          "conservative": "same",
+          "strict": "same",
+          "moon_conservative": "same"
+        },
+        "10mm": {
+          "conservative": "same",
+          "strict": "same",
+          "moon_conservative": "same"
+        },
+        "width_50mm": {
+          "conservative": "same",
+          "strict": "same",
+          "moon_conservative": "same"
+        }
+      }
+    },
+    {
+      "sample": "2-7",
+      "material": "PMMA & Nomex",
+      "thickness_mm": 0.85,
+      "thickness_assumed": false,
+      "flow_direction": "concurrent",
+      "o2": 0.221,
+      "ug_burned_fraction": 1.0,
+      "1g_burned_fraction": 0.0,
+      "ug_burn_length_raw": "5 cm & 0 (note 2)",
+      "1g_burn_length_raw": "~ 0 (Nomex)",
+      "actual": "more_at_ug",
+      "flagged": true,
+      "earth": {
+        "thickness": {
+          "g_m_s2": 9.81,
+          "L_mm": 0.85,
+          "u_b_cm_s": {
+            "p05": 9.595599606585601,
+            "p50": 18.224671796236223,
+            "p95": 31.452777351158907
+          },
+          "ri": {
+            "p05": 0.2301888460999836,
+            "p50": 0.8303466723139179,
+            "p95": 2.473193059044368
+          },
+          "regime_fractions": {
+            "forced": 0.001,
+            "mixed": 0.999,
+            "buoyant": 0.0
+          },
+          "dominant_regime": "mixed"
+        },
+        "10mm": {
+          "g_m_s2": 9.81,
+          "L_mm": 10.0,
+          "u_b_cm_s": {
+            "p05": 32.9126351224689,
+            "p50": 62.51010855482194,
+            "p95": 107.88213629052198
+          },
+          "ri": {
+            "p05": 2.7081040717645126,
+            "p50": 9.768784380163739,
+            "p95": 29.096388929933735
+          },
+          "regime_fractions": {
+            "forced": 0.0,
+            "mixed": 0.5105,
+            "buoyant": 0.4895
+          },
+          "dominant_regime": "mixed"
+        },
+        "width_50mm": {
+          "g_m_s2": 9.81,
+          "L_mm": 50.0,
+          "u_b_cm_s": {
+            "p05": 73.59488945248758,
+            "p50": 139.77685200947298,
+            "p95": 241.23179030350414
+          },
+          "ri": {
+            "p05": 13.540520358822567,
+            "p50": 48.843921900818685,
+            "p95": 145.48194464966866
+          },
+          "regime_fractions": {
+            "forced": 0.0,
+            "mixed": 0.01200000000000001,
+            "buoyant": 0.988
+          },
+          "dominant_regime": "buoyant"
+        }
+      },
+      "moon": {
+        "thickness": {
+          "g_m_s2": 1.62,
+          "L_mm": 0.85,
+          "u_b_cm_s": {
+            "p05": 3.8993760646261,
+            "p50": 7.405983148685885,
+            "p95": 12.781505293837922
+          },
+          "ri": {
+            "p05": 0.03801283697063951,
+            "p50": 0.13712146882248183,
+            "p95": 0.4084172024109966
+          },
+          "regime_fractions": {
+            "forced": 0.3525,
+            "mixed": 0.6475,
+            "buoyant": 0.0
+          },
+          "dominant_regime": "mixed"
+        },
+        "10mm": {
+          "g_m_s2": 1.62,
+          "L_mm": 10.0,
+          "u_b_cm_s": {
+            "p05": 13.374749560438804,
+            "p50": 25.40231263177784,
+            "p95": 43.840201477693796
+          },
+          "ri": {
+            "p05": 0.44720984671340575,
+            "p50": 1.6131937508527274,
+            "p95": 4.804908263658781
+          },
+          "regime_fractions": {
+            "forced": 0.0,
+            "mixed": 1.0,
+            "buoyant": 0.0
+          },
+          "dominant_regime": "mixed"
+        },
+        "width_50mm": {
+          "g_m_s2": 1.62,
+          "L_mm": 50.0,
+          "u_b_cm_s": {
+            "p05": 29.9068491991766,
+            "p50": 56.801297830356845,
+            "p95": 98.02967065141009
+          },
+          "ri": {
+            "p05": 2.2360492335670292,
+            "p50": 8.06596875426364,
+            "p95": 24.024541318293917
+          },
+          "regime_fractions": {
+            "forced": 0.0,
+            "mixed": 0.6054999999999999,
+            "buoyant": 0.3945
+          },
+          "dominant_regime": "mixed"
+        }
+      },
+      "pred": {
+        "thickness": {
+          "conservative": "same",
+          "strict": "same",
+          "moon_conservative": "same"
+        },
+        "10mm": {
+          "conservative": "same",
+          "strict": "same",
+          "moon_conservative": "same"
+        },
+        "width_50mm": {
+          "conservative": "same",
+          "strict": "same",
+          "moon_conservative": "same"
+        }
+      }
+    },
+    {
+      "sample": "2-8",
+      "material": "PMMA",
+      "thickness_mm": null,
+      "thickness_assumed": true,
+      "flow_direction": "concurrent",
+      "o2": 0.2205,
+      "ug_burned_fraction": 0.3448275862068966,
+      "1g_burned_fraction": 1.0,
+      "ug_burn_length_raw": "~ 10 cm (note 3)",
+      "1g_burn_length_raw": "Complete",
+      "actual": "more_at_1g",
+      "flagged": true,
+      "earth": {
+        "thickness": {
+          "g_m_s2": 9.81,
+          "L_mm": 10.0,
+          "u_b_cm_s": {
+            "p05": 32.9126351224689,
+            "p50": 62.51010855482194,
+            "p95": 107.88213629052198
+          },
+          "ri": {
+            "p05": 2.7081040717645126,
+            "p50": 9.768784380163739,
+            "p95": 29.096388929933735
+          },
+          "regime_fractions": {
+            "forced": 0.0,
+            "mixed": 0.5105,
+            "buoyant": 0.4895
+          },
+          "dominant_regime": "mixed"
+        },
+        "10mm": {
+          "g_m_s2": 9.81,
+          "L_mm": 10.0,
+          "u_b_cm_s": {
+            "p05": 32.9126351224689,
+            "p50": 62.51010855482194,
+            "p95": 107.88213629052198
+          },
+          "ri": {
+            "p05": 2.7081040717645126,
+            "p50": 9.768784380163739,
+            "p95": 29.096388929933735
+          },
+          "regime_fractions": {
+            "forced": 0.0,
+            "mixed": 0.5105,
+            "buoyant": 0.4895
+          },
+          "dominant_regime": "mixed"
+        },
+        "width_50mm": {
+          "g_m_s2": 9.81,
+          "L_mm": 50.0,
+          "u_b_cm_s": {
+            "p05": 73.59488945248758,
+            "p50": 139.77685200947298,
+            "p95": 241.23179030350414
+          },
+          "ri": {
+            "p05": 13.540520358822567,
+            "p50": 48.843921900818685,
+            "p95": 145.48194464966866
+          },
+          "regime_fractions": {
+            "forced": 0.0,
+            "mixed": 0.01200000000000001,
+            "buoyant": 0.988
+          },
+          "dominant_regime": "buoyant"
+        }
+      },
+      "moon": {
+        "thickness": {
+          "g_m_s2": 1.62,
+          "L_mm": 10.0,
+          "u_b_cm_s": {
+            "p05": 13.374749560438804,
+            "p50": 25.40231263177784,
+            "p95": 43.840201477693796
+          },
+          "ri": {
+            "p05": 0.44720984671340575,
+            "p50": 1.6131937508527274,
+            "p95": 4.804908263658781
+          },
+          "regime_fractions": {
+            "forced": 0.0,
+            "mixed": 1.0,
+            "buoyant": 0.0
+          },
+          "dominant_regime": "mixed"
+        },
+        "10mm": {
+          "g_m_s2": 1.62,
+          "L_mm": 10.0,
+          "u_b_cm_s": {
+            "p05": 13.374749560438804,
+            "p50": 25.40231263177784,
+            "p95": 43.840201477693796
+          },
+          "ri": {
+            "p05": 0.44720984671340575,
+            "p50": 1.6131937508527274,
+            "p95": 4.804908263658781
+          },
+          "regime_fractions": {
+            "forced": 0.0,
+            "mixed": 1.0,
+            "buoyant": 0.0
+          },
+          "dominant_regime": "mixed"
+        },
+        "width_50mm": {
+          "g_m_s2": 1.62,
+          "L_mm": 50.0,
+          "u_b_cm_s": {
+            "p05": 29.9068491991766,
+            "p50": 56.801297830356845,
+            "p95": 98.02967065141009
+          },
+          "ri": {
+            "p05": 2.2360492335670292,
+            "p50": 8.06596875426364,
+            "p95": 24.024541318293917
+          },
+          "regime_fractions": {
+            "forced": 0.0,
+            "mixed": 0.6054999999999999,
+            "buoyant": 0.3945
+          },
+          "dominant_regime": "mixed"
+        }
+      },
+      "pred": {
+        "thickness": {
+          "conservative": "more_at_1g",
+          "strict": "same",
+          "moon_conservative": "more_at_1g"
+        },
+        "10mm": {
+          "conservative": "more_at_1g",
+          "strict": "same",
+          "moon_conservative": "more_at_1g"
+        },
+        "width_50mm": {
+          "conservative": "more_at_1g",
+          "strict": "more_at_1g",
+          "moon_conservative": "more_at_1g"
+        }
+      }
+    },
+    {
+      "sample": "2-9",
+      "material": "PMMA",
+      "thickness_mm": 10.0,
+      "thickness_assumed": false,
+      "flow_direction": "concurrent",
+      "o2": 0.2195,
+      "ug_burned_fraction": 0.3448275862068966,
+      "1g_burned_fraction": 1.0,
+      "ug_burn_length_raw": "~ 10 cm (note 4)",
+      "1g_burn_length_raw": "Complete",
+      "actual": "more_at_1g",
+      "flagged": true,
+      "earth": {
+        "thickness": {
+          "g_m_s2": 9.81,
+          "L_mm": 10.0,
+          "u_b_cm_s": {
+            "p05": 32.9126351224689,
+            "p50": 62.51010855482194,
+            "p95": 107.88213629052198
+          },
+          "ri": {
+            "p05": 2.7081040717645126,
+            "p50": 9.768784380163739,
+            "p95": 29.096388929933735
+          },
+          "regime_fractions": {
+            "forced": 0.0,
+            "mixed": 0.5105,
+            "buoyant": 0.4895
+          },
+          "dominant_regime": "mixed"
+        },
+        "10mm": {
+          "g_m_s2": 9.81,
+          "L_mm": 10.0,
+          "u_b_cm_s": {
+            "p05": 32.9126351224689,
+            "p50": 62.51010855482194,
+            "p95": 107.88213629052198
+          },
+          "ri": {
+            "p05": 2.7081040717645126,
+            "p50": 9.768784380163739,
+            "p95": 29.096388929933735
+          },
+          "regime_fractions": {
+            "forced": 0.0,
+            "mixed": 0.5105,
+            "buoyant": 0.4895
+          },
+          "dominant_regime": "mixed"
+        },
+        "width_50mm": {
+          "g_m_s2": 9.81,
+          "L_mm": 50.0,
+          "u_b_cm_s": {
+            "p05": 73.59488945248758,
+            "p50": 139.77685200947298,
+            "p95": 241.23179030350414
+          },
+          "ri": {
+            "p05": 13.540520358822567,
+            "p50": 48.843921900818685,
+            "p95": 145.48194464966866
+          },
+          "regime_fractions": {
+            "forced": 0.0,
+            "mixed": 0.01200000000000001,
+            "buoyant": 0.988
+          },
+          "dominant_regime": "buoyant"
+        }
+      },
+      "moon": {
+        "thickness": {
+          "g_m_s2": 1.62,
+          "L_mm": 10.0,
+          "u_b_cm_s": {
+            "p05": 13.374749560438804,
+            "p50": 25.40231263177784,
+            "p95": 43.840201477693796
+          },
+          "ri": {
+            "p05": 0.44720984671340575,
+            "p50": 1.6131937508527274,
+            "p95": 4.804908263658781
+          },
+          "regime_fractions": {
+            "forced": 0.0,
+            "mixed": 1.0,
+            "buoyant": 0.0
+          },
+          "dominant_regime": "mixed"
+        },
+        "10mm": {
+          "g_m_s2": 1.62,
+          "L_mm": 10.0,
+          "u_b_cm_s": {
+            "p05": 13.374749560438804,
+            "p50": 25.40231263177784,
+            "p95": 43.840201477693796
+          },
+          "ri": {
+            "p05": 0.44720984671340575,
+            "p50": 1.6131937508527274,
+            "p95": 4.804908263658781
+          },
+          "regime_fractions": {
+            "forced": 0.0,
+            "mixed": 1.0,
+            "buoyant": 0.0
+          },
+          "dominant_regime": "mixed"
+        },
+        "width_50mm": {
+          "g_m_s2": 1.62,
+          "L_mm": 50.0,
+          "u_b_cm_s": {
+            "p05": 29.9068491991766,
+            "p50": 56.801297830356845,
+            "p95": 98.02967065141009
+          },
+          "ri": {
+            "p05": 2.2360492335670292,
+            "p50": 8.06596875426364,
+            "p95": 24.024541318293917
+          },
+          "regime_fractions": {
+            "forced": 0.0,
+            "mixed": 0.6054999999999999,
+            "buoyant": 0.3945
+          },
+          "dominant_regime": "mixed"
+        }
+      },
+      "pred": {
+        "thickness": {
+          "conservative": "more_at_1g",
+          "strict": "same",
+          "moon_conservative": "more_at_1g"
+        },
+        "10mm": {
+          "conservative": "more_at_1g",
+          "strict": "same",
+          "moon_conservative": "more_at_1g"
+        },
+        "width_50mm": {
+          "conservative": "more_at_1g",
+          "strict": "more_at_1g",
+          "moon_conservative": "more_at_1g"
+        }
+      }
+    }
+  ],
+  "scores_all": {
+    "baseline_same_as_ug": {
+      "n": 9,
+      "hits": 3,
+      "accuracy": 0.3333333333333333,
+      "binary_hits": 3,
+      "binary_accuracy": 0.3333333333333333,
+      "confusion_actual_by_predicted": {
+        "same": {
+          "same": 3,
+          "more_at_1g": 0,
+          "more_at_ug": 0
+        },
+        "more_at_1g": {
+          "same": 5,
+          "more_at_1g": 0,
+          "more_at_ug": 0
+        },
+        "more_at_ug": {
+          "same": 1,
+          "more_at_1g": 0,
+          "more_at_ug": 0
+        }
+      }
+    },
+    "baseline_always_more_at_1g_capped": {
+      "n": 9,
+      "hits": 7,
+      "accuracy": 0.7777777777777778,
+      "binary_hits": 7,
+      "binary_accuracy": 0.7777777777777778,
+      "confusion_actual_by_predicted": {
+        "same": {
+          "same": 2,
+          "more_at_1g": 1,
+          "more_at_ug": 0
+        },
+        "more_at_1g": {
+          "same": 0,
+          "more_at_1g": 5,
+          "more_at_ug": 0
+        },
+        "more_at_ug": {
+          "same": 1,
+          "more_at_1g": 0,
+          "more_at_ug": 0
+        }
+      }
+    },
+    "bridge_conservative_L_thickness": {
+      "n": 9,
+      "hits": 7,
+      "accuracy": 0.7777777777777778,
+      "binary_hits": 7,
+      "binary_accuracy": 0.7777777777777778,
+      "confusion_actual_by_predicted": {
+        "same": {
+          "same": 2,
+          "more_at_1g": 1,
+          "more_at_ug": 0
+        },
+        "more_at_1g": {
+          "same": 0,
+          "more_at_1g": 5,
+          "more_at_ug": 0
+        },
+        "more_at_ug": {
+          "same": 1,
+          "more_at_1g": 0,
+          "more_at_ug": 0
+        }
+      }
+    },
+    "bridge_strict_L_thickness": {
+      "n": 9,
+      "hits": 3,
+      "accuracy": 0.3333333333333333,
+      "binary_hits": 3,
+      "binary_accuracy": 0.3333333333333333,
+      "confusion_actual_by_predicted": {
+        "same": {
+          "same": 3,
+          "more_at_1g": 0,
+          "more_at_ug": 0
+        },
+        "more_at_1g": {
+          "same": 5,
+          "more_at_1g": 0,
+          "more_at_ug": 0
+        },
+        "more_at_ug": {
+          "same": 1,
+          "more_at_1g": 0,
+          "more_at_ug": 0
+        }
+      }
+    },
+    "bridge_conservative_L_10mm": {
+      "n": 9,
+      "hits": 7,
+      "accuracy": 0.7777777777777778,
+      "binary_hits": 7,
+      "binary_accuracy": 0.7777777777777778,
+      "confusion_actual_by_predicted": {
+        "same": {
+          "same": 2,
+          "more_at_1g": 1,
+          "more_at_ug": 0
+        },
+        "more_at_1g": {
+          "same": 0,
+          "more_at_1g": 5,
+          "more_at_ug": 0
+        },
+        "more_at_ug": {
+          "same": 1,
+          "more_at_1g": 0,
+          "more_at_ug": 0
+        }
+      }
+    },
+    "bridge_strict_L_10mm": {
+      "n": 9,
+      "hits": 3,
+      "accuracy": 0.3333333333333333,
+      "binary_hits": 3,
+      "binary_accuracy": 0.3333333333333333,
+      "confusion_actual_by_predicted": {
+        "same": {
+          "same": 3,
+          "more_at_1g": 0,
+          "more_at_ug": 0
+        },
+        "more_at_1g": {
+          "same": 5,
+          "more_at_1g": 0,
+          "more_at_ug": 0
+        },
+        "more_at_ug": {
+          "same": 1,
+          "more_at_1g": 0,
+          "more_at_ug": 0
+        }
+      }
+    },
+    "bridge_conservative_L_width_50mm": {
+      "n": 9,
+      "hits": 7,
+      "accuracy": 0.7777777777777778,
+      "binary_hits": 7,
+      "binary_accuracy": 0.7777777777777778,
+      "confusion_actual_by_predicted": {
+        "same": {
+          "same": 2,
+          "more_at_1g": 1,
+          "more_at_ug": 0
+        },
+        "more_at_1g": {
+          "same": 0,
+          "more_at_1g": 5,
+          "more_at_ug": 0
+        },
+        "more_at_ug": {
+          "same": 1,
+          "more_at_1g": 0,
+          "more_at_ug": 0
+        }
+      }
+    },
+    "bridge_strict_L_width_50mm": {
+      "n": 9,
+      "hits": 7,
+      "accuracy": 0.7777777777777778,
+      "binary_hits": 7,
+      "binary_accuracy": 0.7777777777777778,
+      "confusion_actual_by_predicted": {
+        "same": {
+          "same": 2,
+          "more_at_1g": 1,
+          "more_at_ug": 0
+        },
+        "more_at_1g": {
+          "same": 0,
+          "more_at_1g": 5,
+          "more_at_ug": 0
+        },
+        "more_at_ug": {
+          "same": 1,
+          "more_at_1g": 0,
+          "more_at_ug": 0
+        }
+      }
+    }
+  },
+  "scores_unflagged": {
+    "baseline_same_as_ug": {
+      "n": 6,
+      "hits": 3,
+      "accuracy": 0.5,
+      "binary_hits": 3,
+      "binary_accuracy": 0.5,
+      "confusion_actual_by_predicted": {
+        "same": {
+          "same": 3,
+          "more_at_1g": 0,
+          "more_at_ug": 0
+        },
+        "more_at_1g": {
+          "same": 3,
+          "more_at_1g": 0,
+          "more_at_ug": 0
+        },
+        "more_at_ug": {
+          "same": 0,
+          "more_at_1g": 0,
+          "more_at_ug": 0
+        }
+      }
+    },
+    "baseline_always_more_at_1g_capped": {
+      "n": 6,
+      "hits": 5,
+      "accuracy": 0.8333333333333334,
+      "binary_hits": 5,
+      "binary_accuracy": 0.8333333333333334,
+      "confusion_actual_by_predicted": {
+        "same": {
+          "same": 2,
+          "more_at_1g": 1,
+          "more_at_ug": 0
+        },
+        "more_at_1g": {
+          "same": 0,
+          "more_at_1g": 3,
+          "more_at_ug": 0
+        },
+        "more_at_ug": {
+          "same": 0,
+          "more_at_1g": 0,
+          "more_at_ug": 0
+        }
+      }
+    },
+    "bridge_conservative_L_thickness": {
+      "n": 6,
+      "hits": 5,
+      "accuracy": 0.8333333333333334,
+      "binary_hits": 5,
+      "binary_accuracy": 0.8333333333333334,
+      "confusion_actual_by_predicted": {
+        "same": {
+          "same": 2,
+          "more_at_1g": 1,
+          "more_at_ug": 0
+        },
+        "more_at_1g": {
+          "same": 0,
+          "more_at_1g": 3,
+          "more_at_ug": 0
+        },
+        "more_at_ug": {
+          "same": 0,
+          "more_at_1g": 0,
+          "more_at_ug": 0
+        }
+      }
+    },
+    "bridge_strict_L_thickness": {
+      "n": 6,
+      "hits": 3,
+      "accuracy": 0.5,
+      "binary_hits": 3,
+      "binary_accuracy": 0.5,
+      "confusion_actual_by_predicted": {
+        "same": {
+          "same": 3,
+          "more_at_1g": 0,
+          "more_at_ug": 0
+        },
+        "more_at_1g": {
+          "same": 3,
+          "more_at_1g": 0,
+          "more_at_ug": 0
+        },
+        "more_at_ug": {
+          "same": 0,
+          "more_at_1g": 0,
+          "more_at_ug": 0
+        }
+      }
+    },
+    "bridge_conservative_L_10mm": {
+      "n": 6,
+      "hits": 5,
+      "accuracy": 0.8333333333333334,
+      "binary_hits": 5,
+      "binary_accuracy": 0.8333333333333334,
+      "confusion_actual_by_predicted": {
+        "same": {
+          "same": 2,
+          "more_at_1g": 1,
+          "more_at_ug": 0
+        },
+        "more_at_1g": {
+          "same": 0,
+          "more_at_1g": 3,
+          "more_at_ug": 0
+        },
+        "more_at_ug": {
+          "same": 0,
+          "more_at_1g": 0,
+          "more_at_ug": 0
+        }
+      }
+    },
+    "bridge_strict_L_10mm": {
+      "n": 6,
+      "hits": 3,
+      "accuracy": 0.5,
+      "binary_hits": 3,
+      "binary_accuracy": 0.5,
+      "confusion_actual_by_predicted": {
+        "same": {
+          "same": 3,
+          "more_at_1g": 0,
+          "more_at_ug": 0
+        },
+        "more_at_1g": {
+          "same": 3,
+          "more_at_1g": 0,
+          "more_at_ug": 0
+        },
+        "more_at_ug": {
+          "same": 0,
+          "more_at_1g": 0,
+          "more_at_ug": 0
+        }
+      }
+    },
+    "bridge_conservative_L_width_50mm": {
+      "n": 6,
+      "hits": 5,
+      "accuracy": 0.8333333333333334,
+      "binary_hits": 5,
+      "binary_accuracy": 0.8333333333333334,
+      "confusion_actual_by_predicted": {
+        "same": {
+          "same": 2,
+          "more_at_1g": 1,
+          "more_at_ug": 0
+        },
+        "more_at_1g": {
+          "same": 0,
+          "more_at_1g": 3,
+          "more_at_ug": 0
+        },
+        "more_at_ug": {
+          "same": 0,
+          "more_at_1g": 0,
+          "more_at_ug": 0
+        }
+      }
+    },
+    "bridge_strict_L_width_50mm": {
+      "n": 6,
+      "hits": 5,
+      "accuracy": 0.8333333333333334,
+      "binary_hits": 5,
+      "binary_accuracy": 0.8333333333333334,
+      "confusion_actual_by_predicted": {
+        "same": {
+          "same": 2,
+          "more_at_1g": 1,
+          "more_at_ug": 0
+        },
+        "more_at_1g": {
+          "same": 0,
+          "more_at_1g": 3,
+          "more_at_ug": 0
+        },
+        "more_at_ug": {
+          "same": 0,
+          "more_at_1g": 0,
+          "more_at_ug": 0
+        }
+      }
+    }
+  },
+  "unflagged_samples": [
+    "2-1",
+    "2-2",
+    "2-3",
+    "2-4",
+    "2-5",
+    "2-6"
+  ],
+  "headline": {
+    "primary": "bridge_conservative_L_thickness",
+    "accuracy": 0.7777777777777778,
+    "hits": 7,
+    "n": 9,
+    "baseline_accuracy": 0.3333333333333333
+  }
+}

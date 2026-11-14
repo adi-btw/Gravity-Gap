@@ -71,3 +71,11 @@ For BRE, the ignitions are **not split by O₂ level**, and **pressure is not in
 | `thickness_typo_037mm_read_as_0.37mm` | SAFFIRE-II "037 mm" |
 | `material_blank_in_source_filled_from_row_above` | SAFFIRE-II rows with an empty material cell (likely merged cells) |
 | `flow_settings_kept_raw_units_unknown` | BASS-II fan and air "display" values have no stated units, so they are kept raw in `notes` |
+
+## Validation
+`psi_saffire_ug_vs_1g.csv` is the only microgravity-vs-1 g pairing in the data, so it is used for the
+V3 hindcast (`python -m engine.hindcast`): predict the 1 g outcome of each SAFFIRE-II sample from its
+microgravity result plus the physics bridge at g = 9.81, then score against the 1 g columns.
+Results: `artifacts/validation_saffire.md` (summary, tables, limitations) and
+`artifacts/hindcast_saffire.json`. Tests: `tests/test_hindcast.py`.
+Sample 2-8 has no thickness in the source ("See Fig. 5"); the hindcast uses a flagged 10 mm fallback.
