@@ -75,6 +75,7 @@ function IncidentCard({ inc }: { inc: Incident }) {
   const habitat = incidentHabitat(inc);
   const boundsHref = incidentHref(inc, "/bounds");
   const regimeHref = incidentHref(inc, "/regime");
+  const suppressionHref = incidentHref(inc, "/suppression");
   const headingId = `incident-${inc.id}`;
   const assumed = new Set(inc.assumed);
   // The scope note is shown on its own; do not repeat it in the findings list.
@@ -202,6 +203,11 @@ function IncidentCard({ inc }: { inc: Incident }) {
           <Link href={regimeHref} className="text-sm text-muted underline hover:text-fg">
             See its flow regime<span className="sr-only"> for {inc.name}</span>
           </Link>
+          {suppressionHref ? (
+            <Link href={suppressionHref} className="text-sm text-muted underline hover:text-fg">
+              Could dilution put it out?<span className="sr-only"> ({inc.name})</span>
+            </Link>
+          ) : null}
         </div>
       ) : null}
     </article>

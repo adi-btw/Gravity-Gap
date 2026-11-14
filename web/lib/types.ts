@@ -227,3 +227,76 @@ export interface IncidentsArtifact {
   engine_version?: string;
   incidents: Incident[];
 }
+
+// ------------------------------------------------------------------ R2 suppression (plan/contracts.md R2 addendum)
+
+export type DiluentId = "co2" | "he";
+
+export interface DiluentInfo {
+  label: string;
+  /** Highest fraction the engine sweeps (0.70 CO2, 0.45 He). */
+  max: number;
+}
+
+export interface SuppressionMetricPoint {
+  applicable: boolean;
+  estimate: number | null;
+  band90: [number, number] | null;
+  reason: string | null;
+}
+
+export interface SuppressionPoint {
+  /** Diluent mole fraction (replaces nitrogen; O2 and pressure held at the habitat's). */
+  fraction: number;
+  M1: SuppressionMetricPoint;
+  M2: SuppressionMetricPoint;
+}
+
+/** One aggregated FLEX training condition with this diluent > 0. */
+export interface SuppressionTested {
+  o2: number;
+  p_atm: number;
+  fraction: number;
+  n: number;
+  extinctions: number | null;
+}
+
+export interface SuppressionCurve {
+  diluent: DiluentId;
+  label: string;
+  habitat: { g_m_s2: number; p_psia: number; o2: number; u_cm_s: number; L_mm: number } | null;
+  points: SuppressionPoint[];
+  /** Smallest applicable fraction whose M1 estimate >= 0.9, or null when not reached inside tested conditions. */
+  dose_for_p90: { fraction: number; metric: string; note?: string | null } | null;
+  tested: SuppressionTested[];
+  tested_o2_range: [number, number] | null;
+  gate_note: string | null;
+  safety_note: string | null;
+  model_version: string | null;
+}
+
+/** One empirical FLEX outcome bin from artifacts/suppression_reference.json (flattened). */
+export interface SuppressionReferenceBin {
+  diluent: DiluentId;
+  fuel: string | null;
+  /** Diluent fraction bin [lo, hi]; [0, 0] for the undiluted bin. */
+  fraction: [number, number];
+  /** O2 band [lo, hi] (open ends as 0 / 1). */
+  o2_band: [number, number];
+  o2_band_label: string;
+  n: number;
+  extinctions: number | null;
+  completions: number | null;
+  disruptions: number | null;
+  extinction_rate: number | null;
+  /** Interval on the extinction rate: from the artifact when given, else a Wilson 90% interval from n and extinctions. */
+  interval: [number, number] | null;
+  interval_source: "artifact" | "wilson90" | null;
+  record_ids: string[];
+}
+
+export interface SuppressionReference {
+  generated_at?: string;
+  bins: SuppressionReferenceBin[];
+  note?: string;
+}

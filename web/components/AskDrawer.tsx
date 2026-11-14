@@ -30,6 +30,9 @@ const SUGGESTED = [
   "What does Gravity Gap say about the Mir fire?",
   "What would Gravity Gap say about Apollo 1's cabin air?",
   "Is Apollo 13 in scope?",
+  // R2 suppression calculator demo questions.
+  "How much CO₂ would it take to put out a flame in ISS air?",
+  "Why can't Gravity Gap answer suppression for the lunar base?",
 ];
 
 /**

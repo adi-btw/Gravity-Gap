@@ -500,6 +500,6 @@
   0.24
  ],
  "gate_note": "FLEX tested helium dilution only between 13% and 24% O₂ (0.69-1.01 atm). This habitat (26% O₂, 0.69 atm) is close enough to those tests (distance <= 2, ADR-0006) for helium fractions up to 45%. Gravity does not change these numbers; it only widens the band (ADR-0005).",
- "safety_note": "CO₂ at these concentrations is dangerous to breathe. Spacecraft use portable CO₂ or water-mist extinguishers aimed at the fire, not cabin flooding. This shows how dilution affected flames in NASA's tests; it is not an operating procedure.",
+ "safety_note": "Changing a cabin's gas mix changes what the crew breathes. This shows how helium dilution affected flames in NASA's FLEX tests; it is not an operating procedure or extinguisher guidance.",
  "model_version": "M1 2a8ccd37105c, M2 d3f1ae64f2c0"
 }

@@ -25,6 +25,29 @@ describe("coverageStatus mirrors engine/coverage.py", () => {
     expect(coverageStatus(load("M5"), 0.21, 14.7).covered).toBe(true);
   });
 
+  it("ADR-0006 diluted queries match engine/coverage.py habitat_status (M1 and M2)", () => {
+    // [o2, psia, co2, he] -> [covered, nearest_distance] from python -c habitat_status(...) on the same artifacts.
+    const cases: [number, number, number, number, boolean, number][] = [
+      [0.34, 8.2, 0.05, 0, false, 2.6118], // lunar base + 5% CO2: only CO2 tests count, all at <= 25% O2
+      [0.21, 14.7, 0.2, 0, true, 0.501], // ISS + 20% CO2
+      [0.21, 14.7, 0, 0.3, true, 1.118], // ISS + 30% He
+      [0.21, 14.7, 0.65, 0, false, 2.2596], // ISS + 65% CO2: past the tested fractions
+    ];
+    for (const m of ["M1", "M2"]) {
+      for (const [o2, p, co2, he, covered, d] of cases) {
+        const s = coverageStatus(load(m), o2, p, co2, he);
+        expect(s.covered, `${m} ${o2} ${p} co2=${co2} he=${he}`).toBe(covered);
+        expect(s.nearestDistance).toBeCloseTo(d, 3);
+        if (co2 > 0) expect(s.nearest?.co2).toBeGreaterThan(0);
+        if (he > 0) expect(s.nearest?.he).toBeGreaterThan(0);
+      }
+    }
+  });
+
+  it("other metrics ignore co2/he", () => {
+    expect(coverageStatus(load("M3"), 0.34, 8.2, 0.3, 0)).toEqual(coverageStatus(load("M3"), 0.34, 8.2));
+  });
+
   it("rejects malformed payloads", () => {
     expect(() => normalizeCoverage({})).toThrow();
   });

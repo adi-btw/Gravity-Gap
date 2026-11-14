@@ -9,10 +9,13 @@
  */
 import { normalizeCoverage } from "./coverage";
 import { matchPreset, type Habitat } from "./habitat";
+import { STATIC_DILUENTS, normalizeReference, normalizeSuppression } from "./suppression";
 import type {
   AskAnswer,
   BoundsResult,
   CatalogRecord,
+  DiluentId,
+  DiluentInfo,
   Incident,
   IncidentsArtifact,
   MetricInfo,
@@ -20,6 +23,8 @@ import type {
   PlannerItem,
   RankItem,
   RankWeights,
+  SuppressionCurve,
+  SuppressionReference,
   TestsPage,
 } from "./types";
 
@@ -61,6 +66,10 @@ class LiveUnavailable extends Error {}
 export const OFFLINE_NOTE = "offline data: the live API is unreachable, showing precomputed artifacts";
 export const CUSTOM_HABITAT_NOTE =
   "Live API needed for custom habitats: precomputed bounds exist only for the six presets.";
+export const CUSTOM_SUPPRESSION_NOTE =
+  "Live API needed for custom habitats: precomputed suppression curves exist only for the six presets.";
+/** A suppression curve runs the M1/M2 models at every fraction, so the first live call gets more time. */
+const SUPPRESSION_TIMEOUT_MS = 10_000;
 
 /** Static fallback for GET /metrics (plan/03 §3 metric table). */
 export const STATIC_METRICS: MetricInfo[] = [
@@ -239,9 +248,9 @@ export function createClient(opts: ClientOptions = {}) {
   const doFetch: typeof fetch = opts.fetchImpl ?? ((...a) => fetch(...a));
   const timeoutMs = opts.timeoutMs ?? 2500;
 
-  async function live(path: string, init?: RequestInit): Promise<Response> {
+  async function live(path: string, init?: RequestInit, ms = timeoutMs): Promise<Response> {
     const ctrl = new AbortController();
-    const timer = setTimeout(() => ctrl.abort(), timeoutMs);
+    const timer = setTimeout(() => ctrl.abort(), ms);
     let res: Response;
     try {
       res = await doFetch(`${apiUrl}${path}`, { ...init, signal: ctrl.signal });
@@ -264,8 +273,8 @@ export function createClient(opts: ClientOptions = {}) {
     return res;
   }
 
-  async function liveJson<T>(path: string, init?: RequestInit): Promise<T> {
-    return (await (await live(path, init)).json()) as T;
+  async function liveJson<T>(path: string, init?: RequestInit, ms?: number): Promise<T> {
+    return (await (await live(path, init, ms)).json()) as T;
   }
 
   function post(body: unknown): RequestInit {
@@ -357,6 +366,48 @@ export function createClient(opts: ClientOptions = {}) {
         async () => ({
           data: normalizeIncidents(
             await staticJson("incidents.json", "API offline and no incidents artifact was bundled."),
+          ),
+          source: "offline",
+          note: OFFLINE_NOTE,
+        }),
+      ),
+
+    /** R2 diluents (GET /suppression/diluents); offline mirrors engine/suppression.py DILUENTS. */
+    suppressionDiluents: () =>
+      withFallback<Record<DiluentId, DiluentInfo>>(
+        () => liveJson<Record<DiluentId, DiluentInfo>>("/suppression/diluents"),
+        async () => ({ data: STATIC_DILUENTS, source: "offline", note: OFFLINE_NOTE }),
+      ),
+
+    /**
+     * R2 suppression curve (POST /suppression). Offline: the preset artifact artifacts/suppression/{preset}_{diluent}.json;
+     * a custom habitat has no honest offline curve.
+     */
+    suppression: (h: Habitat, diluent: DiluentId) =>
+      withFallback<SuppressionCurve>(
+        async () =>
+          normalizeSuppression(
+            await liveJson<unknown>("/suppression", post({ ...habitatBody(h), diluent }), Math.max(timeoutMs, SUPPRESSION_TIMEOUT_MS)),
+            diluent,
+          ),
+        async () => {
+          const preset = matchPreset(h);
+          if (!preset) throw new OfflineUnavailableError(CUSTOM_SUPPRESSION_NOTE);
+          const raw = await staticJson<unknown>(
+            `suppression/${preset.id}_${diluent}.json`,
+            `API offline and no precomputed suppression curve for ${preset.label} / ${diluent === "he" ? "helium" : "CO₂"}.`,
+          );
+          return { data: normalizeSuppression(raw, diluent), source: "offline", note: `${OFFLINE_NOTE} (${preset.label} preset)` };
+        },
+      ),
+
+    /** R2 empirical FLEX outcome rates by diluent bin (GET /suppression/reference, artifacts/suppression_reference.json). */
+    suppressionReference: () =>
+      withFallback<SuppressionReference>(
+        async () => normalizeReference(await liveJson<unknown>("/suppression/reference")),
+        async () => ({
+          data: normalizeReference(
+            await staticJson("suppression_reference.json", "API offline and no suppression reference artifact was bundled."),
           ),
           source: "offline",
           note: OFFLINE_NOTE,

@@ -94,10 +94,20 @@ export function CoverageChart({ cov, status, habitatLabel }: Props) {
       <g aria-hidden="true" opacity={0.22} fill="var(--micro)">
         {r.type === "distance" ? (
           cov.points.map((p, i) => {
+            // ADR-0006 (M1/M2): a tested point's reach in the O2 x pressure plane shrinks by its diluent distance
+            // from the habitat, and a diluted habitat is covered only by tests with that diluent.
+            let k = 1;
+            if (r.co2_scale !== undefined) {
+              if ((status.co2 > 0 && (p.co2 ?? 0) <= 0) || (status.he > 0 && (p.he ?? 0) <= 0)) return null;
+              const dc = (status.co2 - (p.co2 ?? 0)) / r.co2_scale;
+              const dh = (status.he - (p.he ?? 0)) / (r.he_scale ?? r.co2_scale);
+              k = Math.sqrt(Math.max(0, 1 - (dc * dc + dh * dh) / (r.max_distance * r.max_distance)));
+              if (k === 0) return null;
+            }
             const cx = x(p.o2);
             const cy = y(p.p_atm);
-            const rx = Math.abs(x(p.o2 + reachO2) - cx);
-            const ry = Math.abs(y(p.p_atm * Math.exp(reachLnP)) - cy);
+            const rx = Math.abs(x(p.o2 + reachO2 * k) - cx);
+            const ry = Math.abs(y(p.p_atm * Math.exp(reachLnP * k)) - cy);
             return <ellipse key={i} cx={cx} cy={cy} rx={rx} ry={ry} />;
           })
         ) : (

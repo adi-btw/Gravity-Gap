@@ -15,6 +15,8 @@ const ROUTES = [
   "/data",
   "/about",
   "/replay",
+  "/suppression",
+  "/suppression?g=0&p=14.7&o2=0.21&u=10&L=10&diluent=co2",
 ];
 const THEMES = ["dark", "light"] as const;
 type Theme = (typeof THEMES)[number];

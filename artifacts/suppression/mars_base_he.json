@@ -410,6 +410,6 @@
   0.24
  ],
  "gate_note": "FLEX tested helium dilution only between 13% and 24% O₂ (0.69-1.01 atm); at 34% O₂ and 0.56 atm there is no evidence, so no number is shown for any helium fraction. An answer here needs new dilution tests at this oxygen level.",
- "safety_note": "CO₂ at these concentrations is dangerous to breathe. Spacecraft use portable CO₂ or water-mist extinguishers aimed at the fire, not cabin flooding. This shows how dilution affected flames in NASA's tests; it is not an operating procedure.",
+ "safety_note": "Changing a cabin's gas mix changes what the crew breathes. This shows how helium dilution affected flames in NASA's FLEX tests; it is not an operating procedure or extinguisher guidance.",
  "model_version": "M1 2a8ccd37105c, M2 d3f1ae64f2c0"
 }

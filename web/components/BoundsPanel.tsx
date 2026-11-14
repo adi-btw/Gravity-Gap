@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useState } from "react";
 import { api, type Sourced } from "@/lib/api";
 import { fmtBand, fmtEstimate, fmtSig, humanize } from "@/lib/format";
@@ -53,7 +54,12 @@ export function BoundsPanel() {
             Every estimate traces to the training tests listed below.
           </p>
         </div>
-        {bounds.status === "ok" ? <SourceChip source={bounds.data.source} note={bounds.data.note} /> : null}
+        <div className="flex flex-wrap items-center gap-3">
+          <Link href={`/suppression?${queryString}`} className="text-sm text-micro underline hover:text-fg">
+            How much CO₂ would put it out? →
+          </Link>
+          {bounds.status === "ok" ? <SourceChip source={bounds.data.source} note={bounds.data.note} /> : null}
+        </div>
       </header>
 
       <fieldset>

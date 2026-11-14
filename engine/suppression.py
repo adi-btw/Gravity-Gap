@@ -48,6 +48,12 @@ SAFETY_NOTE = (
     "water-mist extinguishers aimed at the fire, not cabin flooding. This shows how dilution affected "
     "flames in NASA's tests; it is not an operating procedure."
 )
+# Per-diluent safety notes (the CO2 text is not true of helium). SAFETY_NOTE stays the CO2 note for older callers.
+SAFETY_NOTES = {
+    "co2": SAFETY_NOTE,
+    "he": ("Changing a cabin's gas mix changes what the crew breathes. This shows how helium dilution affected "
+           "flames in NASA's FLEX tests; it is not an operating procedure or extinguisher guidance."),
+}
 COMPOSITION_REASON = "composition over 100%"
 
 
@@ -160,7 +166,7 @@ def curve(diluent: str, g_m_s2: float, p_psia: float, o2: float, u_cm_s: float, 
         "tested": tested,
         "tested_o2_range": o2_range,
         "gate_note": _gate_note(diluent, o2, p_atm, o2_range, p_range, points),
-        "safety_note": SAFETY_NOTE,
+        "safety_note": SAFETY_NOTES[diluent],
         "model_version": (f"M1 {get_model('M1', n_boot=n_boot).model_version}, "
                           f"M2 {get_model('M2', n_boot=n_boot).model_version}"),
     }

@@ -146,3 +146,13 @@ def test_artifacts_exist_after_build():
             assert path.exists(), f"run python -m engine.suppression ({path})"
             data = json.loads(path.read_text(encoding="utf-8"))
             assert data["preset_id"] == p["id"] and data["diluent"] == d and len(data["points"]) == 15
+
+
+def test_safety_note_is_specific_to_the_diluent():
+    """The CO2 breathing warning must not be shown for helium (each diluent has its own note)."""
+    from engine.suppression import SAFETY_NOTES
+
+    he = SAFETY_NOTES["he"]
+    assert "CO₂" not in he and "CO2" not in he
+    assert "helium" in he and "not an operating procedure" in he
+    assert "dangerous to breathe" in SAFETY_NOTES["co2"]

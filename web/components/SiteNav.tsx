@@ -12,6 +12,7 @@ export const NAV_ITEMS = [
   { href: "/explore", label: "Spectrum" },
   { href: "/regime", label: "Regime" },
   { href: "/bounds", label: "Bounds" },
+  { href: "/suppression", label: "Put it out" },
   { href: "/ledger", label: "Ledger" },
   { href: "/planner", label: "Planner" },
   { href: "/data", label: "Data" },
