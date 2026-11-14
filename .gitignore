@@ -6,3 +6,8 @@ __pycache__/
 .env
 **/graphify-out/cache/
 .omc/
+
+# R3 detection: large reference documents (hashes in data/detection/manifest.json; restore with scripts/fetch_detection.py)
+data/detection/raw/PSI-101/*.docx
+data/detection/raw/PSI-47/*.doc
+data/detection/raw/PSI-115/PSI-115_Reports_NNX17AF08A_FinalReport.pdf
