@@ -1,0 +1,175 @@
+{
+  "version": 1,
+  "incidents": [
+    {
+      "id": "apollo1",
+      "name": "Apollo 1",
+      "date": "1967-01-27",
+      "phase": "pre-launch \"plugs out\" test on the launch pad (AS-204)",
+      "in_scope": true,
+      "scope_note": null,
+      "g_m_s2": 9.81,
+      "p_psia": 16.7,
+      "o2": 1.0,
+      "u_cm_s": 10,
+      "L_mm": 10,
+      "assumed": [
+        "u_cm_s",
+        "L_mm"
+      ],
+      "assumed_note": "Ventilation speed (10 cm/s) and fuel length (10 mm) are engineering assumptions matching the app presets, not values from a NASA page.",
+      "summary": "During a preflight test on the launch pad on Jan. 27, 1967, a fire swept through the AS-204 Command Module, which was pressurized with pure oxygen, and astronauts Grissom, White and Chaffee lost their lives.",
+      "sources": [
+        {
+          "field": "date",
+          "url": "https://sma.nasa.gov/sma-disciplines/accllp/apollo-1",
+          "quote": "On Jan. 27, 1967, astronauts Virgil “Gus” Grissom, Edward White and Robert Chaffee lost their lives during a preflight test for AS-204"
+        },
+        {
+          "field": "summary",
+          "url": "https://sma.nasa.gov/sma-disciplines/accllp/apollo-1",
+          "quote": "during a preflight test for AS-204 when a fire swept through the Command Module (CM)."
+        },
+        {
+          "field": "g_m_s2",
+          "url": "https://sma.nasa.gov/sma-disciplines/accllp/apollo-1",
+          "quote": "On Jan. 27, Grissom, White and Chaffee were scheduled to conduct a key test on the launch pad"
+        },
+        {
+          "field": "o2",
+          "url": "https://sma.nasa.gov/sma-disciplines/accllp/apollo-1",
+          "quote": "the spacecraft’s hatches closed and the cabin pressurized with 100% oxygen."
+        },
+        {
+          "field": "p_psia",
+          "url": "https://www.nasa.gov/history/Apollo204/chariot.html",
+          "quote": "pure oxygen at a pressure of 11.5 newtons per square centimeter (16.7 pounds per square inch) was substituted."
+        },
+        {
+          "field": "phase",
+          "url": "https://www.nasa.gov/history/Apollo204/chariot.html",
+          "quote": "During this \"plugs out\" test, all electrical, environmental, and ground checkout cables would be disconnected"
+        }
+      ]
+    },
+    {
+      "id": "mir1997",
+      "name": "Mir oxygen-generator fire",
+      "date": "1997-02-24",
+      "phase": "in orbit, aboard the Mir space station (Kvant-1 module)",
+      "in_scope": true,
+      "scope_note": null,
+      "g_m_s2": 0.0,
+      "p_psia": 14.7,
+      "o2": 0.21,
+      "u_cm_s": 10,
+      "L_mm": 10,
+      "assumed": [
+        "p_psia",
+        "o2",
+        "u_cm_s",
+        "L_mm"
+      ],
+      "assumed_note": "Mir operated a sea-level-like air atmosphere; cabin pressure (14.7 psia) and oxygen fraction (0.21) are not quoted from a NASA page. Ventilation speed and fuel length are engineering assumptions matching the app presets.",
+      "summary": "On Feb. 24, 1997, a solid-fuel oxygen generator ignited in Mir's Kvant-1 module, producing a flame and dense smoke; the station's life support system cleared the smoke over the following hours. Cabin pressure and oxygen here are assumed sea-level air, not values quoted from a NASA page.",
+      "sources": [
+        {
+          "field": "date",
+          "url": "https://www.nasa.gov/history/25-years-ago-fire-aboard-space-station-mir/",
+          "quote": "On Feb. 24, 1997, the six crew members aboard the Russian space station Mir faced significant danger"
+        },
+        {
+          "field": "summary",
+          "url": "https://www.nasa.gov/history/25-years-ago-fire-aboard-space-station-mir/",
+          "quote": "when a fire ignited in an oxygen generating system."
+        },
+        {
+          "field": "summary",
+          "url": "https://www.nasa.gov/history/25-years-ago-fire-aboard-space-station-mir/",
+          "quote": "as Lazutkin activated a solid-fuel oxygen generator in Mir’s Kvant-1 module, the canister ignited"
+        },
+        {
+          "field": "g_m_s2",
+          "url": "https://www.nasa.gov/history/25-years-ago-fire-aboard-space-station-mir/",
+          "quote": "the worst in-orbit fire incident in the history of spaceflight."
+        }
+      ]
+    },
+    {
+      "id": "artemis2",
+      "name": "Artemis II smoke alarm",
+      "date": "2026-04-01",
+      "phase": "lunar transit, flight day 9/10 of the Artemis II test flight (date shown is the April 1, 2026 launch)",
+      "in_scope": true,
+      "scope_note": null,
+      "g_m_s2": 0.0,
+      "p_psia": 14.7,
+      "o2": 0.21,
+      "u_cm_s": 10,
+      "L_mm": 10,
+      "assumed": [
+        "p_psia",
+        "o2",
+        "u_cm_s",
+        "L_mm"
+      ],
+      "assumed_note": "No NASA page found giving Orion's cabin pressure or oxygen fraction; sea-level air (14.7 psia, 0.21) is assumed. NASA's thermal report says the alarm turned off the cabin fans, so real airflow was likely lower than the assumed 10 cm/s preset.",
+      "summary": "During lunar transit on the Artemis II test flight, a smoke detector alarm that a NASA engineering report later called a false alarm automatically turned off Orion's cabin fans. Cabin pressure and oxygen here are assumed sea-level air, not values quoted from a NASA page.",
+      "sources": [
+        {
+          "field": "summary",
+          "source": "2026 NASA Space Apps Challenge brief",
+          "quote": "make the fire alarm go off in your spacecraft when you’re still about 80,000 miles from home."
+        },
+        {
+          "field": "summary",
+          "url": "https://ntrs.nasa.gov/api/citations/20260007602/downloads/TFAWS_ATCS_Overview_%20Rev3.pdf",
+          "quote": "Smoke Detector False Alarm – Automatically Turned Off Cabin and ARS Fans, causing high cabin temperature transients (~80F)"
+        },
+        {
+          "field": "g_m_s2",
+          "url": "https://ntrs.nasa.gov/api/citations/20260007602/downloads/TFAWS_ATCS_Overview_%20Rev3.pdf",
+          "quote": "Lunar Transit - Flight Day 9/10"
+        },
+        {
+          "field": "date",
+          "url": "https://www.nasa.gov/blogs/missions/2026/04/01/live-artemis-ii-launch-day-updates",
+          "quote": "lift off from Launch Complex 39B at NASA’s Kennedy Space Center in Florida on Wednesday, April 1, 2026."
+        }
+      ]
+    },
+    {
+      "id": "apollo13",
+      "name": "Apollo 13",
+      "date": "1970-04-13",
+      "phase": "third day of the mission, translunar flight (launched April 11, 1970)",
+      "in_scope": false,
+      "scope_note": "Outside this tool's scope: Apollo 13 was a failure of a high-pressure oxygen tank in the Service Module, not a cabin fire, so the PSI combustion data and this tool do not apply.",
+      "g_m_s2": null,
+      "p_psia": null,
+      "o2": null,
+      "u_cm_s": null,
+      "L_mm": null,
+      "assumed": [],
+      "assumed_note": null,
+      "summary": "On the third day of the Apollo 13 mission, oxygen tank number two failed, followed by tank number one; the lunar landing was called off and the crew returned to Earth safely.",
+      "sources": [
+        {
+          "field": "summary",
+          "url": "https://sma.nasa.gov/sma-disciplines/accllp/apollo-13",
+          "quote": "oxygen tank number two blew up, leading to the subsequent failure of tank number one."
+        },
+        {
+          "field": "date",
+          "url": "https://sma.nasa.gov/sma-disciplines/accllp/apollo-13",
+          "quote": "Things went smoothly until the third day of the mission"
+        },
+        {
+          "field": "date",
+          "url": "https://www.nasa.gov/mission/apollo-13/",
+          "quote": "Launch April 11, 1970"
+        }
+      ]
+    }
+  ]
+}
