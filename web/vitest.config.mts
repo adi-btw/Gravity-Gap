@@ -4,5 +4,6 @@ export default defineConfig({
   test: {
     environment: "node",
     include: ["lib/**/*.test.ts"],
+    exclude: ["e2e/**", "node_modules/**"],
   },
 });

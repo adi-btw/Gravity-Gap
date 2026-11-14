@@ -79,7 +79,7 @@ export function LedgerView() {
       {rows && !parseError ? (
         rows.length ? (
           <section className="overflow-x-auto rounded-lg border border-line bg-surface p-4">
-            <p className="mb-2 text-sm" aria-live="polite">
+            <p className="mb-2 text-sm" aria-live="polite" data-testid="ledger-verified">
               <span className="num font-semibold">{nOk}</span> of <span className="num">{rows.length}</span> hashes
               verified in your browser.
             </p>

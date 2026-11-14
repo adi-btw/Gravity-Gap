@@ -55,7 +55,7 @@ export function PlannerView() {
                       <span className="num text-sm">score {t.score.toFixed(3)}</span>
                     </div>
                     <p className="mt-1 text-sm">{t.rationale}</p>
-                    <div className="mt-2 grid gap-1 md:max-w-lg" aria-label={`Score parts for test ${t.rank}`}>
+                    <div className="mt-2 grid gap-1 md:max-w-lg" role="group" aria-label={`Score parts for test ${t.rank}`}>
                       {Object.entries(t.parts).map(([k, v]) => (
                         <PartBar key={k} label={PART_LABEL[k] ?? k} value={v} color={k === "mixed_fraction" ? "var(--partial)" : k === "band_width" ? "var(--warn)" : "var(--micro)"} />
                       ))}

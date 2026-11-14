@@ -14,6 +14,8 @@ npm test           # vitest
 npm run lint       # eslint (next/core-web-vitals + next/typescript)
 npm run build      # copies artifacts (prebuild), then a production build
 npm start          # serve the production build
+npm run e2e        # Playwright: demo path online + offline, axe accessibility, keyboard (T7, T8)
+npm run record-demo  # re-record docs/media/demo.webm and the step screenshots (H4)
 ```
 
 Run the API next to it from the repo root: `python -m uvicorn api.main:app --port 8000`.
@@ -66,3 +68,44 @@ spellings (`10.0`, `1e-05`) hash exactly; `JSON.parse` would lose them. The test
 - `components/HabitatBar.tsx` (F0): habitat in the URL (`?g=&p=&o2=&u=&L=`), so every link is shareable.
 - Tests (`lib/*.test.ts`): physics parity with `../tests/fixtures/physics_reference.json`, presets parity, data-layer
   fallback, safe Markdown, ledger hash, catalog helpers.
+
+## End-to-end tests (T7) and accessibility (T8)
+
+Playwright tests live in `e2e/` (`playwright.config.ts`). First time only: `npx playwright install chromium`.
+
+`npm run e2e` starts two servers through Playwright `webServer` (or reuses ones already running locally):
+the API (`python -m uvicorn api.main:app --port 8000` from the repo root, ready at `/health`) and the web app
+(`npm run build && npm run start -- -p 3000`). Set `E2E_NO_BUILD=1` to skip the build and serve the existing `.next`.
+In CI (`CI=1`) servers are never reused and failures retry once.
+
+| Spec | What it proves |
+|---|---|
+| `e2e/demo.spec.ts` | The scripted judge path (plan/11) with the **lunar base** preset, against the live API, in under 120 s: landing shows the gap → Lunar base → /regime badge MIXED, Ri ≈ 6.5 → Pressure × gravity G* ≈ 0.051 → /bounds M1 estimate + 90% band + transfer confidence low → M2 shows the extrapolation state with a reason and no number → Explain gives a validated answer with citations → /ledger 5 of 5 hashes verified → /planner ranked tests. |
+| `e2e/offline.spec.ts` | The same steps with every request to `:8000` aborted (`page.route`): "offline data" chips, preset bounds from artifacts, Explain and Ask answer pre-generated questions from `ai_cache.json`, a custom habitat and /data say the live API is needed. |
+| `e2e/a11y.spec.ts` | axe-core (WCAG 2.0/2.1/2.2 A + AA and best-practice tags) on every route, the M2 + Explain state and the open Ask drawer, in both dark and light themes: zero serious or critical violations. Keyboard only: skip link, HabitatBar presets and every slider/number input, Ask drawer open (Enter), focus trap, Ctrl+Enter send, close with Esc and with the Close button (focus returns to Ask), regime tabs with arrow keys; focused controls must show a 2 px outline. |
+| `e2e/demo-path.ts` | Shared step functions used by the demo spec and the recorder. |
+
+Stable hooks for tests: `data-testid` = `regime-badge`, `stat-ri`, `gstar-value`, `bounds-estimate`, `bounds-band`,
+`bounds-extrapolation`, `ledger-verified`.
+
+Accessibility fixes made for T8: light-theme amber darkened to `#a64b06` (5.1:1 on `surface-2`); SVG labels over tinted
+fills and hatches carry a light-theme contrast halo (`.svg-halo`), white G* contour labels a dark stroke (and the
+label that collided with the Earth marker is dropped); the band chart is a
+labelled group whose columns are focusable `role="img"` items with a visible focus ring (`.svg-focus-ring`); evidence
+chips describe their tooltip with `aria-describedby` instead of `aria-label` on a `<span>`; score-part bars are
+labelled `role="group"`s; the regime-map vent label no longer overlaps the BUOYANT label.
+
+## Demo recording (H4)
+
+`npm run record-demo` (`playwright.record.config.ts`, excluded from `npm run e2e`) warms the API (so the first
+`/bounds` call does not hit the 2.5 s client timeout and fall back offline), then runs the same judge path at a human
+pace with video on at 1440×900 (dark theme) and writes to `../docs/media/`: `demo.webm` (about 1.5 min, ~17 MB, VP9) and the step
+screenshots `01-landing.png`, `02-regime-mixed.png`, `03-pressure-gravity.png`, `04-bounds-m1.png`,
+`05-bounds-m2-extrapolation.png`, `06-explain.png`, `07-ledger.png`, `08-planner.png`. Pauses per step are in
+`e2e/record-demo.spec.ts`.
+
+## Data explorer outcome filter
+
+The outcome selector is sent to the API as `outcome=` (exact match, phase 3 contract) on `/data/tests` and on the
+CSV/JSON download links. The table also filters rows in the browser, so an older API that ignores the parameter still
+shows the right rows (only the download would then be unfiltered by outcome).

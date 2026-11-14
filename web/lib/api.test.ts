@@ -130,6 +130,14 @@ describe("data layer fallback", () => {
     );
   });
 
+  it("passes the outcome filter through to tests and export", async () => {
+    const c = createClient({ apiUrl: API });
+    expect(c.exportUrl({ outcome: "extinction" }, "json")).toBe(`${API}/data/export?outcome=extinction&format=json`);
+    const { impl, calls } = fakeFetch(() => json({ total: 0, limit: 50, offset: 0, rows: [] }));
+    await createClient({ apiUrl: API, fetchImpl: impl }).tests({ outcome: "extinction", limit: 50 });
+    expect(calls.some((u) => u.includes("/data/tests?outcome=extinction&limit=50"))).toBe(true);
+  });
+
   it("normalises the planner artifact (items or list)", () => {
     expect(normalizePlanner({ items: [{ rank: 1 }], design_implications: ["x"], method: "m" })).toMatchObject({
       tests: [{ rank: 1 }],

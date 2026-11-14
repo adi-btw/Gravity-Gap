@@ -26,7 +26,7 @@ export function GapHero({ currentG }: { currentG?: number }) {
         </pattern>
       </defs>
       <rect x={zoneL} y={36} width={zoneR - zoneL} height={AXIS_Y - 36} fill="url(#hero-hatch)" />
-      <text x={(zoneL + zoneR) / 2 + 90} y={58} fontSize={14} fill="var(--muted)" textAnchor="middle" fontWeight={600}>
+      <text x={(zoneL + zoneR) / 2 + 90} y={58} fontSize={14} fill="var(--muted)" textAnchor="middle" fontWeight={600} className="svg-halo">
         NO DIRECT FIRE DATA
       </text>
 

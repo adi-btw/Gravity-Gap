@@ -46,12 +46,14 @@ export function DataExplorer() {
   const catalog = useAsync(() => api.catalog(), "catalog");
 
   const pct = (s: string) => (s.trim() === "" || !Number.isFinite(Number(s)) ? undefined : Number(s) / 100);
-  // The API filters by investigation and O2 only; outcome is applied here over the full filtered set
-  // (the table has under 2,000 rows), so pagination stays correct.
+  // outcome= is passed to the API (phase 3 exact-match filter) so downloads include it. The rows are also
+  // filtered here over the full filtered set (under 2,000 rows), which keeps the table correct against an
+  // older API that ignores the parameter; against a new API the second filter is a no-op.
   const filters: TestsFilters = {
     investigation_id: inv || undefined,
     o2_min: pct(o2min),
     o2_max: pct(o2max),
+    outcome: outcome || undefined,
   };
   const key = JSON.stringify({ ...filters, outcome, offset });
   const page = useAsync(async () => {
@@ -157,7 +159,8 @@ export function DataExplorer() {
             <>
               {outcome ? (
                 <p className="mb-2 text-xs text-muted">
-                  Outcome is filtered in your browser; downloads apply the investigation and O₂ filters only (the export API has no outcome filter).
+                  Outcome filter: <span className="num">{outcome}</span>. Downloads pass it to the API as{" "}
+                  <code className="num">outcome=</code> (exact match).
                 </p>
               ) : null}
               <div className="overflow-x-auto">

@@ -27,7 +27,7 @@ export function PressureGravityExplorer({ habitat }: { habitat: Habitat }) {
       <div className="grid gap-3 sm:grid-cols-3" aria-live="polite">
         <div className="rounded-md border border-line bg-surface p-3">
           <div className="text-xs text-muted">G* = (g/g₀)(P/P₀)² for your habitat</div>
-          <div className="num mt-1 text-2xl">{fmtSig(gs, 3)}</div>
+          <div className="num mt-1 text-2xl" data-testid="gstar-value">{fmtSig(gs, 3)}</div>
           <div className="mt-1 text-[11px] text-muted">
             {gFraction(habitat.g_m_s2).toFixed(3)} g × ({habitat.p_psia} / 14.7)²
           </div>

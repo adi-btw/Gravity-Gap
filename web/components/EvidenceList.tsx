@@ -28,16 +28,18 @@ export function EvidenceList({ rows, queryString }: { rows: EvidenceRow[]; query
             {items.map((r) => {
               const short = r.record_id.split(":").slice(1).join(":") || r.record_id;
               const tip = `${r.record_id}${r.distance !== undefined && r.distance !== null ? ` · atmosphere distance ${r.distance.toFixed(2)}` : ""}`;
+              const tipId = `ev-tip-${r.record_id.replace(/[^A-Za-z0-9_-]/g, "-")}`;
               return (
                 <span key={r.record_id} className="group relative">
                   <span
                     tabIndex={0}
-                    aria-label={tip}
+                    aria-describedby={tipId}
                     className="num inline-block cursor-default rounded border border-line px-1.5 py-px text-[11px] hover:border-micro focus:border-micro"
                   >
                     {short}
                   </span>
                   <span
+                    id={tipId}
                     role="tooltip"
                     className="num pointer-events-none absolute bottom-full left-0 z-10 mb-1 hidden whitespace-nowrap rounded border border-line bg-surface-2 px-2 py-1 text-[11px] shadow group-hover:block group-focus-within:block"
                   >

@@ -10,7 +10,9 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "test": "vitest run"
+    "test": "vitest run",
+    "e2e": "playwright test",
+    "record-demo": "playwright test --config playwright.record.config.ts"
   },
   "dependencies": {
     "next": "15.5.29",
@@ -18,7 +20,9 @@
     "react-dom": "19.1.0"
   },
   "devDependencies": {
+    "@axe-core/playwright": "^4.14.0",
     "@eslint/eslintrc": "^3",
+    "@playwright/test": "^1.65.1",
     "@tailwindcss/postcss": "^4",
     "@types/node": "^20",
     "@types/react": "^19",

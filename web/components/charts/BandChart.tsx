@@ -54,9 +54,9 @@ export function BandChart({ points, unit, domain, ariaLabel }: Props) {
   const cx = (i: number) => M.l + colW * (i + 0.5);
 
   return (
-    <svg viewBox={`0 0 ${W} ${H}`} className="h-auto w-full" role="img" aria-label={ariaLabel}>
+    <svg viewBox={`0 0 ${W} ${H}`} className="h-auto w-full" role="group" aria-label={ariaLabel}>
       {ticks([lo, hi]).map((t) => (
-        <g key={t}>
+        <g key={t} aria-hidden="true">
           <line x1={M.l} x2={W - M.r} y1={y(t)} y2={y(t)} stroke="var(--line)" strokeDasharray="2 4" />
           <text x={M.l - 6} y={y(t) + 4} fontSize={11} textAnchor="end" fill="var(--muted)" className="num">
             {fmtSig(t, 3)}
@@ -68,6 +68,7 @@ export function BandChart({ points, unit, domain, ariaLabel }: Props) {
         fontSize={11}
         textAnchor="middle"
         fill="var(--muted)"
+        aria-hidden="true"
       >
         {unit ?? "value"}
       </text>
@@ -76,8 +77,19 @@ export function BandChart({ points, unit, domain, ariaLabel }: Props) {
         const bw = Math.min(64, colW * 0.4);
         const has = p.estimate !== null || p.band !== null;
         return (
-          <g key={p.key} tabIndex={0} aria-label={p.trace ?? p.label} className="focus:outline-none">
+          <g key={p.key} tabIndex={0} role="img" aria-label={p.trace ?? p.label} className="focus:outline-none">
             <title>{p.trace ?? p.label}</title>
+            <rect
+              className="svg-focus-ring"
+              x={x - colW / 2 + 4}
+              y={M.t - 6}
+              width={colW - 8}
+              height={H - M.t}
+              fill="none"
+              stroke="var(--micro)"
+              strokeWidth={2}
+              rx={6}
+            />
             {p.band ? (
               <rect
                 x={x - bw / 2}

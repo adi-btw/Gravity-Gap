@@ -115,16 +115,22 @@ export function GStarMap({ markers, current }: Props) {
         pts.length > 1 ? (
           <g key={lvl}>
             <polyline points={pts.join(" ")} fill="none" stroke="#ffffff" strokeOpacity={0.55} strokeWidth={1} strokeDasharray="4 3" />
+            {/* A label whose end point sits on the top edge would be clipped or collide with the Earth marker. */}
+            {Number(pts[pts.length - 1].split(",")[1]) - 4 < M.t + 12 ? null : (
             <text
               x={Number(pts[pts.length - 1].split(",")[0]) - 4}
               y={Number(pts[pts.length - 1].split(",")[1]) - 4}
               fontSize={10}
               fill="#ffffff"
+              stroke="#111827"
+              strokeWidth={3}
+              paintOrder="stroke"
               textAnchor="end"
               className="num"
             >
               G*={lvl}
             </text>
+            )}
           </g>
         ) : null,
       )}

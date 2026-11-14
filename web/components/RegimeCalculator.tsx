@@ -7,11 +7,11 @@ import { gFraction, type Habitat } from "@/lib/habitat";
 import { RegimeMap, ventForRi } from "./charts/RegimeMap";
 import { RegimeBadge } from "./RegimeBadge";
 
-function Stat({ label, value, unit, sub }: { label: string; value: string; unit?: string; sub?: string }) {
+function Stat({ label, value, unit, sub, testId }: { label: string; value: string; unit?: string; sub?: string; testId?: string }) {
   return (
     <div className="rounded-md border border-line bg-surface p-3">
       <div className="text-xs text-muted">{label}</div>
-      <div className="num mt-1 text-2xl">
+      <div className="num mt-1 text-2xl" data-testid={testId}>
         {value}
         {unit ? <span className="ml-1 text-sm text-muted">{unit}</span> : null}
       </div>
@@ -59,6 +59,7 @@ export function RegimeCalculator({ habitat }: { habitat: Habitat }) {
         <Stat
           label="Richardson number Ri = u_b² / u_f²"
           value={fmtSig(e.ri, 3)}
+          testId="stat-ri"
           sub={e.ri === null ? "vent off under gravity: Ri → ∞" : "forced < 0.1 ≤ mixed ≤ 10 < buoyant"}
         />
         <Stat label="Effective flow u_eff" value={fmt(e.u_eff_cm_s, 2)} unit="cm/s" sub="bridge to microgravity data (k = 1)" />

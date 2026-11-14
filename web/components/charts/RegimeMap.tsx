@@ -88,19 +88,19 @@ export function RegimeMap({ g, u, L }: Props) {
       {/* region labels */}
       {g > 0 ? (
         <>
-          <text x={M.l + 8} y={M.t + 18} fontSize={12} fill="var(--normal)" fontWeight={600}>
+          <text x={M.l + 8} y={M.t + 18} fontSize={12} fill="var(--normal)" fontWeight={600} className="svg-halo">
             ↑ BUOYANT (Ri &gt; 10)
           </text>
-          <text x={W - M.r - 8} y={H - M.b - 10} fontSize={12} fill="var(--micro)" fontWeight={600} textAnchor="end">
+          <text x={W - M.r - 8} y={H - M.b - 10} fontSize={12} fill="var(--micro)" fontWeight={600} textAnchor="end" className="svg-halo">
             → FORCED (Ri &lt; 0.1)
           </text>
         </>
       ) : (
-        <text x={M.l + PW / 2} y={M.t + PH / 2} fontSize={13} fill="var(--micro)" fontWeight={600} textAnchor="middle">
+        <text x={M.l + PW / 2} y={M.t + PH / 2} fontSize={13} fill="var(--micro)" fontWeight={600} textAnchor="middle" className="svg-halo">
           g = 0: no buoyancy, every point is FORCED (Ri = 0)
         </text>
       )}
-      <text x={xOf(10)} y={M.t + 14} fontSize={10} fill="var(--muted)" textAnchor="middle">
+      <text x={xOf(10)} y={M.t + PH - 6} fontSize={10} fill="var(--muted)" textAnchor="middle" className="svg-halo">
         5–15 cm/s cabin vent
       </text>
 

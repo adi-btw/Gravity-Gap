@@ -204,7 +204,7 @@ export function ExploreView() {
                           <span className="num text-sm">score {item.score.toFixed(3)}</span>
                         </div>
                         {rec?.title && rec.title !== item.acronym ? <p className="text-xs text-muted">{rec.title}</p> : null}
-                        <div className="mt-2 space-y-1" aria-label={`Score parts for ${item.id}`}>
+                        <div className="mt-2 space-y-1" role="group" aria-label={`Score parts for ${item.id}`}>
                           {Object.entries(item.parts).map(([k, v]) => (
                             <PartBar key={k} label={PART_LABEL[k] ?? k} value={v} color={PART_COLOR[k]} />
                           ))}

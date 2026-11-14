@@ -42,3 +42,9 @@ next-env.d.ts
 
 # build-time copy of ../artifacts and ../ledger (scripts/copy-artifacts.mjs)
 /public/artifacts/
+
+# playwright
+/test-results/
+/playwright-report/
+/blob-report/
+/playwright/.cache/

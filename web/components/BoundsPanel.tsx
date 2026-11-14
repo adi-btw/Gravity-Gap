@@ -128,7 +128,7 @@ function BoundsView({
         </div>
 
         {!r.applicable ? (
-          <div className="hatch mt-3 rounded-md border border-dashed border-line p-4" role="status">
+          <div className="hatch mt-3 rounded-md border border-dashed border-line p-4" role="status" data-testid="bounds-extrapolation">
             <p className="text-sm font-semibold">Extrapolation: no evidence</p>
             <p className="mt-1 text-sm">{r.reason ?? "The habitat is outside every tested condition for this metric."}</p>
             <p className="mt-2 text-xs text-muted">
@@ -241,10 +241,10 @@ function NumericChart({ r, kind, gLabel, trace }: { r: BoundsResult; kind: strin
       />
       <div>
         <p className="text-sm">
-          Estimate <span className="num text-2xl font-semibold text-partial">{fmtEstimate(est, kind, r.unit)}</span>
+          Estimate <span className="num text-2xl font-semibold text-partial" data-testid="bounds-estimate">{fmtEstimate(est, kind, r.unit)}</span>
         </p>
         <p className="text-sm text-muted">
-          90% band <span className="num text-fg">{fmtBand(r.band90, kind, r.unit)}</span>
+          90% band <span className="num text-fg" data-testid="bounds-band">{fmtBand(r.band90, kind, r.unit)}</span>
         </p>
         <table className="mt-3 w-full text-left text-xs">
           <caption className="sr-only">Estimates and 90% bands (table alternative to the chart)</caption>

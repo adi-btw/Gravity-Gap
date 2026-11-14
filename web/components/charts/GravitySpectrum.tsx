@@ -88,7 +88,7 @@ export function GravitySpectrum({
         </pattern>
       </defs>
       <rect x={zoneL} y={30} width={zoneR - zoneL} height={AXIS_Y - 30} fill="url(#spec-hatch)" />
-      <text x={(zoneL + zoneR) / 2 + 120} y={60} fontSize={14} fill="var(--muted)" textAnchor="middle" fontWeight={600}>
+      <text x={(zoneL + zoneR) / 2 + 120} y={60} fontSize={14} fill="var(--muted)" textAnchor="middle" fontWeight={600} className="svg-halo">
         NO DIRECT FIRE DATA
       </text>
       {[

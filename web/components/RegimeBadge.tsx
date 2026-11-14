@@ -42,6 +42,7 @@ export function RegimeBadge({ regime, large = false }: { regime: Regime; large?:
         large ? "px-3 py-1.5 text-lg" : "px-2 py-0.5 text-xs"
       }`}
       title={REGIME_LABEL[regime]}
+      data-testid="regime-badge"
     >
       <RegimeIcon regime={regime} size={large ? 22 : 14} />
       {regime}

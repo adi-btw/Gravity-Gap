@@ -79,6 +79,8 @@ export interface TestsFilters {
   investigation_id?: string;
   o2_min?: number;
   o2_max?: number;
+  /** Exact match on the outcome column (phase 3 API; comma-separate for several). Ignored by older APIs. */
+  outcome?: string;
   limit?: number;
   offset?: number;
 }
