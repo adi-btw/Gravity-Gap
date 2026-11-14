@@ -1,0 +1,121 @@
+investigation_id,investigation,test_date,test_type,fuel,fuel_concentration,atmosphere,o2_levels_percent,pressure_levels_atm,burner_size_mm,mesh_polarity,flow_speed_range_cm_s,droplet_diameter_range_mm,flames_ignited,quality_flags,source_file,source_row
+PSI-20,ACME BRE,2019-02-08,,100% C2H4,,,21; 26.5; 40,,25.0,,,,10.0,pressure_not_in_table;ignitions_not_split_by_o2_level,PSI-20_Experimental_table_ACME_BRE.csv,1
+PSI-20,ACME BRE,2019-02-20,,100% C2H4,,,26.5; 34,,25.0,,,,8.0,pressure_not_in_table;ignitions_not_split_by_o2_level,PSI-20_Experimental_table_ACME_BRE.csv,2
+PSI-20,ACME BRE,2019-02-25,,50% C2H4,,,21; 26.5; 34; 40,,25.0,,,,8.0,pressure_not_in_table;ignitions_not_split_by_o2_level,PSI-20_Experimental_table_ACME_BRE.csv,3
+PSI-20,ACME BRE,2019-03-04,,50% C2H4,,,26.5; 40,,25.0,,,,6.0,pressure_not_in_table;ignitions_not_split_by_o2_level,PSI-20_Experimental_table_ACME_BRE.csv,4
+PSI-20,ACME BRE,2019-03-07,,50% C2H4,,,34,,25.0,,,,6.0,excel_percent_artifact_fixed;pressure_not_in_table;ignitions_not_split_by_o2_level,PSI-20_Experimental_table_ACME_BRE.csv,5
+PSI-20,ACME BRE,2019-03-11,,50% C2H4,,,26.5; 34,,25.0,,,,7.0,pressure_not_in_table;ignitions_not_split_by_o2_level,PSI-20_Experimental_table_ACME_BRE.csv,6
+PSI-20,ACME BRE,2019-03-28,,100% C2H4,,,26.5; 34,,25.0,,,,8.0,pressure_not_in_table;ignitions_not_split_by_o2_level,PSI-20_Experimental_table_ACME_BRE.csv,7
+PSI-20,ACME BRE,2019-04-01,,100% C2H4,,,21,,25.0,,,,0.0,excel_percent_artifact_fixed;pressure_not_in_table;ignitions_not_split_by_o2_level,PSI-20_Experimental_table_ACME_BRE.csv,8
+PSI-20,ACME BRE,2019-04-04,,100% C2H4,,,21; 26.5; 34,,25.0,,,,9.0,pressure_not_in_table;ignitions_not_split_by_o2_level,PSI-20_Experimental_table_ACME_BRE.csv,9
+PSI-20,ACME BRE,2020-09-03,,100% C2H4,,,25; 34; 40,,50.0,,,,13.0,pressure_not_in_table;ignitions_not_split_by_o2_level,PSI-20_Experimental_table_ACME_BRE.csv,10
+PSI-20,ACME BRE,2020-10-17,,100% C2H4,,,26.5; 34,,25.0,,,,13.0,pressure_not_in_table;ignitions_not_split_by_o2_level,PSI-20_Experimental_table_ACME_BRE.csv,11
+PSI-20,ACME BRE,2020-12-05,,100% CH4,,,25; 34; 40,,25.0,,,,21.0,pressure_not_in_table;ignitions_not_split_by_o2_level,PSI-20_Experimental_table_ACME_BRE.csv,12
+PSI-20,ACME BRE,2020-12-04,,100% CH4,,,25; 40,,25.0,,,,18.0,pressure_not_in_table;ignitions_not_split_by_o2_level,PSI-20_Experimental_table_ACME_BRE.csv,13
+PSI-20,ACME BRE,2020-12-11,,50% C2H4,,,25; 40,,25.0,,,,12.0,pressure_not_in_table;ignitions_not_split_by_o2_level,PSI-20_Experimental_table_ACME_BRE.csv,14
+PSI-20,ACME BRE,2020-12-17,,100% C2H4,,,34; 40,,25.0,,,,10.0,pressure_not_in_table;ignitions_not_split_by_o2_level,PSI-20_Experimental_table_ACME_BRE.csv,15
+PSI-20,ACME BRE,2020-12-23,,100% C2H4,,,25; 34; 40,,25.0,,,,17.0,pressure_not_in_table;ignitions_not_split_by_o2_level,PSI-20_Experimental_table_ACME_BRE.csv,16
+PSI-20,ACME BRE,2021-01-20,,100% C2H4,,,21; 26.5; 34,,25.0,,,,15.0,pressure_not_in_table;ignitions_not_split_by_o2_level,PSI-20_Experimental_table_ACME_BRE.csv,17
+PSI-20,ACME BRE,2021-01-28,,100% C2H4,,,25; 34; 40,,50.0,,,,13.0,pressure_not_in_table;ignitions_not_split_by_o2_level,PSI-20_Experimental_table_ACME_BRE.csv,18
+PSI-21,ACME CLD Flame,2017-11-15,Methane based test,40% CH4,30%-40%,,,,,,,,10.0,,PSI-21_Experimental_table_CLD_Flame.csv,1
+PSI-21,ACME CLD Flame,2017-11-20,Methane based test,40% CH4,30%-40%,,,,,,,,5.0,fuel_label_autofill_fixed,PSI-21_Experimental_table_CLD_Flame.csv,2
+PSI-21,ACME CLD Flame,2017-12-08,Methane based test,40% CH4,40%,,,,,,,,8.0,fuel_label_autofill_fixed,PSI-21_Experimental_table_CLD_Flame.csv,3
+PSI-21,ACME CLD Flame,2017-12-22,Methane based test,40% CH4,30%-40%,,,,,,,,3.0,fuel_label_autofill_fixed,PSI-21_Experimental_table_CLD_Flame.csv,4
+PSI-21,ACME CLD Flame,2018-01-03,Methane based test,40% CH4,25%-40%,,,,,,,,9.0,fuel_label_autofill_fixed,PSI-21_Experimental_table_CLD_Flame.csv,5
+PSI-21,ACME CLD Flame,2018-01-05,Methane based test,40% CH4,30%-40%,,,,,,,,7.0,fuel_label_autofill_fixed,PSI-21_Experimental_table_CLD_Flame.csv,6
+PSI-21,ACME CLD Flame,2018-01-08,Methane based test,40% CH4,25%-40%,,,,,,,,8.0,fuel_label_autofill_fixed,PSI-21_Experimental_table_CLD_Flame.csv,7
+PSI-21,ACME CLD Flame,2018-01-11,Methane based test,40% CH4,25%-40%,,,,,,,,14.0,fuel_label_autofill_fixed,PSI-21_Experimental_table_CLD_Flame.csv,8
+PSI-21,ACME CLD Flame,2018-01-22,Methane based test,40% CH4,30%-40%,,,,,,,,3.0,fuel_label_autofill_fixed,PSI-21_Experimental_table_CLD_Flame.csv,9
+PSI-21,ACME CLD Flame,2018-01-26,Methane based test,40% CH4,25%-40%,,,,,,,,16.0,fuel_label_autofill_fixed,PSI-21_Experimental_table_CLD_Flame.csv,10
+PSI-21,ACME CLD Flame,2018-02-01,Methane based test,40% CH4,30%-40%,,,,,,,,13.0,fuel_label_autofill_fixed,PSI-21_Experimental_table_CLD_Flame.csv,11
+PSI-21,ACME CLD Flame,2018-02-08,Methane based test,100% CH4,50%-80%,,,,,,,,8.0,,PSI-21_Experimental_table_CLD_Flame.csv,12
+PSI-21,ACME CLD Flame,2018-02-12,Methane based test,100% CH4,50%-100%,,,,,,,,10.0,fuel_label_autofill_fixed,PSI-21_Experimental_table_CLD_Flame.csv,13
+PSI-21,ACME CLD Flame,2018-02-22,Methane based test,100% CH4,30%-40%,,,,,,,,16.0,fuel_label_autofill_fixed,PSI-21_Experimental_table_CLD_Flame.csv,14
+PSI-21,ACME CLD Flame,2018-05-25,Ethylene based test,100% C2H4,80%-100%,,,,,,,,3.0,,PSI-21_Experimental_table_CLD_Flame.csv,15
+PSI-21,ACME CLD Flame,2018-05-31,Ethylene based test,100% C2H5,100%,,,,,,,,2.0,,PSI-21_Experimental_table_CLD_Flame.csv,16
+PSI-21,ACME CLD Flame,2018-06-26,Ethylene based test,100% C2H6,80%-100%,,,,,,,,9.0,,PSI-21_Experimental_table_CLD_Flame.csv,17
+PSI-21,ACME CLD Flame,2018-07-05,Ethylene based test,100% C2H7,60%-100%,,,,,,,,14.0,,PSI-21_Experimental_table_CLD_Flame.csv,18
+PSI-21,ACME CLD Flame,2018-07-11,Ethylene based test,100% C2H8,50%-60%,,,,,,,,10.0,,PSI-21_Experimental_table_CLD_Flame.csv,19
+PSI-21,ACME CLD Flame,2018-07-18,Ethylene based test,100% C2H9,40%-100%,,,,,,,,16.0,,PSI-21_Experimental_table_CLD_Flame.csv,20
+PSI-21,ACME CLD Flame,2018-08-02,Ethylene based test,100% C2H10,100%,,,,,,,,13.0,,PSI-21_Experimental_table_CLD_Flame.csv,21
+PSI-21,ACME CLD Flame,2018-08-06,Ethylene based test,100% C2H11,80%,,,,,,,,18.0,,PSI-21_Experimental_table_CLD_Flame.csv,22
+PSI-21,ACME CLD Flame,2018-08-23,Ethylene based test,50% C2H4,50%,,,,,,,,16.0,,PSI-21_Experimental_table_CLD_Flame.csv,23
+PSI-21,ACME CLD Flame,2018-08-27,Ethylene based test,50% C2H5,40%,,,,,,,,14.0,,PSI-21_Experimental_table_CLD_Flame.csv,24
+PSI-21,ACME CLD Flame,2018-08-29,Ethylene based test,50% C2H6,10%-20%,,,,,,,,6.0,,PSI-21_Experimental_table_CLD_Flame.csv,25
+PSI-21,ACME CLD Flame,2018-09-06,Ethylene based test,50% C2H7,10%-30%,,,,,,,,12.0,,PSI-21_Experimental_table_CLD_Flame.csv,26
+PSI-21,ACME CLD Flame,2018-09-10,Ethylene based test,50% C2H8,15%-30%,,,,,,,,14.0,,PSI-21_Experimental_table_CLD_Flame.csv,27
+PSI-21,ACME CLD Flame,2018-09-14,Ethylene based test,50% C2H9,15%-20%,,,,,,,,15.0,,PSI-21_Experimental_table_CLD_Flame.csv,28
+PSI-21,ACME CLD Flame,2021-02-10,Improved coflow tests,30% C2H4,0%-30%,,,,,,,,9.0,,PSI-21_Experimental_table_CLD_Flame.csv,29
+PSI-21,ACME CLD Flame,2021-02-15,Improved coflow tests,30% C2H5,15%-20%,,,,,,,,16.0,,PSI-21_Experimental_table_CLD_Flame.csv,30
+PSI-21,ACME CLD Flame,2021-02-19,Improved coflow tests,40% CH4,20%-40%,,,,,,,,16.0,,PSI-21_Experimental_table_CLD_Flame.csv,31
+PSI-21,ACME CLD Flame,2021-03-03,Improved coflow tests,40% CH4,30%-40%,,,,,,,,11.0,fuel_label_autofill_fixed,PSI-21_Experimental_table_CLD_Flame.csv,32
+PSI-22,ACME E-FIELD Flames,2018-03-14,First round of tests with coflow burner,100% CH4,100%,,,,,negative,,,10.0,voltage_and_ion_current_not_in_table,PSI-22_Experimental_table_ACME_E-FIELD_Flames.csv,1
+PSI-22,ACME E-FIELD Flames,2018-03-19,First round of tests with coflow burner,100% CH4,70%,,,,,negative,,,10.0,voltage_and_ion_current_not_in_table,PSI-22_Experimental_table_ACME_E-FIELD_Flames.csv,2
+PSI-22,ACME E-FIELD Flames,,,,100%,,,,,,,,,voltage_and_ion_current_not_in_table,PSI-22_Experimental_table_ACME_E-FIELD_Flames.csv,3
+PSI-22,ACME E-FIELD Flames,2018-03-21,First round of tests with coflow burner,40% CH4,40%,,,,,negative,,,8.0,voltage_and_ion_current_not_in_table,PSI-22_Experimental_table_ACME_E-FIELD_Flames.csv,4
+PSI-22,ACME E-FIELD Flames,2018-03-28,First round of tests with coflow burner,100% C2H4,80%,,,,,negative,,,10.0,voltage_and_ion_current_not_in_table,PSI-22_Experimental_table_ACME_E-FIELD_Flames.csv,5
+PSI-22,ACME E-FIELD Flames,,,,100%,,,,,,,,,voltage_and_ion_current_not_in_table,PSI-22_Experimental_table_ACME_E-FIELD_Flames.csv,6
+PSI-22,ACME E-FIELD Flames,2018-04-02,First round of tests with coflow burner,30% C2H4,30%,,,,,negative,,,11.0,voltage_and_ion_current_not_in_table,PSI-22_Experimental_table_ACME_E-FIELD_Flames.csv,7
+PSI-22,ACME E-FIELD Flames,2018-04-05,First round of tests with coflow burner,30% C2H4,30%,,,,,positive,,,10.0,voltage_and_ion_current_not_in_table,PSI-22_Experimental_table_ACME_E-FIELD_Flames.csv,8
+PSI-22,ACME E-FIELD Flames,2018-04-12,First round of tests with coflow burner,40% CH4,40%,,,,,positive,,,8.0,voltage_and_ion_current_not_in_table,PSI-22_Experimental_table_ACME_E-FIELD_Flames.csv,9
+PSI-22,ACME E-FIELD Flames,2018-04-16,First round of tests with coflow burner,40% CH4,40%,,,,,positive,,,13.0,voltage_and_ion_current_not_in_table,PSI-22_Experimental_table_ACME_E-FIELD_Flames.csv,10
+PSI-22,ACME E-FIELD Flames,2018-04-23,First round of tests with coflow burner,100% CH4,100%,,,,,positive,,,15.0,voltage_and_ion_current_not_in_table,PSI-22_Experimental_table_ACME_E-FIELD_Flames.csv,11
+PSI-22,ACME E-FIELD Flames,2018-05-10,First round of tests with coflow burner,100% CH4,70%,,,,,positive,,,13.0,voltage_and_ion_current_not_in_table,PSI-22_Experimental_table_ACME_E-FIELD_Flames.csv,12
+PSI-22,ACME E-FIELD Flames,2018-05-17,First round of tests with coflow burner,100% C2H4,80%,,,,,positive,,,12.0,voltage_and_ion_current_not_in_table,PSI-22_Experimental_table_ACME_E-FIELD_Flames.csv,13
+PSI-22,ACME E-FIELD Flames,,,,100%,,,,,,,,,voltage_and_ion_current_not_in_table,PSI-22_Experimental_table_ACME_E-FIELD_Flames.csv,14
+PSI-22,ACME E-FIELD Flames,2018-09-26,Second round of tests with gas-jet burner,40% CH4,40%,,,,,negative,,,11.0,voltage_and_ion_current_not_in_table,PSI-22_Experimental_table_ACME_E-FIELD_Flames.csv,15
+PSI-22,ACME E-FIELD Flames,2018-10-01,Second round of tests with gas-jet burner,30% C2H4,30%,,,,,negative,,,11.0,voltage_and_ion_current_not_in_table,PSI-22_Experimental_table_ACME_E-FIELD_Flames.csv,16
+PSI-22,ACME E-FIELD Flames,2018-10-09,Second round of tests with gas-jet burner,100% CH4,70%,,,,,negative,,,13.0,voltage_and_ion_current_not_in_table,PSI-22_Experimental_table_ACME_E-FIELD_Flames.csv,17
+PSI-22,ACME E-FIELD Flames,,,,100%,,,,,,,,,voltage_and_ion_current_not_in_table,PSI-22_Experimental_table_ACME_E-FIELD_Flames.csv,18
+PSI-22,ACME E-FIELD Flames,2018-10-12,Second round of tests with gas-jet burner,100% C2H4,100%,,,,,negative,,,10.0,voltage_and_ion_current_not_in_table,PSI-22_Experimental_table_ACME_E-FIELD_Flames.csv,19
+PSI-22,ACME E-FIELD Flames,2018-10-17,Second round of tests with gas-jet burner,100% C2H4,80%,,,,,negative,,,11.0,voltage_and_ion_current_not_in_table,PSI-22_Experimental_table_ACME_E-FIELD_Flames.csv,20
+PSI-22,ACME E-FIELD Flames,2018-10-25,Second round of tests with gas-jet burner,40% CH4,40%,,,,,positive,,,9.0,voltage_and_ion_current_not_in_table,PSI-22_Experimental_table_ACME_E-FIELD_Flames.csv,21
+PSI-22,ACME E-FIELD Flames,2018-10-29,Second round of tests with gas-jet burner,30% C2H4,30%,,,,,positive,,,10.0,voltage_and_ion_current_not_in_table,PSI-22_Experimental_table_ACME_E-FIELD_Flames.csv,22
+PSI-22,ACME E-FIELD Flames,2018-11-08,Second round of tests with gas-jet burner,100% CH4,70%,,,,,positive,,,13.0,voltage_and_ion_current_not_in_table,PSI-22_Experimental_table_ACME_E-FIELD_Flames.csv,23
+PSI-22,ACME E-FIELD Flames,,,,100%,,,,,,,,,voltage_and_ion_current_not_in_table,PSI-22_Experimental_table_ACME_E-FIELD_Flames.csv,24
+PSI-22,ACME E-FIELD Flames,2018-11-15,Second round of tests with gas-jet burner,100% C2H4,25%,,,,,positive,,,11.0,voltage_and_ion_current_not_in_table,PSI-22_Experimental_table_ACME_E-FIELD_Flames.csv,25
+PSI-22,ACME E-FIELD Flames,,,,50%,,,,,,,,,voltage_and_ion_current_not_in_table,PSI-22_Experimental_table_ACME_E-FIELD_Flames.csv,26
+PSI-22,ACME E-FIELD Flames,,,,80%,,,,,,,,,voltage_and_ion_current_not_in_table,PSI-22_Experimental_table_ACME_E-FIELD_Flames.csv,27
+PSI-22,ACME E-FIELD Flames,,,,100%,,,,,,,,,voltage_and_ion_current_not_in_table,PSI-22_Experimental_table_ACME_E-FIELD_Flames.csv,28
+PSI-22,ACME E-FIELD Flames,2018-11-15,Second round of tests with gas-jet burner,100% C2H4,25%,,,,,positive,,,11.0,voltage_and_ion_current_not_in_table,PSI-22_Experimental_table_ACME_E-FIELD_Flames.csv,29
+PSI-22,ACME E-FIELD Flames,,,,50%,,,,,,,,,voltage_and_ion_current_not_in_table,PSI-22_Experimental_table_ACME_E-FIELD_Flames.csv,30
+PSI-22,ACME E-FIELD Flames,,,,80%,,,,,,,,,voltage_and_ion_current_not_in_table,PSI-22_Experimental_table_ACME_E-FIELD_Flames.csv,31
+PSI-22,ACME E-FIELD Flames,,,,100%,,,,,,,,,voltage_and_ion_current_not_in_table,PSI-22_Experimental_table_ACME_E-FIELD_Flames.csv,32
+PSI-23,ACME s-Flame,2019-09-11,First round of tests with nitrogen-diluted fuel and oxygen,50% C2H4 with N2,,~21% O2 with N2,21,,,,,,13.0,o2_approximate,PSI-23_Experimental_table_ACME_s-Flame.csv,1
+PSI-23,ACME s-Flame,2019-09-13,First round of tests with nitrogen-diluted fuel and oxygen,50% C2H4 with N2,,~21% O2 with N2,21,,,,,,16.0,diluent_label_autofill_fixed;o2_approximate,PSI-23_Experimental_table_ACME_s-Flame.csv,2
+PSI-23,ACME s-Flame,2019-10-31,First round of tests with nitrogen-diluted fuel and oxygen,45% CH4 with N2,,~21% O2 with N2,21,,,,,,9.0,diluent_label_autofill_fixed;o2_approximate,PSI-23_Experimental_table_ACME_s-Flame.csv,3
+PSI-23,ACME s-Flame,2019-11-04,First round of tests with nitrogen-diluted fuel and oxygen,45% CH4 with N2,,~30% O2 with N2,30,,,,,,21.0,diluent_label_autofill_fixed;o2_approximate,PSI-23_Experimental_table_ACME_s-Flame.csv,4
+PSI-23,ACME s-Flame,2019-12-18,First round of tests with nitrogen-diluted fuel and oxygen,100% H2,,~21% O2 with N2,21,,,,,,10.0,o2_approximate,PSI-23_Experimental_table_ACME_s-Flame.csv,5
+PSI-23,ACME s-Flame,2020-01-06,First round of tests with nitrogen-diluted fuel and oxygen,44.4% H2 with CH4,,~21% O2 with N2,21,,,,,,17.0,diluent_label_autofill_fixed;o2_approximate,PSI-23_Experimental_table_ACME_s-Flame.csv,6
+PSI-23,ACME s-Flame,2020-01-13,First round of tests with nitrogen-diluted fuel and oxygen,66.7% H2 with CH4,,~21% O2 with N2,21,,,,,,22.0,diluent_label_autofill_fixed;o2_approximate,PSI-23_Experimental_table_ACME_s-Flame.csv,7
+PSI-23,ACME s-Flame,2020-01-24,First round of tests with nitrogen-diluted fuel and oxygen,100% H2,,~21% O2 with N2,21,,,,,,16.0,diluent_label_autofill_fixed;o2_approximate,PSI-23_Experimental_table_ACME_s-Flame.csv,8
+PSI-23,ACME s-Flame,2020-01-29,First round of tests with nitrogen-diluted fuel and oxygen,50% C2H4 with N2,,~21% O2 with N2,21,,,,,,21.0,diluent_label_autofill_fixed;o2_approximate,PSI-23_Experimental_table_ACME_s-Flame.csv,9
+PSI-23,ACME s-Flame,2020-05-11,First round of tests with nitrogen-diluted fuel and oxygen,"25% H2, 20% CH4, with He",,~21% O2 with He,21,,,,,,7.0,o2_approximate,PSI-23_Experimental_table_ACME_s-Flame.csv,10
+PSI-23,ACME s-Flame,2020-05-15,Second round of tests with helium-diluted fuel and oxygen,"20% H2, 25% CH4, with He",,~21% O2 with He,21,,,,,,11.0,o2_approximate,PSI-23_Experimental_table_ACME_s-Flame.csv,11
+PSI-23,ACME s-Flame,2020-05-21,Second round of tests with helium-diluted fuel and oxygen,"30% H2, 15% CH4, with He",,~30% O2 with He,30,,,,,,17.0,o2_approximate,PSI-23_Experimental_table_ACME_s-Flame.csv,12
+PSI-23,ACME s-Flame,2020-06-03,Second round of tests with helium-diluted fuel and oxygen,45% H2 with He,,~30% and ~21% O2 with He,30,,,,,,9.0,o2_approximate,PSI-23_Experimental_table_ACME_s-Flame.csv,13
+PSI-23,ACME s-Flame,2020-06-08,Second round of tests with helium-diluted fuel and oxygen,45% CH4 with He,,~30% and ~21% O2 with He,30,,,,,,12.0,o2_approximate,PSI-23_Experimental_table_ACME_s-Flame.csv,14
+PSI-23,ACME s-Flame,2020-06-12,Second round of tests with helium-diluted fuel and oxygen,20% C2H4 with He,,~30% O2 with He,30,,,,,,11.0,o2_approximate,PSI-23_Experimental_table_ACME_s-Flame.csv,15
+PSI-23,ACME s-Flame,2020-06-18,Second round of tests with helium-diluted fuel and oxygen,25% C2H4 with He,,~30% and ~21% O2 with He,30,,,,,,20.0,o2_approximate,PSI-23_Experimental_table_ACME_s-Flame.csv,16
+PSI-23,ACME s-Flame,2020-06-24,Second round of tests with helium-diluted fuel and oxygen,30% C2H4 with He,,~30% and ~21% O2 with He,30,,,,,,23.0,o2_approximate,PSI-23_Experimental_table_ACME_s-Flame.csv,17
+PSI-23,ACME s-Flame,2020-07-08,Second round of tests with helium-diluted fuel and oxygen,35% H2 with He,,~30% and ~21% O2 with He,30,,,,,,21.0,o2_approximate,PSI-23_Experimental_table_ACME_s-Flame.csv,18
+PSI-106,SLICE,2012-02-09,,100% CH4,,,,,,,,,,free_text_row,PSI-106_Experimental_table_Slice.csv,1
+PSI-106,SLICE,2012-02-13,SLICE testing with,40% CH4 (balance N2) including 2 pyrometry calibration tests and 2 fan calibrations,,,,,,,,,,free_text_row,PSI-106_Experimental_table_Slice.csv,2
+PSI-106,SLICE,2012-02-17,,70% CH4 (balance N2) including 1 pyrometry calibration test,,,,,,,,,,free_text_row,PSI-106_Experimental_table_Slice.csv,3
+PSI-106,SLICE,2012-02-20,,20% C2H4 (balance N2),,,,,,,,,,free_text_row,PSI-106_Experimental_table_Slice.csv,4
+PSI-106,SLICE,2012-02-27,,100% CH4,,,,,,,,,,free_text_row,PSI-106_Experimental_table_Slice.csv,5
+PSI-106,SLICE,2012-03-01,,40% CH4 (balance N2),,,,,,,,,,free_text_row,PSI-106_Experimental_table_Slice.csv,6
+PSI-106,SLICE,2012-03-05,SLICE testing with,70% CH4 (balance N2) where the fuel bottle was not emptied (in contrast to most days),,,,,,,,,,free_text_row,PSI-106_Experimental_table_Slice.csv,7
+PSI-106,SLICE,2012-03-09,,100% C2H6,,,,,,,,,,free_text_row,PSI-106_Experimental_table_Slice.csv,8
+PSI-106,SLICE,2012-03-12,,100% CH4,,,,,,,,,,free_text_row,PSI-106_Experimental_table_Slice.csv,9
+PSI-106,SLICE,2012-03-15,,20% C2H4 (balance N2),,,,,,,,,,free_text_row,PSI-106_Experimental_table_Slice.csv,10
+PSI-106,SLICE,2012-03-19,SLICE testing with,70% CH4 (balance N2) including 1 pyrometry calibration test and 2 fan calibrations,,,,,,,,,,free_text_row,PSI-106_Experimental_table_Slice.csv,11
+PSI-106,SLICE,2012-03-23,Last day of testing: SPICE testing with 100% C3H8 and then 100%,100% C2H4,,,,,,,,,,free_text_row,PSI-106_Experimental_table_Slice.csv,12
+PSI-68,FLEX-2,,condition range (not individual tests),IsoOctane (pure),,O2/N2 or O2/He,17; 21; 25; 30,0.5; 1.0; 1.5; 2.0;  3.0,,,0.1 - 5,1.5 - 5,,ranges_only,PSI-68_Experimental_table_Flex2.csv,1
+PSI-68,FLEX-2,,condition range (not individual tests),n-Octane (pure),,O2/N2 or O2/He,17; 21; 25; 30,0.5; 1.0; 1.5; 2.0;  3.0,,,0.1 - 5,1.5 - 5,,ranges_only,PSI-68_Experimental_table_Flex2.csv,2
+PSI-68,FLEX-2,,condition range (not individual tests),Heptane (pure),,O2/N2 or O2/He,17; 21; 25; 30,0.5; 1.0; 1.5; 2.0;  3.0,,,0.1 - 5,1.5 - 5,,ranges_only,PSI-68_Experimental_table_Flex2.csv,3
+PSI-68,FLEX-2,,condition range (not individual tests),Decane (pure),,O2/N2 or O2/He,17; 21; 25; 30,0.5; 1.0; 1.5; 2.0;  3.0,,,0.1 - 5,1.5 - 5,,ranges_only,PSI-68_Experimental_table_Flex2.csv,4
+PSI-68,FLEX-2,,condition range (not individual tests),Ethanol (pure),,O2/N2 or O2/He,17; 21; 25; 30,0.5; 1.0; 1.5; 2.0;  3.0,,,0.1 - 5,1.5 - 5,,ranges_only,PSI-68_Experimental_table_Flex2.csv,5
+PSI-68,FLEX-2,,condition range (not individual tests),Propanol (95%) Glycerol (5%) (mixture),,O2/N2 or O2/He,17; 21; 25; 30,0.5; 1.0; 1.5; 2.0;  3.0,,,0.1 - 5,1.5 - 5,,ranges_only,PSI-68_Experimental_table_Flex2.csv,6
+PSI-68,FLEX-2,,condition range (not individual tests),Heptane (50%) IsoOctane (50%) (mixture),,O2/N2 or O2/He,17; 21; 25; 30,0.5; 1.0; 1.5; 2.0;  3.0,,,0.1 - 5,1.5 - 5,,ranges_only,PSI-68_Experimental_table_Flex2.csv,7
+PSI-68,FLEX-2,,condition range (not individual tests),Propanol (80%) Glycerol (20%) (mixture),,O2/N2 or O2/He,17; 21; 25; 30,0.5; 1.0; 1.5; 2.0;  3.0,,,0.1 - 5,1.5 - 5,,ranges_only,PSI-68_Experimental_table_Flex2.csv,8
