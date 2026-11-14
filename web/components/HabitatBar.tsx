@@ -5,6 +5,13 @@ import { PRESETS } from "@/lib/presets";
 import { useHabitat } from "@/lib/useHabitat";
 import { NumberField } from "./NumberField";
 
+/** FIELDS specs carry a `key` property; strip it so it is not spread as React's special `key` prop. */
+function fieldProps<T extends { key: unknown }>(spec: T): Omit<T, "key"> {
+  const { key: _ignored, ...rest } = spec;
+  void _ignored;
+  return rest;
+}
+
 /** Persistent habitat bar (F0): presets plus editable g · P · O₂ · vent · L, all stored in the URL. */
 export function HabitatBar({ compact = false }: { compact?: boolean }) {
   const { habitat, setHabitat, setField } = useHabitat();
@@ -38,14 +45,14 @@ export function HabitatBar({ compact = false }: { compact?: boolean }) {
 
       <div className="mt-3 flex flex-wrap gap-x-5 gap-y-3">
         <NumberField
-          {...FIELDS.g_m_s2}
+          {...fieldProps(FIELDS.g_m_s2)}
           value={habitat.g_m_s2}
           onChange={(v) => setField("g_m_s2", v)}
           hint={`= ${gFraction(habitat.g_m_s2).toFixed(3)} g (Earth)`}
         />
-        <NumberField {...FIELDS.p_psia} value={habitat.p_psia} onChange={(v) => setField("p_psia", v)} />
+        <NumberField {...fieldProps(FIELDS.p_psia)} value={habitat.p_psia} onChange={(v) => setField("p_psia", v)} />
         <NumberField
-          {...FIELDS.o2}
+          {...fieldProps(FIELDS.o2)}
           scale={100}
           decimals={1}
           value={habitat.o2}
@@ -53,13 +60,13 @@ export function HabitatBar({ compact = false }: { compact?: boolean }) {
           hint={`mole fraction ${habitat.o2.toFixed(3)}`}
         />
         <NumberField
-          {...FIELDS.u_cm_s}
+          {...fieldProps(FIELDS.u_cm_s)}
           value={habitat.u_cm_s}
           onChange={(v) => setField("u_cm_s", v)}
           tag="assumed, editable"
         />
         <NumberField
-          {...FIELDS.L_mm}
+          {...fieldProps(FIELDS.L_mm)}
           value={habitat.L_mm}
           onChange={(v) => setField("L_mm", v)}
           tag="assumed, editable"
