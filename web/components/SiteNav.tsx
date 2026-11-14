@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useHabitat } from "@/lib/useHabitat";
+import { AskButton } from "./AskDrawer";
 import { ThemeToggle } from "./ThemeToggle";
 
 export const NAV_ITEMS = [
@@ -49,6 +50,7 @@ export function SiteNav() {
           })}
         </ul>
       </nav>
+      <AskButton />
       <ThemeToggle />
     </div>
   );

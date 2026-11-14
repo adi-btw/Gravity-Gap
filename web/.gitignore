@@ -39,3 +39,6 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# build-time copy of ../artifacts and ../ledger (scripts/copy-artifacts.mjs)
+/public/artifacts/

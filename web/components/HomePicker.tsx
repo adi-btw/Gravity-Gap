@@ -38,12 +38,26 @@ export function HomePicker() {
           </dl>
         </div>
         <p className="mt-3 text-sm">{REGIME_EVIDENCE[e.regime]}</p>
-        <Link
-          href={`/regime?${queryString}`}
-          className="mt-3 inline-block rounded-md border border-micro px-3 py-1.5 text-sm text-micro hover:bg-surface-2"
-        >
-          Open the regime calculator →
-        </Link>
+        <div className="mt-3 flex flex-wrap gap-2">
+          <Link
+            href={`/bounds?${queryString}`}
+            className="inline-block rounded-md border border-partial px-3 py-1.5 text-sm text-partial hover:bg-surface-2"
+          >
+            See the fire bounds for this habitat →
+          </Link>
+          <Link
+            href={`/regime?${queryString}`}
+            className="inline-block rounded-md border border-micro px-3 py-1.5 text-sm text-micro hover:bg-surface-2"
+          >
+            Open the regime calculator →
+          </Link>
+          <Link
+            href={`/explore?${queryString}`}
+            className="inline-block rounded-md border border-line px-3 py-1.5 text-sm text-muted hover:text-fg"
+          >
+            Which evidence applies →
+          </Link>
+        </div>
       </section>
     </>
   );

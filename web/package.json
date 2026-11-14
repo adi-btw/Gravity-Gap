@@ -3,7 +3,10 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
+    "copy-artifacts": "node scripts/copy-artifacts.mjs",
+    "predev": "node scripts/copy-artifacts.mjs",
     "dev": "next dev",
+    "prebuild": "node scripts/copy-artifacts.mjs",
     "build": "next build",
     "start": "next start",
     "lint": "eslint",

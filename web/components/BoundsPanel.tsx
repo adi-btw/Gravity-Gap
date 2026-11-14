@@ -1,0 +1,429 @@
+"use client";
+
+import { useState } from "react";
+import { api, type Sourced } from "@/lib/api";
+import { fmtBand, fmtEstimate, fmtSig, humanize } from "@/lib/format";
+import { G0 } from "@/lib/physics";
+import { matchPreset } from "@/lib/habitat";
+import type { AskAnswer, BoundsResult, MetricInfo, RefPoint, SensitivityRow } from "@/lib/types";
+import { useAsync } from "@/lib/useAsync";
+import { useHabitat } from "@/lib/useHabitat";
+import { useQueryParam } from "@/lib/useQueryParam";
+import { AskAnswerView } from "./AskAnswer";
+import { useAsk } from "./AskDrawer";
+import { BandChart, type BandPoint } from "./charts/BandChart";
+import { RegimeFractionsBar } from "./charts/RegimeFractionsBar";
+import { TornadoChart } from "./charts/TornadoChart";
+import { EvidenceList } from "./EvidenceList";
+import { Empty, ErrorState, Loading, SourceChip } from "./ui/States";
+
+const CONF_STYLE: Record<string, string> = {
+  high: "border-micro text-micro",
+  medium: "border-normal text-normal",
+  low: "border-warn text-warn",
+};
+
+function isNum(v: unknown): v is number {
+  return typeof v === "number" && Number.isFinite(v);
+}
+
+function numBand(b: RefPoint["band90"]): [number, number] | null {
+  return b && isNum(b[0]) && isNum(b[1]) ? [b[0], b[1]] : null;
+}
+
+export function BoundsPanel() {
+  const { habitat, queryString } = useHabitat();
+  const [metric, setMetric] = useQueryParam("metric", "M1");
+  const metrics = useAsync(() => api.metrics(), "metrics");
+  const key = `${queryString}|${metric}`;
+  const bounds = useAsync(() => api.bounds(habitat, metric), key);
+
+  const list: MetricInfo[] = metrics.status === "ok" ? metrics.data.data : [];
+
+  return (
+    <div className="space-y-4">
+      <header className="flex flex-wrap items-end justify-between gap-3">
+        <div>
+          <p className="text-xs uppercase tracking-wider text-partial">F4 · Bounds panel</p>
+          <h1 className="text-2xl font-semibold">What happens to a fire in this habitat?</h1>
+          <p className="mt-1 max-w-3xl text-sm text-muted">
+            A partial-gravity estimate with its 90% band, next to the microgravity (0 g) and Earth (1 g) references.
+            Every estimate traces to the training tests listed below.
+          </p>
+        </div>
+        {bounds.status === "ok" ? <SourceChip source={bounds.data.source} note={bounds.data.note} /> : null}
+      </header>
+
+      <fieldset>
+        <legend className="mb-1 text-xs font-medium text-muted">Metric</legend>
+        {metrics.status === "loading" ? <Loading label="Loading metrics…" /> : null}
+        {metrics.status === "error" ? <ErrorState error={metrics.error} onRetry={metrics.reload} /> : null}
+        <div className="flex flex-wrap gap-2">
+          {list.map((m) => (
+            <button
+              key={m.id}
+              type="button"
+              aria-pressed={m.id === metric}
+              onClick={() => setMetric(m.id)}
+              title={m.data}
+              className={`rounded-md border px-3 py-1.5 text-left text-xs ${
+                m.id === metric ? "border-partial bg-surface-2 text-fg" : "border-line text-muted hover:text-fg"
+              }`}
+            >
+              <span className="num font-semibold">{m.id}</span> {m.label}
+            </button>
+          ))}
+        </div>
+      </fieldset>
+
+      {bounds.status === "loading" ? <Loading label="Computing bounds…" /> : null}
+      {bounds.status === "error" ? <ErrorState error={bounds.error} onRetry={bounds.reload} /> : null}
+      {bounds.status === "ok" ? (
+        <BoundsView r={bounds.data.data} metricInfo={list.find((m) => m.id === metric)} queryString={queryString} habitatG={habitat.g_m_s2} />
+      ) : null}
+    </div>
+  );
+}
+
+function BoundsView({
+  r,
+  metricInfo,
+  queryString,
+  habitatG,
+}: {
+  r: BoundsResult;
+  metricInfo?: MetricInfo;
+  queryString: string;
+  habitatG: number;
+}) {
+  const kind = r.kind ?? metricInfo?.kind ?? "quantity";
+  const isCategory = kind === "category" || typeof r.estimate === "string";
+  const gLabel = `${(habitatG / G0).toFixed(3)} g`;
+  const evidenceIds = r.evidence.slice(0, 4).map((e) => e.record_id).join(", ");
+  const trace = `${r.n_train} training tests; nearest evidence ${evidenceIds || "none"}`;
+
+  return (
+    <div className="space-y-4">
+      {r.nonmonotonic_flag ? (
+        <div role="alert" className="flex gap-2 rounded-md border-2 border-warn bg-[var(--warn-fill)] px-3 py-2 text-sm">
+          <svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true" className="mt-0.5 shrink-0 text-warn">
+            <path d="M12 3l10 18H2L12 3z" fill="none" stroke="currentColor" strokeWidth="2" strokeLinejoin="round" />
+            <path d="M12 10v5M12 18v.5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+          </svg>
+          <div>
+            <p className="font-semibold text-warn">Non-monotonic warning: partial gravity may be worse than both references</p>
+            <p className="mt-1">{r.nonmonotonic_note ?? "The effective flow sits near the flammability peak."}</p>
+          </div>
+        </div>
+      ) : null}
+
+      <section className="rounded-lg border border-line bg-surface p-4" aria-labelledby="estimate-h">
+        <div className="flex flex-wrap items-baseline justify-between gap-2">
+          <h2 id="estimate-h" className="text-base font-semibold">
+            <span className="num">{r.metric}</span> · {r.label}
+          </h2>
+          <span className="num text-[11px] text-muted">
+            model {r.model_version} · n_train {r.n_train}
+          </span>
+        </div>
+
+        {!r.applicable ? (
+          <div className="hatch mt-3 rounded-md border border-dashed border-line p-4" role="status">
+            <p className="text-sm font-semibold">Extrapolation: no evidence</p>
+            <p className="mt-1 text-sm">{r.reason ?? "The habitat is outside every tested condition for this metric."}</p>
+            <p className="mt-2 text-xs text-muted">
+              No number is shown on purpose. The nearest tested conditions are listed under evidence; the test planner
+              lists experiments that would close this gap.
+            </p>
+          </div>
+        ) : isCategory ? (
+          <CategoryColumns r={r} gLabel={gLabel} />
+        ) : (
+          <NumericChart r={r} kind={kind} gLabel={gLabel} trace={trace} />
+        )}
+      </section>
+
+      <div className="grid gap-4 md:grid-cols-2">
+        <section className="rounded-lg border border-line bg-surface p-4" aria-labelledby="transfer-h">
+          <h2 id="transfer-h" className="mb-2 text-sm font-semibold">
+            Does microgravity evidence transfer here?
+          </h2>
+          {r.transfer ? (
+            <>
+              <span
+                className={`inline-block rounded-md border-2 px-2 py-0.5 text-xs font-semibold uppercase ${CONF_STYLE[r.transfer.confidence] ?? "border-line"}`}
+              >
+                transfer confidence: {r.transfer.confidence}
+              </span>
+              <p className="mt-2 text-sm">{r.transfer.basis}</p>
+            </>
+          ) : (
+            <p className="text-sm text-muted">No transfer basis reported.</p>
+          )}
+          {r.regime_fractions ? (
+            <div className="mt-3">
+              <h3 className="mb-1 text-xs font-medium text-muted">Flame regime across uncertainty samples</h3>
+              <RegimeFractionsBar fractions={r.regime_fractions} />
+            </div>
+          ) : null}
+          {r.u_eff_summary ? (
+            <p className="num mt-2 text-xs text-muted">
+              u_eff p05 {fmtSig(r.u_eff_summary.p05)} · p50 {fmtSig(r.u_eff_summary.p50)} · p95 {fmtSig(r.u_eff_summary.p95)} cm/s
+            </p>
+          ) : null}
+        </section>
+
+        <section className="rounded-lg border border-line bg-surface p-4" aria-labelledby="sens-h">
+          <h2 id="sens-h" className="mb-2 text-sm font-semibold">
+            Sensitivity
+          </h2>
+          <Sensitivity rows={r.sensitivity} kind={kind} unit={r.unit} />
+        </section>
+      </div>
+
+      <section className="rounded-lg border border-line bg-surface p-4" aria-labelledby="ev-h">
+        <h2 id="ev-h" className="mb-2 text-sm font-semibold">
+          Evidence ({r.evidence.length} nearest training record{r.evidence.length === 1 ? "" : "s"})
+        </h2>
+        <EvidenceList rows={r.evidence} queryString={queryString} />
+      </section>
+
+      <Explain r={r} />
+    </div>
+  );
+}
+
+function NumericChart({ r, kind, gLabel, trace }: { r: BoundsResult; kind: string; gLabel: string; trace: string }) {
+  const est = isNum(r.estimate) ? r.estimate : null;
+  const points: BandPoint[] = [
+    {
+      key: "0g",
+      label: "0 g reference",
+      sublabel: "ISS / Cygnus",
+      estimate: r.ref_0g && isNum(r.ref_0g.estimate) ? r.ref_0g.estimate : null,
+      band: r.ref_0g ? numBand(r.ref_0g.band90) : null,
+      color: "var(--micro)",
+      fill: "var(--micro-fill)",
+    },
+    {
+      key: "partial",
+      label: "Your habitat",
+      sublabel: gLabel,
+      estimate: est,
+      band: numBand(r.band90),
+      color: "var(--partial)",
+      fill: "var(--partial-fill)",
+      trace: `Partial-g estimate ${fmtEstimate(est, kind, r.unit)}, 90% band ${fmtBand(r.band90, kind, r.unit)}. ${trace}`,
+    },
+    {
+      key: "1g",
+      label: "1 g reference",
+      sublabel: r.ref_1g ? "Earth" : "no 1 g basis",
+      estimate: r.ref_1g && isNum(r.ref_1g.estimate) ? r.ref_1g.estimate : null,
+      band: r.ref_1g ? numBand(r.ref_1g.band90) : null,
+      color: "var(--normal)",
+      fill: "var(--normal-fill)",
+    },
+  ];
+  const prob = kind === "probability";
+  const rows = [
+    ["0 g reference", r.ref_0g],
+    [`Your habitat (${gLabel})`, { estimate: r.estimate, band90: r.band90 }],
+    ["1 g reference", r.ref_1g],
+  ] as const;
+  return (
+    <div className="mt-3 grid gap-4 lg:grid-cols-[3fr_2fr]">
+      <BandChart
+        points={points}
+        unit={prob ? "probability" : r.unit}
+        domain={prob ? [0, 1] : undefined}
+        ariaLabel={`${r.label}: 0 g reference ${fmtEstimate(points[0].estimate, kind, r.unit)}, your habitat ${fmtEstimate(est, kind, r.unit)} with 90% band ${fmtBand(r.band90, kind, r.unit)}, 1 g reference ${r.ref_1g ? fmtEstimate(points[2].estimate, kind, r.unit) : "not available"}.`}
+      />
+      <div>
+        <p className="text-sm">
+          Estimate <span className="num text-2xl font-semibold text-partial">{fmtEstimate(est, kind, r.unit)}</span>
+        </p>
+        <p className="text-sm text-muted">
+          90% band <span className="num text-fg">{fmtBand(r.band90, kind, r.unit)}</span>
+        </p>
+        <table className="mt-3 w-full text-left text-xs">
+          <caption className="sr-only">Estimates and 90% bands (table alternative to the chart)</caption>
+          <thead className="text-muted">
+            <tr>
+              <th scope="col" className="py-1 pr-2">Reference</th>
+              <th scope="col" className="py-1 pr-2">Estimate</th>
+              <th scope="col" className="py-1">90% band</th>
+            </tr>
+          </thead>
+          <tbody>
+            {rows.map(([name, ref]) => (
+              <tr key={name} className="border-t border-line">
+                <th scope="row" className="py-1 pr-2 font-normal">{name}</th>
+                <td className="num py-1 pr-2">{ref ? fmtEstimate(ref.estimate, kind, r.unit) : "no basis"}</td>
+                <td className="num py-1">{ref ? fmtBand(ref.band90, kind, r.unit) : "–"}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  );
+}
+
+function CategoryColumns({ r, gLabel }: { r: BoundsResult; gLabel: string }) {
+  const cols = [
+    { name: "0 g reference", ref: r.ref_0g, cls: "border-micro text-micro" },
+    { name: `Your habitat (${gLabel})`, ref: { estimate: r.estimate, band90: r.band90 } as RefPoint, cls: "border-partial text-partial" },
+    { name: "1 g reference", ref: r.ref_1g, cls: "border-normal text-normal" },
+  ];
+  return (
+    <div className="mt-3 grid gap-3 sm:grid-cols-3" role="list" aria-label="Outcome at 0 g, your habitat and 1 g">
+      {cols.map((c) => (
+        <div key={c.name} role="listitem" className={`rounded-md border-2 bg-surface-2 p-3 ${c.cls}`}>
+          <p className="text-xs font-medium">{c.name}</p>
+          {c.ref && c.ref.estimate !== null ? (
+            <>
+              <p className="mt-1 text-lg font-semibold capitalize text-fg">{fmtEstimate(c.ref.estimate, "category")}</p>
+              <p className="text-xs text-muted">
+                range: <span className="num">{fmtBand(c.ref.band90, "category")}</span>
+              </p>
+            </>
+          ) : (
+            <p className="mt-1 text-sm text-muted">no basis</p>
+          )}
+        </div>
+      ))}
+    </div>
+  );
+}
+
+function Sensitivity({ rows, kind, unit }: { rows: SensitivityRow[]; kind: string; unit: string | null }) {
+  const numeric = rows.filter((x) => isNum(x.low) && isNum(x.high)) as (SensitivityRow & { low: number; high: number })[];
+  const categorical = rows.filter((x) => typeof x.low === "string" || typeof x.high === "string");
+  if (!numeric.length && !categorical.length) {
+    return <Empty>No sensitivity is reported (no estimate at this habitat).</Empty>;
+  }
+  const groups = new Map<string, typeof numeric>();
+  numeric.forEach((x) => {
+    const q = x.quantity ?? "estimate";
+    groups.set(q, [...(groups.get(q) ?? []), x]);
+  });
+  return (
+    <div className="space-y-3">
+      {[...groups.entries()].map(([q, rs]) => {
+        const base = rs.find((x) => isNum(x.baseline))?.baseline;
+        const title = q === "band_width" ? "Effect on the 90% band width" : "Effect on the estimate";
+        return (
+          <div key={q}>
+            <h3 className="text-xs font-medium text-muted">{title}</h3>
+            <TornadoChart
+              rows={rs.map((x) => ({ param: x.param, low: x.low, high: x.high }))}
+              base={isNum(base) ? base : null}
+              unit={q === "band_width" ? null : kind === "probability" ? null : unit}
+              ariaLabel={`${title}: ${rs.map((x) => `${x.param} from ${fmtSig(x.low)} to ${fmtSig(x.high)}`).join("; ")}`}
+            />
+            <table className="w-full text-left text-[11px]">
+              <caption className="sr-only">{title} (table)</caption>
+              <thead className="text-muted">
+                <tr>
+                  <th scope="col">Parameter</th>
+                  <th scope="col">Input low → high</th>
+                  <th scope="col">Value at low</th>
+                  <th scope="col">Value at high</th>
+                </tr>
+              </thead>
+              <tbody className="num">
+                {rs.map((x) => (
+                  <tr key={x.param} className="border-t border-line">
+                    <th scope="row" className="font-normal">{x.param}</th>
+                    <td>{isNum(x.input_low) && isNum(x.input_high) ? `${fmtSig(x.input_low)} → ${fmtSig(x.input_high)}` : "–"}</td>
+                    <td>{fmtSig(x.low)}</td>
+                    <td>{fmtSig(x.high)}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        );
+      })}
+      {categorical.length ? (
+        <table className="w-full text-left text-xs">
+          <caption className="mb-1 text-left text-xs font-medium text-muted">Outcome at each parameter&apos;s low and high setting</caption>
+          <thead className="text-muted">
+            <tr>
+              <th scope="col">Parameter</th>
+              <th scope="col">Low</th>
+              <th scope="col">High</th>
+            </tr>
+          </thead>
+          <tbody>
+            {categorical.map((x) => (
+              <tr key={x.param} className="border-t border-line">
+                <th scope="row" className="num font-normal">{x.param}</th>
+                <td>{x.low === null ? "–" : humanize(String(x.low))}</td>
+                <td>{x.high === null ? "–" : humanize(String(x.high))}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      ) : null}
+    </div>
+  );
+}
+
+function Explain({ r }: { r: BoundsResult }) {
+  const { habitat } = useHabitat();
+  const { open } = useAsk();
+  const [state, setState] = useState<
+    { s: "idle" } | { s: "loading" } | { s: "ok"; r: Sourced<AskAnswer> } | { s: "error"; e: Error }
+  >({ s: "idle" });
+  const preset = matchPreset(habitat);
+  const where = preset ? `the ${preset.label.toLowerCase()}` : "this habitat";
+  // Phrased like the pre-generated demo questions so the offline cache can answer it.
+  const question = r.applicable ? `Why is the ${r.metric} band wide for ${where}?` : `Why is there no ${r.metric} estimate for ${where}?`;
+  const contextIds = [r.metric, ...new Set(r.evidence.map((e) => e.investigation_id))];
+
+  const run = async () => {
+    setState({ s: "loading" });
+    try {
+      setState({ s: "ok", r: await api.ask(question, habitat, contextIds) });
+    } catch (e) {
+      setState({ s: "error", e: e instanceof Error ? e : new Error(String(e)) });
+    }
+  };
+
+  return (
+    <section className="rounded-lg border border-line bg-surface p-4" aria-labelledby="explain-h">
+      <div className="flex flex-wrap items-center justify-between gap-2">
+        <h2 id="explain-h" className="text-sm font-semibold">
+          Explain this prediction
+        </h2>
+        <div className="flex gap-2">
+          <button
+            type="button"
+            onClick={run}
+            disabled={state.s === "loading"}
+            className="rounded-md border border-partial px-3 py-1.5 text-sm text-partial hover:bg-surface-2 disabled:opacity-50"
+          >
+            Explain
+          </button>
+          <button
+            type="button"
+            onClick={() => open({ question, contextIds })}
+            className="rounded-md border border-line px-3 py-1.5 text-sm text-muted hover:text-fg"
+          >
+            Ask a follow-up
+          </button>
+        </div>
+      </div>
+      <p className="mt-1 text-xs text-muted">
+        Asks: <q>{question}</q> for {preset ? preset.label : "this custom habitat"}, with {r.metric} and its evidence as context.
+      </p>
+      <div className="mt-3" aria-live="polite">
+        {state.s === "loading" ? <Loading label="Explaining…" /> : null}
+        {state.s === "error" ? <ErrorState error={state.e} onRetry={run} /> : null}
+        {state.s === "ok" ? <AskAnswerView answer={state.r.data} source={state.r.source} note={state.r.note} /> : null}
+      </div>
+    </section>
+  );
+}
