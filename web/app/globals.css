@@ -1,0 +1,91 @@
+@import "tailwindcss";
+
+/*
+ * Design tokens (plan/06 §3). Dark "mission control" is the default;
+ * [data-theme="light"] on <html> switches to the light theme.
+ * Semantic colors: microgravity = cyan, normal gravity = amber,
+ * partial-gravity estimate = violet, no data = hatched grey, warning = red.
+ */
+:root {
+  color-scheme: dark;
+  --bg: #0a0f1e;
+  --surface: #111a2e;
+  --surface-2: #18233d;
+  --line: #2b3a5c;
+  --fg: #e7edf8;
+  --muted: #a3b0c9;
+  --micro: #22d3ee;
+  --normal: #fbbf24;
+  --partial: #a78bfa;
+  --nodata: #6b7280;
+  --warn: #f87171;
+  --micro-fill: rgba(34, 211, 238, 0.28);
+  --normal-fill: rgba(251, 191, 36, 0.28);
+  --partial-fill: rgba(167, 139, 250, 0.32);
+  --nodata-fill: rgba(107, 114, 128, 0.35);
+  --warn-fill: rgba(248, 113, 113, 0.14);
+}
+
+:root[data-theme="light"] {
+  color-scheme: light;
+  --bg: #f6f8fc;
+  --surface: #ffffff;
+  --surface-2: #edf1f8;
+  --line: #c9d3e3;
+  --fg: #0f172a;
+  --muted: #475569;
+  --micro: #0e7490;
+  --normal: #b45309;
+  --partial: #6d28d9;
+  --nodata: #6b7280;
+  --warn: #b91c1c;
+  --micro-fill: rgba(14, 116, 144, 0.2);
+  --normal-fill: rgba(180, 83, 9, 0.2);
+  --partial-fill: rgba(109, 40, 217, 0.2);
+  --nodata-fill: rgba(107, 114, 128, 0.25);
+  --warn-fill: rgba(185, 28, 28, 0.08);
+}
+
+@theme inline {
+  --color-bg: var(--bg);
+  --color-surface: var(--surface);
+  --color-surface-2: var(--surface-2);
+  --color-line: var(--line);
+  --color-fg: var(--fg);
+  --color-muted: var(--muted);
+  --color-micro: var(--micro);
+  --color-normal: var(--normal);
+  --color-partial: var(--partial);
+  --color-nodata: var(--nodata);
+  --color-warn: var(--warn);
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-jetbrains-mono), ui-monospace, monospace;
+}
+
+body {
+  background: var(--bg);
+  color: var(--fg);
+  font-family: var(--font-sans);
+}
+
+.hatch {
+  background-image: repeating-linear-gradient(
+    45deg,
+    var(--nodata-fill) 0 6px,
+    transparent 6px 12px
+  );
+}
+
+.num {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+}
+
+:focus-visible {
+  outline: 2px solid var(--micro);
+  outline-offset: 2px;
+}
+
+input[type="range"] {
+  accent-color: var(--micro);
+}
