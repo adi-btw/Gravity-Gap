@@ -43,13 +43,17 @@ DEFAULT_MODEL = "claude-sonnet-5-5"
 MAX_CLAUDE_CALLS = int(os.environ.get("GRAVITY_GAP_MAX_CLAUDE_CALLS", "200"))
 _claude_calls = 0
 
-DEMO_QUESTIONS: list[tuple[str, str]] = [
+DEMO_QUESTIONS: list[tuple[str, str | None]] = [
     ("Why is the lunar base in the mixed regime?", "lunar_base"),
     ("Why is the M1 band wide for the lunar base?", "lunar_base"),
     ("Which experiments matter most for a Mars base?", "mars_base"),
     ("What should LUCI test first?", "lunar_base"),
     ("Is the lunar rover safer with the fans off?", "lunar_rover"),
     ("Can you predict rocket engine fires?", "lunar_base"),
+    # R1 real-fire replay: habitat None -> the incident's own conditions (cache key "incident:<id>")
+    ("What does Gravity Gap say about the Mir fire?", None),
+    ("What would Gravity Gap say about Apollo 1's cabin air?", None),
+    ("Is Apollo 13 in scope?", None),
 ]
 
 OUT_OF_SCOPE = ("rocket", "propellant", "propulsion", "thruster", "launch vehicle", "booster",
@@ -116,8 +120,10 @@ def _norm(q: str) -> str:
 # --------------------------------------------------------------------------- intent
 
 
-def classify(question: str) -> str:
+def classify(question: str, context_ids: Iterable[str] = ()) -> str:
     q = question.lower()
+    if ctx.find_incidents(question, context_ids):
+        return "incident"
     if any(w in q for w in OUT_OF_SCOPE):
         return "refusal"
     if ctx._wants_fans_off(q) or ("fan" in q and ("off" in q or "without" in q)) or "ventilation" in q:
@@ -440,7 +446,162 @@ def t_explain(pack: dict, question: str, metric: str | None) -> str:
     return "\n\n".join(o for o in out if o)
 
 
-TEMPLATES = {"regime": t_regime, "band": t_band, "experiments": t_experiments, "planner": t_planner,
+# --------------------------------------------------------------------------- incidents (R1)
+
+# Hindsight wording the incident answers must never contain (plan/13-round-2-features.md, writing rules).
+HINDSIGHT = re.compile(r"\b(would|could|might) have\b|\bprevent(ed|able)?\b", re.IGNORECASE)
+INCIDENT_FIELD_LABELS = (("g_m_s2", "gravity"), ("p_psia", "pressure"), ("o2", "O₂"), ("u_cm_s", "vent flow"),
+                         ("L_mm", "flame size"))
+INCIDENT_CLOSING = ("This is what today's PSI data can and cannot say about these conditions. It is not a "
+                    "reconstruction of the event and not a judgement of the crew or of the people who worked on it.")
+INCIDENT_CLOSING_OUT_OF_SCOPE = ("Gravity Gap makes no prediction about this event. This is not a judgement of the "
+                                 "crew or of the people who worked on it.")
+
+
+def _clean(text: Any) -> str:
+    """Artifact sentence, or '' when it uses hindsight wording (never shown in an incident answer)."""
+    t = str(text or "").strip()
+    return "" if not t or HINDSIGHT.search(t) else t
+
+
+def _source_urls(inc: dict, field: str | None = None) -> list[str]:
+    urls: list[str] = []
+    for s in inc.get("sources") or []:
+        if not isinstance(s, dict) or not s.get("url"):
+            continue
+        if field is None or s.get("field") == field:
+            u = str(s["url"]).strip()
+            if u not in urls:
+                urls.append(u)
+    return urls
+
+
+def _cites(ids: Iterable[str]) -> str:
+    return " ".join(f"[{i}]" for i in ids)
+
+
+def _incident_value(field: str, v: Any) -> str:
+    if field == "o2":
+        return pct(v)
+    unit = {"g_m_s2": "m/s²", "p_psia": "psia", "u_cm_s": "cm/s", "L_mm": "mm"}[field]
+    return f"{fmt(v)} {unit}"
+
+
+def _incident_title(inc: dict) -> str:
+    year = f" ({inc['year']})" if inc.get("year") else ""
+    phase = f": {inc['phase']}" if inc.get("phase") else ""
+    return f"**{inc.get('name') or inc['incident_id']}{year}**{phase} [{inc['id']}]."
+
+
+def _incident_conditions(inc: dict) -> str:
+    assumed = set(inc.get("assumed") or [])
+    bits = []
+    for field, label in INCIDENT_FIELD_LABELS:
+        v = inc.get(field)
+        if not isinstance(v, (int, float)) or isinstance(v, bool):
+            continue
+        cite = _source_urls(inc, field)
+        tag = " (assumed; not stated in the sources)" if field in assumed else ""
+        bits.append(f"{label} {_incident_value(field, v)}{tag}" + (f" {_cites(cite)}" if cite else ""))
+    if not bits:
+        return ""
+    note = _clean(inc.get("assumed_note"))
+    return f"**Conditions used** [{inc['id']}]: " + "; ".join(bits) + "." + (f" {note}" if note else "")
+
+
+def _incident_quotes(inc: dict) -> str:
+    lines = []
+    for s in inc.get("sources") or []:
+        if not isinstance(s, dict) or not s.get("url") or not _clean(s.get("quote")):
+            continue
+        q = " ".join(str(s["quote"]).split())
+        lines.append(f"- {s.get('field') or 'source'}: “{q}” [{str(s['url']).strip()}]")
+    return ("**What the sources say:**\n" + "\n".join(lines)) if lines else ""
+
+
+def _incident_regime(inc: dict) -> str:
+    phys = inc.get("physics")
+    if not phys:
+        return ""
+    ri = phys.get("ri")
+    ri_txt = "unbounded (no forced flow)" if ri is None else fmt(ri)
+    s = (f"**Regime: {phys.get('regime')}.** Buoyant velocity {fmt(phys.get('u_b_cm_s'))} cm/s against a vent flow "
+         f"of {fmt(inc.get('u_cm_s'))} cm/s gives Ri = {ri_txt} ({REGIME_DEF}) [{inc['id']}].")
+    fr = inc.get("regime_fractions") or {}
+    if fr:
+        s += (f" Sampling the uncertain constants gives {pct(fr.get('forced'))} forced, {pct(fr.get('mixed'))} "
+              f"mixed and {pct(fr.get('buoyant'))} buoyant flames [{inc['id']}].")
+    return s
+
+
+def _incident_metrics(pack: dict, inc: dict) -> str:
+    metrics = inc.get("metrics") or {}
+    if not metrics:
+        return ""
+    cov = inc.get("coverage") or {}
+    meta = pack.get("metrics") or {}
+    lines = []
+    for m in sorted(metrics):
+        r = metrics[m] or {}
+        info = {**(meta.get(m) or {}), "metric": m}
+        name = f"{m} – {info['label']}" if info.get("label") else m
+        c = cov.get(m) or {}
+        if r.get("applicable"):
+            line = f"- **{name}**: estimate {val(info, r.get('estimate'))}, 90% band {band(info, r.get('band90'))}"
+            if r.get("transfer_confidence"):
+                line += f", transfer confidence **{r['transfer_confidence']}**"
+        else:
+            reason = _clean(r.get("reason")) or "outside the tested conditions"
+            line = f"- **{name}**: **no evidence** – {reason}"
+        if isinstance(c.get("nearest_distance"), (int, float)):
+            line += f" (nearest tested condition at distance {fmt(c['nearest_distance'])})"
+        lines.append(line + f" [{inc['id']}]")
+    return "**What today's data can and cannot say:**\n" + "\n".join(lines)
+
+
+_METRIC_FINDING = re.compile(r"^M[1-5]\b")
+
+
+def _incident_findings(inc: dict, skip: Iterable[str] = ()) -> str:
+    """Engine findings, minus the per-metric ones already listed by ``_incident_metrics`` and ``skip``."""
+    finds = [f for f in (_clean(x) for x in inc.get("findings") or [])
+             if f and not _METRIC_FINDING.match(f) and f not in skip]
+    return ("**Findings:** " + " ".join(finds) + f" [{inc['id']}]") if finds else ""
+
+
+def _incident_par(pack: dict, inc: dict) -> str:
+    summary = _clean(inc.get("summary"))
+    src = _source_urls(inc, "summary")
+    out = [_incident_title(inc)]
+    if summary:
+        out.append(f"{summary} [{inc['id']}]" + (f" {_cites(src)}" if src else ""))
+    if not inc.get("in_scope"):
+        raw_note = _clean(inc.get("scope_note"))
+        note = re.sub(r"^outside (this tool's|gravity gap's) scope\s*[:.-]\s*", "", raw_note, flags=re.IGNORECASE)
+        note = note[:1].upper() + note[1:]
+        out.insert(1, f"**Outside Gravity Gap's scope.** {note + ' ' if note else ''}Gravity Gap studies cabin "
+                      f"fires (burning materials, fuel droplets and small gas flames in a cabin atmosphere with "
+                      f"ventilation) using NASA PSI combustion experiments, so it gives no regime, estimate or band "
+                      f"for this event [{inc['id']}].")
+        out += [_incident_findings(inc, skip=(raw_note,)), _incident_quotes(inc)]
+        return "\n\n".join(o for o in out if o)
+    out.append(f"**Scope:** inside Gravity Gap's scope (a fire in a crew-cabin atmosphere) [{inc['id']}].")
+    out += [_incident_conditions(inc), _incident_regime(inc), _incident_metrics(pack, inc),
+            _incident_findings(inc), _incident_quotes(inc)]
+    return "\n\n".join(o for o in out if o)
+
+
+def t_incident(pack: dict, question: str, metric: str | None) -> str:
+    incs = pack.get("incidents") or []
+    if not incs:
+        return ("The real-fire replay artifact (artifacts/incidents.json) is not available in this build, so "
+                "Gravity Gap cannot describe this incident yet.")
+    parts = [_incident_par(pack, inc) for inc in incs]
+    closing = INCIDENT_CLOSING if any(i.get("in_scope") for i in incs) else INCIDENT_CLOSING_OUT_OF_SCOPE
+    return "\n\n---\n\n".join(parts) + "\n\n" + closing
+
+
+TEMPLATES = {"incident": t_incident, "regime": t_regime, "band": t_band, "experiments": t_experiments, "planner": t_planner,
              "fans_off": t_fans_off, "explain": t_explain}
 
 
@@ -448,6 +609,8 @@ def template_answer(question: str, pack: dict, intent: str, metric: str | None) 
     if intent == "refusal":
         return t_refusal(pack, question)
     text = TEMPLATES.get(intent, t_explain)(pack, question, metric)
+    if intent == "incident":
+        return text  # self-contained: built only from the incident artifact, not the habitat predictions
     note = _missing_note(pack)
     return text + ("\n\n" + note if note else "")
 
@@ -556,9 +719,26 @@ def load_cache(path: Path | None = None) -> dict:
         return {"entries": []}
 
 
+def _default_habitat(question: str, context_ids: Iterable[str] = ()) -> tuple[str | dict, str]:
+    """(habitat, cache key) used when the caller gives no habitat.
+
+    Incident questions use the first named incident: its own conditions when in scope, else the habitat
+    inferred from the question; the cache key is ``incident:<id>`` either way.
+    """
+    for inc in ctx.find_incidents(question, context_ids):
+        hab = ctx.incident_habitat(inc)
+        return (hab if hab is not None else infer_habitat(question)), f"incident:{inc['id']}"
+    pid = infer_habitat(question)
+    return pid, pid
+
+
+def _cache_habitat_key(question: str, habitat: Any, context_ids: Iterable[str] = ()) -> str:
+    return _default_habitat(question, context_ids)[1] if habitat is None else _habitat_key(habitat)
+
+
 def _from_cache(question: str, habitat: Any, context_ids: Iterable[str]) -> dict | None:
     entries = load_cache().get("entries") or []
-    hk = _habitat_key(habitat)
+    hk = _cache_habitat_key(question, habitat, context_ids)
     cands = [e for e in entries if e.get("question_key") == _norm(question) and e.get("habitat") == hk]
     if not cands:
         return None
@@ -578,9 +758,7 @@ def ask(question: str, habitat: str | dict | None = None, context_ids: Iterable[
     if not question:
         raise ValueError("question is required")
     context_ids = [str(c) for c in (context_ids or [])]
-    if habitat is None:
-        habitat = infer_habitat(question)
-    intent = classify(question)
+    intent = classify(question, context_ids)
     metric = _metric_in(question, context_ids)
 
     if use_cache:
@@ -591,6 +769,8 @@ def ask(question: str, habitat: str | dict | None = None, context_ids: Iterable[
                     "intent": hit.get("intent", intent), "habitat": hit["habitat"],
                     "validation": hit.get("validation"), "prompt_version": PROMPT_VERSION}
 
+    if habitat is None:
+        habitat = _default_habitat(question, context_ids)[0]
     pack = ctx.build_context(habitat, question=question, context_ids=context_ids,
                              metrics=None)
     hab_out = pack["habitat"].get("preset_id") or pack["habitat"].get("label")
@@ -611,12 +791,13 @@ def ask(question: str, habitat: str | dict | None = None, context_ids: Iterable[
             "prompt_version": PROMPT_VERSION}
 
 
-def build_cache(path: Path | None = None, questions: list[tuple[str, str]] | None = None) -> dict:
+def build_cache(path: Path | None = None, questions: list[tuple[str, str | None]] | None = None) -> dict:
     entries = []
     for q, hab in questions or DEMO_QUESTIONS:
         res = ask(q, hab, use_cache=False)
-        entries.append({"question": q, "question_key": _norm(q), "habitat": _habitat_key(hab),
-                        "fingerprint": fingerprint(q, _habitat_key(hab)), "intent": res["intent"],
+        hk = _cache_habitat_key(q, hab)
+        entries.append({"question": q, "question_key": _norm(q), "habitat": hk,
+                        "fingerprint": fingerprint(q, hk), "intent": res["intent"],
                         "mode_generated": res["mode"], "answer_markdown": res["answer_markdown"],
                         "citations": res["citations"], "numbers_used": res["numbers_used"],
                         "validated": res["validated"], "validation": res["validation"]})

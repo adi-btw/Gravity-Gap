@@ -29,9 +29,10 @@ Number extraction rules (what counts as "a number"):
 
 Citation rules: a citation is any bracketed token, or bare ``PSI-NN`` / ``rec:...`` /
 ``doi:...`` token, with prefix ``PSI-``, ``rec:``, ``doi:`` or ``eng:`` (engine outputs:
-``eng:physics``, ``eng:M1``, ``eng:planner:1``, ``eng:fans_off:M1``...). Each must be in
-``pack["citable_ids"]``. Bracketed text without a citation prefix is scanned for numbers
-like normal text.
+``eng:physics``, ``eng:M1``, ``eng:planner:1``, ``eng:fans_off:M1``, ``eng:incident:mir1997``...),
+or an ``http(s)://`` source URL (bracketed or bare; R1 incident sources are cited by their URL exactly
+as written in the incident's ``sources``). Each must be in ``pack["citable_ids"]``. URLs are never
+scanned for numbers. Bracketed text without a citation prefix is scanned for numbers like normal text.
 """
 from __future__ import annotations
 
@@ -48,10 +49,11 @@ CONSTANTS: dict[str, float] = {
     "p_sea_level_psia": 14.7, "band_percent": 90.0, "air_o2_fraction": 0.21,
 }
 
-CITE_PREFIX = r"(?:PSI-\d+|rec:[^\s,;\]]+|doi:[^\s,;\]]+|eng:[^\s,;\]]+)"
+CITE_PREFIX = r"(?:PSI-\d+|rec:[^\s,;\]]+|doi:[^\s,;\]]+|eng:[^\s,;\]]+|https?://[^\s,;\]]+)"
 _BRACKET = re.compile(r"\[([^\[\]]+)\]")
 _CITE_TOKEN = re.compile(rf"^\s*({CITE_PREFIX})\s*$")
 _BARE_CITE = re.compile(r"(?<![\w:/\[-])(PSI-\d+|rec:[^\s,;\])]+|doi:[^\s,;\])]+|eng:[^\s,;\])]+)")
+_URL = re.compile(r"https?://[^\s\]\)>]+")
 _DOI = re.compile(r"\b10\.\d{4,9}/[^\s\])>,;]+")
 _LIST_NUM = re.compile(r"(?m)^\s*(?:[-*+]\s+)?\d+[.)]\s+")
 _DATE = re.compile(r"\b(?:19|20)\d{2}-\d{2}-\d{2}(?:T[\d:.+Z-]+)?\b")
@@ -86,6 +88,7 @@ def _numbers_in_text(text: str) -> list[tuple[float, bool, str]]:
 
 
 def _strip_ignored(text: str) -> str:
+    text = _URL.sub(" ", text)
     text = _DOI.sub(" ", text)
     text = _DATE.sub(" ", text)
     text = _YEAR_CITE.sub(" ", text)
@@ -94,7 +97,7 @@ def _strip_ignored(text: str) -> str:
 
 _SKIP_KEYS = {"id", "record_id", "investigation_id", "doi", "citable_ids", "catalog_index",
               "created_at", "generated_at", "model_version", "version", "sha256", "question",
-              "evidence_ids", "evidence_investigations", "extends", "missing"}
+              "evidence_ids", "evidence_investigations", "extends", "missing", "url", "incident_id"}
 
 
 def pack_numbers(pack: dict) -> list[tuple[float, str]]:
@@ -167,6 +170,10 @@ def extract_citations(text: str) -> tuple[list[str], str]:
         return m.group(0)
 
     stripped = _BRACKET.sub(repl, text)
+    # bare source URLs (e.g. markdown links "[NASA](https://...)") must resolve too
+    for m in _URL.finditer(stripped):
+        ids.append(m.group(0).rstrip(".,;:"))
+    stripped = _URL.sub(" ", stripped)
     # bare mentions (PSI-69 in prose) must also resolve
     for m in _BARE_CITE.finditer(stripped):
         ids.append(m.group(1).rstrip(".:"))

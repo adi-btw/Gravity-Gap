@@ -33,6 +33,8 @@ changed/missing/unlisted files; it never crashes. CORS allows the comma-separate
 | GET | `/metrics` | – | `engine.bounds.METRICS` (`M1`..`M5` -> `{label, unit, kind, data, flow_dependent}`) |
 | POST | `/bounds` | habitat fields + `metric` | `engine.bounds.predict(...)` (JSON-safe; 422 unknown metric; 503 if `engine.bounds`/`engine.rules` missing) |
 | GET | `/planner` | – | `artifacts/planner.json` (`items[]`, `design_implications[]`); 503 if not built |
+| GET | `/incidents` | – | `artifacts/incidents.json` (R1 real-fire replay: `{generated_at, engine_version, incidents[]}`); 503 if not built |
+| GET | `/incidents/{id}` | – | one incident (`apollo1`, `mir1997`, `artemis2`, `apollo13`), 404 problem+json if unknown, 503 if not built |
 | GET | `/ledger` | – | `{predictions[], verification[{id, ok, line}]}` from `ledger/predictions.jsonl` |
 | POST | `/ledger` | header `X-Team-Token`; `{metric, habitat: preset id \| fields, rationale, author}` | 201 + appended record (`id, created_at, habitat, metric, estimate, band90, model_version, artifact_hashes, rationale, author, status, sha256`) |
 | POST | `/ask` | `{question, habitat?: preset id \| fields, context_ids?: [PSI-xx, rec:..., M1]}` | `{answer_markdown, citations[], numbers_used[], validated, mode: "claude"\|"cached"\|"template", intent, habitat, validation}` |
@@ -54,9 +56,18 @@ changed/missing/unlisted files; it never crashes. CORS allows the comma-separate
   installed (model `GRAVITY_GAP_MODEL`, default `claude-sonnet-5-5`); otherwise a fresh entry of
   `artifacts/ai_cache.json` (`mode: "cached"`) or a deterministic template answer (`mode: "template"`).
   Every answer is checked by `engine/ai/validator.py`: each number must be in the context pack (±0.5%) and
-  each citation (`PSI-xx`, `rec:...`, `doi:...`, `eng:...`) must resolve. Out-of-scope questions (rockets,
+  each citation (`PSI-xx`, `rec:...`, `doi:...`, `eng:...`, incident source `https://...` URLs) must resolve. Out-of-scope questions (rockets,
   propellants, weapons) get a refusal. Rebuild the cache with `python -m engine.ai.answer --build-cache`.
-- **Artifact build order:** engine artifacts -> `python -m engine.ai.answer --build-cache` ->
+- **Real-fire replay (R1).** `/incidents` serves `artifacts/incidents.json` (built by `python -m engine.incidents`
+  from `data/incidents.json`), read on every request, with `inf`/`NaN` as `null`. Out-of-scope incidents
+  (`apollo13`) have `in_scope: false`, a `scope_note` and `physics`/`metrics`/`coverage` = `null`.
+  `/ask` recognises incident questions ("What does Gravity Gap say about the Mir fire?", "Is Apollo 13 in
+  scope?"; or `context_ids: ["mir1997"]`) as intent `incident`. Without a `habitat` the answer uses the incident's
+  own conditions. Answers use only the incident artifact's numbers and cite `[eng:incident:<id>]` plus the
+  source URL exactly as written in the incident's `sources` (the validator resolves both and never reads
+  numbers inside URLs). Out-of-scope incidents get an "Outside Gravity Gap's scope" explanation and no
+  hindsight wording ("would have prevented") is ever produced.
+- **Artifact build order:** engine artifacts (incl. `python -m engine.incidents`) -> `python -m engine.ai.answer --build-cache` ->
   `python scripts/build_manifest.py` (last).
 
 Input bounds (`HabitatIn`): `0 <= g_m_s2 <= 30`, `0.5 <= p_psia <= 20`, `0.05 <= o2 <= 1`,

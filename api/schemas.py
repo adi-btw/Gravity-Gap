@@ -125,7 +125,8 @@ class AskIn(BaseModel):
     question: str = Field(..., min_length=3, max_length=1000)
     habitat: str | dict[str, Any] | None = Field(None, description="Preset id or habitat fields; inferred if omitted")
     context_ids: list[str] = Field(default_factory=list, max_length=50,
-                                   description="Ids to include: PSI-xx, rec:..., M1..M5")
+                                   description="Ids to include: PSI-xx, rec:..., M1..M5, incident ids "
+                                               "(mir1997 or eng:incident:mir1997)")
 
 
 class AskOut(BaseModel):

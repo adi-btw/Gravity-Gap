@@ -483,3 +483,94 @@ def test_export_json_all_dois(client, catalog_ready):
 
 def test_export_bad_format(client):
     _assert_problem(client.get("/data/export", params={"format": "xml"}), 422)
+
+
+# --------------------------------------------------------------------------- R1 real-fire replay
+
+INCIDENTS_FIXTURE = {
+    "generated_at": "2026-11-14T00:00:00+00:00", "engine_version": "test",
+    "incidents": [
+        {"id": "mir1997", "name": "Mir oxygen-generator fire", "date": "1997-02-24", "in_scope": True,
+         "scope_note": None, "g_m_s2": 0.0, "p_psia": 14.7, "o2": 0.21, "u_cm_s": 10, "L_mm": 10,
+         "assumed": ["p_psia", "o2", "u_cm_s", "L_mm"], "summary": "Test summary.",
+         "sources": [{"field": "date", "url": "https://www.nasa.gov/example", "quote": "On Feb. 24, 1997"}],
+         "physics": {"u_b_cm_s": 0.0, "ri": None, "regime": "forced"},
+         "regime_fractions": {"forced": 1.0, "mixed": 0.0, "buoyant": 0.0},
+         "metrics": {"M1": {"applicable": True, "estimate": 0.94, "band90": [0.82, 0.98], "reason": None,
+                            "transfer_confidence": "high"}},
+         "coverage": {"M1": {"covered": True, "nearest_distance": 0.0009}},
+         "findings": ["In orbit (0 g) the flame is forced-flow."]},
+        {"id": "apollo13", "name": "Apollo 13", "date": "1970-04-13", "in_scope": False,
+         "scope_note": "Outside this tool's scope: not a cabin fire.", "g_m_s2": None, "p_psia": None, "o2": None,
+         "u_cm_s": None, "L_mm": None, "assumed": [], "summary": "Test.", "sources": [],
+         "physics": None, "regime_fractions": None, "metrics": None, "coverage": None,
+         "findings": ["Outside this tool's scope: not a cabin fire."]},
+    ],
+}
+
+
+@pytest.fixture
+def incidents_tmp(tmp_path, monkeypatch):
+    import api.main as main_mod
+
+    path = tmp_path / "incidents.json"
+    path.write_text(json.dumps(INCIDENTS_FIXTURE), encoding="utf-8")
+    monkeypatch.setattr(main_mod, "INCIDENTS_PATH", path)
+    return path
+
+
+def test_incidents_list(client, incidents_tmp):
+    r = client.get("/incidents")
+    assert r.status_code == 200, r.text
+    body = r.json()
+    assert [i["id"] for i in body["incidents"]] == ["mir1997", "apollo13"]
+    assert body["incidents"][0]["physics"]["ri"] is None
+    assert _all_finite_or_null(body)
+
+
+def test_incident_record_and_out_of_scope(client, incidents_tmp):
+    r = client.get("/incidents/mir1997")
+    assert r.status_code == 200
+    assert r.json()["metrics"]["M1"]["applicable"] is True
+    a13 = client.get("/incidents/apollo13").json()
+    assert a13["in_scope"] is False and a13["physics"] is None and a13["scope_note"]
+
+
+def test_incident_unknown_404_problem_json(client, incidents_tmp):
+    body = _assert_problem(client.get("/incidents/challenger"), 404)
+    assert "challenger" in body["detail"]
+
+
+def test_incidents_not_built_503_problem_json(client, tmp_path, monkeypatch):
+    import api.main as main_mod
+
+    monkeypatch.setattr(main_mod, "INCIDENTS_PATH", tmp_path / "missing.json")
+    _assert_problem(client.get("/incidents"), 503)
+    _assert_problem(client.get("/incidents/mir1997"), 503)
+
+
+def test_incidents_non_finite_values_become_null(client, tmp_path, monkeypatch):
+    import api.main as main_mod
+
+    path = tmp_path / "incidents.json"
+    path.write_text('{"incidents": [{"id": "x", "physics": {"ri": Infinity, "u_b_cm_s": NaN}}]}', encoding="utf-8")
+    monkeypatch.setattr(main_mod, "INCIDENTS_PATH", path)
+    body = client.get("/incidents/x").json()
+    assert body["physics"] == {"ri": None, "u_b_cm_s": None}
+
+
+def test_incidents_real_artifact(client):
+    path = ROOT / "artifacts" / "incidents.json"
+    if not path.exists():
+        pytest.skip("artifacts/incidents.json (TL, python -m engine.incidents) not built yet")
+    body = client.get("/incidents").json()
+    ids = {i["id"] for i in body["incidents"]}
+    assert {"apollo1", "mir1997", "artemis2", "apollo13"} <= ids
+    assert _all_finite_or_null(body)
+    for iid in ids:
+        rec = client.get(f"/incidents/{iid}").json()
+        assert rec["id"] == iid
+        if not rec["in_scope"]:
+            assert rec["physics"] is None and rec["metrics"] is None and rec["scope_note"]
+        else:
+            assert set(rec["metrics"]) == {"M1", "M2", "M3", "M4", "M5"}

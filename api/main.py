@@ -40,6 +40,7 @@ CLEANING_REPORT_PATH = ROOT / "data" / "clean" / "CLEANING_REPORT.md"
 ARTIFACTS_DIR = ROOT / "artifacts"
 MANIFEST_PATH = ARTIFACTS_DIR / "MANIFEST.json"
 PLANNER_PATH = ARTIFACTS_DIR / "planner.json"
+INCIDENTS_PATH = ARTIFACTS_DIR / "incidents.json"
 
 ASK_RATE_PER_MIN = int(os.environ.get("GRAVITY_GAP_ASK_RATE", "20"))
 LEDGER_RATE_PER_MIN = int(os.environ.get("GRAVITY_GAP_LEDGER_RATE", "10"))
@@ -423,6 +424,34 @@ def planner() -> dict[str, Any]:
     if not PLANNER_PATH.exists():
         raise HTTPException(status_code=503, detail="artifacts/planner.json is not built yet")
     return json.loads(PLANNER_PATH.read_text(encoding="utf-8"))
+
+
+def load_incidents_artifact() -> dict[str, Any]:
+    """artifacts/incidents.json (R1 real-fire replay); read per request (small, rebuilt by engine.incidents)."""
+    if not INCIDENTS_PATH.exists():
+        raise HTTPException(status_code=503,
+                            detail="artifacts/incidents.json is not built yet (python -m engine.incidents)")
+    try:
+        data = json.loads(INCIDENTS_PATH.read_text(encoding="utf-8"))
+    except ValueError as exc:
+        raise HTTPException(status_code=503, detail="artifacts/incidents.json is not valid JSON") from exc
+    if not isinstance(data, dict) or not isinstance(data.get("incidents"), list):
+        raise HTTPException(status_code=503, detail="artifacts/incidents.json has no incidents list")
+    return to_jsonable(data)
+
+
+@app.get("/incidents")
+def incidents() -> dict[str, Any]:
+    """Real-fire replay: every incident with its engine results (`{generated_at, engine_version, incidents[]}`)."""
+    return load_incidents_artifact()
+
+
+@app.get("/incidents/{incident_id}")
+def incident_record(incident_id: str) -> dict[str, Any]:
+    for inc in load_incidents_artifact()["incidents"]:
+        if isinstance(inc, dict) and str(inc.get("id")) == incident_id:
+            return inc
+    raise HTTPException(status_code=404, detail=f"Incident '{incident_id}' not found")
 
 
 @app.get("/ledger")

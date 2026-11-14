@@ -13,6 +13,9 @@ The pack is the *only* source of facts an answer may use. It contains:
 * ``records``   trimmed catalog records for the ranked + requested ids    -> cite ``[PSI-69]``, ``[doi:...]``
 * ``evidence``  psi_tests.csv rows for the predictions' nearest evidence   -> cite ``[rec:PSI-69:FLEX:12]``
 * ``catalog_index`` every catalog id / acronym / DOI (so any real investigation resolves)
+* ``incidents`` real-fire replay incidents named in the question / ``context_ids`` (R1), trimmed from
+  ``artifacts/incidents.json``                                          -> cite ``[eng:incident:mir1997]``
+  and, for sourced facts, the source URL exactly as written in the incident's ``sources``
 * ``constants`` physical constants and thresholds the answers may quote
 * ``citable_ids`` every id a citation may use
 * ``missing``   engine pieces that were unavailable (answers must say so, not guess)
@@ -26,6 +29,7 @@ import csv
 import importlib
 import json
 import math
+import re
 from functools import lru_cache
 from pathlib import Path
 from typing import Any, Iterable
@@ -39,6 +43,7 @@ CATALOG_PATH = ARTIFACTS / "catalog.json"
 PLANNER_PATH = ARTIFACTS / "planner.json"
 BOUNDS_DIR = ARTIFACTS / "bounds"
 TESTS_CSV = ROOT / "data" / "clean" / "psi_tests.csv"
+INCIDENTS_PATH = ARTIFACTS / "incidents.json"
 
 PACK_VERSION = "context.v1"
 HABITAT_FIELDS = ("g_m_s2", "p_psia", "o2", "u_cm_s", "L_mm")
@@ -112,6 +117,84 @@ def evidence_row(record_id: str) -> dict | None:
         out[k] = _num(v) if k in ("o2_mole_fraction", "pressure_atm", "flow_speed_cm_s", "size_mm",
                                   "extinction_diameter_mm") else v
     return out
+
+
+# --------------------------------------------------------------------------- incidents (R1)
+
+INCIDENT_FIELDS = ("id", "name", "date", "phase", "in_scope", "scope_note", "g_m_s2", "p_psia", "o2", "u_cm_s",
+                   "L_mm", "assumed", "assumed_note", "summary", "sources", "physics", "regime_fractions", "metrics", "coverage",
+                   "findings")
+# Extra names people use for the incidents (matched as whole words, case-insensitive).
+INCIDENT_ALIASES: dict[str, tuple[str, ...]] = {
+    "apollo1": ("apollo 1", "apollo-1", "apollo i", "as-204", "as 204"),
+    "mir1997": ("mir",),
+    "artemis2": ("artemis ii", "artemis 2", "artemis-2"),
+    "apollo13": ("apollo 13", "apollo-13", "apollo xiii"),
+}
+
+
+def load_incidents(path: Path | None = None) -> list[dict]:
+    """Incidents from ``artifacts/incidents.json`` (empty list when not built). Read each call: the file is small."""
+    f = path or INCIDENTS_PATH
+    if not f.exists():
+        return []
+    try:
+        data = json.loads(f.read_text(encoding="utf-8"))
+    except ValueError:
+        return []
+    items = data.get("incidents") if isinstance(data, dict) else data
+    return [i for i in (items or []) if isinstance(i, dict) and i.get("id")]
+
+
+def _alias_patterns(inc: dict) -> list[str]:
+    names = {str(inc["id"]).lower()}
+    name = str(inc.get("name") or "").strip().lower()
+    if name:
+        names.add(name)
+        names.add(re.sub(r"\s*\(.*?\)\s*", " ", name).strip())
+    names.update(INCIDENT_ALIASES.get(str(inc["id"]), ()))
+    pats = []
+    for n in sorted((n for n in names if n), key=len, reverse=True):
+        words = [re.escape(w) for w in re.split(r"[\s-]+", n) if w]
+        pats.append(r"(?<![\w-])" + r"[\s-]*".join(words) + r"(?![\w-])")
+    return pats
+
+
+def find_incidents(question: str, context_ids: Iterable[str] = (), incidents: list[dict] | None = None) -> list[dict]:
+    """Incidents named in the question (by id, name or alias) or listed in ``context_ids``.
+
+    ``context_ids`` may hold ``"mir1997"``, ``"incident:mir1997"`` or ``"eng:incident:mir1997"``.
+    """
+    incs = load_incidents() if incidents is None else incidents
+    q = (question or "").lower()
+    ids = {str(c).split(":")[-1] for c in context_ids or ()}
+    out = []
+    for inc in incs:
+        if str(inc["id"]) in ids or any(re.search(p, q) for p in _alias_patterns(inc)):
+            out.append(inc)
+    return out
+
+
+def incident_habitat(inc: dict) -> dict | None:
+    """The incident's conditions as a habitat dict, or None (out of scope / values missing)."""
+    if not inc.get("in_scope"):
+        return None
+    vals = {k: inc.get(k) for k in HABITAT_FIELDS}
+    if any(not isinstance(vals[k], (int, float)) or isinstance(vals[k], bool) for k in HABITAT_FIELDS[:4]):
+        return None
+    if not isinstance(vals["L_mm"], (int, float)):
+        vals["L_mm"] = 10.0
+    return {**{k: float(v) for k, v in vals.items()}, "label": str(inc.get("name") or inc["id"])}
+
+
+def trim_incident(inc: dict) -> dict:
+    out = {k: inc.get(k) for k in INCIDENT_FIELDS if k in inc}
+    out["incident_id"] = out.pop("id")
+    date = str(inc.get("date") or "")
+    if re.match(r"^\d{4}", date):
+        out["year"] = int(date[:4])
+    out["id"] = f"eng:incident:{inc['id']}"
+    return jsonable(out)
 
 
 def presets() -> list[dict]:
@@ -368,6 +451,15 @@ def build_context(
             citable.add(row["id"])
             evidence.append(row)
     pack["evidence"] = evidence
+
+    # ---- real-fire replay incidents (R1)
+    incs = [trim_incident(i) for i in find_incidents(question, ctx_ids)]
+    for inc in incs:
+        citable.add(inc["id"])
+        for src in inc.get("sources") or []:
+            if isinstance(src, dict) and src.get("url"):
+                citable.add(str(src["url"]).strip())
+    pack["incidents"] = incs
 
     pack["constants"] = dict(CONSTANTS)
     pack["missing"] = missing
