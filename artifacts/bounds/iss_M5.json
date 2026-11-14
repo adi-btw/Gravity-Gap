@@ -1,0 +1,182 @@
+{
+  "preset_id": "iss",
+  "habitat": {
+    "g_m_s2": 0.0,
+    "p_psia": 14.7,
+    "o2": 0.21,
+    "u_cm_s": 10.0,
+    "L_mm": 10.0
+  },
+  "metric": "M5",
+  "label": "Supported coflow window",
+  "unit": "fraction",
+  "kind": "probability",
+  "applicable": true,
+  "reason": null,
+  "estimate": 1.0,
+  "band90": [
+    0.0,
+    1.0
+  ],
+  "ref_0g": {
+    "estimate": 1.0,
+    "band90": [
+      1.0,
+      1.0
+    ]
+  },
+  "ref_1g": {
+    "estimate": 0.96,
+    "band90": [
+      0.96,
+      0.96
+    ]
+  },
+  "regime_fractions": {
+    "forced": 1.0,
+    "mixed": 0.0,
+    "buoyant": 0.0
+  },
+  "u_eff_summary": {
+    "p05": 10.0,
+    "p50": 10.0,
+    "p95": 10.0
+  },
+  "nonmonotonic_flag": false,
+  "nonmonotonic_note": null,
+  "transfer": {
+    "basis": "forced-flow dominated (100%): coflow evidence transfers. SPICE flames observed at coflow 0.66-85.28 cm/s for all fuels, all nozzles (n=407 ignited rows; LOS / negative-flow rows excluded); SPICE has no O2 or pressure in its table, so the atmosphere is unknown (ISS cabin air assumed). ref_1g is the bridge model at g = 9.81 (no 1 g SPICE data)",
+    "confidence": "medium"
+  },
+  "evidence": [
+    {
+      "record_id": "PSI-107:Spice:141",
+      "investigation_id": "PSI-107",
+      "distance": 0.0233
+    },
+    {
+      "record_id": "PSI-107:Spice:142",
+      "investigation_id": "PSI-107",
+      "distance": 0.0233
+    },
+    {
+      "record_id": "PSI-107:Spice:143",
+      "investigation_id": "PSI-107",
+      "distance": 0.0233
+    },
+    {
+      "record_id": "PSI-107:Spice:144",
+      "investigation_id": "PSI-107",
+      "distance": 0.0233
+    },
+    {
+      "record_id": "PSI-107:Spice:146",
+      "investigation_id": "PSI-107",
+      "distance": 0.0233
+    },
+    {
+      "record_id": "PSI-107:Spice:208",
+      "investigation_id": "PSI-107",
+      "distance": 0.0233
+    },
+    {
+      "record_id": "PSI-107:Spice:213",
+      "investigation_id": "PSI-107",
+      "distance": 0.0233
+    },
+    {
+      "record_id": "PSI-107:Spice:341",
+      "investigation_id": "PSI-107",
+      "distance": 0.0233
+    },
+    {
+      "record_id": "PSI-107:Spice:408",
+      "investigation_id": "PSI-107",
+      "distance": 0.0233
+    },
+    {
+      "record_id": "PSI-107:Spice:409",
+      "investigation_id": "PSI-107",
+      "distance": 0.0233
+    },
+    {
+      "record_id": "PSI-107:Spice:439",
+      "investigation_id": "PSI-107",
+      "distance": 0.0233
+    },
+    {
+      "record_id": "PSI-107:Spice:440",
+      "investigation_id": "PSI-107",
+      "distance": 0.0233
+    },
+    {
+      "record_id": "PSI-107:Spice:441",
+      "investigation_id": "PSI-107",
+      "distance": 0.0233
+    },
+    {
+      "record_id": "PSI-107:Spice:214",
+      "investigation_id": "PSI-107",
+      "distance": 0.3034
+    },
+    {
+      "record_id": "PSI-107:Spice:216",
+      "investigation_id": "PSI-107",
+      "distance": 0.3034
+    },
+    {
+      "record_id": "PSI-107:Spice:217",
+      "investigation_id": "PSI-107",
+      "distance": 0.3034
+    },
+    {
+      "record_id": "PSI-107:Spice:169",
+      "investigation_id": "PSI-107",
+      "distance": 0.3207
+    },
+    {
+      "record_id": "PSI-107:Spice:170",
+      "investigation_id": "PSI-107",
+      "distance": 0.3207
+    },
+    {
+      "record_id": "PSI-107:Spice:174",
+      "investigation_id": "PSI-107",
+      "distance": 0.3207
+    },
+    {
+      "record_id": "PSI-107:Spice:193",
+      "investigation_id": "PSI-107",
+      "distance": 0.3207
+    }
+  ],
+  "sensitivity": [
+    {
+      "param": "C_b",
+      "low": 1.0,
+      "high": 1.0
+    },
+    {
+      "param": "k",
+      "low": 1.0,
+      "high": 1.0
+    },
+    {
+      "param": "dT_over_T",
+      "low": 1.0,
+      "high": 1.0
+    },
+    {
+      "param": "L_mm",
+      "low": 1.0,
+      "high": 1.0
+    },
+    {
+      "param": "u_cm_s",
+      "low": 1.0,
+      "high": 1.0
+    }
+  ],
+  "n_train": 407,
+  "model_version": "rules-m5-1.0.0+f744ca805556"
+}

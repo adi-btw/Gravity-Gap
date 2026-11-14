@@ -1,0 +1,127 @@
+{
+  "preset_id": "earth",
+  "habitat": {
+    "g_m_s2": 9.81,
+    "p_psia": 14.7,
+    "o2": 0.21,
+    "u_cm_s": 0.0,
+    "L_mm": 10.0
+  },
+  "metric": "M4",
+  "label": "Solid material burn extent",
+  "unit": "category",
+  "kind": "category",
+  "applicable": true,
+  "reason": null,
+  "estimate": "complete_burn",
+  "band90": [
+    "complete_burn",
+    "complete_burn"
+  ],
+  "ref_0g": {
+    "estimate": "complete_burn",
+    "band90": [
+      "complete_burn",
+      "complete_burn"
+    ]
+  },
+  "ref_1g": {
+    "estimate": "complete_burn",
+    "band90": [
+      "complete_burn",
+      "complete_burn"
+    ]
+  },
+  "regime_fractions": {
+    "forced": 0.0,
+    "mixed": 0.0,
+    "buoyant": 1.0
+  },
+  "u_eff_summary": {
+    "p05": 15.490081782246317,
+    "p50": 39.20100608392617,
+    "p95": 81.33320326678458
+  },
+  "nonmonotonic_flag": false,
+  "nonmonotonic_note": null,
+  "transfer": {
+    "basis": "buoyancy dominated (100%); 1 g outcome applies; low-confidence material (footnoted / mixed-material samples or 'any' envelope). any SAFFIRE-II material (most severe): microgravity complete_burn, 1 g complete_burn (n=9, SAFFIRE-II at 20 cm/s)",
+    "confidence": "low"
+  },
+  "evidence": [
+    {
+      "record_id": "PSI-99:SAFFIRE-2:1",
+      "investigation_id": "PSI-99",
+      "distance": 0.1
+    },
+    {
+      "record_id": "PSI-99:SAFFIRE-2:9",
+      "investigation_id": "PSI-99",
+      "distance": 0.19
+    },
+    {
+      "record_id": "PSI-99:SAFFIRE-2:8",
+      "investigation_id": "PSI-99",
+      "distance": 0.21
+    },
+    {
+      "record_id": "PSI-99:SAFFIRE-2:2",
+      "investigation_id": "PSI-99",
+      "distance": 0.22
+    },
+    {
+      "record_id": "PSI-99:SAFFIRE-2:3",
+      "investigation_id": "PSI-99",
+      "distance": 0.22
+    },
+    {
+      "record_id": "PSI-99:SAFFIRE-2:4",
+      "investigation_id": "PSI-99",
+      "distance": 0.22
+    },
+    {
+      "record_id": "PSI-99:SAFFIRE-2:5",
+      "investigation_id": "PSI-99",
+      "distance": 0.22
+    },
+    {
+      "record_id": "PSI-99:SAFFIRE-2:6",
+      "investigation_id": "PSI-99",
+      "distance": 0.22
+    },
+    {
+      "record_id": "PSI-99:SAFFIRE-2:7",
+      "investigation_id": "PSI-99",
+      "distance": 0.22
+    }
+  ],
+  "sensitivity": [
+    {
+      "param": "C_b",
+      "low": "complete_burn",
+      "high": "complete_burn"
+    },
+    {
+      "param": "k",
+      "low": "complete_burn",
+      "high": "complete_burn"
+    },
+    {
+      "param": "dT_over_T",
+      "low": "complete_burn",
+      "high": "complete_burn"
+    },
+    {
+      "param": "L_mm",
+      "low": "complete_burn",
+      "high": "complete_burn"
+    },
+    {
+      "param": "u_cm_s",
+      "low": "complete_burn",
+      "high": "complete_burn"
+    }
+  ],
+  "n_train": 9,
+  "model_version": "rules-m4-1.0.0+cf29fd0d386f"
+}

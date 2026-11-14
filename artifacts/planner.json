@@ -1,0 +1,278 @@
+{
+  "version": "0.1.0",
+  "generated_at": "2026-11-14T18:18:12+00:00",
+  "method": "score = band_width x habitat_weight x mixed_fraction; greedy top 10 with kernel re-scoring over atmosphere distance, gravity (2 m/s^2) and vent flow (10 cm/s)",
+  "grid": {
+    "g_m_s2": [
+      1.62,
+      3.71
+    ],
+    "p_psia": [
+      8.2,
+      10.2,
+      14.7
+    ],
+    "o2": [
+      0.21,
+      0.265,
+      0.3,
+      0.34
+    ],
+    "u_cm_s": [
+      0.0,
+      5.0,
+      10.0,
+      20.0
+    ],
+    "L_mm": 10.0,
+    "metrics": [
+      "M1",
+      "M2",
+      "M3"
+    ]
+  },
+  "habitat_targets": [
+    {
+      "p_psia": 8.2,
+      "o2": 0.34,
+      "weight": 1.0,
+      "label": "lunar/Mars base 8.2 psia / 34% O2"
+    },
+    {
+      "p_psia": 10.2,
+      "o2": 0.265,
+      "weight": 0.7,
+      "label": "exploration vehicle 10.2 psia / 26.5% O2"
+    },
+    {
+      "p_psia": 14.7,
+      "o2": 0.21,
+      "weight": 0.4,
+      "label": "ISS 14.7 psia / 21% O2"
+    }
+  ],
+  "items": [
+    {
+      "rank": 1,
+      "g_m_s2": 1.62,
+      "p_psia": 8.2,
+      "o2": 0.34,
+      "u_cm_s": 20.0,
+      "metric": "M2",
+      "score": 1.0,
+      "base_score": 1.0,
+      "parts": {
+        "band_width": 1.0,
+        "habitat_weight": 1.0,
+        "mixed_fraction": 1.0
+      },
+      "rationale": "Extinction diameter at Moon gravity (0.165 g), 8.2 psia / 34% O2, vent 20 cm/s: there is no microgravity evidence at this atmosphere (honesty gate), 100% of physics samples are in the mixed regime where neither 0 g nor 1 g data apply, and the atmosphere is close to the lunar/Mars base 8.2 psia / 34% O2 target (weight 1.00).",
+      "extends": [
+        "PSI-69",
+        "PSI-10",
+        "PSI-159"
+      ]
+    },
+    {
+      "rank": 2,
+      "g_m_s2": 3.71,
+      "p_psia": 10.2,
+      "o2": 0.265,
+      "u_cm_s": 20.0,
+      "metric": "M2",
+      "score": 0.5328359412268691,
+      "base_score": 0.622712342781294,
+      "parts": {
+        "band_width": 0.9596430001252795,
+        "habitat_weight": 0.7,
+        "mixed_fraction": 0.927
+      },
+      "rationale": "Extinction diameter at Mars gravity (0.378 g), 10.2 psia / 26.5% O2, vent 20 cm/s: the current 90% band is 0.96 wide (relative), 93% of physics samples are in the mixed regime where neither 0 g nor 1 g data apply, and the atmosphere is close to the exploration vehicle 10.2 psia / 26.5% O2 target (weight 0.70).",
+      "extends": [
+        "PSI-69",
+        "PSI-10",
+        "PSI-68",
+        "PSI-159"
+      ]
+    },
+    {
+      "rank": 3,
+      "g_m_s2": 3.71,
+      "p_psia": 8.2,
+      "o2": 0.34,
+      "u_cm_s": 20.0,
+      "metric": "M1",
+      "score": 0.45232945403268693,
+      "base_score": 0.5916952823501965,
+      "parts": {
+        "band_width": 0.6382904879721645,
+        "habitat_weight": 1.0,
+        "mixed_fraction": 0.927
+      },
+      "rationale": "P(droplet flame self-extinguishes before burnout) at Mars gravity (0.378 g), 8.2 psia / 34% O2, vent 20 cm/s: the current 90% band is 0.64 wide, 93% of physics samples are in the mixed regime where neither 0 g nor 1 g data apply, and the atmosphere is close to the lunar/Mars base 8.2 psia / 34% O2 target (weight 1.00).",
+      "extends": [
+        "PSI-69",
+        "PSI-10",
+        "PSI-159"
+      ]
+    },
+    {
+      "rank": 4,
+      "g_m_s2": 1.62,
+      "p_psia": 10.2,
+      "o2": 0.265,
+      "u_cm_s": 20.0,
+      "metric": "M1",
+      "score": 0.31101370105108667,
+      "base_score": 0.4754629954586969,
+      "parts": {
+        "band_width": 0.6792328506552814,
+        "habitat_weight": 0.7,
+        "mixed_fraction": 1.0
+      },
+      "rationale": "P(droplet flame self-extinguishes before burnout) at Moon gravity (0.165 g), 10.2 psia / 26.5% O2, vent 20 cm/s: the current 90% band is 0.68 wide, 100% of physics samples are in the mixed regime where neither 0 g nor 1 g data apply, and the atmosphere is close to the exploration vehicle 10.2 psia / 26.5% O2 target (weight 0.70).",
+      "extends": [
+        "PSI-69",
+        "PSI-10",
+        "PSI-68",
+        "PSI-159"
+      ]
+    },
+    {
+      "rank": 5,
+      "g_m_s2": 1.62,
+      "p_psia": 10.2,
+      "o2": 0.34,
+      "u_cm_s": 10.0,
+      "metric": "M2",
+      "score": 0.22519359396939737,
+      "base_score": 0.5499027666007476,
+      "parts": {
+        "band_width": 1.0,
+        "habitat_weight": 0.7674846707616854,
+        "mixed_fraction": 0.7165
+      },
+      "rationale": "Extinction diameter at Moon gravity (0.165 g), 10.2 psia / 34% O2, vent 10 cm/s: the current 90% band is 1.00 wide (relative), 72% of physics samples are in the mixed regime where neither 0 g nor 1 g data apply, and the atmosphere is close to the lunar/Mars base 8.2 psia / 34% O2 target (weight 0.77).",
+      "extends": [
+        "PSI-69",
+        "PSI-10",
+        "PSI-159"
+      ]
+    },
+    {
+      "rank": 6,
+      "g_m_s2": 1.62,
+      "p_psia": 14.7,
+      "o2": 0.21,
+      "u_cm_s": 20.0,
+      "metric": "M2",
+      "score": 0.20612994782869257,
+      "base_score": 0.2674366422762525,
+      "parts": {
+        "band_width": 0.6685916056906313,
+        "habitat_weight": 0.4,
+        "mixed_fraction": 1.0
+      },
+      "rationale": "Extinction diameter at Moon gravity (0.165 g), 14.7 psia / 21% O2, vent 20 cm/s: the current 90% band is 0.67 wide (relative), 100% of physics samples are in the mixed regime where neither 0 g nor 1 g data apply, and the atmosphere is close to the ISS 14.7 psia / 21% O2 target (weight 0.40).",
+      "extends": [
+        "PSI-69",
+        "PSI-10",
+        "PSI-39",
+        "PSI-68",
+        "PSI-159"
+      ]
+    },
+    {
+      "rank": 7,
+      "g_m_s2": 3.71,
+      "p_psia": 8.2,
+      "o2": 0.34,
+      "u_cm_s": 20.0,
+      "metric": "M3",
+      "score": 0.17280589003308391,
+      "base_score": 0.36757754670086856,
+      "parts": {
+        "band_width": 0.3965237828488334,
+        "habitat_weight": 1.0,
+        "mixed_fraction": 0.927
+      },
+      "rationale": "P(gas flame self-extinguishes vs flow-terminated) at Mars gravity (0.378 g), 8.2 psia / 34% O2, vent 20 cm/s: the current 90% band is 0.40 wide, 93% of physics samples are in the mixed regime where neither 0 g nor 1 g data apply, and the atmosphere is close to the lunar/Mars base 8.2 psia / 34% O2 target (weight 1.00).",
+      "extends": [
+        "PSI-159",
+        "PSI-10"
+      ]
+    },
+    {
+      "rank": 8,
+      "g_m_s2": 1.62,
+      "p_psia": 8.2,
+      "o2": 0.34,
+      "u_cm_s": 10.0,
+      "metric": "M1",
+      "score": 0.1451760960218796,
+      "base_score": 0.48110523965846796,
+      "parts": {
+        "band_width": 0.6714657915679944,
+        "habitat_weight": 1.0,
+        "mixed_fraction": 0.7165
+      },
+      "rationale": "P(droplet flame self-extinguishes before burnout) at Moon gravity (0.165 g), 8.2 psia / 34% O2, vent 10 cm/s: the current 90% band is 0.67 wide, 72% of physics samples are in the mixed regime where neither 0 g nor 1 g data apply, and the atmosphere is close to the lunar/Mars base 8.2 psia / 34% O2 target (weight 1.00).",
+      "extends": [
+        "PSI-69",
+        "PSI-10",
+        "PSI-159"
+      ]
+    },
+    {
+      "rank": 9,
+      "g_m_s2": 1.62,
+      "p_psia": 10.2,
+      "o2": 0.265,
+      "u_cm_s": 10.0,
+      "metric": "M2",
+      "score": 0.11274173317062326,
+      "base_score": 0.5015499999999999,
+      "parts": {
+        "band_width": 1.0,
+        "habitat_weight": 0.7,
+        "mixed_fraction": 0.7165
+      },
+      "rationale": "Extinction diameter at Moon gravity (0.165 g), 10.2 psia / 26.5% O2, vent 10 cm/s: the current 90% band is 1.00 wide (relative), 72% of physics samples are in the mixed regime where neither 0 g nor 1 g data apply, and the atmosphere is close to the exploration vehicle 10.2 psia / 26.5% O2 target (weight 0.70).",
+      "extends": [
+        "PSI-69",
+        "PSI-10",
+        "PSI-68",
+        "PSI-159"
+      ]
+    },
+    {
+      "rank": 10,
+      "g_m_s2": 3.71,
+      "p_psia": 14.7,
+      "o2": 0.3,
+      "u_cm_s": 20.0,
+      "metric": "M1",
+      "score": 0.09040212055614358,
+      "base_score": 0.17871852441364397,
+      "parts": {
+        "band_width": 0.7389966859738818,
+        "habitat_weight": 0.26088394018531935,
+        "mixed_fraction": 0.927
+      },
+      "rationale": "P(droplet flame self-extinguishes before burnout) at Mars gravity (0.378 g), 14.7 psia / 30% O2, vent 20 cm/s: the current 90% band is 0.74 wide, 93% of physics samples are in the mixed regime where neither 0 g nor 1 g data apply, and the atmosphere is close to the exploration vehicle 10.2 psia / 26.5% O2 target (weight 0.26).",
+      "extends": [
+        "PSI-69",
+        "PSI-10",
+        "PSI-68",
+        "PSI-159"
+      ]
+    }
+  ],
+  "design_implications": [
+    "At lunar gravity a 10 mm flame stays forced-flow dominated (Ri < 0.1, where microgravity evidence transfers) only above about 80 cm/s of vent flow at the median coefficients, and above 139 cm/s to cover 95% of the Monte Carlo samples (u_b p50 25.4 cm/s, p95 43.8 cm/s). Typical cabin vents (5-20 cm/s) are far below this, so lunar fires are mixed or buoyancy-dominated.",
+    "At lunar gravity a 10 mm flame becomes buoyancy-dominated (Ri > 10) when the vent flow is below about 8.0 cm/s (median coefficients): turning ventilation off does not create a microgravity-like quiescent flame.",
+    "At Mars gravity a 10 mm flame stays forced-flow dominated (Ri < 0.1, where microgravity evidence transfers) only above about 122 cm/s of vent flow at the median coefficients, and above 210 cm/s to cover 95% of the Monte Carlo samples (u_b p50 38.4 cm/s, p95 66.3 cm/s). Typical cabin vents (5-20 cm/s) are far below this, so Mars fires are mixed or buoyancy-dominated.",
+    "At Mars gravity a 10 mm flame becomes buoyancy-dominated (Ri > 10) when the vent flow is below about 12.2 cm/s (median coefficients): turning ventilation off does not create a microgravity-like quiescent flame.",
+    "Droplet and gas-burner extinction evidence (M1-M3) has no flow variable, so for partial-gravity habitats its bands are widened rather than shifted; tests in the mixed regime at 8.2 psia / 34% O2 are the most valuable way to narrow them."
+  ]
+}

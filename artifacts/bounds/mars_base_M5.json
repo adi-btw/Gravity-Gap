@@ -1,0 +1,170 @@
+{
+  "preset_id": "mars_base",
+  "habitat": {
+    "g_m_s2": 3.71,
+    "p_psia": 8.2,
+    "o2": 0.34,
+    "u_cm_s": 10.0,
+    "L_mm": 10.0
+  },
+  "metric": "M5",
+  "label": "Supported coflow window",
+  "unit": "fraction",
+  "kind": "probability",
+  "applicable": false,
+  "reason": "extrapolation, no evidence: SPICE only tested in ISS cabin air (assumed ~21% O2 / ~1 atm; the table records no atmosphere); habitat O2 34.0% outside 19-23.5%; pressure 8.2 psia (0.56 atm) outside 0.9-1.1 atm. No estimate is given outside the tested atmosphere.",
+  "estimate": null,
+  "band90": null,
+  "ref_0g": {
+    "estimate": null,
+    "band90": null
+  },
+  "ref_1g": null,
+  "regime_fractions": {
+    "forced": 0.0,
+    "mixed": 0.323,
+    "buoyant": 0.677
+  },
+  "u_eff_summary": {
+    "p05": 13.810967774813237,
+    "p50": 26.099135134564538,
+    "p95": 51.00716878015114
+  },
+  "nonmonotonic_flag": false,
+  "nonmonotonic_note": null,
+  "transfer": {
+    "basis": "no transfer: SPICE flames observed at coflow 0.66-85.28 cm/s for all fuels, all nozzles (n=407 ignited rows; LOS / negative-flow rows excluded); SPICE has no O2 or pressure in its table, so the atmosphere is unknown (ISS cabin air assumed)",
+    "confidence": "low"
+  },
+  "evidence": [
+    {
+      "record_id": "PSI-107:Spice:155",
+      "investigation_id": "PSI-107",
+      "distance": 0.0063
+    },
+    {
+      "record_id": "PSI-107:Spice:156",
+      "investigation_id": "PSI-107",
+      "distance": 0.0063
+    },
+    {
+      "record_id": "PSI-107:Spice:175",
+      "investigation_id": "PSI-107",
+      "distance": 0.0063
+    },
+    {
+      "record_id": "PSI-107:Spice:180",
+      "investigation_id": "PSI-107",
+      "distance": 0.0063
+    },
+    {
+      "record_id": "PSI-107:Spice:192",
+      "investigation_id": "PSI-107",
+      "distance": 0.0063
+    },
+    {
+      "record_id": "PSI-107:Spice:255",
+      "investigation_id": "PSI-107",
+      "distance": 0.0063
+    },
+    {
+      "record_id": "PSI-107:Spice:275",
+      "investigation_id": "PSI-107",
+      "distance": 0.0063
+    },
+    {
+      "record_id": "PSI-107:Spice:308",
+      "investigation_id": "PSI-107",
+      "distance": 0.0063
+    },
+    {
+      "record_id": "PSI-107:Spice:309",
+      "investigation_id": "PSI-107",
+      "distance": 0.0063
+    },
+    {
+      "record_id": "PSI-107:Spice:310",
+      "investigation_id": "PSI-107",
+      "distance": 0.0063
+    },
+    {
+      "record_id": "PSI-107:Spice:176",
+      "investigation_id": "PSI-107",
+      "distance": 0.1119
+    },
+    {
+      "record_id": "PSI-107:Spice:177",
+      "investigation_id": "PSI-107",
+      "distance": 0.1119
+    },
+    {
+      "record_id": "PSI-107:Spice:178",
+      "investigation_id": "PSI-107",
+      "distance": 0.1119
+    },
+    {
+      "record_id": "PSI-107:Spice:179",
+      "investigation_id": "PSI-107",
+      "distance": 0.1119
+    },
+    {
+      "record_id": "PSI-107:Spice:189",
+      "investigation_id": "PSI-107",
+      "distance": 0.1119
+    },
+    {
+      "record_id": "PSI-107:Spice:190",
+      "investigation_id": "PSI-107",
+      "distance": 0.1119
+    },
+    {
+      "record_id": "PSI-107:Spice:244",
+      "investigation_id": "PSI-107",
+      "distance": 0.1119
+    },
+    {
+      "record_id": "PSI-107:Spice:254",
+      "investigation_id": "PSI-107",
+      "distance": 0.1119
+    },
+    {
+      "record_id": "PSI-107:Spice:265",
+      "investigation_id": "PSI-107",
+      "distance": 0.1119
+    },
+    {
+      "record_id": "PSI-107:Spice:267",
+      "investigation_id": "PSI-107",
+      "distance": 0.1119
+    }
+  ],
+  "sensitivity": [
+    {
+      "param": "C_b",
+      "low": null,
+      "high": null
+    },
+    {
+      "param": "k",
+      "low": null,
+      "high": null
+    },
+    {
+      "param": "dT_over_T",
+      "low": null,
+      "high": null
+    },
+    {
+      "param": "L_mm",
+      "low": null,
+      "high": null
+    },
+    {
+      "param": "u_cm_s",
+      "low": null,
+      "high": null
+    }
+  ],
+  "n_train": 407,
+  "model_version": "rules-m5-1.0.0+f744ca805556"
+}

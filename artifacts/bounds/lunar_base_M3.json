@@ -1,0 +1,212 @@
+{
+  "preset_id": "lunar_base",
+  "habitat": {
+    "g_m_s2": 1.62,
+    "p_psia": 8.2,
+    "o2": 0.34,
+    "u_cm_s": 10.0,
+    "L_mm": 10.0
+  },
+  "metric": "M3",
+  "label": "P(gas flame self-extinguishes vs flow-terminated)",
+  "unit": "probability",
+  "kind": "probability",
+  "applicable": true,
+  "reason": null,
+  "estimate": 0.8722546263980915,
+  "band90": [
+    0.5597213750976666,
+    0.9849158347631888
+  ],
+  "ref_0g": {
+    "estimate": 0.8722546263980915,
+    "band90": [
+      0.7103589981815119,
+      0.9643024798877307
+    ]
+  },
+  "ref_1g": null,
+  "regime_fractions": {
+    "forced": 0.0,
+    "mixed": 0.7165,
+    "buoyant": 0.2835
+  },
+  "u_eff_summary": {
+    "p05": 11.816241119164198,
+    "p50": 18.80877736731201,
+    "p95": 34.531147909134575
+  },
+  "nonmonotonic_flag": false,
+  "nonmonotonic_note": null,
+  "transfer": {
+    "basis": "At 1.62 m/s^2 the Monte Carlo puts the flame 0% forced-flow, 72% mixed and 28% buoyancy-dominated. The droplet and spherical-burner tests were run in microgravity with no imposed flow, so gravity does not change the estimate; the 90% band is widened x1.64 to cover buoyancy the tests did not have (transfer confidence low). No 1 g reference: these investigations have no normal-gravity counterpart in the PSI data.",
+    "confidence": "low"
+  },
+  "evidence": [
+    {
+      "record_id": "PSI-159:CFI-G_Normal_Flames:128",
+      "investigation_id": "PSI-159",
+      "distance": 0.36587908220944654
+    },
+    {
+      "record_id": "PSI-159:CFI-G_Normal_Flames:129",
+      "investigation_id": "PSI-159",
+      "distance": 0.3793070722889641
+    },
+    {
+      "record_id": "PSI-159:CFI-G_Normal_Flames:130",
+      "investigation_id": "PSI-159",
+      "distance": 0.3955110804318137
+    },
+    {
+      "record_id": "PSI-159:CFI-G_Normal_Flames:38",
+      "investigation_id": "PSI-159",
+      "distance": 0.4575000276148058
+    },
+    {
+      "record_id": "PSI-159:CFI-G_Normal_Flames:37",
+      "investigation_id": "PSI-159",
+      "distance": 0.46338797076457067
+    },
+    {
+      "record_id": "PSI-159:CFI-G_Normal_Flames:156",
+      "investigation_id": "PSI-159",
+      "distance": 0.4784998133512625
+    },
+    {
+      "record_id": "PSI-159:CFI-G_Normal_Flames:35",
+      "investigation_id": "PSI-159",
+      "distance": 0.5205618218673466
+    },
+    {
+      "record_id": "PSI-159:CFI-G_Normal_Flames:127",
+      "investigation_id": "PSI-159",
+      "distance": 0.6014078028624471
+    },
+    {
+      "record_id": "PSI-159:CFI-G_Normal_Flames:34",
+      "investigation_id": "PSI-159",
+      "distance": 0.6903380931436076
+    },
+    {
+      "record_id": "PSI-159:CFI-G_Normal_Flames:155",
+      "investigation_id": "PSI-159",
+      "distance": 0.7379246354005238
+    },
+    {
+      "record_id": "PSI-159:CFI-G_Normal_Flames:126",
+      "investigation_id": "PSI-159",
+      "distance": 0.8056899131905452
+    },
+    {
+      "record_id": "PSI-159:CFI-G_Normal_Flames:33",
+      "investigation_id": "PSI-159",
+      "distance": 0.8284266437617334
+    },
+    {
+      "record_id": "PSI-159:CFI-G_Normal_Flames:154",
+      "investigation_id": "PSI-159",
+      "distance": 0.8527477603843588
+    },
+    {
+      "record_id": "PSI-159:CFI-G_Normal_Flames:153",
+      "investigation_id": "PSI-159",
+      "distance": 0.9376249753429702
+    },
+    {
+      "record_id": "PSI-159:CFI-G_Normal_Flames:32",
+      "investigation_id": "PSI-159",
+      "distance": 0.9647013750307264
+    },
+    {
+      "record_id": "PSI-159:CFI-G_Normal_Flames:152",
+      "investigation_id": "PSI-159",
+      "distance": 1.0384557933589018
+    },
+    {
+      "record_id": "PSI-159:CFI-G_Normal_Flames:125",
+      "investigation_id": "PSI-159",
+      "distance": 1.0403280418986434
+    },
+    {
+      "record_id": "PSI-159:CFI-G_Normal_Flames:31",
+      "investigation_id": "PSI-159",
+      "distance": 1.1136922531654183
+    },
+    {
+      "record_id": "PSI-159:CFI-G_Normal_Flames:10",
+      "investigation_id": "PSI-159",
+      "distance": 1.7793129915739692
+    },
+    {
+      "record_id": "PSI-159:CFI-G_Normal_Flames:9",
+      "investigation_id": "PSI-159",
+      "distance": 1.8096466604596944
+    }
+  ],
+  "sensitivity": [
+    {
+      "param": "o2",
+      "low": 0.9106404683955251,
+      "high": 0.8206274775482645,
+      "baseline": 0.8722546263980915,
+      "quantity": "estimate",
+      "input_low": 0.31000000000000005,
+      "input_high": 0.37
+    },
+    {
+      "param": "pressure",
+      "low": 0.8770110473959468,
+      "high": 0.8682525889162169,
+      "baseline": 0.8722546263980915,
+      "quantity": "estimate",
+      "input_low": 0.44637996733805113,
+      "input_high": 0.6695699510070766
+    },
+    {
+      "param": "C_b",
+      "low": 0.3866086395972522,
+      "high": 0.5030373285133529,
+      "baseline": 0.42519445966552216,
+      "quantity": "band_width",
+      "input_low": 0.5,
+      "input_high": 1.5
+    },
+    {
+      "param": "k",
+      "low": 0.42519445966552216,
+      "high": 0.42519445966552216,
+      "baseline": 0.42519445966552216,
+      "quantity": "band_width",
+      "input_low": 0.3,
+      "input_high": 1.0
+    },
+    {
+      "param": "dT_over_T",
+      "low": 0.40162393373659677,
+      "high": 0.44695053544345154,
+      "baseline": 0.42519445966552216,
+      "quantity": "band_width",
+      "input_low": 3.0,
+      "input_high": 6.0
+    },
+    {
+      "param": "L_factor",
+      "low": 0.3876264366677197,
+      "high": 0.4579924181825369,
+      "baseline": 0.42519445966552216,
+      "quantity": "band_width",
+      "input_low": 0.5,
+      "input_high": 1.5
+    }
+  ],
+  "n_train": 133,
+  "model_version": "3e3a8c2d84ca",
+  "inputs": {
+    "fuel": "propane",
+    "fuel_fraction": 0.3,
+    "p_atm": 0.5579749591725639,
+    "widen_factor": 1.64175,
+    "nearest": "nearest tested condition is PSI-159 PSI-159:CFI-G_Normal_Flames:128 at O2 0.341, 0.50 atm (atmosphere distance 0.37)"
+  }
+}

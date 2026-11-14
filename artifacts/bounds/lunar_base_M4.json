@@ -1,0 +1,115 @@
+{
+  "preset_id": "lunar_base",
+  "habitat": {
+    "g_m_s2": 1.62,
+    "p_psia": 8.2,
+    "o2": 0.34,
+    "u_cm_s": 10.0,
+    "L_mm": 10.0
+  },
+  "metric": "M4",
+  "label": "Solid material burn extent",
+  "unit": "category",
+  "kind": "category",
+  "applicable": false,
+  "reason": "extrapolation, no evidence: SAFFIRE-II only tested ~22% O2 (21.5-22.1%) at ~1 atm cabin pressure and 20 cm/s flow; habitat O2 34.0% outside 20-24.0%; pressure 8.2 psia (0.56 atm) outside 0.9-1.1 atm. No estimate is given outside the tested atmosphere.",
+  "estimate": null,
+  "band90": null,
+  "ref_0g": {
+    "estimate": null,
+    "band90": null
+  },
+  "ref_1g": null,
+  "regime_fractions": {
+    "forced": 0.0,
+    "mixed": 0.7165,
+    "buoyant": 0.2835
+  },
+  "u_eff_summary": {
+    "p05": 11.816241119164198,
+    "p50": 18.80877736731201,
+    "p95": 34.531147909134575
+  },
+  "nonmonotonic_flag": false,
+  "nonmonotonic_note": null,
+  "transfer": {
+    "basis": "no transfer: habitat atmosphere outside the SAFFIRE-II test atmosphere (lunar/exploration 34% O2 / 8.2 psia is untested)",
+    "confidence": "low"
+  },
+  "evidence": [
+    {
+      "record_id": "PSI-99:SAFFIRE-2:2",
+      "investigation_id": "PSI-99",
+      "distance": 3.0735
+    },
+    {
+      "record_id": "PSI-99:SAFFIRE-2:3",
+      "investigation_id": "PSI-99",
+      "distance": 3.0735
+    },
+    {
+      "record_id": "PSI-99:SAFFIRE-2:4",
+      "investigation_id": "PSI-99",
+      "distance": 3.0735
+    },
+    {
+      "record_id": "PSI-99:SAFFIRE-2:5",
+      "investigation_id": "PSI-99",
+      "distance": 3.0735
+    },
+    {
+      "record_id": "PSI-99:SAFFIRE-2:6",
+      "investigation_id": "PSI-99",
+      "distance": 3.0735
+    },
+    {
+      "record_id": "PSI-99:SAFFIRE-2:7",
+      "investigation_id": "PSI-99",
+      "distance": 3.0735
+    },
+    {
+      "record_id": "PSI-99:SAFFIRE-2:8",
+      "investigation_id": "PSI-99",
+      "distance": 3.0813
+    },
+    {
+      "record_id": "PSI-99:SAFFIRE-2:9",
+      "investigation_id": "PSI-99",
+      "distance": 3.0968
+    },
+    {
+      "record_id": "PSI-99:SAFFIRE-2:1",
+      "investigation_id": "PSI-99",
+      "distance": 3.1674
+    }
+  ],
+  "sensitivity": [
+    {
+      "param": "C_b",
+      "low": null,
+      "high": null
+    },
+    {
+      "param": "k",
+      "low": null,
+      "high": null
+    },
+    {
+      "param": "dT_over_T",
+      "low": null,
+      "high": null
+    },
+    {
+      "param": "L_mm",
+      "low": null,
+      "high": null
+    },
+    {
+      "param": "u_cm_s",
+      "low": null,
+      "high": null
+    }
+  ],
+  "n_train": 9,
+  "model_version": "rules-m4-1.0.0+cf29fd0d386f"
+}

@@ -1,0 +1,141 @@
+{
+  "preset_id": "lunar_rover",
+  "habitat": {
+    "g_m_s2": 1.62,
+    "p_psia": 8.2,
+    "o2": 0.34,
+    "u_cm_s": 5.0,
+    "L_mm": 10.0
+  },
+  "metric": "M2",
+  "label": "Extinction diameter",
+  "unit": "mm",
+  "kind": "quantity",
+  "applicable": false,
+  "reason": "Extrapolation: no evidence. The query (O2 0.340, 0.56 atm) is more than 2 atmosphere-distance units from every M2 training test; the nearest tested condition is PSI-69 PSI-69:FLEX:45 at O2 0.300, 1.01 atm (atmosphere distance 2.14).",
+  "estimate": null,
+  "band90": null,
+  "ref_0g": null,
+  "ref_1g": null,
+  "regime_fractions": {
+    "forced": 0.0,
+    "mixed": 0.119,
+    "buoyant": 0.881
+  },
+  "u_eff_summary": {
+    "p05": 8.038877669269162,
+    "p50": 16.696409645625103,
+    "p95": 33.42753619180673
+  },
+  "nonmonotonic_flag": false,
+  "nonmonotonic_note": null,
+  "transfer": {
+    "basis": "No estimate: outside the tested atmosphere range.",
+    "confidence": "low"
+  },
+  "evidence": [
+    {
+      "record_id": "PSI-69:FLEX:45",
+      "investigation_id": "PSI-69",
+      "distance": 2.136445922062471
+    },
+    {
+      "record_id": "PSI-69:FLEX:30",
+      "investigation_id": "PSI-69",
+      "distance": 2.1400649408976817
+    },
+    {
+      "record_id": "PSI-69:FLEX:94",
+      "investigation_id": "PSI-69",
+      "distance": 2.1416346574172236
+    },
+    {
+      "record_id": "PSI-69:FLEX:249",
+      "investigation_id": "PSI-69",
+      "distance": 2.1425292027922347
+    },
+    {
+      "record_id": "PSI-69:FLEX:251",
+      "investigation_id": "PSI-69",
+      "distance": 2.1432013360260496
+    },
+    {
+      "record_id": "PSI-69:FLEX:95",
+      "investigation_id": "PSI-69",
+      "distance": 2.1434256129631146
+    },
+    {
+      "record_id": "PSI-69:FLEX:177",
+      "investigation_id": "PSI-69",
+      "distance": 2.1492971928957556
+    },
+    {
+      "record_id": "PSI-69:FLEX:253",
+      "investigation_id": "PSI-69",
+      "distance": 2.32562399423727
+    },
+    {
+      "record_id": "PSI-69:FLEX:178",
+      "investigation_id": "PSI-69",
+      "distance": 2.329506172099698
+    },
+    {
+      "record_id": "PSI-69:FLEX:104",
+      "investigation_id": "PSI-69",
+      "distance": 2.330534483681684
+    },
+    {
+      "record_id": "PSI-69:FLEX:99",
+      "investigation_id": "PSI-69",
+      "distance": 2.3323923890473273
+    },
+    {
+      "record_id": "PSI-69:FLEX:185",
+      "investigation_id": "PSI-69",
+      "distance": 2.332806463081705
+    },
+    {
+      "record_id": "PSI-69:FLEX:186",
+      "investigation_id": "PSI-69",
+      "distance": 2.334883367078454
+    },
+    {
+      "record_id": "PSI-69:FLEX:100",
+      "investigation_id": "PSI-69",
+      "distance": 2.335925879899568
+    },
+    {
+      "record_id": "PSI-69:FLEX:98",
+      "investigation_id": "PSI-69",
+      "distance": 2.3367618271572455
+    },
+    {
+      "record_id": "PSI-69:FLEX:101",
+      "investigation_id": "PSI-69",
+      "distance": 2.340122692263634
+    },
+    {
+      "record_id": "PSI-69:FLEX:259",
+      "investigation_id": "PSI-69",
+      "distance": 2.702447777941712
+    },
+    {
+      "record_id": "PSI-69:FLEX:258",
+      "investigation_id": "PSI-69",
+      "distance": 2.703480751350943
+    },
+    {
+      "record_id": "PSI-69:FLEX:256",
+      "investigation_id": "PSI-69",
+      "distance": 2.7062534159984346
+    },
+    {
+      "record_id": "PSI-69:FLEX:257",
+      "investigation_id": "PSI-69",
+      "distance": 2.7062534159984346
+    }
+  ],
+  "sensitivity": [],
+  "n_train": 158,
+  "model_version": "d3f1ae64f2c0"
+}

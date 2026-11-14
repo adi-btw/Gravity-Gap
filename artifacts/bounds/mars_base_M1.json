@@ -1,0 +1,216 @@
+{
+  "preset_id": "mars_base",
+  "habitat": {
+    "g_m_s2": 3.71,
+    "p_psia": 8.2,
+    "o2": 0.34,
+    "u_cm_s": 10.0,
+    "L_mm": 10.0
+  },
+  "metric": "M1",
+  "label": "P(droplet flame self-extinguishes before burnout)",
+  "unit": "probability",
+  "kind": "probability",
+  "applicable": true,
+  "reason": null,
+  "estimate": 0.20064279335457827,
+  "band90": [
+    0.0087431010944814,
+    0.7369256414827569
+  ],
+  "ref_0g": {
+    "estimate": 0.20064279335457827,
+    "band90": [
+      0.039031831205837614,
+      0.48246667475630706
+    ]
+  },
+  "ref_1g": null,
+  "regime_fractions": {
+    "forced": 0.0,
+    "mixed": 0.32299999999999995,
+    "buoyant": 0.677
+  },
+  "u_eff_summary": {
+    "p05": 13.810967774813237,
+    "p50": 26.099135134564538,
+    "p95": 51.00716878015114
+  },
+  "nonmonotonic_flag": false,
+  "nonmonotonic_note": null,
+  "transfer": {
+    "basis": "At 3.71 m/s^2 the Monte Carlo puts the flame 0% forced-flow, 32% mixed and 68% buoyancy-dominated. The droplet and spherical-burner tests were run in microgravity with no imposed flow, so gravity does not change the estimate; the 90% band is widened x1.84 to cover buoyancy the tests did not have (transfer confidence low). No 1 g reference: these investigations have no normal-gravity counterpart in the PSI data.",
+    "confidence": "low"
+  },
+  "evidence": [
+    {
+      "record_id": "PSI-69:FLEX:20",
+      "investigation_id": "PSI-69",
+      "distance": 0.8025518168680995
+    },
+    {
+      "record_id": "PSI-69:FLEX:25",
+      "investigation_id": "PSI-69",
+      "distance": 1.1235712831523503
+    },
+    {
+      "record_id": "PSI-69:FLEX:29",
+      "investigation_id": "PSI-69",
+      "distance": 2.1308098954944708
+    },
+    {
+      "record_id": "PSI-69:FLEX:45",
+      "investigation_id": "PSI-69",
+      "distance": 2.136445922062471
+    },
+    {
+      "record_id": "PSI-69:FLEX:30",
+      "investigation_id": "PSI-69",
+      "distance": 2.1400649408976817
+    },
+    {
+      "record_id": "PSI-69:FLEX:94",
+      "investigation_id": "PSI-69",
+      "distance": 2.1416346574172236
+    },
+    {
+      "record_id": "PSI-69:FLEX:249",
+      "investigation_id": "PSI-69",
+      "distance": 2.1425292027922347
+    },
+    {
+      "record_id": "PSI-69:FLEX:251",
+      "investigation_id": "PSI-69",
+      "distance": 2.1432013360260496
+    },
+    {
+      "record_id": "PSI-69:FLEX:95",
+      "investigation_id": "PSI-69",
+      "distance": 2.1434256129631146
+    },
+    {
+      "record_id": "PSI-69:FLEX:32",
+      "investigation_id": "PSI-69",
+      "distance": 2.1472932621878895
+    },
+    {
+      "record_id": "PSI-69:FLEX:176",
+      "investigation_id": "PSI-69",
+      "distance": 2.149069938037988
+    },
+    {
+      "record_id": "PSI-69:FLEX:177",
+      "investigation_id": "PSI-69",
+      "distance": 2.1492971928957556
+    },
+    {
+      "record_id": "PSI-69:FLEX:253",
+      "investigation_id": "PSI-69",
+      "distance": 2.32562399423727
+    },
+    {
+      "record_id": "PSI-69:FLEX:250",
+      "investigation_id": "PSI-69",
+      "distance": 2.3266416956182194
+    },
+    {
+      "record_id": "PSI-69:FLEX:178",
+      "investigation_id": "PSI-69",
+      "distance": 2.329506172099698
+    },
+    {
+      "record_id": "PSI-69:FLEX:104",
+      "investigation_id": "PSI-69",
+      "distance": 2.330534483681684
+    },
+    {
+      "record_id": "PSI-69:FLEX:97",
+      "investigation_id": "PSI-69",
+      "distance": 2.3307404775582095
+    },
+    {
+      "record_id": "PSI-69:FLEX:183",
+      "investigation_id": "PSI-69",
+      "distance": 2.331152796001648
+    },
+    {
+      "record_id": "PSI-69:FLEX:99",
+      "investigation_id": "PSI-69",
+      "distance": 2.3323923890473273
+    },
+    {
+      "record_id": "PSI-69:FLEX:184",
+      "investigation_id": "PSI-69",
+      "distance": 2.33259937141854
+    }
+  ],
+  "sensitivity": [
+    {
+      "param": "o2",
+      "low": 0.3527114680266858,
+      "high": 0.10363972989210618,
+      "baseline": 0.20064279335457827,
+      "quantity": "estimate",
+      "input_low": 0.31000000000000005,
+      "input_high": 0.37
+    },
+    {
+      "param": "pressure",
+      "low": 0.15844662636540077,
+      "high": 0.24097594595448754,
+      "baseline": 0.20064279335457827,
+      "quantity": "estimate",
+      "input_low": 0.44637996733805113,
+      "input_high": 0.6695699510070766
+    },
+    {
+      "param": "C_b",
+      "low": 0.626347090581173,
+      "high": 0.7693748955661157,
+      "baseline": 0.7281825403882755,
+      "quantity": "band_width",
+      "input_low": 0.5,
+      "input_high": 1.5
+    },
+    {
+      "param": "k",
+      "low": 0.7281825403882755,
+      "high": 0.7281825403882755,
+      "baseline": 0.7281825403882755,
+      "quantity": "band_width",
+      "input_low": 0.3,
+      "input_high": 1.0
+    },
+    {
+      "param": "dT_over_T",
+      "low": 0.7061180442512494,
+      "high": 0.7439264890223923,
+      "baseline": 0.7281825403882755,
+      "quantity": "band_width",
+      "input_low": 3.0,
+      "input_high": 6.0
+    },
+    {
+      "param": "L_factor",
+      "low": 0.686694828980285,
+      "high": 0.7524360644490533,
+      "baseline": 0.7281825403882755,
+      "quantity": "band_width",
+      "input_low": 0.5,
+      "input_high": 1.5
+    }
+  ],
+  "n_train": 206,
+  "model_version": "2a8ccd37105c",
+  "inputs": {
+    "fuel": "Heptane",
+    "droplet_mm": 4.67,
+    "droplet_mm_requested": 10.0,
+    "droplet_clipped": true,
+    "he": 0.0,
+    "co2": 0.0,
+    "p_atm": 0.5579749591725639,
+    "widen_factor": 1.8385,
+    "nearest": "nearest tested condition is PSI-69 PSI-69:FLEX:20 at O2 0.340, 0.71 atm (atmosphere distance 0.80)"
+  }
+}
