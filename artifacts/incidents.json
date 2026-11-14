@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-14T20:10:45+00:00",
+  "generated_at": "2026-11-14T23:25:35+00:00",
   "engine_version": "0.1.0",
   "incidents": [
     {
@@ -70,14 +70,14 @@
           "applicable": false,
           "estimate": null,
           "band90": null,
-          "reason": "Extrapolation: no evidence. The query (O2 1.000, 1.14 atm) is more than 2 atmosphere-distance units from every M1 training test; the nearest tested condition is PSI-69 PSI-69:FLEX:20 at O2 0.340, 0.71 atm (atmosphere distance 13.29).",
+          "reason": "Extrapolation: no evidence. The query (O2 1.000, 1.14 atm, CO2 0.00, He 0.00) is more than 2 atmosphere-and-diluent-distance units from every M1 training test; the nearest tested condition is PSI-69 PSI-69:FLEX:20 at O2 0.340, 0.71 atm, CO2 0.00, He 0.00 (atmosphere and diluent distance 13.29).",
           "transfer_confidence": "low"
         },
         "M2": {
           "applicable": false,
           "estimate": null,
           "band90": null,
-          "reason": "Extrapolation: no evidence. The query (O2 1.000, 1.14 atm) is more than 2 atmosphere-distance units from every M2 training test; the nearest tested condition is PSI-69 PSI-69:FLEX:30 at O2 0.300, 1.01 atm (atmosphere distance 14.01).",
+          "reason": "Extrapolation: no evidence. The query (O2 1.000, 1.14 atm, CO2 0.00, He 0.00) is more than 2 atmosphere-and-diluent-distance units from every M2 training test; the nearest tested condition is PSI-69 PSI-69:FLEX:30 at O2 0.300, 1.01 atm, CO2 0.00, He 0.00 (atmosphere and diluent distance 14.01).",
           "transfer_confidence": "low"
         },
         "M3": {

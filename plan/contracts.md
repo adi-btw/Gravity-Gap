@@ -197,3 +197,55 @@ Out-of-scope incidents get `physics`/`metrics`/`coverage` = null and one finding
 
 ## Web (FE)
 `/replay` page (cards → "Load this habitat" sets `?g=&p=&o2=&u=&L=` then links to `/bounds`), a "History" group in the habitat bar, a landing link "Start with a real fire". Offline: reads `artifacts/incidents.json` (copied by `copy-artifacts.mjs`). The habitat bar pressure input max must allow 16.7 psia (raise to 20, matching the API limit).
+
+---
+
+# Round 2 · R2 Suppression calculator addendum (see plan/13-round-2-features.md §R2)
+
+## Ownership (R2)
+| Role | Owns |
+|---|---|
+| TL | `engine/bounds.py` + `engine/models/` (dilution-aware gate), `engine/coverage.py` (same gate), `engine/suppression.py`, `engine/planner.py` (new candidate type), `artifacts/suppression/`, `artifacts/bounds/`, `artifacts/coverage/`, `artifacts/planner.json`, `artifacts/validation_report.md`, `tests/test_bounds.py`, `tests/test_coverage.py`, `tests/test_suppression.py`, `tests/test_planner.py`, `plan/decisions.md` (ADR-0006) |
+| DE | `engine/suppression_reference.py`, `artifacts/suppression_reference.json`, `tests/test_suppression_reference.py` |
+| AI | `api/**`, `engine/ai/**`, `tests/test_api.py`, `tests/test_ai.py` |
+| FE | `web/**` |
+Nobody commits. Team lead rebuilds incidents, AI cache and MANIFEST at the end.
+
+## Dilution-aware gate (TL, ADR-0006)
+For metrics whose models use diluents (M1, M2): a query is applicable only if some training test is within distance 2 in
+`(o2/0.05, ln p/0.3, co2/0.10, he/0.10)`. M3–M5 unchanged. `engine/coverage.py` uses the same 4-D distance for M1/M2
+(points gain `co2`, `he`) so "covered == applicable" still holds. Report any preset/incident result that changes.
+
+## `engine/suppression.py` (TL)
+```python
+DILUENTS = {"co2": {"label": "Carbon dioxide (CO2)", "max": 0.70}, "he": {"label": "Helium", "max": 0.45}}
+def curve(diluent, g_m_s2, p_psia, o2, u_cm_s, L_mm, steps=15, seed=0) -> dict
+```
+Holds the habitat O₂ and pressure; the diluent replaces nitrogen (`n2 = 1 - o2 - fraction`; a point with n2 < 0 is
+`applicable: false`, reason "composition over 100%"). Returns:
+```
+{diluent, label, habitat:{g_m_s2,p_psia,o2,u_cm_s,L_mm},
+ points:[{fraction, M1:{applicable, estimate, band90, reason}, M2:{applicable, estimate, band90, reason}}],
+ dose_for_p90: {fraction, metric:"M1"} | null,      # smallest applicable fraction whose M1 estimate >= 0.9
+ tested: [{o2, p_atm, fraction, n, extinctions}],  # FLEX training tests with this diluent > 0 (aggregated)
+ tested_o2_range: [min, max] | null, gate_note: str, safety_note: str, model_version}
+```
+`python -m engine.suppression` writes `artifacts/suppression/{preset_id}_{co2|he}.json` for the 6 presets.
+
+## `artifacts/suppression_reference.json` (DE)
+Empirical FLEX outcome rates by diluent bin, independent of the models: for each diluent and fuel, bins of diluent
+fraction (0, 0–0.1, 0.1–0.2, … per data) × O₂ bands (≤0.17, 0.17–0.22, >0.22): `{n, extinctions, completions,
+disruptions, extinction_rate}` with record ids. Used to check the model curve's direction and shown as dots on the chart.
+
+## API (AI)
+| Method | Path | Response |
+|---|---|---|
+| GET | `/suppression/diluents` | `DILUENTS` |
+| POST | `/suppression` | habitat fields + `diluent` (+ optional `steps` 5–30) → `curve(...)` (JSON-safe) |
+| GET | `/suppression/reference` | `artifacts/suppression_reference.json` |
+
+## Web (FE)
+`/suppression` page "Put it out": diluent toggle, M1 curve with 90% band (gaps where not applicable, never
+interpolated), M2 curve, the dose marker, the empirical reference dots, a "tested conditions" chart (diluent fraction × O₂
+of the FLEX tests with the habitat's O₂ as a line), and an always-visible **warn-tone** safety note. Offline: preset
+artifacts `artifacts/suppression/{preset}_{diluent}.json`; custom habitats need the live API.

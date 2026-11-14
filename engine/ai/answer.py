@@ -1003,6 +1003,10 @@ def main(argv: list[str] | None = None) -> None:  # pragma: no cover - CLI
     ap.add_argument("--build-cache", action="store_true")
     ap.add_argument("--no-cache", action="store_true")
     a = ap.parse_args(argv)
+    # Windows consoles (cp1252) can't print "CO₂"; never let logging crash the cache build.
+    reconfigure = getattr(__import__("sys").stdout, "reconfigure", None)
+    if reconfigure:
+        reconfigure(errors="replace")
     if a.build_cache:
         data = build_cache()
         for e in data["entries"]:

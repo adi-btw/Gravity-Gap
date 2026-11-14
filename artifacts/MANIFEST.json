@@ -1,20 +1,20 @@
 {
   "version": 1,
-  "generated_at": "2026-11-14T20:18:24+00:00",
+  "generated_at": "2026-11-14T23:26:58+00:00",
   "generated_by": "scripts/build_manifest.py",
-  "artifact_set_sha256": "d4f0e0bde05a8e5d81d9874eff3671efc40c3c70708a2d04c164fc5891892ad0",
+  "artifact_set_sha256": "854aa5baa3aaa93799fc76b1cee43e78a5add045e648bb5038da78ec9193af15",
   "files": {
     "ai_cache.json": {
-      "sha256": "b3b2c1c91a2874ecc60972071f4eb51436ea853685585d7f8c56755643b3bd42",
-      "bytes": 80960
+      "sha256": "72d6b7bd3e6fb5b419a86f1831d5f12e37c8a966ba90106489199ec2af0498d7",
+      "bytes": 141395
     },
     "bounds/earth_M1.json": {
-      "sha256": "5dd770573ebab7043a4e119b89914c98b6831b43734406af82969987ae9163d9",
-      "bytes": 5801
+      "sha256": "2a2e5ae1373eea62f08eae0c1648a62a990bae097d408d2e0424d1965329829d",
+      "bytes": 5825
     },
     "bounds/earth_M2.json": {
-      "sha256": "798f47c611efd1f3c3f689ab403456c50b841651d21943c743a02ed3376fa115",
-      "bytes": 5747
+      "sha256": "bb1f0dec19a02fe9b39ca337dad8c53896702c84a60b2a0e9c5316daf8d76921",
+      "bytes": 5770
     },
     "bounds/earth_M3.json": {
       "sha256": "d46ae6ee750e20e25c4f6bb961963888d251ef54f3510256265f60acd3257aa3",
@@ -29,12 +29,12 @@
       "bytes": 4196
     },
     "bounds/exploration_M1.json": {
-      "sha256": "3f012ac38d2778dfc5b74c9367a611455a0bd17c53b092993cc5c8a83d4dbabf",
-      "bytes": 5571
+      "sha256": "6e8c6eeb2c9f646072a94325733974380e69214e732c1f63d26babe2c4d0c331",
+      "bytes": 5585
     },
     "bounds/exploration_M2.json": {
-      "sha256": "b0c1982f5e09d3c2086ad7952912d913b211c9bd6de8196af6251703fed81554",
-      "bytes": 5514
+      "sha256": "dd09458040850e27dbbe0f9931096b471fc9b701ee7815a8e7236e0c31bacb31",
+      "bytes": 5530
     },
     "bounds/exploration_M3.json": {
       "sha256": "2d617089d7fe5ef70b157a999b12a6782689760d4d4b644f93f0d36f741f8dda",
@@ -49,12 +49,12 @@
       "bytes": 4138
     },
     "bounds/iss_M1.json": {
-      "sha256": "299cc838cfe79c6669fa2f68c3f445edc4f8a0d0c47665bc86868ae3a793dbbc",
-      "bytes": 5549
+      "sha256": "ad5a4748d9943452394e6e282a0269dfaf0b29d14eb6582034a99789d781bc43",
+      "bytes": 5573
     },
     "bounds/iss_M2.json": {
-      "sha256": "0056152641e49417a6570325e3301d065c40c7afae680de03074a43f91484ae6",
-      "bytes": 5495
+      "sha256": "7418daec530496ba50f1ee298804d6e28689f1ea9d832ea59e4a2d5ba6d14927",
+      "bytes": 5518
     },
     "bounds/iss_M3.json": {
       "sha256": "55a428392afbb083809d17528323876e9b46e9c0a33100d9ef0d993e1a43d213",
@@ -69,12 +69,12 @@
       "bytes": 4086
     },
     "bounds/lunar_base_M1.json": {
-      "sha256": "c6ac1c126981e884c62327f6fb8a168253168bddbb75c5fb6a7fa5e9d0b3269e",
-      "bytes": 5802
+      "sha256": "ff296595091445aa476ea3ba464a046666e4dde7522cbd40166d9b62b139c40f",
+      "bytes": 5824
     },
     "bounds/lunar_base_M2.json": {
-      "sha256": "0677a307407c3313ee60b6c366b69206b11e1f8f58bc2b268b0c9d43491211a3",
-      "bytes": 3653
+      "sha256": "1ce63f3c69805df401986fb0d3302fa8871db051f7540ce928455d5e3905a586",
+      "bytes": 3704
     },
     "bounds/lunar_base_M3.json": {
       "sha256": "134314ff5699237fc7a911dac52425b29ed010927619921f695ebc5087e81a76",
@@ -89,12 +89,12 @@
       "bytes": 4170
     },
     "bounds/lunar_rover_M1.json": {
-      "sha256": "d10b9bb8941d5802ec1e477ba5d0dd70283c186ae28c9bde2cd9451379e6f562",
-      "bytes": 5799
+      "sha256": "90acf59c6620a16aa9bebc260daa1bc80d0db8c4c7b0fc57eef849c48280fbea",
+      "bytes": 5821
     },
     "bounds/lunar_rover_M2.json": {
-      "sha256": "fa7b21c5d2360fedc0c0074973c560e223cbd534316c4fd80b53a101eb0158a7",
-      "bytes": 3650
+      "sha256": "f6e97704e2504aa4e3eee37bcc9438b978ef039b60a2ecb7077cd64cc1fc4be4",
+      "bytes": 3701
     },
     "bounds/lunar_rover_M3.json": {
       "sha256": "d54b85a276ec0274cb93f36299819fbf055c271b3bb0c05a4c6578f5e3b16135",
@@ -109,12 +109,12 @@
       "bytes": 4165
     },
     "bounds/mars_base_M1.json": {
-      "sha256": "391c2dd1ea143e6facffc60072a6fc36d2af2f544bca80bb52e1d0634543489d",
-      "bytes": 5809
+      "sha256": "ae7510c0ea7a4cabb03ad6c3ca6c556620012d9bd0c4f5b5572c5423f7a31bf0",
+      "bytes": 5831
     },
     "bounds/mars_base_M2.json": {
-      "sha256": "8b74bbeff53433446268ba0d8b08b483332dfe01f02879ff88d8a2ad998c5c3c",
-      "bytes": 3664
+      "sha256": "249d0cb30cb109f2e68172242fa7e8c3b0d3f509728f7ab08255a1c80102d0fc",
+      "bytes": 3715
     },
     "bounds/mars_base_M3.json": {
       "sha256": "588b9c11081f0b5bd4ea13b15f17251d4f0f98e40c1da32146c5dc59e51a0ba1",
@@ -133,23 +133,23 @@
       "bytes": 171827
     },
     "coverage/M1.json": {
-      "sha256": "eeef70ef122b93602c556c881ab59a0ff1c3651122e2e328e3228e84c704dbdf",
-      "bytes": 5639
+      "sha256": "372b668d386db223ce608a24d4e23b9b72e69ffbd6d68c5b0401639a79516344",
+      "bytes": 11217
     },
     "coverage/M2.json": {
-      "sha256": "ef3e62202a261614b0beadc0cfc9fe54e81e350798979d21ef10db5bf7674a4a",
-      "bytes": 4967
+      "sha256": "d645b12816fc368b346e9c18b052b9c6af0c858606fed45413bd423dd80b3325",
+      "bytes": 9930
     },
     "coverage/M3.json": {
-      "sha256": "ce4fd4f817aeccf66937f26b3d9206f3bbc7a03a1c5a3fdb8ccc277f5bbba89b",
+      "sha256": "2d16b4c51ef9853d48b8b3171785d7ef5faf2c4f8f2e8164f4287182b99ec7de",
       "bytes": 9781
     },
     "coverage/M4.json": {
-      "sha256": "cc607d65c08ef4eeaf2c9d8595706c4afb40e4d17def3e173476de3f21799a5a",
+      "sha256": "dac7a6a172942c96a27c5dfd986fc6331e64e09138fd6b46510ef24cd5c54277",
       "bytes": 800
     },
     "coverage/M5.json": {
-      "sha256": "70663bfa674a5c7a727b49ccbc0abc967b5c1ac7b06ecb65652d27a341010466",
+      "sha256": "34388be47b9c92c4eebfe435fe3f62c3332b9a865896d26ecadc01c334f0a1e4",
       "bytes": 517
     },
     "hindcast_saffire.json": {
@@ -157,12 +157,12 @@
       "bytes": 49702
     },
     "incidents.json": {
-      "sha256": "07c48acde9ed864096e48be947cf985f9c5f41de5934a6b9046204992437e707",
-      "bytes": 18154
+      "sha256": "cf9f5c1a2df76c2f507856cea0bf4e977504e7c2f41a46c2bf38722d57bb2a79",
+      "bytes": 18278
     },
     "planner.json": {
-      "sha256": "c3a582ac424a89e46a43bfac3de9b7ff3c7408ef6d3896fe1857b51a80dc613f",
-      "bytes": 10402
+      "sha256": "5338571794e1b631a1857ed7774e0d2029dc2fbfbb9ad7a8f67f15c1c5aa6ff9",
+      "bytes": 12000
     },
     "regime_grid.json": {
       "sha256": "d4e7f73d4945d7a13bacdaee308150822ef741b8a81fb485a2d73a615da854d9",
@@ -172,9 +172,61 @@
       "sha256": "25d61816e16d7d3fe3072dcd24fd4fe64d829334c9c8ea04222e3102bc05b376",
       "bytes": 14340
     },
+    "suppression/earth_co2.json": {
+      "sha256": "8df9f4b5a0c98575bdcb5a1d7babb3aab37b17cd645cc2498363a3659efaea25",
+      "bytes": 11840
+    },
+    "suppression/earth_he.json": {
+      "sha256": "450bd1742248dbbfb146d8405da7d59dc5e6a203aa60a00958a34c84bb7a4ec8",
+      "bytes": 9348
+    },
+    "suppression/exploration_co2.json": {
+      "sha256": "171aa6e09f962b4c7f49edc8a86354959abafc19bbad7eef757d6b1636a9334e",
+      "bytes": 12839
+    },
+    "suppression/exploration_he.json": {
+      "sha256": "aba2ca9b7e22ef1566a48207e572dc95f381412a37b6477c0d69c9efcb444efd",
+      "bytes": 9214
+    },
+    "suppression/iss_co2.json": {
+      "sha256": "0176513045682c4efaf7554dee57e4449c41bdf290204f93333d08ce83fe875d",
+      "bytes": 11832
+    },
+    "suppression/iss_he.json": {
+      "sha256": "82a879189e573bd6a407b7488853972b5d9229304e6be4443d2583619ea0c67f",
+      "bytes": 9337
+    },
+    "suppression/lunar_base_co2.json": {
+      "sha256": "4fef1fa55af36ed0f45442e0f99b15868b9d72ed5b88059266b66e4f15546d31",
+      "bytes": 18101
+    },
+    "suppression/lunar_base_he.json": {
+      "sha256": "906dc258d84771f8c3066b5b3a51baf86b46ac783d00ab2a98af3b41fa055467",
+      "bytes": 17694
+    },
+    "suppression/lunar_rover_co2.json": {
+      "sha256": "052af6d8d6747cb4c24d625ee1fdf7673feaea3cbc58a5ec4d41757d7ab9abcc",
+      "bytes": 18101
+    },
+    "suppression/lunar_rover_he.json": {
+      "sha256": "af38a442601dfab616293091beeadb8faa74d45714ae44d8c34ce35df5ee6307",
+      "bytes": 17694
+    },
+    "suppression/mars_base_co2.json": {
+      "sha256": "cb28e7c1d666361aece8bc0616794b5dd8c7fa3a6f5a0e49d214a02ec935f26c",
+      "bytes": 18098
+    },
+    "suppression/mars_base_he.json": {
+      "sha256": "a0579b7d178bb21a9fc81678c75feb88b58aa7b74e2797ad920cdbd28a2c06f4",
+      "bytes": 17691
+    },
+    "suppression_reference.json": {
+      "sha256": "78dc657d4263f97c73f1ad5d0ad1f5808cc67ebe3be936ac63df71771dfc1ac4",
+      "bytes": 60114
+    },
     "validation_report.md": {
-      "sha256": "c2c3e96b77157b1a490c0366dafc258cf1cbf2c0cfaf0fb004c54dcf32458023",
-      "bytes": 5759
+      "sha256": "972999b9959f7e2a6e25b9dd77f28546bcf562f5756ef36ba40e878f5bf02324",
+      "bytes": 7578
     },
     "validation_saffire.md": {
       "sha256": "ddd1dccd66f4c577aecf18858988c19ec98ffbf2b5642d6d76bfa34beb95ef49",
