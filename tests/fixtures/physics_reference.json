@@ -1,0 +1,400 @@
+{
+ "version": "1.0.0",
+ "description": "Shared physics reference cases (TL). Python engine/physics.py and web/lib/physics.ts must both pass. rel_tol 1e-6 = exact formula; 0.01 = rounded plan value. For exact zero expected values compare with abs tol 1e-12. String \"inf\" in args or expected means +Infinity.",
+ "cases": [
+  {
+   "id": "R1",
+   "fn": "buoyant_velocity_cm_s",
+   "args": {
+    "g_m_s2": 9.81,
+    "L_mm": 10,
+    "dT_over_T": 4,
+    "C_b": 1
+   },
+   "expected": 62.64,
+   "rel_tol": 0.01,
+   "note": "plan 08 R1, rounded"
+  },
+  {
+   "id": "R1_exact",
+   "fn": "buoyant_velocity_cm_s",
+   "args": {
+    "g_m_s2": 9.81,
+    "L_mm": 10,
+    "dT_over_T": 4,
+    "C_b": 1
+   },
+   "expected": 62.6418390534633,
+   "rel_tol": 1e-06,
+   "note": "100*sqrt(9.81*0.01*4)=100*sqrt(0.3924)"
+  },
+  {
+   "id": "R2",
+   "fn": "buoyant_velocity_cm_s",
+   "args": {
+    "g_m_s2": 1.62,
+    "L_mm": 10,
+    "dT_over_T": 4,
+    "C_b": 1
+   },
+   "expected": 25.46,
+   "rel_tol": 0.01,
+   "note": "plan 08 R2, rounded"
+  },
+  {
+   "id": "R2_exact",
+   "fn": "buoyant_velocity_cm_s",
+   "args": {
+    "g_m_s2": 1.62,
+    "L_mm": 10,
+    "dT_over_T": 4,
+    "C_b": 1
+   },
+   "expected": 25.455844122715714,
+   "rel_tol": 1e-06,
+   "note": "100*sqrt(0.0648)"
+  },
+  {
+   "id": "UB_mars",
+   "fn": "buoyant_velocity_cm_s",
+   "args": {
+    "g_m_s2": 3.71,
+    "L_mm": 10,
+    "dT_over_T": 4,
+    "C_b": 1
+   },
+   "expected": 38.52272056851645,
+   "rel_tol": 1e-06,
+   "note": "100*sqrt(0.1484)"
+  },
+  {
+   "id": "UB_cb_half",
+   "fn": "buoyant_velocity_cm_s",
+   "args": {
+    "g_m_s2": 9.81,
+    "L_mm": 40,
+    "dT_over_T": 4,
+    "C_b": 0.5
+   },
+   "expected": 62.6418390534633,
+   "rel_tol": 1e-06,
+   "note": "C_b=0.5, L=40 mm -> equals R1 exactly"
+  },
+  {
+   "id": "R3",
+   "fn": "g_star",
+   "args": {
+    "g_m_s2": 1.62,
+    "p_psia": 8.2
+   },
+   "expected": 0.0513,
+   "rel_tol": 0.01,
+   "note": "plan 08 R3: 0.165*0.5578^2, rounded"
+  },
+  {
+   "id": "R3_exact",
+   "fn": "g_star",
+   "args": {
+    "g_m_s2": 1.62,
+    "p_psia": 8.2
+   },
+   "expected": 0.05138531727987956,
+   "rel_tol": 1e-06,
+   "note": "(1.62/9.81)*(8.2/14.7)^2"
+  },
+  {
+   "id": "GS_earth",
+   "fn": "g_star",
+   "args": {
+    "g_m_s2": 9.81,
+    "p_psia": 14.7
+   },
+   "expected": 1.0,
+   "rel_tol": 1e-06
+  },
+  {
+   "id": "GS_moon_10p2",
+   "fn": "g_star",
+   "args": {
+    "g_m_s2": 1.62,
+    "p_psia": 10.2
+   },
+   "expected": 0.07950815600533417,
+   "rel_tol": 1e-06,
+   "note": "(1.62/9.81)*(10.2/14.7)^2 ~ 0.0795"
+  },
+  {
+   "id": "GS_mars_8p2",
+   "fn": "g_star",
+   "args": {
+    "g_m_s2": 3.71,
+    "p_psia": 8.2
+   },
+   "expected": 0.11767872043725504,
+   "rel_tol": 1e-06,
+   "note": "(3.71/9.81)*(8.2/14.7)^2 ~ 0.118"
+  },
+  {
+   "id": "GS_orbit",
+   "fn": "g_star",
+   "args": {
+    "g_m_s2": 0,
+    "p_psia": 14.7
+   },
+   "expected": 0.0,
+   "rel_tol": 1e-06
+  },
+  {
+   "id": "R4_ueff",
+   "fn": "effective_flow_cm_s",
+   "args": {
+    "u_f_cm_s": 10,
+    "u_b_cm_s": 25.46,
+    "k": 1
+   },
+   "expected": 27.353456819934113,
+   "rel_tol": 1e-06,
+   "note": "sqrt(100+648.2116)=sqrt(748.2116)"
+  },
+  {
+   "id": "R4_ueff_plan",
+   "fn": "effective_flow_cm_s",
+   "args": {
+    "u_f_cm_s": 10,
+    "u_b_cm_s": 25.46,
+    "k": 1
+   },
+   "expected": 27.35,
+   "rel_tol": 0.01,
+   "note": "plan 08 R4, rounded"
+  },
+  {
+   "id": "R4_ri",
+   "fn": "richardson",
+   "args": {
+    "u_b_cm_s": 25.46,
+    "u_f_cm_s": 10
+   },
+   "expected": 6.482116000000001,
+   "rel_tol": 1e-06,
+   "note": "648.2116/100"
+  },
+  {
+   "id": "R4_ri_plan",
+   "fn": "richardson",
+   "args": {
+    "u_b_cm_s": 25.46,
+    "u_f_cm_s": 10
+   },
+   "expected": 6.48,
+   "rel_tol": 0.01,
+   "note": "plan 08 R4, rounded"
+  },
+  {
+   "id": "R4_regime",
+   "fn": "regime",
+   "args": {
+    "ri": 6.482116000000001
+   },
+   "expected": "mixed",
+   "rel_tol": 1e-06
+  },
+  {
+   "id": "R5_ub",
+   "fn": "buoyant_velocity_cm_s",
+   "args": {
+    "g_m_s2": 0,
+    "L_mm": 10,
+    "dT_over_T": 4,
+    "C_b": 1
+   },
+   "expected": 0.0,
+   "rel_tol": 1e-06
+  },
+  {
+   "id": "R5_ri",
+   "fn": "richardson",
+   "args": {
+    "u_b_cm_s": 0,
+    "u_f_cm_s": 10
+   },
+   "expected": 0.0,
+   "rel_tol": 1e-06
+  },
+  {
+   "id": "R5_regime",
+   "fn": "regime",
+   "args": {
+    "ri": 0
+   },
+   "expected": "forced",
+   "rel_tol": 1e-06
+  },
+  {
+   "id": "R5_ueff",
+   "fn": "effective_flow_cm_s",
+   "args": {
+    "u_f_cm_s": 10,
+    "u_b_cm_s": 0,
+    "k": 1
+   },
+   "expected": 10.0,
+   "rel_tol": 1e-06
+  },
+  {
+   "id": "UEFF_k03",
+   "fn": "effective_flow_cm_s",
+   "args": {
+    "u_f_cm_s": 0,
+    "u_b_cm_s": 62.6418390534633,
+    "k": 0.3
+   },
+   "expected": 18.79255171603899,
+   "rel_tol": 1e-06,
+   "note": "u_f=0 -> k*u_b"
+  },
+  {
+   "id": "RI_vent_off",
+   "fn": "richardson",
+   "args": {
+    "u_b_cm_s": 25.46,
+    "u_f_cm_s": 0
+   },
+   "expected": "inf",
+   "rel_tol": 0,
+   "note": "u_f=0, u_b>0 -> inf"
+  },
+  {
+   "id": "RI_both_zero",
+   "fn": "richardson",
+   "args": {
+    "u_b_cm_s": 0,
+    "u_f_cm_s": 0
+   },
+   "expected": 0.0,
+   "rel_tol": 1e-06,
+   "note": "u_b=0 wins -> 0"
+  },
+  {
+   "id": "RI_earth_quiescent_regime",
+   "fn": "regime",
+   "args": {
+    "ri": "inf"
+   },
+   "expected": "buoyant",
+   "rel_tol": 0,
+   "note": "args value \"inf\" means +Infinity"
+  },
+  {
+   "id": "REG_below_forced",
+   "fn": "regime",
+   "args": {
+    "ri": 0.0999
+   },
+   "expected": "forced",
+   "rel_tol": 1e-06
+  },
+  {
+   "id": "REG_forced_edge",
+   "fn": "regime",
+   "args": {
+    "ri": 0.1
+   },
+   "expected": "mixed",
+   "rel_tol": 0,
+   "note": "boundary 0.1 is mixed"
+  },
+  {
+   "id": "REG_buoyant_edge",
+   "fn": "regime",
+   "args": {
+    "ri": 10
+   },
+   "expected": "mixed",
+   "rel_tol": 0,
+   "note": "boundary 10 is mixed"
+  },
+  {
+   "id": "REG_above_buoyant",
+   "fn": "regime",
+   "args": {
+    "ri": 10.0001
+   },
+   "expected": "buoyant",
+   "rel_tol": 1e-06
+  },
+  {
+   "id": "PO2_lunar",
+   "fn": "o2_partial_pressure_psia",
+   "args": {
+    "o2": 0.34,
+    "p_psia": 8.2
+   },
+   "expected": 2.788,
+   "rel_tol": 1e-06,
+   "note": "2.788 psia"
+  },
+  {
+   "id": "PO2_sea_level",
+   "fn": "o2_partial_pressure_psia",
+   "args": {
+    "o2": 0.21,
+    "p_psia": 14.7
+   },
+   "expected": 3.0869999999999997,
+   "rel_tol": 1e-06,
+   "note": "3.087 psia"
+  },
+  {
+   "id": "AD_identical",
+   "fn": "atmosphere_distance",
+   "args": {
+    "o2": 0.21,
+    "p_atm": 1.0,
+    "o2_t": 0.21,
+    "p_t_atm": 1.0
+   },
+   "expected": 0.0,
+   "rel_tol": 1e-06
+  },
+  {
+   "id": "AD_lunar_vs_sea_level",
+   "fn": "atmosphere_distance",
+   "args": {
+    "o2": 0.34,
+    "p_atm": 0.558,
+    "o2_t": 0.21,
+    "p_t_atm": 1.0
+   },
+   "expected": 3.246795449573508,
+   "rel_tol": 1e-06,
+   "note": "sqrt(2.6^2 + (ln0.558/0.3)^2)"
+  },
+  {
+   "id": "AD_o2_only",
+   "fn": "atmosphere_distance",
+   "args": {
+    "o2": 0.26,
+    "p_atm": 1.0,
+    "o2_t": 0.21,
+    "p_t_atm": 1.0
+   },
+   "expected": 1.0,
+   "rel_tol": 1e-06,
+   "note": "one 0.05 step in O2"
+  },
+  {
+   "id": "AD_p_only",
+   "fn": "atmosphere_distance",
+   "args": {
+    "o2": 0.21,
+    "p_atm": 1.349858807576003,
+    "o2_t": 0.21,
+    "p_t_atm": 1.0
+   },
+   "expected": 1.0,
+   "rel_tol": 1e-06,
+   "note": "ln P step of 0.3"
+  }
+ ]
+}
