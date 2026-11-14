@@ -76,3 +76,4 @@ The PSI database holds **no partial-gravity combustion data**. The challenge bri
 | [10-risks.md](10-risks.md) | Risk register and mitigations |
 | [11-demo-pitch.md](11-demo-pitch.md) | Demo script, submission package |
 | [12-backlog.md](12-backlog.md) | Every task with ID, owner, estimate, dependencies |
+| [13-round-2-features.md](13-round-2-features.md) | Round 2: fire replay, suppression calculator, detection pillar |
