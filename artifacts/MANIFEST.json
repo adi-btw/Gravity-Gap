@@ -1,12 +1,12 @@
 {
   "version": 1,
-  "generated_at": "2026-11-14T19:40:25+00:00",
+  "generated_at": "2026-11-14T20:18:24+00:00",
   "generated_by": "scripts/build_manifest.py",
-  "artifact_set_sha256": "7981a2a2527756b30e907b4464f8066bf8fefdf8370f8c15b11fc6706a46b9cb",
+  "artifact_set_sha256": "d4f0e0bde05a8e5d81d9874eff3671efc40c3c70708a2d04c164fc5891892ad0",
   "files": {
     "ai_cache.json": {
-      "sha256": "37447df5132523c253eafe448dab5a7fa564d0eea7203700f6073b3c61960045",
-      "bytes": 46732
+      "sha256": "b3b2c1c91a2874ecc60972071f4eb51436ea853685585d7f8c56755643b3bd42",
+      "bytes": 80960
     },
     "bounds/earth_M1.json": {
       "sha256": "5dd770573ebab7043a4e119b89914c98b6831b43734406af82969987ae9163d9",
@@ -133,28 +133,32 @@
       "bytes": 171827
     },
     "coverage/M1.json": {
-      "sha256": "879f5c55a909ba151816981693aa90ec5ad8180ebfb1227a8feb47cca0eb7e12",
+      "sha256": "eeef70ef122b93602c556c881ab59a0ff1c3651122e2e328e3228e84c704dbdf",
       "bytes": 5639
     },
     "coverage/M2.json": {
-      "sha256": "dc41fadf4e6831e3f96008dce17f1c500a938593d83ba0da60f3f3a4fd6e34e0",
+      "sha256": "ef3e62202a261614b0beadc0cfc9fe54e81e350798979d21ef10db5bf7674a4a",
       "bytes": 4967
     },
     "coverage/M3.json": {
-      "sha256": "7390b91113aa5f344b87c635414d12a18f88777a7bccbe7dc6f4ce929d45598e",
+      "sha256": "ce4fd4f817aeccf66937f26b3d9206f3bbc7a03a1c5a3fdb8ccc277f5bbba89b",
       "bytes": 9781
     },
     "coverage/M4.json": {
-      "sha256": "ee55a908af47d0ba2428b0df54d42026e824be6045a68139016a3bb3a12b235d",
+      "sha256": "cc607d65c08ef4eeaf2c9d8595706c4afb40e4d17def3e173476de3f21799a5a",
       "bytes": 800
     },
     "coverage/M5.json": {
-      "sha256": "356a98d878bd424db78e39959be627c49fe159f7eff3df74262d7d6246ffae94",
+      "sha256": "70663bfa674a5c7a727b49ccbc0abc967b5c1ac7b06ecb65652d27a341010466",
       "bytes": 517
     },
     "hindcast_saffire.json": {
       "sha256": "1a583b7fb4d4c0199826cde6142ec413ed8c00248eb3c3fe4cfb83c68af7e801",
       "bytes": 49702
+    },
+    "incidents.json": {
+      "sha256": "07c48acde9ed864096e48be947cf985f9c5f41de5934a6b9046204992437e707",
+      "bytes": 18154
     },
     "planner.json": {
       "sha256": "c3a582ac424a89e46a43bfac3de9b7ff3c7408ef6d3896fe1857b51a80dc613f",

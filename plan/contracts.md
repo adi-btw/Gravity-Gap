@@ -149,3 +149,51 @@ Nobody commits or pushes. Do not run `scripts/build_manifest.py` or `engine.ai.a
 - `GET /data/tests` and `/data/export` accept `outcome=` (exact match on the `outcome` column; repeatable or comma-separated).
 - E2E tests live in `web/e2e/` (Playwright). `npm run e2e` starts the API (`python -m uvicorn api.main:app --port 8000` from the repo root) and the web app (`next start` on 3000) through Playwright `webServer`, and runs the scripted demo path online and offline (API stopped / blocked).
 - `docs/media/` holds demo screenshots and the recorded demo video produced by the E2E run.
+
+---
+
+# Round 2 · R1 Real-fire replay addendum (see plan/13-round-2-features.md)
+
+## Ownership (R1)
+| Role | Owns |
+|---|---|
+| DE | `data/incidents.json`, `tests/test_incidents_data.py` |
+| TL | `engine/incidents.py`, `artifacts/incidents.json`, `tests/test_incidents.py` |
+| AI | `api/**` (incident endpoints), `engine/ai/**` (incident context + cached questions), `tests/test_api.py`, `tests/test_ai.py` |
+| FE | `web/**` |
+Nobody commits. Do not run `scripts/build_manifest.py` (team lead runs cache + manifest last).
+
+## `data/incidents.json` (DE)
+```json
+{"version": 1, "incidents": [{
+  "id": "apollo1", "name": "Apollo 1", "date": "1967-01-27",
+  "phase": "pre-launch plugs-out test on the pad",
+  "in_scope": true, "scope_note": null,
+  "g_m_s2": 9.81, "p_psia": 16.7, "o2": 1.0, "u_cm_s": 10, "L_mm": 10,
+  "assumed": ["u_cm_s", "L_mm"],
+  "summary": "neutral, factual 1-2 sentences",
+  "sources": [{"field": "p_psia|o2|g_m_s2|summary|date", "url": "https://...", "quote": "exact words from the page"}]
+}]}
+```
+- ids: `apollo1`, `mir1997`, `artemis2`, `apollo13`. Out-of-scope incidents (`apollo13`) set `in_scope: false`, a `scope_note`, and may leave g/p/o2 as null.
+- Every in-scope numeric field except those listed in `assumed` needs a `sources` entry with a verbatim quote. A value that can't be confirmed from an official NASA page is listed in `assumed` with a note in `summary`, never guessed silently.
+
+## `artifacts/incidents.json` (TL, `python -m engine.incidents`)
+```
+{generated_at, engine_version, incidents: [ {<all data/incidents.json fields>,
+   physics: evaluate(...) (ri null for inf) | null,
+   regime_fractions: {forced, mixed, buoyant} | null,
+   metrics: {M1..M5: {applicable, estimate, band90, reason, transfer_confidence}} | null,
+   coverage: {M1..M5: {covered, nearest_distance}} | null,
+   findings: [plain-language factual strings built only from the numbers above]} ]}
+```
+Out-of-scope incidents get `physics`/`metrics`/`coverage` = null and one finding explaining the scope.
+
+## API (AI)
+| Method | Path | Response |
+|---|---|---|
+| GET | `/incidents` | `artifacts/incidents.json` (503 problem+json if not built) |
+| GET | `/incidents/{id}` | one incident (404 problem+json if unknown) |
+
+## Web (FE)
+`/replay` page (cards → "Load this habitat" sets `?g=&p=&o2=&u=&L=` then links to `/bounds`), a "History" group in the habitat bar, a landing link "Start with a real fire". Offline: reads `artifacts/incidents.json` (copied by `copy-artifacts.mjs`). The habitat bar pressure input max must allow 16.7 psia (raise to 20, matching the API limit).

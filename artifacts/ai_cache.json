@@ -1,13 +1,13 @@
 {
   "version": "v1",
-  "generated_at": "2026-11-14T19:40:24+00:00",
+  "generated_at": "2026-11-14T20:18:24+00:00",
   "generated_by": "python -m engine.ai.answer --build-cache",
   "entries": [
     {
       "question": "Why is the lunar base in the mixed regime?",
       "question_key": "why is the lunar base in the mixed regime",
       "habitat": "lunar_base",
-      "fingerprint": "3ec55b8cff1579025419c2d11ba6605a84d56ed6ce9749266045fa923c6f2c3b",
+      "fingerprint": "03ebd657248439ee525358d0c5ecd00df8c19faa48a062c8a6bff30ef9032b04",
       "intent": "regime",
       "mode_generated": "template",
       "answer_markdown": "Lunar base: 1.62 m/s² (0.165 g), 8.2 psia, 34% O₂, vent 10 cm/s, flame size 10 mm.\n\n**Regime: mixed.** For Lunar base the buoyant velocity is 25.5 cm/s against a vent flow of 10 cm/s, so the Richardson number Ri = u_b²/u_f² is 6.48 (forced Ri < 0.1, buoyant Ri > 10) [eng:physics]. Sampling the uncertain constants gives 0% forced, 71.7% mixed and 28.3% buoyant flames [eng:physics].\n\nIn the mixed regime neither the 0 g (ISS, forced-flow) data nor 1 g (buoyant) data apply directly: buoyancy and the vent flow are comparable, which is exactly the condition PSI never tested.\n\nDesign implication: At lunar gravity a 10 mm flame stays forced-flow dominated (Ri < 0.1, where microgravity evidence transfers) only above about 80 cm/s of vent flow at the median coefficients, and above 139 cm/s to cover 95% of the Monte Carlo samples (u_b p50 25.4 cm/s, p95 43.8 cm/s). Typical cabin vents (5-20 cm/s) are far below this, so lunar fires are mixed or buoyancy-dominated. [eng:design:1]\n\nConsequence for the predictions: **M1 – P(droplet flame self-extinguishes before burnout)**: estimate 20.1%, 90% band 1.25% to 68.4% [eng:M1]. The microgravity-only band is 3.9% to 48.2%. Transfer confidence: **low**.",
@@ -230,7 +230,7 @@
       "question": "Why is the M1 band wide for the lunar base?",
       "question_key": "why is the m1 band wide for the lunar base",
       "habitat": "lunar_base",
-      "fingerprint": "7c99bb82e192bff99411c00d5c4ee7c44e5432b554599e444aa67ce4c0c1b969",
+      "fingerprint": "2f38790a78feeb29ad78d0c52cd71291050100109fde04435dd7e5f5a72ad9e7",
       "intent": "band",
       "mode_generated": "template",
       "answer_markdown": "Lunar base: 1.62 m/s² (0.165 g), 8.2 psia, 34% O₂, vent 10 cm/s, flame size 10 mm.\n\n**M1 – P(droplet flame self-extinguishes before burnout)**: estimate 20.1%, 90% band 1.25% to 68.4% [eng:M1]. The microgravity-only band is 3.9% to 48.2%. Transfer confidence: **low**.\n\n**Why the band is wide:** The training tests had no buoyancy, so the band is widened ×1.64 for the 71.7% mixed and 28.3% buoyant share of flames. The largest atmosphere sensitivity is O₂ fraction: moving it from 0.31 to 0.37 moves the estimate from 35.3% to 10.4%. Among the physics constants, buoyancy coefficient C_b matters most: over 0.5 to 1.5 the band width goes from 62.6% to 75.2%. [eng:M1]\n\n**Regime: mixed.** For Lunar base the buoyant velocity is 25.5 cm/s against a vent flow of 10 cm/s, so the Richardson number Ri = u_b²/u_f² is 6.48 (forced Ri < 0.1, buoyant Ri > 10) [eng:physics]. Sampling the uncertain constants gives 0% forced, 71.7% mixed and 28.3% buoyant flames [eng:physics].\n\n**What would narrow it:** Planner rank 4: M1 at 1.62 m/s², 10.2 psia, 26.5% O₂, vent 20 cm/s (score 0.311) [eng:planner:4]. P(droplet flame self-extinguishes before burnout) at Moon gravity (0.165 g), 10.2 psia / 26.5% O2, vent 20 cm/s: the current 90% band is 0.68 wide, 100% of physics samples are in the mixed regime where neither 0 g nor 1 g data apply, and the atmosphere is close to the exploration vehicle 10.2 psia / 26.5% O2 target (weight 0.70). It extends [PSI-69] [PSI-10] [PSI-68] [PSI-159].\n\nNearest evidence [PSI-69]: Methanol, 34% O₂, 0.71 atm, completion [rec:PSI-69:FLEX:20]; Methanol, 30% O₂, 0.707 atm, completion [rec:PSI-69:FLEX:25]; Methanol, 30% O₂, 1.01 atm, completion [rec:PSI-69:FLEX:29].",
@@ -632,7 +632,7 @@
       "question": "Which experiments matter most for a Mars base?",
       "question_key": "which experiments matter most for a mars base",
       "habitat": "mars_base",
-      "fingerprint": "480e5a5d30e28406a33b087171c870b735d7c2e13837503e1506bc0aee9f3d50",
+      "fingerprint": "0c9b04cb70d2c3322e69d7e6a5ce27205000c55cd3c317549b74d8d6900e4a93",
       "intent": "experiments",
       "mode_generated": "template",
       "answer_markdown": "Mars base: 3.71 m/s² (0.378 g), 8.2 psia, 34% O₂, vent 10 cm/s, flame size 10 mm.\n\n**Most relevant PSI investigations** (relevance score: atmosphere match, fire-safety pillars, fuel realism, outcome data, test count):\n1. FLEX [PSI-69] score 0.692 (atmosphere 0.698, fuel realism 0.6)\n2. ACME CFI-G [PSI-159] score 0.606 (atmosphere 1, fuel realism 0.4)\n3. ACME/Flame Design [PSI-10] score 0.605 (atmosphere 1, fuel realism 0.4)\n4. SAFFIRE-II [PSI-99] score 0.552 (atmosphere 0.215, fuel realism 1)\n5. BASS-II [PSI-25] score 0.445 (atmosphere 0.217, fuel realism 1)\n\n**Data behind the predictions here:** M1 uses [PSI-69] (206 training tests, estimate) [eng:M1]; M2 uses [PSI-69] (158 training tests, no estimate (outside tested atmosphere)) [eng:M2]; M3 uses [PSI-159] (133 training tests, estimate) [eng:M3]; M4 uses [PSI-99] (9 training tests, no estimate (outside tested atmosphere)) [eng:M4]; M5 uses [PSI-107] (407 training tests, no estimate (outside tested atmosphere)) [eng:M5].\n\n**Where new experiments matter most:** Planner rank 2: M2 at 3.71 m/s², 10.2 psia, 26.5% O₂, vent 20 cm/s (score 0.533) [eng:planner:2]. Extinction diameter at Mars gravity (0.378 g), 10.2 psia / 26.5% O2, vent 20 cm/s: the current 90% band is 0.96 wide (relative), 93% of physics samples are in the mixed regime where neither 0 g nor 1 g data apply, and the atmosphere is close to the exploration vehicle 10.2 psia / 26.5% O2 target (weight 0.70). It extends [PSI-69] [PSI-10] [PSI-68] [PSI-159].\n\n**Regime: buoyant.** For Mars base the buoyant velocity is 38.5 cm/s against a vent flow of 10 cm/s, so the Richardson number Ri = u_b²/u_f² is 14.8 (forced Ri < 0.1, buoyant Ri > 10) [eng:physics]. Sampling the uncertain constants gives 0% forced, 32.3% mixed and 67.7% buoyant flames [eng:physics].",
@@ -1036,7 +1036,7 @@
       "question": "What should LUCI test first?",
       "question_key": "what should luci test first",
       "habitat": "lunar_base",
-      "fingerprint": "33882fd04fa71b42dfac360ecd4dd57edf3a42e69aaec98182c83c6bbc6f1201",
+      "fingerprint": "09626723bd1f470e7380b7a327cff7fd095a14c6dc9997ded57798f915aacaf1",
       "intent": "planner",
       "mode_generated": "template",
       "answer_markdown": "**First test:** Planner rank 1: M2 at 1.62 m/s², 8.2 psia, 34% O₂, vent 20 cm/s (score 1) [eng:planner:1]. Extinction diameter at Moon gravity (0.165 g), 8.2 psia / 34% O2, vent 20 cm/s: there is no microgravity evidence at this atmosphere (honesty gate), 100% of physics samples are in the mixed regime where neither 0 g nor 1 g data apply, and the atmosphere is close to the lunar/Mars base 8.2 psia / 34% O2 target (weight 1.00). It extends [PSI-69] [PSI-10] [PSI-159].\n\n**Then:** rank 2: M2 at 3.71 m/s², 10.2 psia, 26.5% O₂, vent 20 cm/s [eng:planner:2]; rank 3: M1 at 3.71 m/s², 8.2 psia, 34% O₂, vent 20 cm/s [eng:planner:3].\n\nRanking = current band width × habitat weight × mixed-regime fraction, so tests sit where the predictions are least certain and the habitat atmosphere matters most.\n\nToday, for Lunar base: **M1 – P(droplet flame self-extinguishes before burnout)**: estimate 20.1%, 90% band 1.25% to 68.4% [eng:M1]. The microgravity-only band is 3.9% to 48.2%. Transfer confidence: **low**.",
@@ -1285,7 +1285,7 @@
       "question": "Is the lunar rover safer with the fans off?",
       "question_key": "is the lunar rover safer with the fans off",
       "habitat": "lunar_rover",
-      "fingerprint": "5ba783a54bd88730c498af7a771a1dc554cdafe9a9dc5d4d9877be2a417c12be",
+      "fingerprint": "d121a1eed6d8e57f9efcbc639fbfceb5726cb4fb6b429d8965b82b3ac2b50f77",
       "intent": "fans_off",
       "mode_generated": "template",
       "answer_markdown": "Lunar rover: 1.62 m/s² (0.165 g), 8.2 psia, 34% O₂, vent 5 cm/s, flame size 10 mm.\n\n**With the fans on:** **Regime: buoyant.** For Lunar rover the buoyant velocity is 25.5 cm/s against a vent flow of 5 cm/s, so the Richardson number Ri = u_b²/u_f² is 25.9 (forced Ri < 0.1, buoyant Ri > 10) [eng:physics]. Sampling the uncertain constants gives 0% forced, 11.9% mixed and 88.1% buoyant flames [eng:physics].\n\n**With the fans off:** **Regime: buoyant.** For Lunar rover with fans off the buoyant velocity is 25.5 cm/s against a vent flow of 0 cm/s, so the Richardson number Ri = u_b²/u_f² is unbounded (no forced flow) (forced Ri < 0.1, buoyant Ri > 10) [eng:fans_off:physics]. Sampling the uncertain constants gives 0% forced, 0% mixed and 100% buoyant flames [eng:fans_off:physics].\n\nFans on: **M1 – P(droplet flame self-extinguishes before burnout)**: estimate 20.1%, 90% band 0.727% to 76.2% [eng:M1]. The microgravity-only band is 3.9% to 48.2%. Transfer confidence: **low**.\n\nFans off: **M1 – P(droplet flame self-extinguishes before burnout)**: estimate 20.1%, 90% band 0.653% to 77.6% [eng:fans_off:M1]. The microgravity-only band is 3.9% to 48.2%. Transfer confidence: **low**.\n\n**Not safer by this evidence.** Without ventilation the flame is not microgravity-like: buoyancy takes over and the 90% band gets wider. For M1–M3 the engine never shifts the estimate with gravity or flow (gravity honesty rule), it only widens the band, so 'safer' cannot be claimed from these data.\n\nDesign implication: At lunar gravity a 10 mm flame becomes buoyancy-dominated (Ri > 10) when the vent flow is below about 8.0 cm/s (median coefficients): turning ventilation off does not create a microgravity-like quiescent flame. [eng:design:2]",
@@ -1554,7 +1554,7 @@
       "question": "Can you predict rocket engine fires?",
       "question_key": "can you predict rocket engine fires",
       "habitat": "lunar_base",
-      "fingerprint": "8d13c32fa31c4803f7bc4834aff4128249f8ffc0602b898129de95c85fb25279",
+      "fingerprint": "4dba7606cc7d8d9df0dd33ea95656bc4d09499b8bb02a81217c4244c4a94729d",
       "intent": "refusal",
       "mode_generated": "template",
       "answer_markdown": "This is outside Gravity Gap's scope. Gravity Gap predicts **cabin fires** in spacecraft and habitats (burning materials, fuel droplets, small gas flames, ventilation and cabin atmosphere) from NASA PSI microgravity combustion experiments. Rocket engines, propellants and propulsion combustion are a different problem and are not covered by this data or model; please consult propulsion-specific resources for that. Within scope you can ask, for example, *Why is the lunar base in the mixed regime?* or *What should LUCI test first?*",
@@ -1566,6 +1566,974 @@
         "errors": [],
         "numbers": [],
         "citations": []
+      }
+    },
+    {
+      "question": "What does Gravity Gap say about the Mir fire?",
+      "question_key": "what does gravity gap say about the mir fire",
+      "habitat": "incident:mir1997",
+      "fingerprint": "588d4f5bee713d5e59552c4d8dfbfee801f98f2bd1d1f3f1eecac5714abdc12d",
+      "intent": "incident",
+      "mode_generated": "template",
+      "answer_markdown": "**Mir oxygen-generator fire (1997)**: in orbit, aboard the Mir space station (Kvant-1 module) [eng:incident:mir1997].\n\nOn Feb. 24, 1997, a solid-fuel oxygen generator ignited in Mir's Kvant-1 module, producing a flame and dense smoke; the station's life support system cleared the smoke over the following hours. Cabin pressure and oxygen here are assumed sea-level air, not values quoted from a NASA page. [eng:incident:mir1997] [https://www.nasa.gov/history/25-years-ago-fire-aboard-space-station-mir/]\n\n**Scope:** inside Gravity Gap's scope (a fire in a crew-cabin atmosphere) [eng:incident:mir1997].\n\n**Conditions used** [eng:incident:mir1997]: gravity 0 m/s² [https://www.nasa.gov/history/25-years-ago-fire-aboard-space-station-mir/]; pressure 14.7 psia (assumed; not stated in the sources); O₂ 21% (assumed; not stated in the sources); vent flow 10 cm/s (assumed; not stated in the sources); flame size 10 mm (assumed; not stated in the sources). Mir operated a sea-level-like air atmosphere; cabin pressure (14.7 psia) and oxygen fraction (0.21) are not quoted from a NASA page. Ventilation speed and fuel length are engineering assumptions matching the app presets.\n\n**Regime: forced.** Buoyant velocity 0 cm/s against a vent flow of 10 cm/s gives Ri = 0 (forced Ri < 0.1, buoyant Ri > 10) [eng:incident:mir1997]. Sampling the uncertain constants gives 100% forced, 0% mixed and 0% buoyant flames [eng:incident:mir1997].\n\n**What today's data can and cannot say:**\n- **M1 – P(droplet flame self-extinguishes before burnout)**: estimate 93.9%, 90% band 82.5% to 98.2%, transfer confidence **high** (nearest tested condition at distance 0.0009) [eng:incident:mir1997]\n- **M2 – Extinction diameter**: estimate 4 mm, 90% band 2.55 mm to 4.34 mm, transfer confidence **high** (nearest tested condition at distance 0.0009) [eng:incident:mir1997]\n- **M3 – P(gas flame self-extinguishes vs flow-terminated)**: estimate 97.2%, 90% band 94.5% to 99.1%, transfer confidence **high** (nearest tested condition at distance 0.0009) [eng:incident:mir1997]\n- **M4 – Solid-material burn extent: microgravity vs 1 g**: estimate complete burn, 90% band complete burn to complete burn, transfer confidence **low** (nearest tested condition at distance 0.1) [eng:incident:mir1997]\n- **M5 – Flame existence vs coflow speed**: estimate 1, 90% band 0 to 1, transfer confidence **medium** (nearest tested condition at distance 0.0009) [eng:incident:mir1997]\n\n**Findings:** In orbit (0 g) with the assumed 10 cm/s ventilation the flame is forced-flow (Ri 0; Monte Carlo: 100% forced, 0% mixed, 0% buoyant): the regime ISS data covers best. With the assumed atmosphere (O2 21% at 14.7 psia) the oxygen partial pressure is 3.09 psia (sea-level air is about 3.08 psia). [eng:incident:mir1997]\n\n**What the sources say:**\n- date: “On Feb. 24, 1997, the six crew members aboard the Russian space station Mir faced significant danger” [https://www.nasa.gov/history/25-years-ago-fire-aboard-space-station-mir/]\n- summary: “when a fire ignited in an oxygen generating system.” [https://www.nasa.gov/history/25-years-ago-fire-aboard-space-station-mir/]\n- summary: “as Lazutkin activated a solid-fuel oxygen generator in Mir’s Kvant-1 module, the canister ignited” [https://www.nasa.gov/history/25-years-ago-fire-aboard-space-station-mir/]\n- g_m_s2: “the worst in-orbit fire incident in the history of spaceflight.” [https://www.nasa.gov/history/25-years-ago-fire-aboard-space-station-mir/]\n\nThis is what today's PSI data can and cannot say about these conditions. It is not a reconstruction of the event and not a judgement of the crew or of the people who worked on it.",
+      "citations": [
+        "eng:incident:mir1997",
+        "https://www.nasa.gov/history/25-years-ago-fire-aboard-space-station-mir/"
+      ],
+      "numbers_used": [
+        24.0,
+        1997.0,
+        0.0,
+        14.7,
+        21.0,
+        10.0,
+        10.0,
+        14.7,
+        0.21,
+        0.0,
+        10.0,
+        0.0,
+        0.1,
+        10.0,
+        100.0,
+        0.0,
+        0.0,
+        93.9,
+        90.0,
+        82.5,
+        98.2,
+        0.0009,
+        4.0,
+        90.0,
+        2.55,
+        4.34,
+        0.0009,
+        97.2,
+        90.0,
+        94.5,
+        99.1,
+        0.0009,
+        1.0,
+        90.0,
+        0.1,
+        1.0,
+        90.0,
+        0.0,
+        1.0,
+        0.0009,
+        0.0,
+        10.0,
+        0.0,
+        100.0,
+        0.0,
+        0.0,
+        21.0,
+        14.7,
+        3.09,
+        3.08,
+        24.0,
+        1997.0
+      ],
+      "validated": true,
+      "validation": {
+        "ok": true,
+        "errors": [],
+        "numbers": [
+          {
+            "text": "24",
+            "value": 24.0,
+            "source": "incidents[0].summary~text"
+          },
+          {
+            "text": "1997",
+            "value": 1997.0,
+            "source": "incidents[0].summary~text"
+          },
+          {
+            "text": "0",
+            "value": 0.0,
+            "source": "habitat.g_m_s2"
+          },
+          {
+            "text": "14.7",
+            "value": 14.7,
+            "source": "habitat.p_psia"
+          },
+          {
+            "text": "21%",
+            "value": 21.0,
+            "source": "habitat.o2_percent"
+          },
+          {
+            "text": "10",
+            "value": 10.0,
+            "source": "habitat.u_cm_s"
+          },
+          {
+            "text": "10",
+            "value": 10.0,
+            "source": "habitat.u_cm_s"
+          },
+          {
+            "text": "14.7",
+            "value": 14.7,
+            "source": "habitat.p_psia"
+          },
+          {
+            "text": "0.21",
+            "value": 0.21,
+            "source": "habitat.o2"
+          },
+          {
+            "text": "0",
+            "value": 0.0,
+            "source": "habitat.g_m_s2"
+          },
+          {
+            "text": "10",
+            "value": 10.0,
+            "source": "habitat.u_cm_s"
+          },
+          {
+            "text": "0",
+            "value": 0.0,
+            "source": "habitat.g_m_s2"
+          },
+          {
+            "text": "0.1",
+            "value": 0.1,
+            "source": "design_implications[0]~text"
+          },
+          {
+            "text": "10",
+            "value": 10.0,
+            "source": "habitat.u_cm_s"
+          },
+          {
+            "text": "100%",
+            "value": 100.0,
+            "source": "predictions.M4.transfer.basis~text"
+          },
+          {
+            "text": "0%",
+            "value": 0.0,
+            "source": "habitat.g_m_s2"
+          },
+          {
+            "text": "0%",
+            "value": 0.0,
+            "source": "habitat.g_m_s2"
+          },
+          {
+            "text": "93.9%",
+            "value": 93.9,
+            "source": "predictions.M1.estimate"
+          },
+          {
+            "text": "90%",
+            "value": 90.0,
+            "source": "planner[1].rationale~text"
+          },
+          {
+            "text": "82.5%",
+            "value": 82.5,
+            "source": "predictions.M1.band90[0]"
+          },
+          {
+            "text": "98.2%",
+            "value": 98.2,
+            "source": "predictions.M1.band90[1]"
+          },
+          {
+            "text": "0.0009",
+            "value": 0.0009,
+            "source": "incidents[0].coverage.M1.nearest_distance"
+          },
+          {
+            "text": "4",
+            "value": 4.0,
+            "source": "predictions.M2.estimate"
+          },
+          {
+            "text": "90%",
+            "value": 90.0,
+            "source": "planner[1].rationale~text"
+          },
+          {
+            "text": "2.55",
+            "value": 2.55,
+            "source": "predictions.M2.band90[0]"
+          },
+          {
+            "text": "4.34",
+            "value": 4.34,
+            "source": "predictions.M2.band90[1]"
+          },
+          {
+            "text": "0.0009",
+            "value": 0.0009,
+            "source": "incidents[0].coverage.M1.nearest_distance"
+          },
+          {
+            "text": "97.2%",
+            "value": 97.2,
+            "source": "predictions.M1.sensitivity[0].low"
+          },
+          {
+            "text": "90%",
+            "value": 90.0,
+            "source": "planner[1].rationale~text"
+          },
+          {
+            "text": "94.5%",
+            "value": 94.5,
+            "source": "predictions.M3.band90[0]"
+          },
+          {
+            "text": "99.1%",
+            "value": 99.1,
+            "source": "predictions.M3.band90[1]"
+          },
+          {
+            "text": "0.0009",
+            "value": 0.0009,
+            "source": "incidents[0].coverage.M1.nearest_distance"
+          },
+          {
+            "text": "1",
+            "value": 1.0,
+            "source": "physics.mc.regime_fractions.forced"
+          },
+          {
+            "text": "90%",
+            "value": 90.0,
+            "source": "planner[1].rationale~text"
+          },
+          {
+            "text": "0.1",
+            "value": 0.1,
+            "source": "design_implications[0]~text"
+          },
+          {
+            "text": "1",
+            "value": 1.0,
+            "source": "physics.mc.regime_fractions.forced"
+          },
+          {
+            "text": "90%",
+            "value": 90.0,
+            "source": "planner[1].rationale~text"
+          },
+          {
+            "text": "0",
+            "value": 0.0,
+            "source": "habitat.g_m_s2"
+          },
+          {
+            "text": "1",
+            "value": 1.0,
+            "source": "physics.mc.regime_fractions.forced"
+          },
+          {
+            "text": "0.0009",
+            "value": 0.0009,
+            "source": "incidents[0].coverage.M1.nearest_distance"
+          },
+          {
+            "text": "0",
+            "value": 0.0,
+            "source": "habitat.g_m_s2"
+          },
+          {
+            "text": "10",
+            "value": 10.0,
+            "source": "habitat.u_cm_s"
+          },
+          {
+            "text": "0",
+            "value": 0.0,
+            "source": "habitat.g_m_s2"
+          },
+          {
+            "text": "100%",
+            "value": 100.0,
+            "source": "predictions.M4.transfer.basis~text"
+          },
+          {
+            "text": "0%",
+            "value": 0.0,
+            "source": "habitat.g_m_s2"
+          },
+          {
+            "text": "0%",
+            "value": 0.0,
+            "source": "habitat.g_m_s2"
+          },
+          {
+            "text": "21%",
+            "value": 21.0,
+            "source": "habitat.o2_percent"
+          },
+          {
+            "text": "14.7",
+            "value": 14.7,
+            "source": "habitat.p_psia"
+          },
+          {
+            "text": "3.09",
+            "value": 3.09,
+            "source": "physics.p_o2_psia"
+          },
+          {
+            "text": "3.08",
+            "value": 3.08,
+            "source": "physics.p_o2_psia"
+          },
+          {
+            "text": "24",
+            "value": 24.0,
+            "source": "incidents[0].summary~text"
+          },
+          {
+            "text": "1997",
+            "value": 1997.0,
+            "source": "incidents[0].summary~text"
+          }
+        ],
+        "citations": [
+          {
+            "id": "eng:incident:mir1997",
+            "resolved": true
+          },
+          {
+            "id": "https://www.nasa.gov/history/25-years-ago-fire-aboard-space-station-mir/",
+            "resolved": true
+          }
+        ]
+      }
+    },
+    {
+      "question": "What would Gravity Gap say about Apollo 1's cabin air?",
+      "question_key": "what would gravity gap say about apollo 1 s cabin air",
+      "habitat": "incident:apollo1",
+      "fingerprint": "a7c5305ad21772e9ea5385fba765d911fb78f2c22be3c05ba5f4fca1b174340c",
+      "intent": "incident",
+      "mode_generated": "template",
+      "answer_markdown": "**Apollo 1 (1967)**: pre-launch \"plugs out\" test on the launch pad (AS-204) [eng:incident:apollo1].\n\nDuring a preflight test on the launch pad on Jan. 27, 1967, a fire swept through the AS-204 Command Module, which was pressurized with pure oxygen, and astronauts Grissom, White and Chaffee lost their lives. [eng:incident:apollo1] [https://sma.nasa.gov/sma-disciplines/accllp/apollo-1]\n\n**Scope:** inside Gravity Gap's scope (a fire in a crew-cabin atmosphere) [eng:incident:apollo1].\n\n**Conditions used** [eng:incident:apollo1]: gravity 9.81 m/s² [https://sma.nasa.gov/sma-disciplines/accllp/apollo-1]; pressure 16.7 psia [https://www.nasa.gov/history/Apollo204/chariot.html]; O₂ 100% [https://sma.nasa.gov/sma-disciplines/accllp/apollo-1]; vent flow 10 cm/s (assumed; not stated in the sources); flame size 10 mm (assumed; not stated in the sources). Ventilation speed (10 cm/s) and fuel length (10 mm) are engineering assumptions matching the app presets, not values from a NASA page.\n\n**Regime: buoyant.** Buoyant velocity 62.6 cm/s against a vent flow of 10 cm/s gives Ri = 39.2 (forced Ri < 0.1, buoyant Ri > 10) [eng:incident:apollo1]. Sampling the uncertain constants gives 0% forced, 3.65% mixed and 96.4% buoyant flames [eng:incident:apollo1].\n\n**What today's data can and cannot say:**\n- **M1 – P(droplet flame self-extinguishes before burnout)**: **no evidence** – Extrapolation: no evidence. The query (O2 1.000, 1.14 atm) is more than 2 atmosphere-distance units from every M1 training test; the nearest tested condition is PSI-69 PSI-69:FLEX:20 at O2 0.340, 0.71 atm (atmosphere distance 13.29). (nearest tested condition at distance 13.3) [eng:incident:apollo1]\n- **M2 – Extinction diameter**: **no evidence** – Extrapolation: no evidence. The query (O2 1.000, 1.14 atm) is more than 2 atmosphere-distance units from every M2 training test; the nearest tested condition is PSI-69 PSI-69:FLEX:30 at O2 0.300, 1.01 atm (atmosphere distance 14.01). (nearest tested condition at distance 14) [eng:incident:apollo1]\n- **M3 – P(gas flame self-extinguishes vs flow-terminated)**: **no evidence** – Extrapolation: no evidence. The query (O2 1.000, 1.14 atm) is more than 2 atmosphere-distance units from every M3 training test; the nearest tested condition is PSI-159 PSI-159:CFI-G_Normal_Flames:139 at O2 0.400, 1.00 atm (atmosphere distance 12.01). (nearest tested condition at distance 12) [eng:incident:apollo1]\n- **M4 – Solid-material burn extent: microgravity vs 1 g**: **no evidence** – extrapolation, no evidence: SAFFIRE-II only tested ~22% O2 (21.5-22.1%) at ~1 atm cabin pressure and 20 cm/s flow; habitat O2 100.0% outside 20-24.0%; pressure 16.7 psia (1.14 atm) outside 0.9-1.1 atm. No estimate is given outside the tested atmosphere. (nearest tested condition at distance 15.6) [eng:incident:apollo1]\n- **M5 – Flame existence vs coflow speed**: **no evidence** – extrapolation, no evidence: SPICE only tested in ISS cabin air (assumed ~21% O2 / ~1 atm; the table records no atmosphere); habitat O2 100.0% outside 19-23.5%; pressure 16.7 psia (1.14 atm) outside 0.9-1.1 atm. No estimate is given outside the tested atmosphere. (nearest tested condition at distance 15.8) [eng:incident:apollo1]\n\n**Findings:** At Earth gravity (9.81 m/s²) with the assumed 10 cm/s ventilation the flame is buoyancy-dominated (Ri 39.2; Monte Carlo: 0% forced, 4% mixed, 96% buoyant). At the sourced atmosphere (O2 100% at 16.7 psia) the oxygen partial pressure is 16.7 psia (sea-level air is about 3.08 psia). O2 100% at 16.7 psia is outside every tested atmosphere: no evidence for M1–M5 (nearest tested atmosphere distance 12.0; the evidence gate is 2.0). [eng:incident:apollo1]\n\n**What the sources say:**\n- date: “On Jan. 27, 1967, astronauts Virgil “Gus” Grissom, Edward White and Robert Chaffee lost their lives during a preflight test for AS-204” [https://sma.nasa.gov/sma-disciplines/accllp/apollo-1]\n- summary: “during a preflight test for AS-204 when a fire swept through the Command Module (CM).” [https://sma.nasa.gov/sma-disciplines/accllp/apollo-1]\n- g_m_s2: “On Jan. 27, Grissom, White and Chaffee were scheduled to conduct a key test on the launch pad” [https://sma.nasa.gov/sma-disciplines/accllp/apollo-1]\n- o2: “the spacecraft’s hatches closed and the cabin pressurized with 100% oxygen.” [https://sma.nasa.gov/sma-disciplines/accllp/apollo-1]\n- p_psia: “pure oxygen at a pressure of 11.5 newtons per square centimeter (16.7 pounds per square inch) was substituted.” [https://www.nasa.gov/history/Apollo204/chariot.html]\n- phase: “During this \"plugs out\" test, all electrical, environmental, and ground checkout cables would be disconnected” [https://www.nasa.gov/history/Apollo204/chariot.html]\n\nThis is what today's PSI data can and cannot say about these conditions. It is not a reconstruction of the event and not a judgement of the crew or of the people who worked on it.",
+      "citations": [
+        "eng:incident:apollo1",
+        "https://sma.nasa.gov/sma-disciplines/accllp/apollo-1",
+        "https://www.nasa.gov/history/Apollo204/chariot.html",
+        "PSI-69",
+        "PSI-159"
+      ],
+      "numbers_used": [
+        1.0,
+        27.0,
+        1967.0,
+        9.81,
+        16.7,
+        100.0,
+        10.0,
+        10.0,
+        10.0,
+        10.0,
+        62.6,
+        10.0,
+        39.2,
+        0.1,
+        10.0,
+        0.0,
+        3.65,
+        96.4,
+        1.0,
+        1.14,
+        2.0,
+        0.34,
+        0.71,
+        13.29,
+        13.3,
+        1.0,
+        1.14,
+        2.0,
+        0.3,
+        1.01,
+        14.01,
+        14.0,
+        1.0,
+        1.14,
+        2.0,
+        0.4,
+        1.0,
+        12.01,
+        12.0,
+        1.0,
+        22.0,
+        21.5,
+        22.1,
+        1.0,
+        20.0,
+        100.0,
+        20.0,
+        24.0,
+        16.7,
+        1.14,
+        0.9,
+        1.1,
+        15.6,
+        21.0,
+        1.0,
+        100.0,
+        19.0,
+        23.5,
+        16.7,
+        1.14,
+        0.9,
+        1.1,
+        15.8,
+        9.81,
+        10.0,
+        39.2,
+        0.0,
+        4.0,
+        96.0,
+        100.0,
+        16.7,
+        16.7,
+        3.08,
+        100.0,
+        16.7,
+        12.0,
+        2.0,
+        27.0,
+        1967.0,
+        27.0,
+        100.0,
+        11.5,
+        16.7
+      ],
+      "validated": true,
+      "validation": {
+        "ok": true,
+        "errors": [],
+        "numbers": [
+          {
+            "text": "1",
+            "value": 1.0,
+            "source": "habitat.label~text"
+          },
+          {
+            "text": "27",
+            "value": 27.0,
+            "source": "incidents[0].summary~text"
+          },
+          {
+            "text": "1967",
+            "value": 1967.0,
+            "source": "incidents[0].summary~text"
+          },
+          {
+            "text": "9.81",
+            "value": 9.81,
+            "source": "habitat.g_m_s2"
+          },
+          {
+            "text": "16.7",
+            "value": 16.7,
+            "source": "habitat.p_psia"
+          },
+          {
+            "text": "100%",
+            "value": 100.0,
+            "source": "habitat.o2_percent"
+          },
+          {
+            "text": "10",
+            "value": 10.0,
+            "source": "habitat.u_cm_s"
+          },
+          {
+            "text": "10",
+            "value": 10.0,
+            "source": "habitat.u_cm_s"
+          },
+          {
+            "text": "10",
+            "value": 10.0,
+            "source": "habitat.u_cm_s"
+          },
+          {
+            "text": "10",
+            "value": 10.0,
+            "source": "habitat.u_cm_s"
+          },
+          {
+            "text": "62.6",
+            "value": 62.6,
+            "source": "physics.u_b_cm_s"
+          },
+          {
+            "text": "10",
+            "value": 10.0,
+            "source": "habitat.u_cm_s"
+          },
+          {
+            "text": "39.2",
+            "value": 39.2,
+            "source": "physics.ri"
+          },
+          {
+            "text": "0.1",
+            "value": 0.1,
+            "source": "design_implications[0]~text"
+          },
+          {
+            "text": "10",
+            "value": 10.0,
+            "source": "habitat.u_cm_s"
+          },
+          {
+            "text": "0%",
+            "value": 0.0,
+            "source": "physics.mc.regime_fractions.forced"
+          },
+          {
+            "text": "3.65%",
+            "value": 3.65,
+            "source": "evidence[5].size_mm"
+          },
+          {
+            "text": "96.4%",
+            "value": 96.4,
+            "source": "incidents[0].findings[0]~text"
+          },
+          {
+            "text": "1.000",
+            "value": 1.0,
+            "source": "habitat.label~text"
+          },
+          {
+            "text": "1.14",
+            "value": 1.14,
+            "source": "predictions.M1.reason~text"
+          },
+          {
+            "text": "2",
+            "value": 2.0,
+            "source": "predictions.M1.reason~text"
+          },
+          {
+            "text": "0.340",
+            "value": 0.34,
+            "source": "predictions.M1.reason~text"
+          },
+          {
+            "text": "0.71",
+            "value": 0.71,
+            "source": "predictions.M1.reason~text"
+          },
+          {
+            "text": "13.29",
+            "value": 13.29,
+            "source": "predictions.M1.reason~text"
+          },
+          {
+            "text": "13.3",
+            "value": 13.3,
+            "source": "predictions.M1.reason~text"
+          },
+          {
+            "text": "1.000",
+            "value": 1.0,
+            "source": "habitat.label~text"
+          },
+          {
+            "text": "1.14",
+            "value": 1.14,
+            "source": "predictions.M1.reason~text"
+          },
+          {
+            "text": "2",
+            "value": 2.0,
+            "source": "predictions.M1.reason~text"
+          },
+          {
+            "text": "0.300",
+            "value": 0.3,
+            "source": "predictions.M2.reason~text"
+          },
+          {
+            "text": "1.01",
+            "value": 1.01,
+            "source": "predictions.M2.reason~text"
+          },
+          {
+            "text": "14.01",
+            "value": 14.01,
+            "source": "predictions.M2.reason~text"
+          },
+          {
+            "text": "14",
+            "value": 14.0,
+            "source": "predictions.M2.reason~text"
+          },
+          {
+            "text": "1.000",
+            "value": 1.0,
+            "source": "habitat.label~text"
+          },
+          {
+            "text": "1.14",
+            "value": 1.14,
+            "source": "predictions.M1.reason~text"
+          },
+          {
+            "text": "2",
+            "value": 2.0,
+            "source": "predictions.M1.reason~text"
+          },
+          {
+            "text": "0.400",
+            "value": 0.4,
+            "source": "predictions.M3.reason~text"
+          },
+          {
+            "text": "1.00",
+            "value": 1.0,
+            "source": "habitat.label~text"
+          },
+          {
+            "text": "12.01",
+            "value": 12.01,
+            "source": "predictions.M3.reason~text"
+          },
+          {
+            "text": "12",
+            "value": 12.0,
+            "source": "predictions.M3.reason~text"
+          },
+          {
+            "text": "1",
+            "value": 1.0,
+            "source": "habitat.label~text"
+          },
+          {
+            "text": "22%",
+            "value": 22.0,
+            "source": "predictions.M4.reason~text"
+          },
+          {
+            "text": "21.5",
+            "value": 21.5,
+            "source": "predictions.M4.reason~text"
+          },
+          {
+            "text": "22.1%",
+            "value": 22.1,
+            "source": "predictions.M4.reason~text"
+          },
+          {
+            "text": "1",
+            "value": 1.0,
+            "source": "habitat.label~text"
+          },
+          {
+            "text": "20",
+            "value": 20.0,
+            "source": "predictions.M4.reason~text"
+          },
+          {
+            "text": "100.0%",
+            "value": 100.0,
+            "source": "habitat.o2_percent"
+          },
+          {
+            "text": "20",
+            "value": 20.0,
+            "source": "predictions.M4.reason~text"
+          },
+          {
+            "text": "24.0%",
+            "value": 24.0,
+            "source": "predictions.M4.reason~text"
+          },
+          {
+            "text": "16.7",
+            "value": 16.7,
+            "source": "habitat.p_psia"
+          },
+          {
+            "text": "1.14",
+            "value": 1.14,
+            "source": "predictions.M1.reason~text"
+          },
+          {
+            "text": "0.9",
+            "value": 0.9,
+            "source": "predictions.M4.reason~text"
+          },
+          {
+            "text": "1.1",
+            "value": 1.1,
+            "source": "predictions.M4.reason~text"
+          },
+          {
+            "text": "15.6",
+            "value": 15.6,
+            "source": "incidents[0].coverage.M4.nearest_distance"
+          },
+          {
+            "text": "21%",
+            "value": 21.0,
+            "source": "predictions.M5.reason~text"
+          },
+          {
+            "text": "1",
+            "value": 1.0,
+            "source": "habitat.label~text"
+          },
+          {
+            "text": "100.0%",
+            "value": 100.0,
+            "source": "habitat.o2_percent"
+          },
+          {
+            "text": "19",
+            "value": 19.0,
+            "source": "predictions.M5.reason~text"
+          },
+          {
+            "text": "23.5%",
+            "value": 23.5,
+            "source": "predictions.M5.reason~text"
+          },
+          {
+            "text": "16.7",
+            "value": 16.7,
+            "source": "habitat.p_psia"
+          },
+          {
+            "text": "1.14",
+            "value": 1.14,
+            "source": "predictions.M1.reason~text"
+          },
+          {
+            "text": "0.9",
+            "value": 0.9,
+            "source": "predictions.M4.reason~text"
+          },
+          {
+            "text": "1.1",
+            "value": 1.1,
+            "source": "predictions.M4.reason~text"
+          },
+          {
+            "text": "15.8",
+            "value": 15.8,
+            "source": "incidents[0].coverage.M5.nearest_distance"
+          },
+          {
+            "text": "9.81",
+            "value": 9.81,
+            "source": "habitat.g_m_s2"
+          },
+          {
+            "text": "10",
+            "value": 10.0,
+            "source": "habitat.u_cm_s"
+          },
+          {
+            "text": "39.2",
+            "value": 39.2,
+            "source": "physics.ri"
+          },
+          {
+            "text": "0%",
+            "value": 0.0,
+            "source": "physics.mc.regime_fractions.forced"
+          },
+          {
+            "text": "4%",
+            "value": 4.0,
+            "source": "planner[3].rank"
+          },
+          {
+            "text": "96%",
+            "value": 96.0,
+            "source": "incidents[0].findings[0]~text"
+          },
+          {
+            "text": "100%",
+            "value": 100.0,
+            "source": "habitat.o2_percent"
+          },
+          {
+            "text": "16.7",
+            "value": 16.7,
+            "source": "habitat.p_psia"
+          },
+          {
+            "text": "16.7",
+            "value": 16.7,
+            "source": "habitat.p_psia"
+          },
+          {
+            "text": "3.08",
+            "value": 3.08,
+            "source": "evidence[1].size_mm"
+          },
+          {
+            "text": "100%",
+            "value": 100.0,
+            "source": "habitat.o2_percent"
+          },
+          {
+            "text": "16.7",
+            "value": 16.7,
+            "source": "habitat.p_psia"
+          },
+          {
+            "text": "12.0",
+            "value": 12.0,
+            "source": "predictions.M3.reason~text"
+          },
+          {
+            "text": "2.0",
+            "value": 2.0,
+            "source": "predictions.M1.reason~text"
+          },
+          {
+            "text": "27",
+            "value": 27.0,
+            "source": "incidents[0].summary~text"
+          },
+          {
+            "text": "1967",
+            "value": 1967.0,
+            "source": "incidents[0].summary~text"
+          },
+          {
+            "text": "27",
+            "value": 27.0,
+            "source": "incidents[0].summary~text"
+          },
+          {
+            "text": "100%",
+            "value": 100.0,
+            "source": "habitat.o2_percent"
+          },
+          {
+            "text": "11.5",
+            "value": 11.5,
+            "source": "incidents[0].sources[4].quote~text"
+          },
+          {
+            "text": "16.7",
+            "value": 16.7,
+            "source": "habitat.p_psia"
+          }
+        ],
+        "citations": [
+          {
+            "id": "eng:incident:apollo1",
+            "resolved": true
+          },
+          {
+            "id": "https://sma.nasa.gov/sma-disciplines/accllp/apollo-1",
+            "resolved": true
+          },
+          {
+            "id": "https://www.nasa.gov/history/Apollo204/chariot.html",
+            "resolved": true
+          },
+          {
+            "id": "PSI-69",
+            "resolved": true
+          },
+          {
+            "id": "PSI-159",
+            "resolved": true
+          }
+        ]
+      }
+    },
+    {
+      "question": "Is Apollo 13 in scope?",
+      "question_key": "is apollo 13 in scope",
+      "habitat": "incident:apollo13",
+      "fingerprint": "f2858ac77b2a8aad2f8b9e4427b4e5d32ddf5ff297c6d99505739064d1da7728",
+      "intent": "incident",
+      "mode_generated": "template",
+      "answer_markdown": "**Apollo 13 (1970)**: third day of the mission, translunar flight (launched April 11, 1970) [eng:incident:apollo13].\n\n**Outside Gravity Gap's scope.** Apollo 13 was a failure of a high-pressure oxygen tank in the Service Module, not a cabin fire, so the PSI combustion data and this tool do not apply. Gravity Gap studies cabin fires (burning materials, fuel droplets and small gas flames in a cabin atmosphere with ventilation) using NASA PSI combustion experiments, so it gives no regime, estimate or band for this event [eng:incident:apollo13].\n\nOn the third day of the Apollo 13 mission, oxygen tank number two failed, followed by tank number one; the lunar landing was called off and the crew returned to Earth safely. [eng:incident:apollo13] [https://sma.nasa.gov/sma-disciplines/accllp/apollo-13]\n\n**What the sources say:**\n- summary: “oxygen tank number two blew up, leading to the subsequent failure of tank number one.” [https://sma.nasa.gov/sma-disciplines/accllp/apollo-13]\n- date: “Things went smoothly until the third day of the mission” [https://sma.nasa.gov/sma-disciplines/accllp/apollo-13]\n- date: “Launch April 11, 1970” [https://www.nasa.gov/mission/apollo-13/]\n\nGravity Gap makes no prediction about this event. This is not a judgement of the crew or of the people who worked on it.",
+      "citations": [
+        "eng:incident:apollo13",
+        "https://sma.nasa.gov/sma-disciplines/accllp/apollo-13",
+        "https://www.nasa.gov/mission/apollo-13/"
+      ],
+      "numbers_used": [
+        13.0,
+        11.0,
+        1970.0,
+        13.0,
+        13.0,
+        11.0,
+        1970.0
+      ],
+      "validated": true,
+      "validation": {
+        "ok": true,
+        "errors": [],
+        "numbers": [
+          {
+            "text": "13",
+            "value": 13.0,
+            "source": "incidents[0].name~text"
+          },
+          {
+            "text": "11",
+            "value": 11.0,
+            "source": "incidents[0].phase~text"
+          },
+          {
+            "text": "1970",
+            "value": 1970.0,
+            "source": "incidents[0].phase~text"
+          },
+          {
+            "text": "13",
+            "value": 13.0,
+            "source": "incidents[0].name~text"
+          },
+          {
+            "text": "13",
+            "value": 13.0,
+            "source": "incidents[0].name~text"
+          },
+          {
+            "text": "11",
+            "value": 11.0,
+            "source": "incidents[0].phase~text"
+          },
+          {
+            "text": "1970",
+            "value": 1970.0,
+            "source": "incidents[0].phase~text"
+          }
+        ],
+        "citations": [
+          {
+            "id": "eng:incident:apollo13",
+            "resolved": true
+          },
+          {
+            "id": "https://sma.nasa.gov/sma-disciplines/accllp/apollo-13",
+            "resolved": true
+          },
+          {
+            "id": "https://www.nasa.gov/mission/apollo-13/",
+            "resolved": true
+          }
+        ]
       }
     }
   ]
