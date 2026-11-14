@@ -1,6 +1,6 @@
 {
-  "version": "1.0.0+4dfd844b4112",
-  "generated_at": "2026-11-14T17:56:20+00:00",
+  "version": "1.1.0+4dfd844b4112",
+  "generated_at": "2026-11-14T18:06:47+00:00",
   "generated_by": "engine/catalog.py",
   "rules": {
     "hazard_pillars": {
@@ -9,7 +9,13 @@
       "suppression": "extingu|suppress|dilut|helium|co2"
     },
     "n_tests": "psi_tests.csv rows; day-summary-only investigations: sum of flames_ignited",
-    "conditions": "min/max over clean data; null when the source has no value",
+    "conditions": "min/max over clean data; null when the source has no value; o2 = ambient rows only, burner-stream O2 in o2_burner_stream",
+    "fuel_phase_overrides": {
+      "PSI-47": "aerosol",
+      "PSI-101": "solid",
+      "PSI-102": "solid",
+      "PSI-115": "solid"
+    },
     "ground_reference": "true only when 1-g columns exist in the clean data (SAFFIRE-II)"
   },
   "investigations": [
@@ -34,13 +40,17 @@
       "conditions": {
         "o2": [
           0.198048,
-          0.849978
+          0.4
         ],
         "pressure_atm": [
           0.425968,
           3.01818
         ],
-        "flow_cm_s": null
+        "flow_cm_s": null,
+        "o2_burner_stream": [
+          0.212017,
+          0.849978
+        ]
       },
       "conditions_source": "psi_tests.csv",
       "n_tests": 327,
@@ -230,7 +240,8 @@
           0.4
         ],
         "pressure_atm": null,
-        "flow_cm_s": null
+        "flow_cm_s": null,
+        "o2_burner_stream": null
       },
       "conditions_source": "psi_test_day_summaries.csv",
       "n_tests": 194,
@@ -348,7 +359,8 @@
       "conditions": {
         "o2": null,
         "pressure_atm": null,
-        "flow_cm_s": null
+        "flow_cm_s": null,
+        "o2_burner_stream": null
       },
       "conditions_source": "psi_test_day_summaries.csv",
       "n_tests": 344,
@@ -473,7 +485,8 @@
       "conditions": {
         "o2": null,
         "pressure_atm": null,
-        "flow_cm_s": null
+        "flow_cm_s": null,
+        "o2_burner_stream": null
       },
       "conditions_source": "psi_test_day_summaries.csv",
       "n_tests": 230,
@@ -625,7 +638,8 @@
           0.3
         ],
         "pressure_atm": null,
-        "flow_cm_s": null
+        "flow_cm_s": null,
+        "o2_burner_stream": null
       },
       "conditions_source": "psi_test_day_summaries.csv",
       "n_tests": 276,
@@ -852,7 +866,8 @@
           0.222
         ],
         "pressure_atm": null,
-        "flow_cm_s": null
+        "flow_cm_s": null,
+        "o2_burner_stream": null
       },
       "conditions_source": "psi_tests.csv",
       "n_tests": 129,
@@ -984,7 +999,8 @@
       "conditions": {
         "o2": null,
         "pressure_atm": null,
-        "flow_cm_s": null
+        "flow_cm_s": null,
+        "o2_burner_stream": null
       },
       "conditions_source": "psi_tests.csv",
       "n_tests": 121,
@@ -1092,7 +1108,8 @@
           0.5,
           5.0
         ],
-        "flow_cm_s": null
+        "flow_cm_s": null,
+        "o2_burner_stream": null
       },
       "conditions_source": "psi_tests.csv",
       "n_tests": 79,
@@ -1168,8 +1185,8 @@
       "research_area": "Combustion Science",
       "sub_research_area": "Spacecraft Fire Safety",
       "project_type": "Microgravity Investigation",
-      "fuel_phase": null,
-      "fuel_phase_basis": null,
+      "fuel_phase": "aerosol",
+      "fuel_phase_basis": "curated: DAFT aerosolised a test dust (Arizona Red Dust) to check smoke/particle instruments; nothing was burned, so this is not a fuel (fuel_realism 0) (metadata evidence 'Arizona Red Dust')",
       "gravity_levels": [
         "microgravity"
       ],
@@ -1178,7 +1195,8 @@
       "conditions": {
         "o2": null,
         "pressure_atm": null,
-        "flow_cm_s": null
+        "flow_cm_s": null,
+        "o2_burner_stream": null
       },
       "conditions_source": null,
       "n_tests": 0,
@@ -1238,7 +1256,8 @@
       "conditions": {
         "o2": null,
         "pressure_atm": null,
-        "flow_cm_s": null
+        "flow_cm_s": null,
+        "o2_burner_stream": null
       },
       "conditions_source": null,
       "n_tests": 0,
@@ -1304,7 +1323,8 @@
       "conditions": {
         "o2": null,
         "pressure_atm": null,
-        "flow_cm_s": null
+        "flow_cm_s": null,
+        "o2_burner_stream": null
       },
       "conditions_source": null,
       "n_tests": 0,
@@ -1392,7 +1412,8 @@
         "flow_cm_s": [
           0.1,
           5.0
-        ]
+        ],
+        "o2_burner_stream": null
       },
       "conditions_source": "psi_test_day_summaries.csv",
       "n_tests": 0,
@@ -1645,7 +1666,8 @@
           0.6925,
           3.0525
         ],
-        "flow_cm_s": null
+        "flow_cm_s": null,
+        "o2_burner_stream": null
       },
       "conditions_source": "psi_tests.csv",
       "n_tests": 274,
@@ -1921,7 +1943,8 @@
         "flow_cm_s": [
           20.0,
           20.0
-        ]
+        ],
+        "o2_burner_stream": null
       },
       "conditions_source": "psi_tests.csv",
       "n_tests": 2,
@@ -2005,7 +2028,8 @@
         "flow_cm_s": [
           20.0,
           20.0
-        ]
+        ],
+        "o2_burner_stream": null
       },
       "conditions_source": "psi_tests.csv",
       "n_tests": 9,
@@ -2085,7 +2109,8 @@
         "flow_cm_s": [
           30.0,
           30.0
-        ]
+        ],
+        "o2_burner_stream": null
       },
       "conditions_source": "psi_tests.csv",
       "n_tests": 2,
@@ -2139,8 +2164,8 @@
       "research_area": "Combustion Science",
       "sub_research_area": "Spacecraft Fire Safety",
       "project_type": "Microgravity Investigation",
-      "fuel_phase": null,
-      "fuel_phase_basis": null,
+      "fuel_phase": "solid",
+      "fuel_phase_basis": "curated: SAME-R smoke came from heated (pyrolysing/smouldering) solid spacecraft material samples (Teflon, Kapton, silicone, Pyrell, cotton lamp wick) (metadata evidence 'Kapton')",
       "gravity_levels": [
         "microgravity"
       ],
@@ -2149,7 +2174,8 @@
       "conditions": {
         "o2": null,
         "pressure_atm": null,
-        "flow_cm_s": null
+        "flow_cm_s": null,
+        "o2_burner_stream": null
       },
       "conditions_source": null,
       "n_tests": 0,
@@ -2226,8 +2252,8 @@
       "research_area": "Combustion Science",
       "sub_research_area": "Spacecraft Fire Safety",
       "project_type": "Microgravity Investigation",
-      "fuel_phase": null,
-      "fuel_phase_basis": null,
+      "fuel_phase": "solid",
+      "fuel_phase_basis": "curated: SAME smoke came from overheated solid spacecraft material samples (Teflon, Kapton, silicone, cotton lamp wick) (metadata evidence 'overheated  spacecraft materials')",
       "gravity_levels": [
         "microgravity"
       ],
@@ -2236,7 +2262,8 @@
       "conditions": {
         "o2": null,
         "pressure_atm": null,
-        "flow_cm_s": null
+        "flow_cm_s": null,
+        "o2_burner_stream": null
       },
       "conditions_source": null,
       "n_tests": 0,
@@ -2361,7 +2388,8 @@
       "conditions": {
         "o2": null,
         "pressure_atm": null,
-        "flow_cm_s": null
+        "flow_cm_s": null,
+        "o2_burner_stream": null
       },
       "conditions_source": "psi_test_day_summaries.csv",
       "n_tests": 0,
@@ -2437,7 +2465,8 @@
         "flow_cm_s": [
           -0.28,
           85.28
-        ]
+        ],
+        "o2_burner_stream": null
       },
       "conditions_source": "psi_tests.csv",
       "n_tests": 434,
@@ -2526,7 +2555,8 @@
       "conditions": {
         "o2": null,
         "pressure_atm": null,
-        "flow_cm_s": null
+        "flow_cm_s": null,
+        "o2_burner_stream": null
       },
       "conditions_source": null,
       "n_tests": 0,
@@ -2627,8 +2657,8 @@
       "research_area": "Combustion Science",
       "sub_research_area": "Smoke Aerosol, Combustion Simulation",
       "project_type": "Ground Investigation",
-      "fuel_phase": null,
-      "fuel_phase_basis": null,
+      "fuel_phase": "solid",
+      "fuel_phase_basis": "curated: numerical modeling of SAME: smoke from pyrolysis vapour of a heated solid sample (metadata evidence 'pyrolysis vapor expelled from a heated sample')",
       "gravity_levels": [
         "normal_gravity"
       ],
@@ -2637,7 +2667,8 @@
       "conditions": {
         "o2": null,
         "pressure_atm": null,
-        "flow_cm_s": null
+        "flow_cm_s": null,
+        "o2_burner_stream": null
       },
       "conditions_source": null,
       "n_tests": 0,
@@ -2698,7 +2729,8 @@
       "conditions": {
         "o2": null,
         "pressure_atm": null,
-        "flow_cm_s": null
+        "flow_cm_s": null,
+        "o2_burner_stream": null
       },
       "conditions_source": null,
       "n_tests": 0,
@@ -2799,7 +2831,8 @@
       "conditions": {
         "o2": null,
         "pressure_atm": null,
-        "flow_cm_s": null
+        "flow_cm_s": null,
+        "o2_burner_stream": null
       },
       "conditions_source": null,
       "n_tests": 0,
@@ -2906,14 +2939,18 @@
       "ground_reference_note": null,
       "conditions": {
         "o2": [
-          0.12,
-          0.85
+          0.179686,
+          0.3997
         ],
         "pressure_atm": [
           0.488904,
           3.266617
         ],
-        "flow_cm_s": null
+        "flow_cm_s": null,
+        "o2_burner_stream": [
+          0.12,
+          0.85
+        ]
       },
       "conditions_source": "psi_tests.csv",
       "n_tests": 333,
@@ -2962,7 +2999,8 @@
       "conditions": {
         "o2": null,
         "pressure_atm": null,
-        "flow_cm_s": null
+        "flow_cm_s": null,
+        "o2_burner_stream": null
       },
       "conditions_source": null,
       "n_tests": 0,

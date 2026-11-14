@@ -1,0 +1,473 @@
+{
+  "version": "1.0.0+7b92872a8b9e",
+  "generated_by": "engine/rules.py",
+  "categories": [
+    "no_sustained_burn",
+    "partial_burn",
+    "complete_burn",
+    "between"
+  ],
+  "m4": {
+    "source": "data/clean/psi_saffire_ug_vs_1g.csv (+ psi_tests.csv outcome), SAFFIRE-II PSI-99",
+    "tested": {
+      "o2": [
+        0.215,
+        0.221
+      ],
+      "pressure_atm": "not in table; ~1 atm cabin assumed",
+      "flow_cm_s": 20.0
+    },
+    "gate": {
+      "o2": [
+        0.2,
+        0.24
+      ],
+      "pressure_atm": [
+        0.9,
+        1.1
+      ]
+    },
+    "materials": {
+      "silicone": {
+        "label": "Silicone",
+        "rows": [
+          {
+            "sample": "2-1",
+            "record_id": "PSI-99:SAFFIRE-2:1",
+            "thickness_mm": 0.27,
+            "flow_cm_s": 20.0,
+            "flow_direction": "concurrent",
+            "o2": 0.215,
+            "ug_burned_fraction": 0.0,
+            "1g_burned_fraction": 1.0,
+            "ug_outcome": "no_sustained_burn",
+            "1g_outcome": "complete_burn",
+            "needs_manual_review": false,
+            "ug_burn_length_raw": "~ 0"
+          },
+          {
+            "sample": "2-2",
+            "record_id": "PSI-99:SAFFIRE-2:2",
+            "thickness_mm": 0.61,
+            "flow_cm_s": 20.0,
+            "flow_direction": "concurrent",
+            "o2": 0.221,
+            "ug_burned_fraction": 0.0,
+            "1g_burned_fraction": 0.2620689655172413,
+            "ug_outcome": "no_sustained_burn",
+            "1g_outcome": "partial_burn",
+            "needs_manual_review": false,
+            "ug_burn_length_raw": "~ 0"
+          },
+          {
+            "sample": "2-3",
+            "record_id": "PSI-99:SAFFIRE-2:3",
+            "thickness_mm": 1.03,
+            "flow_cm_s": 20.0,
+            "flow_direction": "concurrent",
+            "o2": 0.221,
+            "ug_burned_fraction": 0.0,
+            "1g_burned_fraction": 0.0,
+            "ug_outcome": "no_sustained_burn",
+            "1g_outcome": "no_sustained_burn",
+            "needs_manual_review": false,
+            "ug_burn_length_raw": "~ 0"
+          },
+          {
+            "sample": "2-4",
+            "record_id": "PSI-99:SAFFIRE-2:4",
+            "thickness_mm": 0.37,
+            "flow_cm_s": 20.0,
+            "flow_direction": "opposed",
+            "o2": 0.221,
+            "ug_burned_fraction": 0.0,
+            "1g_burned_fraction": 1.0,
+            "ug_outcome": "no_sustained_burn",
+            "1g_outcome": "complete_burn",
+            "needs_manual_review": false,
+            "ug_burn_length_raw": "~ 0"
+          }
+        ],
+        "ug_outcome": "no_sustained_burn",
+        "1g_outcome": "complete_burn",
+        "confidence": "medium",
+        "n": 4
+      },
+      "sibal": {
+        "label": "Cotton-Fiberglass (SIBAL)",
+        "rows": [
+          {
+            "sample": "2-5",
+            "record_id": "PSI-99:SAFFIRE-2:5",
+            "thickness_mm": 0.37,
+            "flow_cm_s": 20.0,
+            "flow_direction": "concurrent",
+            "o2": 0.221,
+            "ug_burned_fraction": 1.0,
+            "1g_burned_fraction": 1.0,
+            "ug_outcome": "complete_burn",
+            "1g_outcome": "complete_burn",
+            "needs_manual_review": false,
+            "ug_burn_length_raw": "29 cm"
+          },
+          {
+            "sample": "2-6",
+            "record_id": "PSI-99:SAFFIRE-2:6",
+            "thickness_mm": 0.37,
+            "flow_cm_s": 20.0,
+            "flow_direction": "concurrent",
+            "o2": 0.221,
+            "ug_burned_fraction": 1.0,
+            "1g_burned_fraction": 1.0,
+            "ug_outcome": "complete_burn",
+            "1g_outcome": "complete_burn",
+            "needs_manual_review": false,
+            "ug_burn_length_raw": "29 cm"
+          }
+        ],
+        "ug_outcome": "complete_burn",
+        "1g_outcome": "complete_burn",
+        "confidence": "medium",
+        "n": 2
+      },
+      "pmma_nomex": {
+        "label": "PMMA & Nomex",
+        "rows": [
+          {
+            "sample": "2-7",
+            "record_id": "PSI-99:SAFFIRE-2:7",
+            "thickness_mm": 0.85,
+            "flow_cm_s": 20.0,
+            "flow_direction": "concurrent",
+            "o2": 0.221,
+            "ug_burned_fraction": 1.0,
+            "1g_burned_fraction": 0.0,
+            "ug_outcome": "partial_burn",
+            "1g_outcome": "no_sustained_burn",
+            "needs_manual_review": true,
+            "ug_burn_length_raw": "5 cm & 0 (note 2)"
+          }
+        ],
+        "ug_outcome": "partial_burn",
+        "1g_outcome": "no_sustained_burn",
+        "confidence": "low",
+        "n": 1
+      },
+      "pmma": {
+        "label": "PMMA",
+        "rows": [
+          {
+            "sample": "2-8",
+            "record_id": "PSI-99:SAFFIRE-2:8",
+            "thickness_mm": null,
+            "flow_cm_s": 20.0,
+            "flow_direction": "concurrent",
+            "o2": 0.2205,
+            "ug_burned_fraction": 0.3448275862068966,
+            "1g_burned_fraction": 1.0,
+            "ug_outcome": "partial_burn",
+            "1g_outcome": "complete_burn",
+            "needs_manual_review": true,
+            "ug_burn_length_raw": "~ 10 cm (note 3)"
+          },
+          {
+            "sample": "2-9",
+            "record_id": "PSI-99:SAFFIRE-2:9",
+            "thickness_mm": 10.0,
+            "flow_cm_s": 20.0,
+            "flow_direction": "concurrent",
+            "o2": 0.2195,
+            "ug_burned_fraction": 0.3448275862068966,
+            "1g_burned_fraction": 1.0,
+            "ug_outcome": "partial_burn",
+            "1g_outcome": "complete_burn",
+            "needs_manual_review": true,
+            "ug_burn_length_raw": "~ 10 cm (note 4)"
+          }
+        ],
+        "ug_outcome": "partial_burn",
+        "1g_outcome": "complete_burn",
+        "confidence": "low",
+        "n": 2
+      },
+      "any": {
+        "label": "any SAFFIRE-II material (most severe)",
+        "rows": [
+          {
+            "sample": "2-1",
+            "record_id": "PSI-99:SAFFIRE-2:1",
+            "thickness_mm": 0.27,
+            "flow_cm_s": 20.0,
+            "flow_direction": "concurrent",
+            "o2": 0.215,
+            "ug_burned_fraction": 0.0,
+            "1g_burned_fraction": 1.0,
+            "ug_outcome": "no_sustained_burn",
+            "1g_outcome": "complete_burn",
+            "needs_manual_review": false,
+            "ug_burn_length_raw": "~ 0"
+          },
+          {
+            "sample": "2-2",
+            "record_id": "PSI-99:SAFFIRE-2:2",
+            "thickness_mm": 0.61,
+            "flow_cm_s": 20.0,
+            "flow_direction": "concurrent",
+            "o2": 0.221,
+            "ug_burned_fraction": 0.0,
+            "1g_burned_fraction": 0.2620689655172413,
+            "ug_outcome": "no_sustained_burn",
+            "1g_outcome": "partial_burn",
+            "needs_manual_review": false,
+            "ug_burn_length_raw": "~ 0"
+          },
+          {
+            "sample": "2-3",
+            "record_id": "PSI-99:SAFFIRE-2:3",
+            "thickness_mm": 1.03,
+            "flow_cm_s": 20.0,
+            "flow_direction": "concurrent",
+            "o2": 0.221,
+            "ug_burned_fraction": 0.0,
+            "1g_burned_fraction": 0.0,
+            "ug_outcome": "no_sustained_burn",
+            "1g_outcome": "no_sustained_burn",
+            "needs_manual_review": false,
+            "ug_burn_length_raw": "~ 0"
+          },
+          {
+            "sample": "2-4",
+            "record_id": "PSI-99:SAFFIRE-2:4",
+            "thickness_mm": 0.37,
+            "flow_cm_s": 20.0,
+            "flow_direction": "opposed",
+            "o2": 0.221,
+            "ug_burned_fraction": 0.0,
+            "1g_burned_fraction": 1.0,
+            "ug_outcome": "no_sustained_burn",
+            "1g_outcome": "complete_burn",
+            "needs_manual_review": false,
+            "ug_burn_length_raw": "~ 0"
+          },
+          {
+            "sample": "2-5",
+            "record_id": "PSI-99:SAFFIRE-2:5",
+            "thickness_mm": 0.37,
+            "flow_cm_s": 20.0,
+            "flow_direction": "concurrent",
+            "o2": 0.221,
+            "ug_burned_fraction": 1.0,
+            "1g_burned_fraction": 1.0,
+            "ug_outcome": "complete_burn",
+            "1g_outcome": "complete_burn",
+            "needs_manual_review": false,
+            "ug_burn_length_raw": "29 cm"
+          },
+          {
+            "sample": "2-6",
+            "record_id": "PSI-99:SAFFIRE-2:6",
+            "thickness_mm": 0.37,
+            "flow_cm_s": 20.0,
+            "flow_direction": "concurrent",
+            "o2": 0.221,
+            "ug_burned_fraction": 1.0,
+            "1g_burned_fraction": 1.0,
+            "ug_outcome": "complete_burn",
+            "1g_outcome": "complete_burn",
+            "needs_manual_review": false,
+            "ug_burn_length_raw": "29 cm"
+          },
+          {
+            "sample": "2-7",
+            "record_id": "PSI-99:SAFFIRE-2:7",
+            "thickness_mm": 0.85,
+            "flow_cm_s": 20.0,
+            "flow_direction": "concurrent",
+            "o2": 0.221,
+            "ug_burned_fraction": 1.0,
+            "1g_burned_fraction": 0.0,
+            "ug_outcome": "partial_burn",
+            "1g_outcome": "no_sustained_burn",
+            "needs_manual_review": true,
+            "ug_burn_length_raw": "5 cm & 0 (note 2)"
+          },
+          {
+            "sample": "2-8",
+            "record_id": "PSI-99:SAFFIRE-2:8",
+            "thickness_mm": null,
+            "flow_cm_s": 20.0,
+            "flow_direction": "concurrent",
+            "o2": 0.2205,
+            "ug_burned_fraction": 0.3448275862068966,
+            "1g_burned_fraction": 1.0,
+            "ug_outcome": "partial_burn",
+            "1g_outcome": "complete_burn",
+            "needs_manual_review": true,
+            "ug_burn_length_raw": "~ 10 cm (note 3)"
+          },
+          {
+            "sample": "2-9",
+            "record_id": "PSI-99:SAFFIRE-2:9",
+            "thickness_mm": 10.0,
+            "flow_cm_s": 20.0,
+            "flow_direction": "concurrent",
+            "o2": 0.2195,
+            "ug_burned_fraction": 0.3448275862068966,
+            "1g_burned_fraction": 1.0,
+            "ug_outcome": "partial_burn",
+            "1g_outcome": "complete_burn",
+            "needs_manual_review": true,
+            "ug_burn_length_raw": "~ 10 cm (note 4)"
+          }
+        ],
+        "ug_outcome": "complete_burn",
+        "1g_outcome": "complete_burn",
+        "confidence": "low",
+        "n": 9
+      }
+    }
+  },
+  "m5": {
+    "source": "data/clean/psi_tests.csv, SPICE PSI-107, ignited rows",
+    "atmosphere": "not in table (o2_and_pressure_not_in_table); ISS cabin air ~21% O2 / ~1 atm assumed",
+    "gate": {
+      "o2": [
+        0.19,
+        0.235
+      ],
+      "pressure_atm": [
+        0.9,
+        1.1
+      ]
+    },
+    "excluded_rows": {
+      "loss_of_signal": 3,
+      "negative_or_zero_flow": 5,
+      "no_flame_or_unknown": 0,
+      "flow_missing": 19
+    },
+    "n_rows": 407,
+    "windows": [
+      {
+        "fuel": "50% propylene",
+        "nozzle_mm": 0.4064,
+        "min_cm_s": 10.07,
+        "max_cm_s": 37.33,
+        "n": 20
+      },
+      {
+        "fuel": "50% propylene",
+        "nozzle_mm": 0.762,
+        "min_cm_s": 11.01,
+        "max_cm_s": 50.49,
+        "n": 31
+      },
+      {
+        "fuel": "50% propylene",
+        "nozzle_mm": 1.6002,
+        "min_cm_s": 10.07,
+        "max_cm_s": 66.48,
+        "n": 42
+      },
+      {
+        "fuel": "75% propylene",
+        "nozzle_mm": 0.4064,
+        "min_cm_s": 0.66,
+        "max_cm_s": 85.28,
+        "n": 59
+      },
+      {
+        "fuel": "75% propylene",
+        "nozzle_mm": 0.762,
+        "min_cm_s": 11.95,
+        "max_cm_s": 61.78,
+        "n": 25
+      },
+      {
+        "fuel": "75% propylene",
+        "nozzle_mm": 1.6002,
+        "min_cm_s": 12.89,
+        "max_cm_s": 65.54,
+        "n": 34
+      },
+      {
+        "fuel": "ethylene",
+        "nozzle_mm": 0.4064,
+        "min_cm_s": 15.71,
+        "max_cm_s": 58.02,
+        "n": 16
+      },
+      {
+        "fuel": "ethylene",
+        "nozzle_mm": 0.762,
+        "min_cm_s": 16.65,
+        "max_cm_s": 58.96,
+        "n": 12
+      },
+      {
+        "fuel": "ethylene",
+        "nozzle_mm": 1.6002,
+        "min_cm_s": 16.65,
+        "max_cm_s": 58.02,
+        "n": 13
+      },
+      {
+        "fuel": "methane",
+        "nozzle_mm": 0.4064,
+        "min_cm_s": 27.93,
+        "max_cm_s": 32.63,
+        "n": 2
+      },
+      {
+        "fuel": "methane",
+        "nozzle_mm": 0.762,
+        "min_cm_s": 50.49,
+        "max_cm_s": 55.2,
+        "n": 2
+      },
+      {
+        "fuel": "propane",
+        "nozzle_mm": 0.4064,
+        "min_cm_s": 14.77,
+        "max_cm_s": 33.57,
+        "n": 16
+      },
+      {
+        "fuel": "propane",
+        "nozzle_mm": 0.762,
+        "min_cm_s": 15.71,
+        "max_cm_s": 34.51,
+        "n": 10
+      },
+      {
+        "fuel": "propane",
+        "nozzle_mm": 1.6002,
+        "min_cm_s": 22.29,
+        "max_cm_s": 66.48,
+        "n": 17
+      },
+      {
+        "fuel": "propylene",
+        "nozzle_mm": 0.4064,
+        "min_cm_s": 4.42,
+        "max_cm_s": 56.14,
+        "n": 43
+      },
+      {
+        "fuel": "propylene",
+        "nozzle_mm": 0.762,
+        "min_cm_s": 6.3,
+        "max_cm_s": 51.43,
+        "n": 27
+      },
+      {
+        "fuel": "propylene",
+        "nozzle_mm": 1.6002,
+        "min_cm_s": 9.13,
+        "max_cm_s": 58.02,
+        "n": 38
+      }
+    ]
+  },
+  "psi62_hypothesis": "The unsteady flamelet generated manifold (UFGM) approach was believed to be able to accurately reproduce concurrent flame spread in microgravity, including phenomena such as the “Goldilocks” flammability zone, by coupling near-wall thermal, mass transport, and chemical processes with far-field flow dynamics."
+}

@@ -7,7 +7,8 @@ import random
 import pytest
 
 from engine.catalog import build_catalog
-from engine.rank import DEFAULT_WEIGHTS, atmosphere_part, rank
+from engine.montecarlo import sample_physics
+from engine.rank import DEFAULT_WEIGHTS, FUEL_REALISM, atmosphere_part, rank, regime_fit_part
 
 ISS = dict(g_m_s2=0.0, p_psia=14.7, o2=0.21, u_cm_s=10.0)
 LUNAR = dict(g_m_s2=1.62, p_psia=8.2, o2=0.34, u_cm_s=10.0)
@@ -97,3 +98,51 @@ def test_atmosphere_part_rules():
     assert exact == pytest.approx(1.0)
     far = atmosphere_part({"o2": [0.85, 0.85], "pressure_atm": [3.0, 3.0]}, 0.21, 1.0)[0]
     assert far < 0.01
+
+
+def test_default_weights_sum_to_one():
+    assert sum(DEFAULT_WEIGHTS.values()) == pytest.approx(1.0)
+    assert DEFAULT_WEIGHTS == {"atmosphere": 0.3, "pillar": 0.15, "fuel_realism": 0.15,
+                               "outcomes": 0.15, "n_tests": 0.1, "regime_fit": 0.15}
+
+
+def test_atmosphere_nearest_point_in_box():
+    box = {"o2": [0.15, 0.40], "pressure_atm": [0.5, 3.0]}
+    assert atmosphere_part(box, 0.34, 0.56)[0] == pytest.approx(1.0)   # lunar inside the box
+    # outside in O2 only: distance = (0.45 - 0.40) / 0.05 = 1 -> exp(-0.5)
+    assert atmosphere_part(box, 0.45, 1.0)[0] == pytest.approx(0.6065307, rel=1e-6)
+    # inside the box but far from every corner/midpoint still scores 1
+    wide = {"o2": [0.12, 0.85], "pressure_atm": [0.4, 3.3]}
+    assert atmosphere_part(wide, 0.34, 0.56)[0] == pytest.approx(1.0)
+
+
+def test_regime_fit_rules():
+    mc0 = sample_physics(0.0, 14.7, 0.21, 20.0, 10.0)
+    fit, _ = regime_fit_part({"flow_cm_s": [20.0, 20.0]}, mc0["u_eff"], 1.0)
+    assert fit == pytest.approx(1.0)
+    fit, basis = regime_fit_part({"flow_cm_s": None}, mc0["u_eff"], 0.37)
+    assert fit == 0.37 and "forced" in basis
+    fit, _ = regime_fit_part({"flow_cm_s": [-0.28, 5.0]}, mc0["u_eff"], 1.0)   # 20 cm/s > 7.5
+    assert fit == 0.0
+
+
+def test_gravity_changes_score_for_flow_tested_record(records):
+    """Same atmosphere and vent: g=0 vs lunar g changes SAFFIRE-II (20 cm/s tested)."""
+    atm = dict(p_psia=14.7, o2=0.21, u_cm_s=10.0)
+    r0 = {x["id"]: x for x in rank(records, g_m_s2=0.0, **atm)}
+    r1 = {x["id"]: x for x in rank(records, g_m_s2=1.62, **atm)}
+    a, b = r0["PSI-99"], r1["PSI-99"]
+    assert a["parts"]["atmosphere"] == b["parts"]["atmosphere"]
+    assert a["parts"]["regime_fit"] != b["parts"]["regime_fit"]
+    assert a["score"] != b["score"]
+    assert b["parts"]["regime_fit"] > a["parts"]["regime_fit"]  # buoyancy lifts u_eff toward 20 cm/s
+    # a quiescent/droplet record (FLEX) gets the habitat forced fraction instead
+    assert r0["PSI-69"]["parts"]["regime_fit"] == 1.0
+    assert r1["PSI-69"]["parts"]["regime_fit"] < 1.0
+
+
+def test_aerosol_is_not_a_fuel(records):
+    assert FUEL_REALISM["aerosol"] == 0.0
+    daft = [x for x in rank(records, **ISS) if x["id"] == "PSI-47"]
+    if daft:
+        assert daft[0]["parts"]["fuel_realism"] == 0.0

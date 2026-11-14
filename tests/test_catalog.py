@@ -52,7 +52,7 @@ def test_record_schema(catalog):
     assert len(ids) == len(set(ids))
     for r in catalog["investigations"]:
         assert REQUIRED_KEYS <= set(r), r["id"]
-        assert set(r["conditions"]) == {"o2", "pressure_atm", "flow_cm_s"}
+        assert set(r["conditions"]) == {"o2", "pressure_atm", "flow_cm_s", "o2_burner_stream"}
         for v in r["conditions"].values():
             assert v is None or (len(v) == 2 and v[0] <= v[1])
         assert isinstance(r["n_tests"], int) and r["n_tests"] >= 0
@@ -60,7 +60,7 @@ def test_record_schema(catalog):
         assert isinstance(r["is_combustion"], bool)
         assert set(r["hazard_pillars"]) <= {"prevention", "detection", "suppression"}
         assert set(r["pillar_evidence"]) == set(r["hazard_pillars"])
-        assert r["fuel_phase"] in (None, "gas", "liquid", "solid")
+        assert r["fuel_phase"] in (None, "gas", "liquid", "solid", "aerosol")
         assert set(r["gravity_levels"]) <= {"microgravity", "normal_gravity"}
         for p in r["publications"]:
             assert set(p) == {"doi", "title"}
@@ -76,9 +76,13 @@ def test_ranges_and_counts_match_clean_data(by_id, tests_df):
     for inv, g in tests_df.groupby("investigation_id"):
         r = by_id[inv]
         assert r["n_tests"] == len(g)
-        for key, col in (("o2", "o2_mole_fraction"), ("pressure_atm", "pressure_atm"),
-                         ("flow_cm_s", "flow_speed_cm_s")):
-            s = pd.to_numeric(g[col], errors="coerce").dropna()
+        amb = g["o2_context"] == "ambient"
+        burner = g["o2_context"] == "burner_oxidizer_stream"
+        for key, col, rows in (("o2", "o2_mole_fraction", amb), ("pressure_atm", "pressure_atm", None),
+                               ("flow_cm_s", "flow_speed_cm_s", None),
+                               ("o2_burner_stream", "o2_mole_fraction", burner)):
+            sub = g if rows is None else g[rows]
+            s = pd.to_numeric(sub[col], errors="coerce").dropna()
             if s.empty:
                 assert r["conditions"][key] is None, (inv, key)
             else:
@@ -146,3 +150,25 @@ def test_pillar_rule_is_transparent(by_id):
     for r in by_id.values():
         for pillar, words in r["pillar_evidence"].items():
             assert all(re.search(PILLAR_PATTERNS[pillar], w, re.I) for w in words)
+
+
+def test_o2_excludes_burner_stream(by_id, tests_df):
+    """Inverse-flame burner-stream O2 (up to 85%) is not an atmosphere."""
+    for inv in ("PSI-10", "PSI-159"):
+        r = by_id[inv]
+        assert r["conditions"]["o2_burner_stream"] is not None
+        assert r["conditions"]["o2"][1] <= 0.41
+        assert r["conditions"]["o2_burner_stream"][1] >= 0.84
+    assert by_id["PSI-69"]["conditions"]["o2_burner_stream"] is None
+
+
+def test_fuel_phase_overrides(by_id):
+    from engine.catalog import FUEL_PHASE_OVERRIDES
+    expect = {"PSI-47": "aerosol", "PSI-101": "solid", "PSI-102": "solid", "PSI-115": "solid"}
+    assert {k: v[0] for k, v in FUEL_PHASE_OVERRIDES.items()} == expect
+    for inv, phase in expect.items():
+        if inv not in by_id:
+            continue
+        assert by_id[inv]["fuel_phase"] == phase
+        assert by_id[inv]["fuel_phase_basis"].startswith("curated:")
+        assert "metadata evidence" in by_id[inv]["fuel_phase_basis"]

@@ -12,8 +12,11 @@ Sources
 
 Rules (all transparent, documented per field in the record's ``*_basis`` keys)
 - ``conditions``: min/max of o2_mole_fraction, pressure_atm, flow_speed_cm_s in
-  psi_tests.csv (all rows, so inverse-flame rows contribute their *burner
-  oxidizer stream* O2; see ``o2_context``). For day-summary-only investigations
+  psi_tests.csv. ``conditions.o2`` uses only ``o2_context == "ambient"`` rows (the
+  surrounding atmosphere a habitat would be compared against); inverse-flame rows
+  report the O2 of the *burner oxidizer stream*, which is not an atmosphere, so
+  those go to ``conditions.o2_burner_stream`` instead (null when none). Pressure
+  and flow use all rows. For day-summary-only investigations
   the ranges are parsed from ``o2_levels_percent`` (percent -> fraction),
   ``pressure_levels_atm`` and ``flow_speed_range_cm_s``. Null when no data.
 - ``n_tests``: row count in psi_tests.csv; for day-summary-only investigations the
@@ -30,6 +33,11 @@ Rules (all transparent, documented per field in the record's ``*_basis`` keys)
 - ``gravity_levels``: ["normal_gravity"] for PSI "Ground Investigation" studies,
   ["microgravity"] for flight platforms (ISS, Cygnus, Space Shuttle); a ground
   reference adds "normal_gravity".
+- ``fuel_phase``: psi_tests.csv mode, else inferred from fuel names / metadata;
+  ``FUEL_PHASE_OVERRIDES`` sets curated phases (with the metadata evidence word
+  checked and quoted in ``fuel_phase_basis``) for investigations whose tables are
+  not in data/clean: SAME / SAME-R / SAME modeling (pyrolysed solid samples ->
+  "solid") and DAFT ("aerosol": test dust, no fuel burned, fuel_realism 0).
 - ``lineage`` / ``reanalyzed_by``: ground re-analysis studies and the flight
   investigation whose data they reuse (``LINEAGE``, each link checked against
   the study's title / design keywords and the evidence word recorded).
@@ -49,7 +57,22 @@ ROOT = Path(__file__).resolve().parents[1]
 META_DIR = ROOT / "data" / "psi_metadata"
 CLEAN_DIR = ROOT / "data" / "clean"
 OUT = ROOT / "artifacts" / "catalog.json"
-CATALOG_VERSION = "1.0.0"
+CATALOG_VERSION = "1.1.0"
+
+# investigation -> (fuel_phase, evidence regex over metadata JSON text, basis note)
+FUEL_PHASE_OVERRIDES: dict[str, tuple[str, str, str]] = {
+    "PSI-47": ("aerosol", r"Arizona Red Dust|aerosoli[sz]ed",
+               "DAFT aerosolised a test dust (Arizona Red Dust) to check smoke/particle "
+               "instruments; nothing was burned, so this is not a fuel (fuel_realism 0)"),
+    "PSI-101": ("solid", r"pyrolyzing|Teflon|Kapton|Pyrell",
+                "SAME-R smoke came from heated (pyrolysing/smouldering) solid spacecraft "
+                "material samples (Teflon, Kapton, silicone, Pyrell, cotton lamp wick)"),
+    "PSI-102": ("solid", r"overheated\s+spacecraft materials|pyrolyzing",
+                "SAME smoke came from overheated solid spacecraft material samples "
+                "(Teflon, Kapton, silicone, cotton lamp wick)"),
+    "PSI-115": ("solid", r"pyrolysis vapor expelled from a heated sample",
+                "numerical modeling of SAME: smoke from pyrolysis vapour of a heated solid sample"),
+}
 
 PILLAR_PATTERNS: dict[str, str] = {
     "prevention": r"flammab|material|flame spread|ignit",
@@ -236,10 +259,12 @@ def build_catalog() -> dict:
 
         # --- computed from clean data
         if not t.empty:
+            ctx = t["o2_context"]
             conditions = {
-                "o2": _rng(t["o2_mole_fraction"]),
+                "o2": _rng(t.loc[ctx == "ambient", "o2_mole_fraction"]),
                 "pressure_atm": _rng(t["pressure_atm"]),
                 "flow_cm_s": _rng(t["flow_speed_cm_s"]),
+                "o2_burner_stream": _rng(t.loc[ctx == "burner_oxidizer_stream", "o2_mole_fraction"]),
             }
             n_tests = int(len(t))
             n_basis = "rows in data/clean/psi_tests.csv"
@@ -256,6 +281,7 @@ def build_catalog() -> dict:
                 "o2": _span(o2),
                 "pressure_atm": _span(_parse_numbers(d["pressure_levels_atm"])),
                 "flow_cm_s": _span(_parse_numbers(d["flow_speed_range_cm_s"])),
+                "o2_burner_stream": None,
             }
             fl = pd.to_numeric(d["flames_ignited"], errors="coerce")
             n_tests = int(fl.sum()) if fl.notna().any() else 0
@@ -268,7 +294,7 @@ def build_catalog() -> dict:
             data_acronym = d["investigation"].dropna().iat[0] if d["investigation"].notna().any() else None
             data_hw = data_platform = None
         else:
-            conditions = {"o2": None, "pressure_atm": None, "flow_cm_s": None}
+            conditions = {"o2": None, "pressure_atm": None, "flow_cm_s": None, "o2_burner_stream": None}
             n_tests, n_basis, outcomes = 0, "no experimental table in data/clean", False
             phase, phase_basis, cond_source = None, None, None
             data_acronym = data_hw = data_platform = None
@@ -297,6 +323,13 @@ def build_catalog() -> dict:
 
         text = " ".join(x for x in (f["title"], f["objective"], f["impacts"], *design) if x)
         pillars, evidence = _pillars(text)
+
+        if inv in FUEL_PHASE_OVERRIDES and meta:
+            o_phase, o_rx, o_note = FUEL_PHASE_OVERRIDES[inv]
+            m = re.search(o_rx, json.dumps(meta, ensure_ascii=False), re.I)
+            if m:
+                phase = o_phase
+                phase_basis = f"curated: {o_note} (metadata evidence {m.group(0)!r})"
 
         if not phase and is_comb:
             phase = _infer_phase(" ".join(x for x in (f["sub_research_area"], *design) if x))
@@ -376,7 +409,9 @@ def build_catalog() -> dict:
         "rules": {
             "hazard_pillars": PILLAR_PATTERNS,
             "n_tests": "psi_tests.csv rows; day-summary-only investigations: sum of flames_ignited",
-            "conditions": "min/max over clean data; null when the source has no value",
+            "conditions": "min/max over clean data; null when the source has no value; "
+                          "o2 = ambient rows only, burner-stream O2 in o2_burner_stream",
+            "fuel_phase_overrides": {k: v[0] for k, v in FUEL_PHASE_OVERRIDES.items()},
             "ground_reference": "true only when 1-g columns exist in the clean data (SAFFIRE-II)",
         },
         "investigations": [records[i] for i in ids],

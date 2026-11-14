@@ -1,4 +1,4 @@
-# Team Contracts (build phase 1)
+# Team Contracts (build phases 1 and 2; phase 2 addendum at the end)
 
 Back to [overview](00-overview.md). This is the shared interface every role builds against, so parallel work fits together.
 **Change a contract only by editing this file and saying so in your hand-off report.**
@@ -55,7 +55,7 @@ def evaluate(g_m_s2, p_psia, o2, u_cm_s, L_mm, dT_over_T=4.0, C_b=1.0, k=1.0) ->
 `{"version": "...", "generated_at": "...", "investigations": [record, ...]}` with each record as in [02-data-pipeline.md](02-data-pipeline.md) P3: `id, acronym, title, doi, platform, hardware, fuel_phase, gravity_levels, ground_reference, conditions{o2:[min,max]|null, pressure_atm:[min,max]|null, flow_cm_s:[min,max]|null}, n_tests, outcomes_available, hazard_pillars[], objective, hypothesis, impacts, publications[{doi,title}], related[], is_combustion`. Condition ranges are computed from `data/clean/psi_tests.csv` (and day summaries); text fields come from the PSI API `https://psi.nasa.gov/geode-py/ws/repo/investigations/{id}`.
 
 ## `engine/rank.py` (DE)
-`rank(catalog: list[dict], g_m_s2, p_psia, o2, u_cm_s, weights: dict | None = None) -> list[dict]`, each item `{id, acronym, score, parts{atmosphere, pillar, fuel_realism, outcomes, n_tests}}`, sorted by descending score. Non-combustion records (`is_combustion: false`) are excluded. Default weights `{atmosphere:0.35, pillar:0.2, fuel_realism:0.2, outcomes:0.15, n_tests:0.1}`.
+`rank(catalog: list[dict], g_m_s2, p_psia, o2, u_cm_s, weights: dict | None = None) -> list[dict]`, each item `{id, acronym, score, parts{atmosphere, pillar, fuel_realism, outcomes, n_tests}}`, sorted by descending score. Non-combustion records (`is_combustion: false`) are excluded. Default weights `{atmosphere:0.35, pillar:0.2, fuel_realism:0.2, outcomes:0.15, n_tests:0.1}`. **Phase 2:** a sixth part `regime_fit` was added (u_eff samples inside the record's tested flow range, or the forced fraction for no-flow records); default weights are now `{atmosphere:0.30, pillar:0.15, fuel_realism:0.15, outcomes:0.15, n_tests:0.10, regime_fit:0.15}`. Catalog records add `conditions.o2_burner_stream`; `fuel_phase` may be `aerosol`.
 
 ## API (AI): FastAPI app `api.main:app`, run with `uvicorn api.main:app --reload --port 8000`
 | Method | Path | Body / query | Response |
@@ -73,3 +73,60 @@ CORS allows `http://localhost:3000`. Errors use RFC 7807 problem+json.
 Next.js (App Router, TypeScript, Tailwind) in `web/`. API base from `NEXT_PUBLIC_API_URL` (default `http://localhost:8000`).
 `web/lib/physics.ts` mirrors `engine/physics.py` function-for-function (camelCase names allowed, but the parity test maps fixture `fn` names). `web/lib/presets.ts` mirrors `engine/presets.py`.
 The parity test (vitest) reads `../tests/fixtures/physics_reference.json`.
+
+---
+
+# Phase 2 addendum (M3 Prediction core, M4 Intelligence, M5 Full product)
+
+## Ownership (phase 2)
+| Role | Owns |
+|---|---|
+| TL | `engine/bounds.py`, `engine/models/` (M1–M3 fitting code), `engine/planner.py`, `artifacts/bounds/`, `artifacts/planner.json`, `tests/test_bounds.py`, `tests/test_planner.py`, `engine/validation.py`, `artifacts/validation_report.md`, `plan/decisions.md` (append) |
+| DE | `engine/rules.py` (M4, M5), `artifacts/rules.json`, `engine/rank.py` + `engine/catalog.py` (improvements), `tests/test_rules.py`, `tests/test_rank.py`, `tests/test_catalog.py` |
+| AI | `api/**`, `engine/ledger.py`, `ledger/predictions.jsonl`, `engine/ai/` (context pack, validator, prompts, offline cache), `artifacts/ai_cache.json`, `artifacts/MANIFEST.json` + `scripts/build_manifest.py`, `tests/test_api.py`, `tests/test_ledger.py`, `tests/test_ai.py`, `requirements.txt` |
+| FE | `web/**` |
+
+## `engine/bounds.py` (TL)
+```python
+METRICS: dict[str, dict]   # id -> {label, unit, kind: "probability"|"quantity"|"category", data, flow_dependent: bool}
+def predict(metric: str, g_m_s2, p_psia, o2, u_cm_s, L_mm, n=2000, seed=0) -> dict
+```
+`predict` returns:
+```
+{metric, label, unit, kind,
+ applicable: bool, reason: str|None,                 # honesty gate (atmosphere distance > 2 -> applicable False, estimate None)
+ estimate: float|str|None, band90: [lo, hi]|None,
+ ref_0g: {estimate, band90}, ref_1g: {estimate, band90}|None,   # 1g ref None when no basis
+ regime_fractions: {forced, mixed, buoyant}, u_eff_summary: {p05,p50,p95},
+ nonmonotonic_flag: bool, nonmonotonic_note: str|None,
+ transfer: {basis: str, confidence: "high"|"medium"|"low"},   # how microgravity evidence transfers at this gravity
+ evidence: [{record_id, investigation_id, distance}],        # up to 20 nearest training rows
+ sensitivity: [{param, low, high}],                          # tornado: metric at param low/high
+ n_train: int, model_version: str}
+```
+M1–M3 are fitted by TL; M4 and M5 dispatch to `engine.rules.predict_m4(...)` / `predict_m5(...)` (DE) which return the same shape.
+**Gravity honesty rule:** droplet and spherical-burner data (FLEX, CFI-G) contain no flow variable, so for M1–M3 gravity must NOT silently change the estimate. Use the regime: forced fraction → evidence transfers (confidence high); mixed/buoyant → keep the microgravity-matched estimate but widen the band and lower `transfer.confidence`, and say so in `transfer.basis`. Flow-dependent metrics (M4, M5) map partial gravity through `u_eff`.
+Precomputed: `artifacts/bounds/{preset_id}_{metric}.json` for all 6 presets × 5 metrics.
+
+## `engine/planner.py` (TL)
+`plan_tests(top_k=10) -> list[{rank, g_m_s2, p_psia, o2, u_cm_s, metric, score, parts{band_width, habitat_weight, mixed_fraction}, rationale, extends:[investigation_id]}]`; `main()` writes `artifacts/planner.json` (also `design_implications: [str]`).
+
+## `engine/rules.py` (DE)
+`predict_m4(...)`, `predict_m5(...)` with the `predict` signature and return shape above. M4 uses `data/clean/psi_saffire_ug_vs_1g.csv` (+ SAFFIRE-I/III, BASS-II context) as a rule table; M5 uses SPICE `flow_speed_cm_s` windows per fuel and nozzle. `artifacts/rules.json` holds the tables.
+
+## Ledger (AI): `engine/ledger.py`
+`append(prediction: dict, rationale: str, author: str) -> dict` writes one JSON line to `ledger/predictions.jsonl` with `{id, created_at, habitat, metric, estimate, band90, model_version, artifact_hashes, rationale, status:"open", sha256}`; `sha256` covers the canonical JSON of all other fields. `load()`, `verify() -> list[{id, ok}]`. Append-only: never rewrite existing lines.
+
+## AI layer (AI): `engine/ai/`
+`context.py` builds the context pack (habitat, engine outputs with ids, top catalog records, evidence rows). `validator.py` checks every number in an answer appears in the context pack (±0.5%) and every citation id (`PSI-xx`, `rec:...`, `doi:...`) resolves. `answer.py` → `ask(question, habitat, context_ids) -> {answer_markdown, citations[], numbers_used[], validated, mode: "claude"|"cached"|"template"}`: uses Claude only if `ANTHROPIC_API_KEY` is set and the `anthropic` package is installed; otherwise a deterministic template answer built from engine outputs. Prompts in `engine/ai/prompts/*.md` (versioned).
+
+## API additions (AI)
+| Method | Path | Response |
+|---|---|---|
+| GET | `/metrics` | `bounds.METRICS` |
+| POST | `/bounds` | body: habitat fields + `metric` → `bounds.predict(...)` (JSON-safe) |
+| GET | `/planner` | `artifacts/planner.json` |
+| GET | `/ledger` | `{predictions[], verification[]}` |
+| POST | `/ledger` | header `X-Team-Token` must equal env `LEDGER_TEAM_TOKEN`; body {metric, habitat, rationale, author} → appended record |
+| POST | `/ask` | {question, habitat, context_ids[]} → `ask(...)` |
+| GET | `/data/export` | filters + `format=csv|json`; CSV starts with `#` comment lines citing every included investigation DOI |
