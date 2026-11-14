@@ -1,0 +1,452 @@
+{
+  "generated_at": "2026-11-14T20:10:45+00:00",
+  "engine_version": "0.1.0",
+  "incidents": [
+    {
+      "id": "apollo1",
+      "name": "Apollo 1",
+      "date": "1967-01-27",
+      "phase": "pre-launch \"plugs out\" test on the launch pad (AS-204)",
+      "in_scope": true,
+      "scope_note": null,
+      "g_m_s2": 9.81,
+      "p_psia": 16.7,
+      "o2": 1.0,
+      "u_cm_s": 10,
+      "L_mm": 10,
+      "assumed": [
+        "u_cm_s",
+        "L_mm"
+      ],
+      "assumed_note": "Ventilation speed (10 cm/s) and fuel length (10 mm) are engineering assumptions matching the app presets, not values from a NASA page.",
+      "summary": "During a preflight test on the launch pad on Jan. 27, 1967, a fire swept through the AS-204 Command Module, which was pressurized with pure oxygen, and astronauts Grissom, White and Chaffee lost their lives.",
+      "sources": [
+        {
+          "field": "date",
+          "url": "https://sma.nasa.gov/sma-disciplines/accllp/apollo-1",
+          "quote": "On Jan. 27, 1967, astronauts Virgil “Gus” Grissom, Edward White and Robert Chaffee lost their lives during a preflight test for AS-204"
+        },
+        {
+          "field": "summary",
+          "url": "https://sma.nasa.gov/sma-disciplines/accllp/apollo-1",
+          "quote": "during a preflight test for AS-204 when a fire swept through the Command Module (CM)."
+        },
+        {
+          "field": "g_m_s2",
+          "url": "https://sma.nasa.gov/sma-disciplines/accllp/apollo-1",
+          "quote": "On Jan. 27, Grissom, White and Chaffee were scheduled to conduct a key test on the launch pad"
+        },
+        {
+          "field": "o2",
+          "url": "https://sma.nasa.gov/sma-disciplines/accllp/apollo-1",
+          "quote": "the spacecraft’s hatches closed and the cabin pressurized with 100% oxygen."
+        },
+        {
+          "field": "p_psia",
+          "url": "https://www.nasa.gov/history/Apollo204/chariot.html",
+          "quote": "pure oxygen at a pressure of 11.5 newtons per square centimeter (16.7 pounds per square inch) was substituted."
+        },
+        {
+          "field": "phase",
+          "url": "https://www.nasa.gov/history/Apollo204/chariot.html",
+          "quote": "During this \"plugs out\" test, all electrical, environmental, and ground checkout cables would be disconnected"
+        }
+      ],
+      "physics": {
+        "u_b_cm_s": 62.6418390534633,
+        "ri": 39.24,
+        "regime": "buoyant",
+        "g_star": 1.2906196492202322,
+        "p_o2_psia": 16.7,
+        "u_eff_cm_s": 63.43500610861482
+      },
+      "regime_fractions": {
+        "forced": 0.0,
+        "mixed": 0.03649999999999998,
+        "buoyant": 0.9635
+      },
+      "metrics": {
+        "M1": {
+          "applicable": false,
+          "estimate": null,
+          "band90": null,
+          "reason": "Extrapolation: no evidence. The query (O2 1.000, 1.14 atm) is more than 2 atmosphere-distance units from every M1 training test; the nearest tested condition is PSI-69 PSI-69:FLEX:20 at O2 0.340, 0.71 atm (atmosphere distance 13.29).",
+          "transfer_confidence": "low"
+        },
+        "M2": {
+          "applicable": false,
+          "estimate": null,
+          "band90": null,
+          "reason": "Extrapolation: no evidence. The query (O2 1.000, 1.14 atm) is more than 2 atmosphere-distance units from every M2 training test; the nearest tested condition is PSI-69 PSI-69:FLEX:30 at O2 0.300, 1.01 atm (atmosphere distance 14.01).",
+          "transfer_confidence": "low"
+        },
+        "M3": {
+          "applicable": false,
+          "estimate": null,
+          "band90": null,
+          "reason": "Extrapolation: no evidence. The query (O2 1.000, 1.14 atm) is more than 2 atmosphere-distance units from every M3 training test; the nearest tested condition is PSI-159 PSI-159:CFI-G_Normal_Flames:139 at O2 0.400, 1.00 atm (atmosphere distance 12.01).",
+          "transfer_confidence": "low"
+        },
+        "M4": {
+          "applicable": false,
+          "estimate": null,
+          "band90": null,
+          "reason": "extrapolation, no evidence: SAFFIRE-II only tested ~22% O2 (21.5-22.1%) at ~1 atm cabin pressure and 20 cm/s flow; habitat O2 100.0% outside 20-24.0%; pressure 16.7 psia (1.14 atm) outside 0.9-1.1 atm. No estimate is given outside the tested atmosphere.",
+          "transfer_confidence": "low"
+        },
+        "M5": {
+          "applicable": false,
+          "estimate": null,
+          "band90": null,
+          "reason": "extrapolation, no evidence: SPICE only tested in ISS cabin air (assumed ~21% O2 / ~1 atm; the table records no atmosphere); habitat O2 100.0% outside 19-23.5%; pressure 16.7 psia (1.14 atm) outside 0.9-1.1 atm. No estimate is given outside the tested atmosphere.",
+          "transfer_confidence": "low"
+        }
+      },
+      "coverage": {
+        "M1": {
+          "covered": false,
+          "nearest_distance": 13.2928
+        },
+        "M2": {
+          "covered": false,
+          "nearest_distance": 14.0055
+        },
+        "M3": {
+          "covered": false,
+          "nearest_distance": 12.0076
+        },
+        "M4": {
+          "covered": false,
+          "nearest_distance": 15.5858
+        },
+        "M5": {
+          "covered": false,
+          "nearest_distance": 15.8057
+        }
+      },
+      "findings": [
+        "At Earth gravity (9.81 m/s²) with the assumed 10 cm/s ventilation the flame is buoyancy-dominated (Ri 39.2; Monte Carlo: 0% forced, 4% mixed, 96% buoyant).",
+        "At the sourced atmosphere (O2 100% at 16.7 psia) the oxygen partial pressure is 16.7 psia (sea-level air is about 3.08 psia).",
+        "O2 100% at 16.7 psia is outside every tested atmosphere: no evidence for M1–M5 (nearest tested atmosphere distance 12.0; the evidence gate is 2.0)."
+      ]
+    },
+    {
+      "id": "mir1997",
+      "name": "Mir oxygen-generator fire",
+      "date": "1997-02-24",
+      "phase": "in orbit, aboard the Mir space station (Kvant-1 module)",
+      "in_scope": true,
+      "scope_note": null,
+      "g_m_s2": 0.0,
+      "p_psia": 14.7,
+      "o2": 0.21,
+      "u_cm_s": 10,
+      "L_mm": 10,
+      "assumed": [
+        "p_psia",
+        "o2",
+        "u_cm_s",
+        "L_mm"
+      ],
+      "assumed_note": "Mir operated a sea-level-like air atmosphere; cabin pressure (14.7 psia) and oxygen fraction (0.21) are not quoted from a NASA page. Ventilation speed and fuel length are engineering assumptions matching the app presets.",
+      "summary": "On Feb. 24, 1997, a solid-fuel oxygen generator ignited in Mir's Kvant-1 module, producing a flame and dense smoke; the station's life support system cleared the smoke over the following hours. Cabin pressure and oxygen here are assumed sea-level air, not values quoted from a NASA page.",
+      "sources": [
+        {
+          "field": "date",
+          "url": "https://www.nasa.gov/history/25-years-ago-fire-aboard-space-station-mir/",
+          "quote": "On Feb. 24, 1997, the six crew members aboard the Russian space station Mir faced significant danger"
+        },
+        {
+          "field": "summary",
+          "url": "https://www.nasa.gov/history/25-years-ago-fire-aboard-space-station-mir/",
+          "quote": "when a fire ignited in an oxygen generating system."
+        },
+        {
+          "field": "summary",
+          "url": "https://www.nasa.gov/history/25-years-ago-fire-aboard-space-station-mir/",
+          "quote": "as Lazutkin activated a solid-fuel oxygen generator in Mir’s Kvant-1 module, the canister ignited"
+        },
+        {
+          "field": "g_m_s2",
+          "url": "https://www.nasa.gov/history/25-years-ago-fire-aboard-space-station-mir/",
+          "quote": "the worst in-orbit fire incident in the history of spaceflight."
+        }
+      ],
+      "physics": {
+        "u_b_cm_s": 0.0,
+        "ri": 0.0,
+        "regime": "forced",
+        "g_star": 0.0,
+        "p_o2_psia": 3.0869999999999997,
+        "u_eff_cm_s": 10.0
+      },
+      "regime_fractions": {
+        "forced": 1.0,
+        "mixed": 0.0,
+        "buoyant": 0.0
+      },
+      "metrics": {
+        "M1": {
+          "applicable": true,
+          "estimate": 0.9387076846641129,
+          "band90": [
+            0.824689835800796,
+            0.9815051044685926
+          ],
+          "reason": null,
+          "transfer_confidence": "high"
+        },
+        "M2": {
+          "applicable": true,
+          "estimate": 4.003825654706249,
+          "band90": [
+            2.553599868709032,
+            4.338216017632628
+          ],
+          "reason": null,
+          "transfer_confidence": "high"
+        },
+        "M3": {
+          "applicable": true,
+          "estimate": 0.9718810570690523,
+          "band90": [
+            0.9450496088743562,
+            0.9909464112421233
+          ],
+          "reason": null,
+          "transfer_confidence": "high"
+        },
+        "M4": {
+          "applicable": true,
+          "estimate": "complete_burn",
+          "band90": [
+            "complete_burn",
+            "complete_burn"
+          ],
+          "reason": null,
+          "transfer_confidence": "low"
+        },
+        "M5": {
+          "applicable": true,
+          "estimate": 1.0,
+          "band90": [
+            0.0,
+            1.0
+          ],
+          "reason": null,
+          "transfer_confidence": "medium"
+        }
+      },
+      "coverage": {
+        "M1": {
+          "covered": true,
+          "nearest_distance": 0.0009
+        },
+        "M2": {
+          "covered": true,
+          "nearest_distance": 0.0009
+        },
+        "M3": {
+          "covered": true,
+          "nearest_distance": 0.0009
+        },
+        "M4": {
+          "covered": true,
+          "nearest_distance": 0.1
+        },
+        "M5": {
+          "covered": true,
+          "nearest_distance": 0.0009
+        }
+      },
+      "findings": [
+        "In orbit (0 g) with the assumed 10 cm/s ventilation the flame is forced-flow (Ri 0; Monte Carlo: 100% forced, 0% mixed, 0% buoyant): the regime ISS data covers best.",
+        "With the assumed atmosphere (O2 21% at 14.7 psia) the oxygen partial pressure is 3.09 psia (sea-level air is about 3.08 psia).",
+        "M1 applies here (P(droplet flame self-extinguishes before burnout)): estimate 0.939 (90% band 0.825 to 0.982); transfer confidence high.",
+        "M2 applies here (Extinction diameter): estimate 4.00 mm (90% band 2.55 to 4.34 mm); transfer confidence high.",
+        "M3 applies here (P(gas flame self-extinguishes vs flow-terminated)): estimate 0.972 (90% band 0.945 to 0.991); transfer confidence high.",
+        "M4 applies here (Solid-material burn extent: microgravity vs 1 g): estimate complete burn; transfer confidence low.",
+        "M5 applies here (Flame existence vs coflow speed): estimate 1 (90% band 0 to 1); transfer confidence medium."
+      ]
+    },
+    {
+      "id": "artemis2",
+      "name": "Artemis II smoke alarm",
+      "date": "2026-04-01",
+      "phase": "lunar transit, flight day 9/10 of the Artemis II test flight (date shown is the April 1, 2026 launch)",
+      "in_scope": true,
+      "scope_note": null,
+      "g_m_s2": 0.0,
+      "p_psia": 14.7,
+      "o2": 0.21,
+      "u_cm_s": 10,
+      "L_mm": 10,
+      "assumed": [
+        "p_psia",
+        "o2",
+        "u_cm_s",
+        "L_mm"
+      ],
+      "assumed_note": "No NASA page found giving Orion's cabin pressure or oxygen fraction; sea-level air (14.7 psia, 0.21) is assumed. NASA's thermal report says the alarm turned off the cabin fans, so real airflow was likely lower than the assumed 10 cm/s preset.",
+      "summary": "During lunar transit on the Artemis II test flight, a smoke detector alarm that a NASA engineering report later called a false alarm automatically turned off Orion's cabin fans. Cabin pressure and oxygen here are assumed sea-level air, not values quoted from a NASA page.",
+      "sources": [
+        {
+          "field": "summary",
+          "source": "2026 NASA Space Apps Challenge brief",
+          "quote": "make the fire alarm go off in your spacecraft when you’re still about 80,000 miles from home."
+        },
+        {
+          "field": "summary",
+          "url": "https://ntrs.nasa.gov/api/citations/20260007602/downloads/TFAWS_ATCS_Overview_%20Rev3.pdf",
+          "quote": "Smoke Detector False Alarm – Automatically Turned Off Cabin and ARS Fans, causing high cabin temperature transients (~80F)"
+        },
+        {
+          "field": "g_m_s2",
+          "url": "https://ntrs.nasa.gov/api/citations/20260007602/downloads/TFAWS_ATCS_Overview_%20Rev3.pdf",
+          "quote": "Lunar Transit - Flight Day 9/10"
+        },
+        {
+          "field": "date",
+          "url": "https://www.nasa.gov/blogs/missions/2026/04/01/live-artemis-ii-launch-day-updates",
+          "quote": "lift off from Launch Complex 39B at NASA’s Kennedy Space Center in Florida on Wednesday, April 1, 2026."
+        }
+      ],
+      "physics": {
+        "u_b_cm_s": 0.0,
+        "ri": 0.0,
+        "regime": "forced",
+        "g_star": 0.0,
+        "p_o2_psia": 3.0869999999999997,
+        "u_eff_cm_s": 10.0
+      },
+      "regime_fractions": {
+        "forced": 1.0,
+        "mixed": 0.0,
+        "buoyant": 0.0
+      },
+      "metrics": {
+        "M1": {
+          "applicable": true,
+          "estimate": 0.9387076846641129,
+          "band90": [
+            0.824689835800796,
+            0.9815051044685926
+          ],
+          "reason": null,
+          "transfer_confidence": "high"
+        },
+        "M2": {
+          "applicable": true,
+          "estimate": 4.003825654706249,
+          "band90": [
+            2.553599868709032,
+            4.338216017632628
+          ],
+          "reason": null,
+          "transfer_confidence": "high"
+        },
+        "M3": {
+          "applicable": true,
+          "estimate": 0.9718810570690523,
+          "band90": [
+            0.9450496088743562,
+            0.9909464112421233
+          ],
+          "reason": null,
+          "transfer_confidence": "high"
+        },
+        "M4": {
+          "applicable": true,
+          "estimate": "complete_burn",
+          "band90": [
+            "complete_burn",
+            "complete_burn"
+          ],
+          "reason": null,
+          "transfer_confidence": "low"
+        },
+        "M5": {
+          "applicable": true,
+          "estimate": 1.0,
+          "band90": [
+            0.0,
+            1.0
+          ],
+          "reason": null,
+          "transfer_confidence": "medium"
+        }
+      },
+      "coverage": {
+        "M1": {
+          "covered": true,
+          "nearest_distance": 0.0009
+        },
+        "M2": {
+          "covered": true,
+          "nearest_distance": 0.0009
+        },
+        "M3": {
+          "covered": true,
+          "nearest_distance": 0.0009
+        },
+        "M4": {
+          "covered": true,
+          "nearest_distance": 0.1
+        },
+        "M5": {
+          "covered": true,
+          "nearest_distance": 0.0009
+        }
+      },
+      "findings": [
+        "In orbit (0 g) with the assumed 10 cm/s ventilation the flame is forced-flow (Ri 0; Monte Carlo: 100% forced, 0% mixed, 0% buoyant): the regime ISS data covers best.",
+        "With the assumed atmosphere (O2 21% at 14.7 psia) the oxygen partial pressure is 3.09 psia (sea-level air is about 3.08 psia).",
+        "M1 applies here (P(droplet flame self-extinguishes before burnout)): estimate 0.939 (90% band 0.825 to 0.982); transfer confidence high.",
+        "M2 applies here (Extinction diameter): estimate 4.00 mm (90% band 2.55 to 4.34 mm); transfer confidence high.",
+        "M3 applies here (P(gas flame self-extinguishes vs flow-terminated)): estimate 0.972 (90% band 0.945 to 0.991); transfer confidence high.",
+        "M4 applies here (Solid-material burn extent: microgravity vs 1 g): estimate complete burn; transfer confidence low.",
+        "M5 applies here (Flame existence vs coflow speed): estimate 1 (90% band 0 to 1); transfer confidence medium."
+      ]
+    },
+    {
+      "id": "apollo13",
+      "name": "Apollo 13",
+      "date": "1970-04-13",
+      "phase": "third day of the mission, translunar flight (launched April 11, 1970)",
+      "in_scope": false,
+      "scope_note": "Outside this tool's scope: Apollo 13 was a failure of a high-pressure oxygen tank in the Service Module, not a cabin fire, so the PSI combustion data and this tool do not apply.",
+      "g_m_s2": null,
+      "p_psia": null,
+      "o2": null,
+      "u_cm_s": null,
+      "L_mm": null,
+      "assumed": [],
+      "assumed_note": null,
+      "summary": "On the third day of the Apollo 13 mission, oxygen tank number two failed, followed by tank number one; the lunar landing was called off and the crew returned to Earth safely.",
+      "sources": [
+        {
+          "field": "summary",
+          "url": "https://sma.nasa.gov/sma-disciplines/accllp/apollo-13",
+          "quote": "oxygen tank number two blew up, leading to the subsequent failure of tank number one."
+        },
+        {
+          "field": "date",
+          "url": "https://sma.nasa.gov/sma-disciplines/accllp/apollo-13",
+          "quote": "Things went smoothly until the third day of the mission"
+        },
+        {
+          "field": "date",
+          "url": "https://www.nasa.gov/mission/apollo-13/",
+          "quote": "Launch April 11, 1970"
+        }
+      ],
+      "physics": null,
+      "regime_fractions": null,
+      "metrics": null,
+      "coverage": null,
+      "findings": [
+        "Outside this tool's scope: Apollo 13 was a failure of a high-pressure oxygen tank in the Service Module, not a cabin fire, so the PSI combustion data and this tool do not apply."
+      ]
+    }
+  ]
+}
