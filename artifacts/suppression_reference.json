@@ -1,0 +1,2077 @@
+{
+  "version": 1,
+  "generated_at": "2026-11-14T21:01:05+00:00",
+  "generated_by": "engine.suppression_reference",
+  "source": {
+    "investigation_id": "PSI-69",
+    "acronym": "FLEX",
+    "doi": "10.60555/mbq8-0451",
+    "file": "data/clean/psi_tests.csv"
+  },
+  "rules": {
+    "rows": "investigation_id == PSI-69, outcome in ['extinction', 'completion', 'disruption'], fuel in ['Heptane', 'Methanol']; rows missing O2 or a diluent fraction are dropped; missing pressure is kept.",
+    "exclusions": "A row whose other diluent is > 0 is excluded from this diluent's table. Undiluted rows (CO2 = He = 0) are the 0 bin of both tables.",
+    "binning": {
+      "base_bins": [
+        "0",
+        "(0, 0.1]",
+        "(0.1, 0.2]",
+        "(0.2, 0.3]",
+        "(0.3, 0.4]",
+        ">0.4"
+      ],
+      "merge": "Within each fuel x O2 band, consecutive non-empty diluted base bins are merged left to right until n >= 3; a trailing bin with n < 3 joins the previous diluted bin; the 0 bin is never merged; empty bins are omitted.",
+      "o2_bands": [
+        "O2 <= 0.17",
+        "0.17 < O2 <= 0.22",
+        "O2 > 0.22"
+      ]
+    },
+    "rate": "extinction_rate = extinctions / (extinctions + completions); disruptions excluded (same rule as M1, ADR-0004); null when the denominator is 0.",
+    "interval": "Wilson score interval, 90 % two-sided (z = 1.6449), on extinctions out of extinctions + completions.",
+    "trend": "Per diluent x fuel x O2 band, bins with extinctions + completions >= 3 are rated. < 2 rated bins or no rated diluted bin: insufficient. Else delta = last rated rate - first rated rate: >= +0.1 rises, <= -0.1 falls, otherwise flat. non_monotonic: some step between consecutive rated bins moves against the overall direction by >= 0.1 (for flat, any step is ignored). intervals_overlap: the first and last rated bins' 90 % Wilson intervals overlap, i.e. the change is not distinguishable at this sample size."
+  },
+  "accounting": {
+    "co2": {
+      "flex_rows": 274,
+      "dropped_outcome_not_flex_label": 0,
+      "dropped_fuel_not_heptane_methanol": 0,
+      "dropped_missing_o2_or_diluent": 0,
+      "excluded_he_gt_0": 50,
+      "rows_used": 224,
+      "rows_used_undiluted": 101,
+      "rows_used_diluted": 123
+    },
+    "he": {
+      "flex_rows": 274,
+      "dropped_outcome_not_flex_label": 0,
+      "dropped_fuel_not_heptane_methanol": 0,
+      "dropped_missing_o2_or_diluent": 0,
+      "excluded_co2_gt_0": 123,
+      "rows_used": 151,
+      "rows_used_undiluted": 101,
+      "rows_used_diluted": 50
+    }
+  },
+  "max_diluted_o2": 0.25,
+  "max_diluted_o2_by_diluent": {
+    "co2": 0.25,
+    "he": 0.24
+  },
+  "max_o2_all_flex": 0.34,
+  "tables": {
+    "co2": {
+      "Heptane": {
+        "le_0.17": {
+          "o2_band": "O2 <= 0.17",
+          "n": 18,
+          "bins": [
+            {
+              "bin": "0",
+              "fraction_lo": 0.0,
+              "fraction_hi": 0.0,
+              "lo_inclusive": true,
+              "merged_from": null,
+              "fraction_range": [
+                0.0,
+                0.0
+              ],
+              "n": 14,
+              "extinctions": 11,
+              "completions": 3,
+              "disruptions": 0,
+              "extinction_rate": 0.785714,
+              "interval90": [
+                0.567951,
+                0.910932
+              ],
+              "o2_range": [
+                0.13,
+                0.16
+              ],
+              "p_atm_range": [
+                0.999737,
+                1.013421
+              ],
+              "n_missing_pressure": 0,
+              "record_ids": [
+                "PSI-69:FLEX:209",
+                "PSI-69:FLEX:210",
+                "PSI-69:FLEX:211",
+                "PSI-69:FLEX:212",
+                "PSI-69:FLEX:213",
+                "PSI-69:FLEX:214",
+                "PSI-69:FLEX:69",
+                "PSI-69:FLEX:70",
+                "PSI-69:FLEX:72",
+                "PSI-69:FLEX:73",
+                "PSI-69:FLEX:74",
+                "PSI-69:FLEX:79",
+                "PSI-69:FLEX:80",
+                "PSI-69:FLEX:81"
+              ]
+            },
+            {
+              "bin": ">0.1",
+              "fraction_lo": 0.1,
+              "fraction_hi": null,
+              "lo_inclusive": false,
+              "merged_from": [
+                "(0.1, 0.2]",
+                ">0.4"
+              ],
+              "fraction_range": [
+                0.2,
+                0.45
+              ],
+              "n": 4,
+              "extinctions": 4,
+              "completions": 0,
+              "disruptions": 0,
+              "extinction_rate": 1.0,
+              "interval90": [
+                0.596521,
+                1.0
+              ],
+              "o2_range": [
+                0.17,
+                0.17
+              ],
+              "p_atm_range": [
+                0.705526,
+                0.990132
+              ],
+              "n_missing_pressure": 0,
+              "record_ids": [
+                "PSI-69:FLEX:129",
+                "PSI-69:FLEX:130",
+                "PSI-69:FLEX:194",
+                "PSI-69:FLEX:195"
+              ]
+            }
+          ]
+        },
+        "0.17_0.22": {
+          "o2_band": "0.17 < O2 <= 0.22",
+          "n": 46,
+          "bins": [
+            {
+              "bin": "0",
+              "fraction_lo": 0.0,
+              "fraction_hi": 0.0,
+              "lo_inclusive": true,
+              "merged_from": null,
+              "fraction_range": [
+                0.0,
+                0.0
+              ],
+              "n": 22,
+              "extinctions": 8,
+              "completions": 6,
+              "disruptions": 8,
+              "extinction_rate": 0.571429,
+              "interval90": [
+                0.36037,
+                0.75935
+              ],
+              "o2_range": [
+                0.18,
+                0.21
+              ],
+              "p_atm_range": [
+                0.715921,
+                1.015
+              ],
+              "n_missing_pressure": 0,
+              "record_ids": [
+                "PSI-69:FLEX:204",
+                "PSI-69:FLEX:205",
+                "PSI-69:FLEX:206",
+                "PSI-69:FLEX:207",
+                "PSI-69:FLEX:208",
+                "PSI-69:FLEX:228",
+                "PSI-69:FLEX:229",
+                "PSI-69:FLEX:230",
+                "PSI-69:FLEX:35",
+                "PSI-69:FLEX:47",
+                "PSI-69:FLEX:49",
+                "PSI-69:FLEX:50",
+                "PSI-69:FLEX:51",
+                "PSI-69:FLEX:53",
+                "PSI-69:FLEX:56",
+                "PSI-69:FLEX:57",
+                "PSI-69:FLEX:62",
+                "PSI-69:FLEX:63",
+                "PSI-69:FLEX:64",
+                "PSI-69:FLEX:7",
+                "PSI-69:FLEX:8",
+                "PSI-69:FLEX:9"
+              ]
+            },
+            {
+              "bin": "(0, 0.1]",
+              "fraction_lo": 0.0,
+              "fraction_hi": 0.1,
+              "lo_inclusive": false,
+              "merged_from": null,
+              "fraction_range": [
+                0.05,
+                0.1
+              ],
+              "n": 9,
+              "extinctions": 5,
+              "completions": 0,
+              "disruptions": 4,
+              "extinction_rate": 1.0,
+              "interval90": [
+                0.648883,
+                1.0
+              ],
+              "o2_range": [
+                0.19,
+                0.2
+              ],
+              "p_atm_range": [
+                0.997895,
+                1.01
+              ],
+              "n_missing_pressure": 0,
+              "record_ids": [
+                "PSI-69:FLEX:148",
+                "PSI-69:FLEX:149",
+                "PSI-69:FLEX:150",
+                "PSI-69:FLEX:180",
+                "PSI-69:FLEX:181",
+                "PSI-69:FLEX:182",
+                "PSI-69:FLEX:196",
+                "PSI-69:FLEX:197",
+                "PSI-69:FLEX:198"
+              ]
+            },
+            {
+              "bin": "(0.1, 0.2]",
+              "fraction_lo": 0.1,
+              "fraction_hi": 0.2,
+              "lo_inclusive": false,
+              "merged_from": null,
+              "fraction_range": [
+                0.15,
+                0.15
+              ],
+              "n": 7,
+              "extinctions": 5,
+              "completions": 1,
+              "disruptions": 1,
+              "extinction_rate": 0.833333,
+              "interval90": [
+                0.497583,
+                0.961894
+              ],
+              "o2_range": [
+                0.18,
+                0.18
+              ],
+              "p_atm_range": [
+                0.999868,
+                1.0075
+              ],
+              "n_missing_pressure": 0,
+              "record_ids": [
+                "PSI-69:FLEX:154",
+                "PSI-69:FLEX:155",
+                "PSI-69:FLEX:156",
+                "PSI-69:FLEX:165",
+                "PSI-69:FLEX:171",
+                "PSI-69:FLEX:172",
+                "PSI-69:FLEX:173"
+              ]
+            },
+            {
+              "bin": ">0.2",
+              "fraction_lo": 0.2,
+              "fraction_hi": null,
+              "lo_inclusive": false,
+              "merged_from": [
+                "(0.2, 0.3]",
+                "(0.3, 0.4]",
+                ">0.4"
+              ],
+              "fraction_range": [
+                0.3,
+                0.7
+              ],
+              "n": 8,
+              "extinctions": 7,
+              "completions": 0,
+              "disruptions": 1,
+              "extinction_rate": 1.0,
+              "interval90": [
+                0.721237,
+                1.0
+              ],
+              "o2_range": [
+                0.18,
+                0.21
+              ],
+              "p_atm_range": [
+                0.698816,
+                3.0525
+              ],
+              "n_missing_pressure": 0,
+              "record_ids": [
+                "PSI-69:FLEX:102",
+                "PSI-69:FLEX:103",
+                "PSI-69:FLEX:117",
+                "PSI-69:FLEX:118",
+                "PSI-69:FLEX:119",
+                "PSI-69:FLEX:12",
+                "PSI-69:FLEX:120",
+                "PSI-69:FLEX:18"
+              ]
+            }
+          ]
+        },
+        "gt_0.22": {
+          "o2_band": "O2 > 0.22",
+          "n": 31,
+          "bins": [
+            {
+              "bin": "0",
+              "fraction_lo": 0.0,
+              "fraction_hi": 0.0,
+              "lo_inclusive": true,
+              "merged_from": null,
+              "fraction_range": [
+                0.0,
+                0.0
+              ],
+              "n": 11,
+              "extinctions": 0,
+              "completions": 1,
+              "disruptions": 10,
+              "extinction_rate": 0.0,
+              "interval90": [
+                0.0,
+                0.730134
+              ],
+              "o2_range": [
+                0.3,
+                0.34
+              ],
+              "p_atm_range": [
+                0.703816,
+                1.014605
+              ],
+              "n_missing_pressure": 0,
+              "record_ids": [
+                "PSI-69:FLEX:19",
+                "PSI-69:FLEX:23",
+                "PSI-69:FLEX:24",
+                "PSI-69:FLEX:27",
+                "PSI-69:FLEX:28",
+                "PSI-69:FLEX:31",
+                "PSI-69:FLEX:32",
+                "PSI-69:FLEX:39",
+                "PSI-69:FLEX:42",
+                "PSI-69:FLEX:43",
+                "PSI-69:FLEX:52"
+              ]
+            },
+            {
+              "bin": "(0.1, 0.2]",
+              "fraction_lo": 0.1,
+              "fraction_hi": 0.2,
+              "lo_inclusive": false,
+              "merged_from": null,
+              "fraction_range": [
+                0.15,
+                0.2
+              ],
+              "n": 16,
+              "extinctions": 3,
+              "completions": 2,
+              "disruptions": 11,
+              "extinction_rate": 0.6,
+              "interval90": [
+                0.272483,
+                0.857294
+              ],
+              "o2_range": [
+                0.24,
+                0.25
+              ],
+              "p_atm_range": [
+                0.699605,
+                1.011316
+              ],
+              "n_missing_pressure": 0,
+              "record_ids": [
+                "PSI-69:FLEX:131",
+                "PSI-69:FLEX:132",
+                "PSI-69:FLEX:133",
+                "PSI-69:FLEX:134",
+                "PSI-69:FLEX:135",
+                "PSI-69:FLEX:136",
+                "PSI-69:FLEX:137",
+                "PSI-69:FLEX:138",
+                "PSI-69:FLEX:139",
+                "PSI-69:FLEX:174",
+                "PSI-69:FLEX:175",
+                "PSI-69:FLEX:92",
+                "PSI-69:FLEX:93",
+                "PSI-69:FLEX:94",
+                "PSI-69:FLEX:95",
+                "PSI-69:FLEX:96"
+              ]
+            },
+            {
+              "bin": "(0.2, 0.3]",
+              "fraction_lo": 0.2,
+              "fraction_hi": 0.3,
+              "lo_inclusive": false,
+              "merged_from": null,
+              "fraction_range": [
+                0.25,
+                0.25
+              ],
+              "n": 4,
+              "extinctions": 3,
+              "completions": 0,
+              "disruptions": 1,
+              "extinction_rate": 1.0,
+              "interval90": [
+                0.525804,
+                1.0
+              ],
+              "o2_range": [
+                0.23,
+                0.23
+              ],
+              "p_atm_range": [
+                0.702105,
+                0.708816
+              ],
+              "n_missing_pressure": 0,
+              "record_ids": [
+                "PSI-69:FLEX:100",
+                "PSI-69:FLEX:101",
+                "PSI-69:FLEX:178",
+                "PSI-69:FLEX:179"
+              ]
+            }
+          ]
+        }
+      },
+      "Methanol": {
+        "le_0.17": {
+          "o2_band": "O2 <= 0.17",
+          "n": 43,
+          "bins": [
+            {
+              "bin": "0",
+              "fraction_lo": 0.0,
+              "fraction_hi": 0.0,
+              "lo_inclusive": true,
+              "merged_from": null,
+              "fraction_range": [
+                0.0,
+                0.0
+              ],
+              "n": 22,
+              "extinctions": 22,
+              "completions": 0,
+              "disruptions": 0,
+              "extinction_rate": 1.0,
+              "interval90": [
+                0.890488,
+                1.0
+              ],
+              "o2_range": [
+                0.12,
+                0.15
+              ],
+              "p_atm_range": [
+                0.996842,
+                1.015789
+              ],
+              "n_missing_pressure": 0,
+              "record_ids": [
+                "PSI-69:FLEX:215",
+                "PSI-69:FLEX:216",
+                "PSI-69:FLEX:217",
+                "PSI-69:FLEX:218",
+                "PSI-69:FLEX:219",
+                "PSI-69:FLEX:220",
+                "PSI-69:FLEX:221",
+                "PSI-69:FLEX:65",
+                "PSI-69:FLEX:66",
+                "PSI-69:FLEX:67",
+                "PSI-69:FLEX:68",
+                "PSI-69:FLEX:71",
+                "PSI-69:FLEX:75",
+                "PSI-69:FLEX:76",
+                "PSI-69:FLEX:77",
+                "PSI-69:FLEX:78",
+                "PSI-69:FLEX:82",
+                "PSI-69:FLEX:83",
+                "PSI-69:FLEX:84",
+                "PSI-69:FLEX:85",
+                "PSI-69:FLEX:86",
+                "PSI-69:FLEX:87"
+              ]
+            },
+            {
+              "bin": "(0.1, 0.3]",
+              "fraction_lo": 0.1,
+              "fraction_hi": 0.3,
+              "lo_inclusive": false,
+              "merged_from": [
+                "(0.1, 0.2]",
+                "(0.2, 0.3]"
+              ],
+              "fraction_range": [
+                0.2,
+                0.25
+              ],
+              "n": 6,
+              "extinctions": 6,
+              "completions": 0,
+              "disruptions": 0,
+              "extinction_rate": 1.0,
+              "interval90": [
+                0.689216,
+                1.0
+              ],
+              "o2_range": [
+                0.16,
+                0.17
+              ],
+              "p_atm_range": [
+                0.998816,
+                1.01
+              ],
+              "n_missing_pressure": 0,
+              "record_ids": [
+                "PSI-69:FLEX:157",
+                "PSI-69:FLEX:158",
+                "PSI-69:FLEX:159",
+                "PSI-69:FLEX:160",
+                "PSI-69:FLEX:192",
+                "PSI-69:FLEX:193"
+              ]
+            },
+            {
+              "bin": "(0.3, 0.4]",
+              "fraction_lo": 0.3,
+              "fraction_hi": 0.4,
+              "lo_inclusive": false,
+              "merged_from": null,
+              "fraction_range": [
+                0.32,
+                0.36
+              ],
+              "n": 6,
+              "extinctions": 6,
+              "completions": 0,
+              "disruptions": 0,
+              "extinction_rate": 1.0,
+              "interval90": [
+                0.689216,
+                1.0
+              ],
+              "o2_range": [
+                0.14,
+                0.15
+              ],
+              "p_atm_range": [
+                1.001053,
+                1.008026
+              ],
+              "n_missing_pressure": 0,
+              "record_ids": [
+                "PSI-69:FLEX:161",
+                "PSI-69:FLEX:162",
+                "PSI-69:FLEX:163",
+                "PSI-69:FLEX:164",
+                "PSI-69:FLEX:166",
+                "PSI-69:FLEX:167"
+              ]
+            },
+            {
+              "bin": ">0.4",
+              "fraction_lo": 0.4,
+              "fraction_hi": null,
+              "lo_inclusive": false,
+              "merged_from": null,
+              "fraction_range": [
+                0.45,
+                0.5
+              ],
+              "n": 9,
+              "extinctions": 9,
+              "completions": 0,
+              "disruptions": 0,
+              "extinction_rate": 1.0,
+              "interval90": [
+                0.768866,
+                1.0
+              ],
+              "o2_range": [
+                0.15,
+                0.17
+              ],
+              "p_atm_range": [
+                0.701974,
+                0.706974
+              ],
+              "n_missing_pressure": 0,
+              "record_ids": [
+                "PSI-69:FLEX:125",
+                "PSI-69:FLEX:126",
+                "PSI-69:FLEX:127",
+                "PSI-69:FLEX:128",
+                "PSI-69:FLEX:140",
+                "PSI-69:FLEX:141",
+                "PSI-69:FLEX:142",
+                "PSI-69:FLEX:143",
+                "PSI-69:FLEX:147"
+              ]
+            }
+          ]
+        },
+        "0.17_0.22": {
+          "o2_band": "0.17 < O2 <= 0.22",
+          "n": 55,
+          "bins": [
+            {
+              "bin": "0",
+              "fraction_lo": 0.0,
+              "fraction_hi": 0.0,
+              "lo_inclusive": true,
+              "merged_from": null,
+              "fraction_range": [
+                0.0,
+                0.0
+              ],
+              "n": 19,
+              "extinctions": 15,
+              "completions": 0,
+              "disruptions": 4,
+              "extinction_rate": 1.0,
+              "interval90": [
+                0.847192,
+                1.0
+              ],
+              "o2_range": [
+                0.18,
+                0.21
+              ],
+              "p_atm_range": [
+                0.709211,
+                1.018553
+              ],
+              "n_missing_pressure": 0,
+              "record_ids": [
+                "PSI-69:FLEX:1",
+                "PSI-69:FLEX:2",
+                "PSI-69:FLEX:202",
+                "PSI-69:FLEX:203",
+                "PSI-69:FLEX:3",
+                "PSI-69:FLEX:33",
+                "PSI-69:FLEX:34",
+                "PSI-69:FLEX:36",
+                "PSI-69:FLEX:4",
+                "PSI-69:FLEX:46",
+                "PSI-69:FLEX:48",
+                "PSI-69:FLEX:5",
+                "PSI-69:FLEX:54",
+                "PSI-69:FLEX:55",
+                "PSI-69:FLEX:58",
+                "PSI-69:FLEX:59",
+                "PSI-69:FLEX:6",
+                "PSI-69:FLEX:60",
+                "PSI-69:FLEX:61"
+              ]
+            },
+            {
+              "bin": "(0, 0.1]",
+              "fraction_lo": 0.0,
+              "fraction_hi": 0.1,
+              "lo_inclusive": false,
+              "merged_from": null,
+              "fraction_range": [
+                0.05,
+                0.1
+              ],
+              "n": 8,
+              "extinctions": 8,
+              "completions": 0,
+              "disruptions": 0,
+              "extinction_rate": 1.0,
+              "interval90": [
+                0.747276,
+                1.0
+              ],
+              "o2_range": [
+                0.19,
+                0.2
+              ],
+              "p_atm_range": [
+                0.992105,
+                1.007237
+              ],
+              "n_missing_pressure": 0,
+              "record_ids": [
+                "PSI-69:FLEX:144",
+                "PSI-69:FLEX:145",
+                "PSI-69:FLEX:146",
+                "PSI-69:FLEX:187",
+                "PSI-69:FLEX:188",
+                "PSI-69:FLEX:199",
+                "PSI-69:FLEX:200",
+                "PSI-69:FLEX:201"
+              ]
+            },
+            {
+              "bin": "(0.1, 0.2]",
+              "fraction_lo": 0.1,
+              "fraction_hi": 0.2,
+              "lo_inclusive": false,
+              "merged_from": null,
+              "fraction_range": [
+                0.15,
+                0.15
+              ],
+              "n": 9,
+              "extinctions": 7,
+              "completions": 1,
+              "disruptions": 1,
+              "extinction_rate": 0.875,
+              "interval90": [
+                0.588857,
+                0.971601
+              ],
+              "o2_range": [
+                0.18,
+                0.21
+              ],
+              "p_atm_range": [
+                1.001579,
+                1.008816
+              ],
+              "n_missing_pressure": 0,
+              "record_ids": [
+                "PSI-69:FLEX:151",
+                "PSI-69:FLEX:152",
+                "PSI-69:FLEX:153",
+                "PSI-69:FLEX:168",
+                "PSI-69:FLEX:169",
+                "PSI-69:FLEX:170",
+                "PSI-69:FLEX:189",
+                "PSI-69:FLEX:190",
+                "PSI-69:FLEX:191"
+              ]
+            },
+            {
+              "bin": "(0.2, 0.3]",
+              "fraction_lo": 0.2,
+              "fraction_hi": 0.3,
+              "lo_inclusive": false,
+              "merged_from": null,
+              "fraction_range": [
+                0.3,
+                0.3
+              ],
+              "n": 4,
+              "extinctions": 2,
+              "completions": 2,
+              "disruptions": 0,
+              "extinction_rate": 0.5,
+              "interval90": [
+                0.1824,
+                0.8176
+              ],
+              "o2_range": [
+                0.21,
+                0.21
+              ],
+              "p_atm_range": [
+                0.698289,
+                0.706579
+              ],
+              "n_missing_pressure": 0,
+              "record_ids": [
+                "PSI-69:FLEX:109",
+                "PSI-69:FLEX:110",
+                "PSI-69:FLEX:111",
+                "PSI-69:FLEX:112"
+              ]
+            },
+            {
+              "bin": "(0.3, 0.4]",
+              "fraction_lo": 0.3,
+              "fraction_hi": 0.4,
+              "lo_inclusive": false,
+              "merged_from": null,
+              "fraction_range": [
+                0.35,
+                0.4
+              ],
+              "n": 8,
+              "extinctions": 8,
+              "completions": 0,
+              "disruptions": 0,
+              "extinction_rate": 1.0,
+              "interval90": [
+                0.747276,
+                1.0
+              ],
+              "o2_range": [
+                0.18,
+                0.2
+              ],
+              "p_atm_range": [
+                0.6925,
+                0.705658
+              ],
+              "n_missing_pressure": 1,
+              "record_ids": [
+                "PSI-69:FLEX:113",
+                "PSI-69:FLEX:114",
+                "PSI-69:FLEX:115",
+                "PSI-69:FLEX:116",
+                "PSI-69:FLEX:121",
+                "PSI-69:FLEX:122",
+                "PSI-69:FLEX:123",
+                "PSI-69:FLEX:124"
+              ]
+            },
+            {
+              "bin": ">0.4",
+              "fraction_lo": 0.4,
+              "fraction_hi": null,
+              "lo_inclusive": false,
+              "merged_from": null,
+              "fraction_range": [
+                0.7,
+                0.7
+              ],
+              "n": 7,
+              "extinctions": 6,
+              "completions": 0,
+              "disruptions": 1,
+              "extinction_rate": 1.0,
+              "interval90": [
+                0.689216,
+                1.0
+              ],
+              "o2_range": [
+                0.21,
+                0.21
+              ],
+              "p_atm_range": [
+                2.033816,
+                3.052237
+              ],
+              "n_missing_pressure": 0,
+              "record_ids": [
+                "PSI-69:FLEX:10",
+                "PSI-69:FLEX:11",
+                "PSI-69:FLEX:13",
+                "PSI-69:FLEX:14",
+                "PSI-69:FLEX:15",
+                "PSI-69:FLEX:16",
+                "PSI-69:FLEX:17"
+              ]
+            }
+          ]
+        },
+        "gt_0.22": {
+          "o2_band": "O2 > 0.22",
+          "n": 31,
+          "bins": [
+            {
+              "bin": "0",
+              "fraction_lo": 0.0,
+              "fraction_hi": 0.0,
+              "lo_inclusive": true,
+              "merged_from": null,
+              "fraction_range": [
+                0.0,
+                0.0
+              ],
+              "n": 13,
+              "extinctions": 2,
+              "completions": 3,
+              "disruptions": 8,
+              "extinction_rate": 0.4,
+              "interval90": [
+                0.142706,
+                0.727517
+              ],
+              "o2_range": [
+                0.3,
+                0.34
+              ],
+              "p_atm_range": [
+                0.703026,
+                1.012105
+              ],
+              "n_missing_pressure": 0,
+              "record_ids": [
+                "PSI-69:FLEX:20",
+                "PSI-69:FLEX:21",
+                "PSI-69:FLEX:22",
+                "PSI-69:FLEX:25",
+                "PSI-69:FLEX:26",
+                "PSI-69:FLEX:29",
+                "PSI-69:FLEX:30",
+                "PSI-69:FLEX:37",
+                "PSI-69:FLEX:38",
+                "PSI-69:FLEX:40",
+                "PSI-69:FLEX:41",
+                "PSI-69:FLEX:44",
+                "PSI-69:FLEX:45"
+              ]
+            },
+            {
+              "bin": "(0.1, 0.2]",
+              "fraction_lo": 0.1,
+              "fraction_hi": 0.2,
+              "lo_inclusive": false,
+              "merged_from": null,
+              "fraction_range": [
+                0.15,
+                0.2
+              ],
+              "n": 10,
+              "extinctions": 3,
+              "completions": 1,
+              "disruptions": 6,
+              "extinction_rate": 0.75,
+              "interval90": [
+                0.356168,
+                0.942093
+              ],
+              "o2_range": [
+                0.23,
+                0.25
+              ],
+              "p_atm_range": [
+                0.702763,
+                0.709474
+              ],
+              "n_missing_pressure": 0,
+              "record_ids": [
+                "PSI-69:FLEX:104",
+                "PSI-69:FLEX:105",
+                "PSI-69:FLEX:107",
+                "PSI-69:FLEX:176",
+                "PSI-69:FLEX:177",
+                "PSI-69:FLEX:88",
+                "PSI-69:FLEX:89",
+                "PSI-69:FLEX:90",
+                "PSI-69:FLEX:91",
+                "PSI-69:FLEX:97"
+              ]
+            },
+            {
+              "bin": "(0.2, 0.3]",
+              "fraction_lo": 0.2,
+              "fraction_hi": 0.3,
+              "lo_inclusive": false,
+              "merged_from": null,
+              "fraction_range": [
+                0.25,
+                0.25
+              ],
+              "n": 8,
+              "extinctions": 6,
+              "completions": 1,
+              "disruptions": 1,
+              "extinction_rate": 0.857143,
+              "interval90": [
+                0.547713,
+                0.967456
+              ],
+              "o2_range": [
+                0.23,
+                0.23
+              ],
+              "p_atm_range": [
+                0.703158,
+                0.708289
+              ],
+              "n_missing_pressure": 0,
+              "record_ids": [
+                "PSI-69:FLEX:106",
+                "PSI-69:FLEX:108",
+                "PSI-69:FLEX:183",
+                "PSI-69:FLEX:184",
+                "PSI-69:FLEX:185",
+                "PSI-69:FLEX:186",
+                "PSI-69:FLEX:98",
+                "PSI-69:FLEX:99"
+              ]
+            }
+          ]
+        }
+      }
+    },
+    "he": {
+      "Heptane": {
+        "le_0.17": {
+          "o2_band": "O2 <= 0.17",
+          "n": 21,
+          "bins": [
+            {
+              "bin": "0",
+              "fraction_lo": 0.0,
+              "fraction_hi": 0.0,
+              "lo_inclusive": true,
+              "merged_from": null,
+              "fraction_range": [
+                0.0,
+                0.0
+              ],
+              "n": 14,
+              "extinctions": 11,
+              "completions": 3,
+              "disruptions": 0,
+              "extinction_rate": 0.785714,
+              "interval90": [
+                0.567951,
+                0.910932
+              ],
+              "o2_range": [
+                0.13,
+                0.16
+              ],
+              "p_atm_range": [
+                0.999737,
+                1.013421
+              ],
+              "n_missing_pressure": 0,
+              "record_ids": [
+                "PSI-69:FLEX:209",
+                "PSI-69:FLEX:210",
+                "PSI-69:FLEX:211",
+                "PSI-69:FLEX:212",
+                "PSI-69:FLEX:213",
+                "PSI-69:FLEX:214",
+                "PSI-69:FLEX:69",
+                "PSI-69:FLEX:70",
+                "PSI-69:FLEX:72",
+                "PSI-69:FLEX:73",
+                "PSI-69:FLEX:74",
+                "PSI-69:FLEX:79",
+                "PSI-69:FLEX:80",
+                "PSI-69:FLEX:81"
+              ]
+            },
+            {
+              "bin": "(0.1, 0.2]",
+              "fraction_lo": 0.1,
+              "fraction_hi": 0.2,
+              "lo_inclusive": false,
+              "merged_from": null,
+              "fraction_range": [
+                0.2,
+                0.2
+              ],
+              "n": 4,
+              "extinctions": 2,
+              "completions": 1,
+              "disruptions": 1,
+              "extinction_rate": 0.666667,
+              "interval90": [
+                0.253534,
+                0.921734
+              ],
+              "o2_range": [
+                0.17,
+                0.17
+              ],
+              "p_atm_range": [
+                0.999079,
+                0.999737
+              ],
+              "n_missing_pressure": 0,
+              "record_ids": [
+                "PSI-69:FLEX:235",
+                "PSI-69:FLEX:236",
+                "PSI-69:FLEX:237",
+                "PSI-69:FLEX:238"
+              ]
+            },
+            {
+              "bin": ">0.2",
+              "fraction_lo": 0.2,
+              "fraction_hi": null,
+              "lo_inclusive": false,
+              "merged_from": [
+                "(0.2, 0.3]",
+                ">0.4"
+              ],
+              "fraction_range": [
+                0.25,
+                0.45
+              ],
+              "n": 3,
+              "extinctions": 2,
+              "completions": 1,
+              "disruptions": 0,
+              "extinction_rate": 0.666667,
+              "interval90": [
+                0.253534,
+                0.921734
+              ],
+              "o2_range": [
+                0.16,
+                0.17
+              ],
+              "p_atm_range": [
+                0.700263,
+                0.997237
+              ],
+              "n_missing_pressure": 0,
+              "record_ids": [
+                "PSI-69:FLEX:243",
+                "PSI-69:FLEX:269",
+                "PSI-69:FLEX:270"
+              ]
+            }
+          ]
+        },
+        "0.17_0.22": {
+          "o2_band": "0.17 < O2 <= 0.22",
+          "n": 35,
+          "bins": [
+            {
+              "bin": "0",
+              "fraction_lo": 0.0,
+              "fraction_hi": 0.0,
+              "lo_inclusive": true,
+              "merged_from": null,
+              "fraction_range": [
+                0.0,
+                0.0
+              ],
+              "n": 22,
+              "extinctions": 8,
+              "completions": 6,
+              "disruptions": 8,
+              "extinction_rate": 0.571429,
+              "interval90": [
+                0.36037,
+                0.75935
+              ],
+              "o2_range": [
+                0.18,
+                0.21
+              ],
+              "p_atm_range": [
+                0.715921,
+                1.015
+              ],
+              "n_missing_pressure": 0,
+              "record_ids": [
+                "PSI-69:FLEX:204",
+                "PSI-69:FLEX:205",
+                "PSI-69:FLEX:206",
+                "PSI-69:FLEX:207",
+                "PSI-69:FLEX:208",
+                "PSI-69:FLEX:228",
+                "PSI-69:FLEX:229",
+                "PSI-69:FLEX:230",
+                "PSI-69:FLEX:35",
+                "PSI-69:FLEX:47",
+                "PSI-69:FLEX:49",
+                "PSI-69:FLEX:50",
+                "PSI-69:FLEX:51",
+                "PSI-69:FLEX:53",
+                "PSI-69:FLEX:56",
+                "PSI-69:FLEX:57",
+                "PSI-69:FLEX:62",
+                "PSI-69:FLEX:63",
+                "PSI-69:FLEX:64",
+                "PSI-69:FLEX:7",
+                "PSI-69:FLEX:8",
+                "PSI-69:FLEX:9"
+              ]
+            },
+            {
+              "bin": "(0, 0.2]",
+              "fraction_lo": 0.0,
+              "fraction_hi": 0.2,
+              "lo_inclusive": false,
+              "merged_from": [
+                "(0, 0.1]",
+                "(0.1, 0.2]"
+              ],
+              "fraction_range": [
+                0.05,
+                0.15
+              ],
+              "n": 7,
+              "extinctions": 3,
+              "completions": 3,
+              "disruptions": 1,
+              "extinction_rate": 0.5,
+              "interval90": [
+                0.22126,
+                0.77874
+              ],
+              "o2_range": [
+                0.18,
+                0.21
+              ],
+              "p_atm_range": [
+                0.993816,
+                1.008553
+              ],
+              "n_missing_pressure": 0,
+              "record_ids": [
+                "PSI-69:FLEX:224",
+                "PSI-69:FLEX:231",
+                "PSI-69:FLEX:232",
+                "PSI-69:FLEX:233",
+                "PSI-69:FLEX:234",
+                "PSI-69:FLEX:273",
+                "PSI-69:FLEX:274"
+              ]
+            },
+            {
+              "bin": "(0.2, 0.4]",
+              "fraction_lo": 0.2,
+              "fraction_hi": 0.4,
+              "lo_inclusive": false,
+              "merged_from": [
+                "(0.2, 0.3]",
+                "(0.3, 0.4]"
+              ],
+              "fraction_range": [
+                0.3,
+                0.4
+              ],
+              "n": 6,
+              "extinctions": 6,
+              "completions": 0,
+              "disruptions": 0,
+              "extinction_rate": 1.0,
+              "interval90": [
+                0.689216,
+                1.0
+              ],
+              "o2_range": [
+                0.18,
+                0.21
+              ],
+              "p_atm_range": [
+                0.694737,
+                0.700658
+              ],
+              "n_missing_pressure": 0,
+              "record_ids": [
+                "PSI-69:FLEX:258",
+                "PSI-69:FLEX:259",
+                "PSI-69:FLEX:260",
+                "PSI-69:FLEX:261",
+                "PSI-69:FLEX:267",
+                "PSI-69:FLEX:268"
+              ]
+            }
+          ]
+        },
+        "gt_0.22": {
+          "o2_band": "O2 > 0.22",
+          "n": 13,
+          "bins": [
+            {
+              "bin": "0",
+              "fraction_lo": 0.0,
+              "fraction_hi": 0.0,
+              "lo_inclusive": true,
+              "merged_from": null,
+              "fraction_range": [
+                0.0,
+                0.0
+              ],
+              "n": 11,
+              "extinctions": 0,
+              "completions": 1,
+              "disruptions": 10,
+              "extinction_rate": 0.0,
+              "interval90": [
+                0.0,
+                0.730134
+              ],
+              "o2_range": [
+                0.3,
+                0.34
+              ],
+              "p_atm_range": [
+                0.703816,
+                1.014605
+              ],
+              "n_missing_pressure": 0,
+              "record_ids": [
+                "PSI-69:FLEX:19",
+                "PSI-69:FLEX:23",
+                "PSI-69:FLEX:24",
+                "PSI-69:FLEX:27",
+                "PSI-69:FLEX:28",
+                "PSI-69:FLEX:31",
+                "PSI-69:FLEX:32",
+                "PSI-69:FLEX:39",
+                "PSI-69:FLEX:42",
+                "PSI-69:FLEX:43",
+                "PSI-69:FLEX:52"
+              ]
+            },
+            {
+              "bin": "(0.1, 0.3]",
+              "fraction_lo": 0.1,
+              "fraction_hi": 0.3,
+              "lo_inclusive": false,
+              "merged_from": [
+                "(0.1, 0.2]",
+                "(0.2, 0.3]"
+              ],
+              "fraction_range": [
+                0.2,
+                0.25
+              ],
+              "n": 2,
+              "extinctions": 1,
+              "completions": 1,
+              "disruptions": 0,
+              "extinction_rate": 0.5,
+              "interval90": [
+                0.120866,
+                0.879134
+              ],
+              "o2_range": [
+                0.23,
+                0.24
+              ],
+              "p_atm_range": [
+                0.700263,
+                0.702632
+              ],
+              "n_missing_pressure": 0,
+              "record_ids": [
+                "PSI-69:FLEX:249",
+                "PSI-69:FLEX:250"
+              ]
+            }
+          ]
+        }
+      },
+      "Methanol": {
+        "le_0.17": {
+          "o2_band": "O2 <= 0.17",
+          "n": 33,
+          "bins": [
+            {
+              "bin": "0",
+              "fraction_lo": 0.0,
+              "fraction_hi": 0.0,
+              "lo_inclusive": true,
+              "merged_from": null,
+              "fraction_range": [
+                0.0,
+                0.0
+              ],
+              "n": 22,
+              "extinctions": 22,
+              "completions": 0,
+              "disruptions": 0,
+              "extinction_rate": 1.0,
+              "interval90": [
+                0.890488,
+                1.0
+              ],
+              "o2_range": [
+                0.12,
+                0.15
+              ],
+              "p_atm_range": [
+                0.996842,
+                1.015789
+              ],
+              "n_missing_pressure": 0,
+              "record_ids": [
+                "PSI-69:FLEX:215",
+                "PSI-69:FLEX:216",
+                "PSI-69:FLEX:217",
+                "PSI-69:FLEX:218",
+                "PSI-69:FLEX:219",
+                "PSI-69:FLEX:220",
+                "PSI-69:FLEX:221",
+                "PSI-69:FLEX:65",
+                "PSI-69:FLEX:66",
+                "PSI-69:FLEX:67",
+                "PSI-69:FLEX:68",
+                "PSI-69:FLEX:71",
+                "PSI-69:FLEX:75",
+                "PSI-69:FLEX:76",
+                "PSI-69:FLEX:77",
+                "PSI-69:FLEX:78",
+                "PSI-69:FLEX:82",
+                "PSI-69:FLEX:83",
+                "PSI-69:FLEX:84",
+                "PSI-69:FLEX:85",
+                "PSI-69:FLEX:86",
+                "PSI-69:FLEX:87"
+              ]
+            },
+            {
+              "bin": "(0.1, 0.3]",
+              "fraction_lo": 0.1,
+              "fraction_hi": 0.3,
+              "lo_inclusive": false,
+              "merged_from": [
+                "(0.1, 0.2]",
+                "(0.2, 0.3]"
+              ],
+              "fraction_range": [
+                0.2,
+                0.3
+              ],
+              "n": 6,
+              "extinctions": 6,
+              "completions": 0,
+              "disruptions": 0,
+              "extinction_rate": 1.0,
+              "interval90": [
+                0.689216,
+                1.0
+              ],
+              "o2_range": [
+                0.15,
+                0.17
+              ],
+              "p_atm_range": [
+                0.992368,
+                1.001316
+              ],
+              "n_missing_pressure": 0,
+              "record_ids": [
+                "PSI-69:FLEX:239",
+                "PSI-69:FLEX:240",
+                "PSI-69:FLEX:241",
+                "PSI-69:FLEX:242",
+                "PSI-69:FLEX:244",
+                "PSI-69:FLEX:245"
+              ]
+            },
+            {
+              "bin": ">0.3",
+              "fraction_lo": 0.3,
+              "fraction_hi": null,
+              "lo_inclusive": false,
+              "merged_from": [
+                "(0.3, 0.4]",
+                ">0.4"
+              ],
+              "fraction_range": [
+                0.35,
+                0.45
+              ],
+              "n": 5,
+              "extinctions": 5,
+              "completions": 0,
+              "disruptions": 0,
+              "extinction_rate": 1.0,
+              "interval90": [
+                0.648883,
+                1.0
+              ],
+              "o2_range": [
+                0.13,
+                0.17
+              ],
+              "p_atm_range": [
+                0.697895,
+                1.004605
+              ],
+              "n_missing_pressure": 0,
+              "record_ids": [
+                "PSI-69:FLEX:246",
+                "PSI-69:FLEX:247",
+                "PSI-69:FLEX:248",
+                "PSI-69:FLEX:271",
+                "PSI-69:FLEX:272"
+              ]
+            }
+          ]
+        },
+        "0.17_0.22": {
+          "o2_band": "0.17 < O2 <= 0.22",
+          "n": 32,
+          "bins": [
+            {
+              "bin": "0",
+              "fraction_lo": 0.0,
+              "fraction_hi": 0.0,
+              "lo_inclusive": true,
+              "merged_from": null,
+              "fraction_range": [
+                0.0,
+                0.0
+              ],
+              "n": 19,
+              "extinctions": 15,
+              "completions": 0,
+              "disruptions": 4,
+              "extinction_rate": 1.0,
+              "interval90": [
+                0.847192,
+                1.0
+              ],
+              "o2_range": [
+                0.18,
+                0.21
+              ],
+              "p_atm_range": [
+                0.709211,
+                1.018553
+              ],
+              "n_missing_pressure": 0,
+              "record_ids": [
+                "PSI-69:FLEX:1",
+                "PSI-69:FLEX:2",
+                "PSI-69:FLEX:202",
+                "PSI-69:FLEX:203",
+                "PSI-69:FLEX:3",
+                "PSI-69:FLEX:33",
+                "PSI-69:FLEX:34",
+                "PSI-69:FLEX:36",
+                "PSI-69:FLEX:4",
+                "PSI-69:FLEX:46",
+                "PSI-69:FLEX:48",
+                "PSI-69:FLEX:5",
+                "PSI-69:FLEX:54",
+                "PSI-69:FLEX:55",
+                "PSI-69:FLEX:58",
+                "PSI-69:FLEX:59",
+                "PSI-69:FLEX:6",
+                "PSI-69:FLEX:60",
+                "PSI-69:FLEX:61"
+              ]
+            },
+            {
+              "bin": "(0, 0.1]",
+              "fraction_lo": 0.0,
+              "fraction_hi": 0.1,
+              "lo_inclusive": false,
+              "merged_from": null,
+              "fraction_range": [
+                0.05,
+                0.1
+              ],
+              "n": 3,
+              "extinctions": 3,
+              "completions": 0,
+              "disruptions": 0,
+              "extinction_rate": 1.0,
+              "interval90": [
+                0.525804,
+                1.0
+              ],
+              "o2_range": [
+                0.19,
+                0.2
+              ],
+              "p_atm_range": [
+                0.991316,
+                0.999474
+              ],
+              "n_missing_pressure": 0,
+              "record_ids": [
+                "PSI-69:FLEX:222",
+                "PSI-69:FLEX:223",
+                "PSI-69:FLEX:225"
+              ]
+            },
+            {
+              "bin": "(0.1, 0.3]",
+              "fraction_lo": 0.1,
+              "fraction_hi": 0.3,
+              "lo_inclusive": false,
+              "merged_from": [
+                "(0.1, 0.2]",
+                "(0.2, 0.3]"
+              ],
+              "fraction_range": [
+                0.15,
+                0.3
+              ],
+              "n": 5,
+              "extinctions": 5,
+              "completions": 0,
+              "disruptions": 0,
+              "extinction_rate": 1.0,
+              "interval90": [
+                0.648883,
+                1.0
+              ],
+              "o2_range": [
+                0.18,
+                0.21
+              ],
+              "p_atm_range": [
+                0.698947,
+                1.000395
+              ],
+              "n_missing_pressure": 0,
+              "record_ids": [
+                "PSI-69:FLEX:226",
+                "PSI-69:FLEX:227",
+                "PSI-69:FLEX:255",
+                "PSI-69:FLEX:256",
+                "PSI-69:FLEX:257"
+              ]
+            },
+            {
+              "bin": "(0.3, 0.4]",
+              "fraction_lo": 0.3,
+              "fraction_hi": 0.4,
+              "lo_inclusive": false,
+              "merged_from": null,
+              "fraction_range": [
+                0.35,
+                0.4
+              ],
+              "n": 5,
+              "extinctions": 5,
+              "completions": 0,
+              "disruptions": 0,
+              "extinction_rate": 1.0,
+              "interval90": [
+                0.648883,
+                1.0
+              ],
+              "o2_range": [
+                0.18,
+                0.2
+              ],
+              "p_atm_range": [
+                0.694211,
+                0.701579
+              ],
+              "n_missing_pressure": 0,
+              "record_ids": [
+                "PSI-69:FLEX:262",
+                "PSI-69:FLEX:263",
+                "PSI-69:FLEX:264",
+                "PSI-69:FLEX:265",
+                "PSI-69:FLEX:266"
+              ]
+            }
+          ]
+        },
+        "gt_0.22": {
+          "o2_band": "O2 > 0.22",
+          "n": 17,
+          "bins": [
+            {
+              "bin": "0",
+              "fraction_lo": 0.0,
+              "fraction_hi": 0.0,
+              "lo_inclusive": true,
+              "merged_from": null,
+              "fraction_range": [
+                0.0,
+                0.0
+              ],
+              "n": 13,
+              "extinctions": 2,
+              "completions": 3,
+              "disruptions": 8,
+              "extinction_rate": 0.4,
+              "interval90": [
+                0.142706,
+                0.727517
+              ],
+              "o2_range": [
+                0.3,
+                0.34
+              ],
+              "p_atm_range": [
+                0.703026,
+                1.012105
+              ],
+              "n_missing_pressure": 0,
+              "record_ids": [
+                "PSI-69:FLEX:20",
+                "PSI-69:FLEX:21",
+                "PSI-69:FLEX:22",
+                "PSI-69:FLEX:25",
+                "PSI-69:FLEX:26",
+                "PSI-69:FLEX:29",
+                "PSI-69:FLEX:30",
+                "PSI-69:FLEX:37",
+                "PSI-69:FLEX:38",
+                "PSI-69:FLEX:40",
+                "PSI-69:FLEX:41",
+                "PSI-69:FLEX:44",
+                "PSI-69:FLEX:45"
+              ]
+            },
+            {
+              "bin": "(0.1, 0.3]",
+              "fraction_lo": 0.1,
+              "fraction_hi": 0.3,
+              "lo_inclusive": false,
+              "merged_from": [
+                "(0.1, 0.2]",
+                "(0.2, 0.3]"
+              ],
+              "fraction_range": [
+                0.2,
+                0.25
+              ],
+              "n": 4,
+              "extinctions": 2,
+              "completions": 0,
+              "disruptions": 2,
+              "extinction_rate": 1.0,
+              "interval90": [
+                0.425031,
+                1.0
+              ],
+              "o2_range": [
+                0.23,
+                0.24
+              ],
+              "p_atm_range": [
+                0.699605,
+                0.703421
+              ],
+              "n_missing_pressure": 0,
+              "record_ids": [
+                "PSI-69:FLEX:251",
+                "PSI-69:FLEX:252",
+                "PSI-69:FLEX:253",
+                "PSI-69:FLEX:254"
+              ]
+            }
+          ]
+        }
+      }
+    }
+  },
+  "trend": {
+    "co2": {
+      "Heptane": {
+        "le_0.17": {
+          "direction": "rises",
+          "delta": 0.214286,
+          "from_bin": "0",
+          "to_bin": ">0.1",
+          "non_monotonic": false,
+          "intervals_overlap": true,
+          "sequence": [
+            {
+              "bin": "0",
+              "extinction_rate": 0.785714,
+              "rated_n": 14
+            },
+            {
+              "bin": ">0.1",
+              "extinction_rate": 1.0,
+              "rated_n": 4
+            }
+          ]
+        },
+        "0.17_0.22": {
+          "direction": "rises",
+          "delta": 0.428571,
+          "from_bin": "0",
+          "to_bin": ">0.2",
+          "non_monotonic": true,
+          "intervals_overlap": true,
+          "sequence": [
+            {
+              "bin": "0",
+              "extinction_rate": 0.571429,
+              "rated_n": 14
+            },
+            {
+              "bin": "(0, 0.1]",
+              "extinction_rate": 1.0,
+              "rated_n": 5
+            },
+            {
+              "bin": "(0.1, 0.2]",
+              "extinction_rate": 0.833333,
+              "rated_n": 6
+            },
+            {
+              "bin": ">0.2",
+              "extinction_rate": 1.0,
+              "rated_n": 7
+            }
+          ]
+        },
+        "gt_0.22": {
+          "direction": "rises",
+          "delta": 0.4,
+          "from_bin": "(0.1, 0.2]",
+          "to_bin": "(0.2, 0.3]",
+          "non_monotonic": false,
+          "intervals_overlap": true,
+          "sequence": [
+            {
+              "bin": "(0.1, 0.2]",
+              "extinction_rate": 0.6,
+              "rated_n": 5
+            },
+            {
+              "bin": "(0.2, 0.3]",
+              "extinction_rate": 1.0,
+              "rated_n": 3
+            }
+          ]
+        }
+      },
+      "Methanol": {
+        "le_0.17": {
+          "direction": "flat",
+          "delta": 0.0,
+          "from_bin": "0",
+          "to_bin": ">0.4",
+          "non_monotonic": false,
+          "intervals_overlap": true,
+          "sequence": [
+            {
+              "bin": "0",
+              "extinction_rate": 1.0,
+              "rated_n": 22
+            },
+            {
+              "bin": "(0.1, 0.3]",
+              "extinction_rate": 1.0,
+              "rated_n": 6
+            },
+            {
+              "bin": "(0.3, 0.4]",
+              "extinction_rate": 1.0,
+              "rated_n": 6
+            },
+            {
+              "bin": ">0.4",
+              "extinction_rate": 1.0,
+              "rated_n": 9
+            }
+          ]
+        },
+        "0.17_0.22": {
+          "direction": "flat",
+          "delta": 0.0,
+          "from_bin": "0",
+          "to_bin": ">0.4",
+          "non_monotonic": false,
+          "intervals_overlap": true,
+          "sequence": [
+            {
+              "bin": "0",
+              "extinction_rate": 1.0,
+              "rated_n": 15
+            },
+            {
+              "bin": "(0, 0.1]",
+              "extinction_rate": 1.0,
+              "rated_n": 8
+            },
+            {
+              "bin": "(0.1, 0.2]",
+              "extinction_rate": 0.875,
+              "rated_n": 8
+            },
+            {
+              "bin": "(0.2, 0.3]",
+              "extinction_rate": 0.5,
+              "rated_n": 4
+            },
+            {
+              "bin": "(0.3, 0.4]",
+              "extinction_rate": 1.0,
+              "rated_n": 8
+            },
+            {
+              "bin": ">0.4",
+              "extinction_rate": 1.0,
+              "rated_n": 6
+            }
+          ]
+        },
+        "gt_0.22": {
+          "direction": "rises",
+          "delta": 0.457143,
+          "from_bin": "0",
+          "to_bin": "(0.2, 0.3]",
+          "non_monotonic": false,
+          "intervals_overlap": true,
+          "sequence": [
+            {
+              "bin": "0",
+              "extinction_rate": 0.4,
+              "rated_n": 5
+            },
+            {
+              "bin": "(0.1, 0.2]",
+              "extinction_rate": 0.75,
+              "rated_n": 4
+            },
+            {
+              "bin": "(0.2, 0.3]",
+              "extinction_rate": 0.857143,
+              "rated_n": 7
+            }
+          ]
+        }
+      }
+    },
+    "he": {
+      "Heptane": {
+        "le_0.17": {
+          "direction": "falls",
+          "delta": -0.119047,
+          "from_bin": "0",
+          "to_bin": ">0.2",
+          "non_monotonic": false,
+          "intervals_overlap": true,
+          "sequence": [
+            {
+              "bin": "0",
+              "extinction_rate": 0.785714,
+              "rated_n": 14
+            },
+            {
+              "bin": "(0.1, 0.2]",
+              "extinction_rate": 0.666667,
+              "rated_n": 3
+            },
+            {
+              "bin": ">0.2",
+              "extinction_rate": 0.666667,
+              "rated_n": 3
+            }
+          ]
+        },
+        "0.17_0.22": {
+          "direction": "rises",
+          "delta": 0.428571,
+          "from_bin": "0",
+          "to_bin": "(0.2, 0.4]",
+          "non_monotonic": false,
+          "intervals_overlap": true,
+          "sequence": [
+            {
+              "bin": "0",
+              "extinction_rate": 0.571429,
+              "rated_n": 14
+            },
+            {
+              "bin": "(0, 0.2]",
+              "extinction_rate": 0.5,
+              "rated_n": 6
+            },
+            {
+              "bin": "(0.2, 0.4]",
+              "extinction_rate": 1.0,
+              "rated_n": 6
+            }
+          ]
+        },
+        "gt_0.22": {
+          "direction": "insufficient",
+          "delta": null,
+          "non_monotonic": null,
+          "intervals_overlap": null,
+          "sequence": []
+        }
+      },
+      "Methanol": {
+        "le_0.17": {
+          "direction": "flat",
+          "delta": 0.0,
+          "from_bin": "0",
+          "to_bin": ">0.3",
+          "non_monotonic": false,
+          "intervals_overlap": true,
+          "sequence": [
+            {
+              "bin": "0",
+              "extinction_rate": 1.0,
+              "rated_n": 22
+            },
+            {
+              "bin": "(0.1, 0.3]",
+              "extinction_rate": 1.0,
+              "rated_n": 6
+            },
+            {
+              "bin": ">0.3",
+              "extinction_rate": 1.0,
+              "rated_n": 5
+            }
+          ]
+        },
+        "0.17_0.22": {
+          "direction": "flat",
+          "delta": 0.0,
+          "from_bin": "0",
+          "to_bin": "(0.3, 0.4]",
+          "non_monotonic": false,
+          "intervals_overlap": true,
+          "sequence": [
+            {
+              "bin": "0",
+              "extinction_rate": 1.0,
+              "rated_n": 15
+            },
+            {
+              "bin": "(0, 0.1]",
+              "extinction_rate": 1.0,
+              "rated_n": 3
+            },
+            {
+              "bin": "(0.1, 0.3]",
+              "extinction_rate": 1.0,
+              "rated_n": 5
+            },
+            {
+              "bin": "(0.3, 0.4]",
+              "extinction_rate": 1.0,
+              "rated_n": 5
+            }
+          ]
+        },
+        "gt_0.22": {
+          "direction": "insufficient",
+          "delta": null,
+          "non_monotonic": null,
+          "intervals_overlap": null,
+          "sequence": [
+            {
+              "bin": "0",
+              "extinction_rate": 0.4,
+              "rated_n": 5
+            }
+          ]
+        }
+      }
+    }
+  },
+  "notes": [
+    "No diluted FLEX test exceeds 25% O2: the highest O2 with CO2 or He > 0 is 0.25 (CO2: 0.25, He: 0.24); undiluted tests reach 0.34.",
+    "0 FLEX rows have both CO2 > 0 and He > 0.",
+    "Empirical counts only: bins mix pressures, droplet sizes and O2 within a band, so a cell rate is not a controlled single-variable effect. Use it to check direction, not magnitude.",
+    "Disruptions are excluded from the extinction rate (outcome unknown), as in M1 (ADR-0004); with most FLEX flames extinguishing, many cells sit near 1 and their trend is flat by construction.",
+    "A missing pressure keeps the row (pressure is only reported as a range); see n_missing_pressure."
+  ]
+}
