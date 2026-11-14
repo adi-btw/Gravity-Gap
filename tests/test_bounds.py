@@ -152,3 +152,48 @@ def test_artifacts_json_safe(tmp_path):
     for p in paths:
         json.loads(p.read_text(encoding="utf-8"))
         json.dumps(json.loads(p.read_text(encoding="utf-8")), allow_nan=False)
+
+
+# ---------------------------------------------------------------- ADR-0006 dilution-aware gate
+def test_gate_rejects_co2_at_34_percent_o2():
+    for co2 in (0.05, 0.2, 0.4):
+        r = _pred("M1", "lunar_base", co2=co2)
+        assert r["applicable"] is False and r["estimate"] is None
+        assert "CO2-diluted" in r["reason"] and "between 14% and 24% O2" in r["reason"]
+    assert _pred("M1", "lunar_base", he=0.2)["applicable"] is False
+
+
+def test_gate_accepts_co2_in_iss_air():
+    r = _pred("M1", "iss", co2=0.2)
+    assert r["applicable"] is True and 0 <= r["estimate"] <= 1
+    assert r["inputs"]["co2"] == 0.2
+    assert _pred("M2", "iss", co2=0.2)["applicable"] is True
+
+
+def test_undiluted_presets_unchanged_by_diluent_gate():
+    """Undiluted queries: same applicability as before ADR-0006 (lunar M2 stays gated)."""
+    assert _pred("M1", "lunar_base")["applicable"] is True
+    assert _pred("M2", "lunar_base")["applicable"] is False
+    assert _pred("M1", "iss")["applicable"] is True
+
+
+def test_diluent_evidence_rule_uses_only_diluted_tests():
+    # lunar base is 0.80 from undiluted 34% O2 tests; with a little CO2 those do not count
+    d0 = _pred("M1", "lunar_base")["evidence"][0]["distance"]
+    d1 = _pred("M1", "lunar_base", co2=0.05)["evidence"][0]["distance"]
+    assert d0 < 1.0 and d1 > bounds.GATE_DISTANCE
+
+
+def test_m3_ignores_diluent_gate():
+    a = _pred("M3", "lunar_base")
+    assert a["applicable"] is True
+
+
+def test_composition_over_one_rejected():
+    with pytest.raises(ValueError):
+        _pred("M1", "iss", co2=0.9)
+
+
+def test_dilution_distance_matches_vector():
+    d = bounds.dilution_distance(0.21, 1.0, 0.2, 0.0, 0.21, 1.0, 0.0, 0.0)
+    assert math.isclose(d, 2.0)

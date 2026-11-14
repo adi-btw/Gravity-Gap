@@ -12,7 +12,7 @@
   "unit": "mm",
   "kind": "quantity",
   "applicable": false,
-  "reason": "Extrapolation: no evidence. The query (O2 0.340, 0.56 atm) is more than 2 atmosphere-distance units from every M2 training test; the nearest tested condition is PSI-69 PSI-69:FLEX:45 at O2 0.300, 1.01 atm (atmosphere distance 2.14).",
+  "reason": "Extrapolation: no evidence. The query (O2 0.340, 0.56 atm, CO2 0.00, He 0.00) is more than 2 atmosphere-and-diluent-distance units from every M2 training test; the nearest tested condition is PSI-69 PSI-69:FLEX:45 at O2 0.300, 1.01 atm, CO2 0.00, He 0.00 (atmosphere and diluent distance 2.14).",
   "estimate": null,
   "band90": null,
   "ref_0g": null,
@@ -45,94 +45,94 @@
       "distance": 2.1400649408976817
     },
     {
+      "record_id": "PSI-69:FLEX:36",
+      "investigation_id": "PSI-69",
+      "distance": 2.911895955762942
+    },
+    {
+      "record_id": "PSI-69:FLEX:57",
+      "investigation_id": "PSI-69",
+      "distance": 2.9211937301322495
+    },
+    {
       "record_id": "PSI-69:FLEX:94",
       "investigation_id": "PSI-69",
-      "distance": 2.1416346574172236
+      "distance": 2.930289918395548
     },
     {
       "record_id": "PSI-69:FLEX:249",
       "investigation_id": "PSI-69",
-      "distance": 2.1425292027922347
+      "distance": 2.9309437703268086
     },
     {
       "record_id": "PSI-69:FLEX:251",
       "investigation_id": "PSI-69",
-      "distance": 2.1432013360260496
+      "distance": 2.93143513773439
     },
     {
       "record_id": "PSI-69:FLEX:95",
       "investigation_id": "PSI-69",
-      "distance": 2.1434256129631146
+      "distance": 2.9315991128232906
     },
     {
       "record_id": "PSI-69:FLEX:177",
       "investigation_id": "PSI-69",
-      "distance": 2.1492971928957556
-    },
-    {
-      "record_id": "PSI-69:FLEX:253",
-      "investigation_id": "PSI-69",
-      "distance": 2.32562399423727
-    },
-    {
-      "record_id": "PSI-69:FLEX:178",
-      "investigation_id": "PSI-69",
-      "distance": 2.329506172099698
+      "distance": 2.935894824987703
     },
     {
       "record_id": "PSI-69:FLEX:104",
       "investigation_id": "PSI-69",
-      "distance": 2.330534483681684
+      "distance": 3.0710569808503156
     },
     {
-      "record_id": "PSI-69:FLEX:99",
+      "record_id": "PSI-69:FLEX:5",
       "investigation_id": "PSI-69",
-      "distance": 2.3323923890473273
+      "distance": 3.246885048163893
     },
     {
-      "record_id": "PSI-69:FLEX:185",
+      "record_id": "PSI-69:FLEX:6",
       "investigation_id": "PSI-69",
-      "distance": 2.332806463081705
+      "distance": 3.246885048163893
     },
     {
-      "record_id": "PSI-69:FLEX:186",
+      "record_id": "PSI-69:FLEX:202",
       "investigation_id": "PSI-69",
-      "distance": 2.334883367078454
+      "distance": 3.247410471929897
     },
     {
-      "record_id": "PSI-69:FLEX:100",
+      "record_id": "PSI-69:FLEX:203",
       "investigation_id": "PSI-69",
-      "distance": 2.335925879899568
+      "distance": 3.2510888116196304
     },
     {
-      "record_id": "PSI-69:FLEX:98",
+      "record_id": "PSI-69:FLEX:2",
       "investigation_id": "PSI-69",
-      "distance": 2.3367618271572455
+      "distance": 3.252139882214325
     },
     {
-      "record_id": "PSI-69:FLEX:101",
+      "record_id": "PSI-69:FLEX:3",
       "investigation_id": "PSI-69",
-      "distance": 2.340122692263634
+      "distance": 3.257921638487964
     },
     {
-      "record_id": "PSI-69:FLEX:259",
+      "record_id": "PSI-69:FLEX:33",
       "investigation_id": "PSI-69",
-      "distance": 2.702447777941712
+      "distance": 3.2587101682665454
     },
     {
-      "record_id": "PSI-69:FLEX:258",
+      "record_id": "PSI-69:FLEX:49",
       "investigation_id": "PSI-69",
-      "distance": 2.703480751350943
+      "distance": 3.2597615798185196
     },
     {
-      "record_id": "PSI-69:FLEX:256",
+      "record_id": "PSI-69:FLEX:228",
       "investigation_id": "PSI-69",
-      "distance": 2.7062534159984346
+      "distance": 3.2663338432840803
     },
     {
-      "record_id": "PSI-69:FLEX:257",
+      "record_id": "PSI-69:FLEX:34",
       "investigation_id": "PSI-69",
-      "distance": 2.7062534159984346
+      "distance": 3.2671226175194836
     }
   ],
   "sensitivity": [],

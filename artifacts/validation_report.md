@@ -1,6 +1,6 @@
 # Validation report: E2 bounds models (M1-M3)
 
-Generated 2026-11-14T18:18:19+00:00 by `python -m engine.validation` (engine 0.1.0). Model versions: M1 `2a8ccd37105c`, M2 `d3f1ae64f2c0`, M3 `3e3a8c2d84ca`.
+Generated 2026-11-14T23:13:08+00:00 by `python -m engine.validation` (engine 0.1.0). Model versions: M1 `2a8ccd37105c`, M2 `d3f1ae64f2c0`, M3 `3e3a8c2d84ca`.
 
 All numbers are out-of-fold (5-fold, seed 0) on microgravity PSI data. They measure how well each model interpolates *within* its own investigation; they say nothing about partial gravity, which no PSI test covers (see ADR-0005).
 
@@ -48,6 +48,26 @@ n = 158. Linear quantile regression at q = 0.05 / 0.5 / 0.95 on standardized fea
 - M2 interval coverage 0.848 vs nominal 0.90 (under-covers: treat the band as optimistic).
 - Habitat queries with L_mm = 10 use the largest tested droplet (4.67 mm for M1, M2 clip), an edge of the training range.
 
+## Diluted subset (R2 suppression calculator)
+
+The suppression calculator (`engine.suppression`) reads M1 and M2 at CO2 or helium fractions > 0. These are the same out-of-fold predictions as above (same 5 folds), scored only on FLEX rows that used a diluent. Every diluted training row is at 13-24% O2, so nothing here says anything about dilution at 30-34% O2; the ADR-0006 gate withholds numbers there.
+
+| M1 subset | n | extinctions | O2 range | AUC | Brier | Brier (base rate) | mean predicted | observed |
+|---|---|---|---|---|---|---|---|---|
+| CO2 > 0 | 95 | 87 | 0.14-0.24 | 0.552 | 0.077 | 0.079 | 0.903 | 0.916 |
+| He > 0 | 44 | 38 | 0.13-0.24 | 0.921 | 0.085 | 0.118 | 0.874 | 0.864 |
+| any diluent | 139 | 125 | 0.13-0.24 | 0.705 | 0.080 | 0.092 | 0.894 | 0.899 |
+
+| M2 subset | n | MAE of median (mm) | MAE baseline (mm) | median bias (mm) | 5-95% coverage |
+|---|---|---|---|---|---|
+| CO2 > 0 | 77 | 0.314 | 0.850 | 0.140 | 0.844 |
+| He > 0 | 35 | 0.382 | 0.693 | 0.134 | 0.886 |
+| any diluent | 112 | 0.335 | 0.801 | 0.139 | 0.857 |
+
+- M1 on diluted rows: AUC 0.705, Brier 0.080 vs base rate 0.092. 125 of 139 diluted tests ended in extinction, so the subset is dominated by extinctions and discrimination rests on few completions.
+- CO2 > 0: AUC 0.552 is close to chance; the model barely ranks which of these tests went out, so read the curve as the overall trend only (Brier 0.077 vs base rate 0.079).
+- The suppression curve shape comes from one linear CO2 (or He) coefficient in a logistic model; it cannot bend. Compare it with the empirical bins in `artifacts/suppression_reference.json`.
+
 ## V3 SAFFIRE-II hindcast
 
 `engine.rules` is available (functions: predict_m4, predict_m5). The SAFFIRE-II hindcast (predict 1 g burn extent from microgravity data plus the bridge at g = 9.81, compare with the 1 g columns of `data/clean/psi_saffire_ug_vs_1g.csv`) is owned by DE's M4 rule table; see `artifacts/rules.json` and `tests/test_rules.py`.
@@ -65,13 +85,13 @@ For each preset: the atmosphere input that moves the estimate most (O2 +/-0.03, 
 | exploration | M2 | 3.379 | [2.009, 4.119] | high | o2 (0.651) | C_b (0.000) |
 | exploration | M3 | 0.947 | [0.884, 0.985] | high | o2 (0.041) | C_b (0.000) |
 | lunar_base | M1 | 0.201 | [0.012, 0.684] | low | o2 (0.249) | C_b (0.125) |
-| lunar_base | M2 | gated | - | - | Extrapolation: no evidence. The query (O2 0.340, 0.56 atm) is more than 2 atmosphere-distance units from every M2 training test; the nearest tested condition is PSI-69 PSI-69:FLEX:45 at O2 0.300, 1.01 atm (atmosphere distance 2.14). | - |
+| lunar_base | M2 | gated | - | - | Extrapolation: no evidence. The query (O2 0.340, 0.56 atm, CO2 0.00, He 0.00) is more than 2 atmosphere-and-diluent-distance units from every M2 training test; the nearest tested condition is PSI-69 PSI-69:FLEX:45 at O2 0.300, 1.01 atm, CO2 0.00, He 0.00 (atmosphere and diluent distance 2.14). | - |
 | lunar_base | M3 | 0.872 | [0.560, 0.985] | low | o2 (0.090) | C_b (0.116) |
 | lunar_rover | M1 | 0.201 | [0.007, 0.762] | low | o2 (0.249) | C_b (0.114) |
-| lunar_rover | M2 | gated | - | - | Extrapolation: no evidence. The query (O2 0.340, 0.56 atm) is more than 2 atmosphere-distance units from every M2 training test; the nearest tested condition is PSI-69 PSI-69:FLEX:45 at O2 0.300, 1.01 atm (atmosphere distance 2.14). | - |
+| lunar_rover | M2 | gated | - | - | Extrapolation: no evidence. The query (O2 0.340, 0.56 atm, CO2 0.00, He 0.00) is more than 2 atmosphere-and-diluent-distance units from every M2 training test; the nearest tested condition is PSI-69 PSI-69:FLEX:45 at O2 0.300, 1.01 atm, CO2 0.00, He 0.00 (atmosphere and diluent distance 2.14). | - |
 | lunar_rover | M3 | 0.872 | [0.484, 0.990] | low | o2 (0.090) | C_b (0.111) |
 | mars_base | M1 | 0.201 | [0.009, 0.737] | low | o2 (0.249) | C_b (0.143) |
-| mars_base | M2 | gated | - | - | Extrapolation: no evidence. The query (O2 0.340, 0.56 atm) is more than 2 atmosphere-distance units from every M2 training test; the nearest tested condition is PSI-69 PSI-69:FLEX:45 at O2 0.300, 1.01 atm (atmosphere distance 2.14). | - |
+| mars_base | M2 | gated | - | - | Extrapolation: no evidence. The query (O2 0.340, 0.56 atm, CO2 0.00, He 0.00) is more than 2 atmosphere-and-diluent-distance units from every M2 training test; the nearest tested condition is PSI-69 PSI-69:FLEX:45 at O2 0.300, 1.01 atm, CO2 0.00, He 0.00 (atmosphere and diluent distance 2.14). | - |
 | mars_base | M3 | 0.872 | [0.510, 0.988] | low | o2 (0.090) | C_b (0.136) |
 | earth | M1 | 0.939 | [0.591, 0.995] | low | o2 (0.095) | C_b (0.000) |
 | earth | M2 | 4.004 | [1.103, 4.673] | low | o2 (0.651) | C_b (0.000) |

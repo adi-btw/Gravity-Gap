@@ -38,6 +38,39 @@ def test_covered_agrees_with_engine_gate(metric, hab):
     assert status["covered"] == bounds.predict(metric, **hab)["applicable"]
 
 
+DILUENT_CASES = [
+    (LUNAR, {"co2": 0.05}), (LUNAR, {"co2": 0.3}), (LUNAR, {"he": 0.2}),
+    (ISS, {"co2": 0.2}), (ISS, {"co2": 0.7}), (ISS, {"he": 0.45}),
+    ({**ISS, "o2": 0.265, "p_psia": 10.2}, {"co2": 0.5}),
+]
+
+
+@pytest.mark.parametrize("metric", ["M1", "M2"])
+@pytest.mark.parametrize("hab,dil", DILUENT_CASES)
+def test_covered_agrees_with_engine_gate_diluted(metric, hab, dil):
+    """ADR-0006: the 4-D gate in the chart matches bounds.predict for diluted queries."""
+    status = coverage_for(metric, hab["p_psia"], hab["o2"], **dil)["habitat"]
+    r = bounds.predict(metric, **hab, n=300, n_boot=60, **dil)
+    assert status["covered"] == r["applicable"]
+    assert status["co2"] == dil.get("co2", 0.0) and status["he"] == dil.get("he", 0.0)
+
+
+@pytest.mark.parametrize("metric", ["M1", "M2"])
+def test_diluent_points_and_rule(metric):
+    cov = coverage(metric)
+    assert cov["rule"]["co2_scale"] == 0.10 and cov["rule"]["he_scale"] == 0.10
+    assert all({"co2", "he"} <= set(p) for p in cov["points"])
+    diluted = [p for p in cov["points"] if p["co2"] > 0 or p["he"] > 0]
+    assert diluted and max(p["o2"] for p in diluted) <= 0.25
+    assert "co2" not in coverage("M3")["points"][0]
+
+
+def test_diluent_ignored_for_other_metrics():
+    a = coverage_for("M3", 8.2, 0.34)["habitat"]
+    b = coverage_for("M3", 8.2, 0.34, co2=0.3)["habitat"]
+    assert a == b
+
+
 def test_lunar_base_gaps_are_the_documented_ones():
     covered = {m: coverage_for(m, 8.2, 0.34)["habitat"]["covered"] for m in METRICS}
     assert covered == {"M1": True, "M2": False, "M3": True, "M4": False, "M5": False}

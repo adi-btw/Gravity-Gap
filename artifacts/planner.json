@@ -1,7 +1,7 @@
 {
   "version": "0.1.0",
-  "generated_at": "2026-11-14T18:18:12+00:00",
-  "method": "score = band_width x habitat_weight x mixed_fraction; greedy top 10 with kernel re-scoring over atmosphere distance, gravity (2 m/s^2) and vent flow (10 cm/s)",
+  "generated_at": "2026-11-14T23:12:14+00:00",
+  "method": "score = band_width x habitat_weight x mixed_fraction; greedy top 10 with kernel re-scoring over atmosphere distance, gravity (2 m/s^2), vent flow (10 cm/s) and CO2 fraction (0.10)",
   "grid": {
     "g_m_s2": [
       1.62,
@@ -31,6 +31,31 @@
       "M3"
     ]
   },
+  "candidate_types": {
+    "atmosphere": "every grid point x metric M1-M3, habitat diluent N2",
+    "dilution": {
+      "metric": "M1",
+      "diluent": "co2",
+      "fractions": [
+        0.2,
+        0.3,
+        0.4
+      ],
+      "p_psia": 8.2,
+      "o2": 0.34,
+      "g_m_s2": [
+        1.62,
+        3.71
+      ],
+      "u_cm_s": [
+        0.0,
+        5.0,
+        10.0,
+        20.0
+      ],
+      "why": "FLEX dilution tests were all at 13-25% O2; CO2 suppression at 34% O2 is gated"
+    }
+  },
   "habitat_targets": [
     {
       "p_psia": 8.2,
@@ -59,6 +84,8 @@
       "o2": 0.34,
       "u_cm_s": 20.0,
       "metric": "M2",
+      "type": "atmosphere",
+      "co2": 0.0,
       "score": 1.0,
       "base_score": 1.0,
       "parts": {
@@ -75,12 +102,60 @@
     },
     {
       "rank": 2,
+      "g_m_s2": 1.62,
+      "p_psia": 8.2,
+      "o2": 0.34,
+      "u_cm_s": 20.0,
+      "metric": "M1",
+      "type": "dilution",
+      "co2": 0.4,
+      "score": 0.9998993612116293,
+      "base_score": 1.0,
+      "parts": {
+        "band_width": 1.0,
+        "habitat_weight": 1.0,
+        "mixed_fraction": 1.0
+      },
+      "rationale": "Dilution at high O2: P(droplet flame self-extinguishes before burnout) with 40% CO2 replacing nitrogen at Moon gravity (0.165 g), 8.2 psia / 34% O2, vent 20 cm/s. FLEX tested CO2 dilution only at 14-24% O2, so the suppression calculator has no evidence here (honesty gate); 100% of physics samples are in the mixed regime, and the atmosphere is the lunar/Mars base 8.2 psia / 34% O2 target (weight 1.00). A droplet test here tells whether CO2 suppression works the same way in oxygen-enriched cabin air.",
+      "extends": [
+        "PSI-69",
+        "PSI-10",
+        "PSI-159"
+      ]
+    },
+    {
+      "rank": 3,
+      "g_m_s2": 3.71,
+      "p_psia": 8.2,
+      "o2": 0.34,
+      "u_cm_s": 20.0,
+      "metric": "M1",
+      "type": "dilution",
+      "co2": 0.2,
+      "score": 0.8342369075095551,
+      "base_score": 0.927,
+      "parts": {
+        "band_width": 1.0,
+        "habitat_weight": 1.0,
+        "mixed_fraction": 0.927
+      },
+      "rationale": "Dilution at high O2: P(droplet flame self-extinguishes before burnout) with 20% CO2 replacing nitrogen at Mars gravity (0.378 g), 8.2 psia / 34% O2, vent 20 cm/s. FLEX tested CO2 dilution only at 14-24% O2, so the suppression calculator has no evidence here (honesty gate); 93% of physics samples are in the mixed regime, and the atmosphere is the lunar/Mars base 8.2 psia / 34% O2 target (weight 1.00). A droplet test here tells whether CO2 suppression works the same way in oxygen-enriched cabin air.",
+      "extends": [
+        "PSI-69",
+        "PSI-10",
+        "PSI-159"
+      ]
+    },
+    {
+      "rank": 4,
       "g_m_s2": 3.71,
       "p_psia": 10.2,
       "o2": 0.265,
       "u_cm_s": 20.0,
       "metric": "M2",
-      "score": 0.5328359412268691,
+      "type": "atmosphere",
+      "co2": 0.0,
+      "score": 0.5274379640180397,
       "base_score": 0.622712342781294,
       "parts": {
         "band_width": 0.9596430001252795,
@@ -96,13 +171,38 @@
       ]
     },
     {
-      "rank": 3,
+      "rank": 5,
+      "g_m_s2": 1.62,
+      "p_psia": 8.2,
+      "o2": 0.34,
+      "u_cm_s": 10.0,
+      "metric": "M1",
+      "type": "dilution",
+      "co2": 0.2,
+      "score": 0.4146327391588269,
+      "base_score": 0.7165,
+      "parts": {
+        "band_width": 1.0,
+        "habitat_weight": 1.0,
+        "mixed_fraction": 0.7165
+      },
+      "rationale": "Dilution at high O2: P(droplet flame self-extinguishes before burnout) with 20% CO2 replacing nitrogen at Moon gravity (0.165 g), 8.2 psia / 34% O2, vent 10 cm/s. FLEX tested CO2 dilution only at 14-24% O2, so the suppression calculator has no evidence here (honesty gate); 72% of physics samples are in the mixed regime, and the atmosphere is the lunar/Mars base 8.2 psia / 34% O2 target (weight 1.00). A droplet test here tells whether CO2 suppression works the same way in oxygen-enriched cabin air.",
+      "extends": [
+        "PSI-69",
+        "PSI-10",
+        "PSI-159"
+      ]
+    },
+    {
+      "rank": 6,
       "g_m_s2": 3.71,
       "p_psia": 8.2,
       "o2": 0.34,
       "u_cm_s": 20.0,
       "metric": "M1",
-      "score": 0.45232945403268693,
+      "type": "atmosphere",
+      "co2": 0.0,
+      "score": 0.37244421956498536,
       "base_score": 0.5916952823501965,
       "parts": {
         "band_width": 0.6382904879721645,
@@ -117,13 +217,38 @@
       ]
     },
     {
-      "rank": 4,
+      "rank": 7,
+      "g_m_s2": 3.71,
+      "p_psia": 8.2,
+      "o2": 0.34,
+      "u_cm_s": 20.0,
+      "metric": "M1",
+      "type": "dilution",
+      "co2": 0.4,
+      "score": 0.32107578605992926,
+      "base_score": 0.927,
+      "parts": {
+        "band_width": 1.0,
+        "habitat_weight": 1.0,
+        "mixed_fraction": 0.927
+      },
+      "rationale": "Dilution at high O2: P(droplet flame self-extinguishes before burnout) with 40% CO2 replacing nitrogen at Mars gravity (0.378 g), 8.2 psia / 34% O2, vent 20 cm/s. FLEX tested CO2 dilution only at 14-24% O2, so the suppression calculator has no evidence here (honesty gate); 93% of physics samples are in the mixed regime, and the atmosphere is the lunar/Mars base 8.2 psia / 34% O2 target (weight 1.00). A droplet test here tells whether CO2 suppression works the same way in oxygen-enriched cabin air.",
+      "extends": [
+        "PSI-69",
+        "PSI-10",
+        "PSI-159"
+      ]
+    },
+    {
+      "rank": 8,
       "g_m_s2": 1.62,
       "p_psia": 10.2,
       "o2": 0.265,
       "u_cm_s": 20.0,
       "metric": "M1",
-      "score": 0.31101370105108667,
+      "type": "atmosphere",
+      "co2": 0.0,
+      "score": 0.29866239644288795,
       "base_score": 0.4754629954586969,
       "parts": {
         "band_width": 0.6792328506552814,
@@ -139,98 +264,15 @@
       ]
     },
     {
-      "rank": 5,
-      "g_m_s2": 1.62,
-      "p_psia": 10.2,
-      "o2": 0.34,
-      "u_cm_s": 10.0,
-      "metric": "M2",
-      "score": 0.22519359396939737,
-      "base_score": 0.5499027666007476,
-      "parts": {
-        "band_width": 1.0,
-        "habitat_weight": 0.7674846707616854,
-        "mixed_fraction": 0.7165
-      },
-      "rationale": "Extinction diameter at Moon gravity (0.165 g), 10.2 psia / 34% O2, vent 10 cm/s: the current 90% band is 1.00 wide (relative), 72% of physics samples are in the mixed regime where neither 0 g nor 1 g data apply, and the atmosphere is close to the lunar/Mars base 8.2 psia / 34% O2 target (weight 0.77).",
-      "extends": [
-        "PSI-69",
-        "PSI-10",
-        "PSI-159"
-      ]
-    },
-    {
-      "rank": 6,
-      "g_m_s2": 1.62,
-      "p_psia": 14.7,
-      "o2": 0.21,
-      "u_cm_s": 20.0,
-      "metric": "M2",
-      "score": 0.20612994782869257,
-      "base_score": 0.2674366422762525,
-      "parts": {
-        "band_width": 0.6685916056906313,
-        "habitat_weight": 0.4,
-        "mixed_fraction": 1.0
-      },
-      "rationale": "Extinction diameter at Moon gravity (0.165 g), 14.7 psia / 21% O2, vent 20 cm/s: the current 90% band is 0.67 wide (relative), 100% of physics samples are in the mixed regime where neither 0 g nor 1 g data apply, and the atmosphere is close to the ISS 14.7 psia / 21% O2 target (weight 0.40).",
-      "extends": [
-        "PSI-69",
-        "PSI-10",
-        "PSI-39",
-        "PSI-68",
-        "PSI-159"
-      ]
-    },
-    {
-      "rank": 7,
-      "g_m_s2": 3.71,
-      "p_psia": 8.2,
-      "o2": 0.34,
-      "u_cm_s": 20.0,
-      "metric": "M3",
-      "score": 0.17280589003308391,
-      "base_score": 0.36757754670086856,
-      "parts": {
-        "band_width": 0.3965237828488334,
-        "habitat_weight": 1.0,
-        "mixed_fraction": 0.927
-      },
-      "rationale": "P(gas flame self-extinguishes vs flow-terminated) at Mars gravity (0.378 g), 8.2 psia / 34% O2, vent 20 cm/s: the current 90% band is 0.40 wide, 93% of physics samples are in the mixed regime where neither 0 g nor 1 g data apply, and the atmosphere is close to the lunar/Mars base 8.2 psia / 34% O2 target (weight 1.00).",
-      "extends": [
-        "PSI-159",
-        "PSI-10"
-      ]
-    },
-    {
-      "rank": 8,
-      "g_m_s2": 1.62,
-      "p_psia": 8.2,
-      "o2": 0.34,
-      "u_cm_s": 10.0,
-      "metric": "M1",
-      "score": 0.1451760960218796,
-      "base_score": 0.48110523965846796,
-      "parts": {
-        "band_width": 0.6714657915679944,
-        "habitat_weight": 1.0,
-        "mixed_fraction": 0.7165
-      },
-      "rationale": "P(droplet flame self-extinguishes before burnout) at Moon gravity (0.165 g), 8.2 psia / 34% O2, vent 10 cm/s: the current 90% band is 0.67 wide, 72% of physics samples are in the mixed regime where neither 0 g nor 1 g data apply, and the atmosphere is close to the lunar/Mars base 8.2 psia / 34% O2 target (weight 1.00).",
-      "extends": [
-        "PSI-69",
-        "PSI-10",
-        "PSI-159"
-      ]
-    },
-    {
       "rank": 9,
       "g_m_s2": 1.62,
       "p_psia": 10.2,
       "o2": 0.265,
       "u_cm_s": 10.0,
       "metric": "M2",
-      "score": 0.11274173317062326,
+      "type": "atmosphere",
+      "co2": 0.0,
+      "score": 0.21698082713259517,
       "base_score": 0.5015499999999999,
       "parts": {
         "band_width": 1.0,
@@ -247,24 +289,24 @@
     },
     {
       "rank": 10,
-      "g_m_s2": 3.71,
-      "p_psia": 14.7,
-      "o2": 0.3,
-      "u_cm_s": 20.0,
-      "metric": "M1",
-      "score": 0.09040212055614358,
-      "base_score": 0.17871852441364397,
+      "g_m_s2": 1.62,
+      "p_psia": 8.2,
+      "o2": 0.34,
+      "u_cm_s": 10.0,
+      "metric": "M3",
+      "type": "atmosphere",
+      "co2": 0.0,
+      "score": 0.1813327007549864,
+      "base_score": 0.30465183035034665,
       "parts": {
-        "band_width": 0.7389966859738818,
-        "habitat_weight": 0.26088394018531935,
-        "mixed_fraction": 0.927
+        "band_width": 0.42519445966552216,
+        "habitat_weight": 1.0,
+        "mixed_fraction": 0.7165
       },
-      "rationale": "P(droplet flame self-extinguishes before burnout) at Mars gravity (0.378 g), 14.7 psia / 30% O2, vent 20 cm/s: the current 90% band is 0.74 wide, 93% of physics samples are in the mixed regime where neither 0 g nor 1 g data apply, and the atmosphere is close to the exploration vehicle 10.2 psia / 26.5% O2 target (weight 0.26).",
+      "rationale": "P(gas flame self-extinguishes vs flow-terminated) at Moon gravity (0.165 g), 8.2 psia / 34% O2, vent 10 cm/s: the current 90% band is 0.43 wide, 72% of physics samples are in the mixed regime where neither 0 g nor 1 g data apply, and the atmosphere is close to the lunar/Mars base 8.2 psia / 34% O2 target (weight 1.00).",
       "extends": [
-        "PSI-69",
-        "PSI-10",
-        "PSI-68",
-        "PSI-159"
+        "PSI-159",
+        "PSI-10"
       ]
     }
   ],

@@ -83,6 +83,52 @@ def cv_quantile(metric: str = "M2") -> dict:
     }
 
 
+def _oof_classifier(metric: str):
+    ts, X, y = _features(metric)
+    oof, base = np.empty(len(y)), np.empty(len(y))
+    for tr, te in StratifiedKFold(N_FOLDS, shuffle=True, random_state=SEED).split(X, y):
+        oof[te] = fit_point(metric, X[tr], y[tr])(X[te])
+        base[te] = y[tr].mean()
+    return ts, y, oof, base
+
+
+def _oof_quantile(metric: str = "M2"):
+    ts, X, y = _features(metric)
+    oof, base = np.empty((3, len(y))), np.empty((3, len(y)))
+    for tr, te in KFold(N_FOLDS, shuffle=True, random_state=SEED).split(X):
+        oof[:, te] = fit_point(metric, X[tr], y[tr])(X[te])
+        base[:, te] = np.quantile(y[tr], QUANTILES)[:, None]
+    return ts, y, oof, base
+
+
+def diluted_subset() -> dict:
+    """R2: the same out-of-fold predictions (same folds as V2), scored on FLEX rows with CO2 or He > 0."""
+    ts1, y1, oof1, base1 = _oof_classifier("M1")
+    ts2, y2, oof2, base2 = _oof_quantile("M2")
+    m1, m2 = [], []
+    for name, key in (("CO2 > 0", "co2"), ("He > 0", "he"), ("any diluent", None)):
+        if key:
+            mask1 = ts1.X[key].to_numpy() > 0
+            mask2 = ts2.X[key].to_numpy() > 0
+        else:
+            mask1 = (ts1.X["co2"].to_numpy() > 0) | (ts1.X["he"].to_numpy() > 0)
+            mask2 = (ts2.X["co2"].to_numpy() > 0) | (ts2.X["he"].to_numpy() > 0)
+        yy, pp, bb = y1[mask1], oof1[mask1], base1[mask1]
+        both = 0 < yy.sum() < len(yy)
+        m1.append({"subset": name, "n": int(mask1.sum()), "positives": int(yy.sum()),
+                   "o2_range": [float(ts1.o2[mask1].min()), float(ts1.o2[mask1].max())],
+                   "auc": float(roc_auc_score(yy, pp)) if both else None,
+                   "brier": float(brier_score_loss(yy, pp)), "brier_baseline": float(brier_score_loss(yy, bb)),
+                   "mean_pred": float(pp.mean()), "observed": float(yy.mean())})
+        yq, oq, bq = y2[mask2], oof2[:, mask2], base2[:, mask2]
+        m2.append({"subset": name, "n": int(mask2.sum()),
+                   "mae_median": float(np.mean(np.abs(yq - oq[1]))),
+                   "mae_median_baseline": float(np.mean(np.abs(yq - bq[1]))),
+                   "coverage90": float(np.mean((yq >= oq[0]) & (yq <= oq[2]))),
+                   "bias_median": float(np.mean(oq[1] - yq))})
+    return {"M1": m1, "M2": m2}
+
+
 def sensitivity_summary() -> list[dict]:
     rows = []
     for p in PRESETS:
@@ -203,6 +249,34 @@ def build_report() -> str:
     notes.append("- Habitat queries with L_mm = 10 use the largest tested droplet (4.67 mm for M1, M2 clip), "
                  "an edge of the training range.")
     L += notes
+    dsub = diluted_subset()
+    L += ["", "## Diluted subset (R2 suppression calculator)", "",
+          "The suppression calculator (`engine.suppression`) reads M1 and M2 at CO2 or helium fractions > 0. "
+          "These are the same out-of-fold predictions as above (same 5 folds), scored only on FLEX rows that "
+          "used a diluent. Every diluted training row is at 13-24% O2, so nothing here says anything about "
+          "dilution at 30-34% O2; the ADR-0006 gate withholds numbers there.", "",
+          "| M1 subset | n | extinctions | O2 range | AUC | Brier | Brier (base rate) | mean predicted | observed |",
+          "|---|---|---|---|---|---|---|---|---|"]
+    for r in dsub["M1"]:
+        L.append(f"| {r['subset']} | {r['n']} | {r['positives']} | {_f(r['o2_range'][0], 2)}-{_f(r['o2_range'][1], 2)} | "
+                 f"{_f(r['auc'])} | {_f(r['brier'])} | {_f(r['brier_baseline'])} | {_f(r['mean_pred'])} | "
+                 f"{_f(r['observed'])} |")
+    L += ["", "| M2 subset | n | MAE of median (mm) | MAE baseline (mm) | median bias (mm) | 5-95% coverage |",
+          "|---|---|---|---|---|---|"]
+    for r in dsub["M2"]:
+        L.append(f"| {r['subset']} | {r['n']} | {_f(r['mae_median'])} | {_f(r['mae_median_baseline'])} | "
+                 f"{_f(r['bias_median'])} | {_f(r['coverage90'])} |")
+    anyd = dsub["M1"][-1]
+    L += ["", f"- M1 on diluted rows: AUC {_f(anyd['auc'])}, Brier {_f(anyd['brier'])} vs base rate "
+              f"{_f(anyd['brier_baseline'])}"
+              + (" (NOT better than the base rate)." if anyd["brier"] >= anyd["brier_baseline"] else ".")
+              + f" {anyd['positives']} of {anyd['n']} diluted tests ended in extinction, so the subset is "
+              "dominated by extinctions and discrimination rests on few completions.",
+          *[f"- {r['subset']}: AUC {_f(r['auc'])} is close to chance; the model barely ranks which of these "
+            f"tests went out, so read the curve as the overall trend only (Brier {_f(r['brier'])} vs base rate "
+            f"{_f(r['brier_baseline'])})." for r in dsub["M1"] if r["auc"] is not None and r["auc"] < 0.65],
+          "- The suppression curve shape comes from one linear CO2 (or He) coefficient in a logistic model; it "
+          "cannot bend. Compare it with the empirical bins in `artifacts/suppression_reference.json`."]
     L += ["", "## V3 SAFFIRE-II hindcast", "", _rules_note(), "",
           "## V5 Sensitivity (tornado) summary", "",
           "For each preset: the atmosphere input that moves the estimate most (O2 +/-0.03, pressure +/-20%), "

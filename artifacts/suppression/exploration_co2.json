@@ -1,0 +1,569 @@
+{
+ "preset_id": "exploration",
+ "diluent": "co2",
+ "label": "Carbon dioxide (CO2)",
+ "habitat": {
+  "g_m_s2": 0.0,
+  "p_psia": 10.2,
+  "o2": 0.265,
+  "u_cm_s": 10.0,
+  "L_mm": 10.0
+ },
+ "composition_rule": "O2 and total pressure are held at the habitat values; the diluent replaces nitrogen (n2 = 1 - o2 - fraction).",
+ "points": [
+  {
+   "fraction": 0.0,
+   "n2": 0.735,
+   "M1": {
+    "applicable": true,
+    "estimate": 0.6977943375373291,
+    "band90": [
+     0.38728921860880583,
+     0.8787640977587361
+    ],
+    "reason": null
+   },
+   "M2": {
+    "applicable": true,
+    "estimate": 3.3785930937600455,
+    "band90": [
+     2.0085115384116983,
+     4.118660066038408
+    ],
+    "reason": null
+   }
+  },
+  {
+   "fraction": 0.05,
+   "n2": 0.685,
+   "M1": {
+    "applicable": true,
+    "estimate": 0.7238891231447772,
+    "band90": [
+     0.42843955579870446,
+     0.8922780662294886
+    ],
+    "reason": null
+   },
+   "M2": {
+    "applicable": true,
+    "estimate": 3.454433453772263,
+    "band90": [
+     2.082610986338855,
+     4.1581242002454255
+    ],
+    "reason": null
+   }
+  },
+  {
+   "fraction": 0.1,
+   "n2": 0.635,
+   "M1": {
+    "applicable": true,
+    "estimate": 0.7485426554645747,
+    "band90": [
+     0.4707094227079532,
+     0.9079829597848922
+    ],
+    "reason": null
+   },
+   "M2": {
+    "applicable": true,
+    "estimate": 3.5302738137844814,
+    "band90": [
+     2.1567104342660115,
+     4.197588334452442
+    ],
+    "reason": null
+   }
+  },
+  {
+   "fraction": 0.15,
+   "n2": 0.585,
+   "M1": {
+    "applicable": true,
+    "estimate": 0.7716891816308791,
+    "band90": [
+     0.50054650503587,
+     0.9193137601420607
+    ],
+    "reason": null
+   },
+   "M2": {
+    "applicable": true,
+    "estimate": 3.6061141737966995,
+    "band90": [
+     2.230809882193168,
+     4.23705246865946
+    ],
+    "reason": null
+   }
+  },
+  {
+   "fraction": 0.2,
+   "n2": 0.535,
+   "M1": {
+    "applicable": true,
+    "estimate": 0.79329344387201,
+    "band90": [
+     0.5211112032673865,
+     0.9324394196188943
+    ],
+    "reason": null
+   },
+   "M2": {
+    "applicable": true,
+    "estimate": 3.6819545338089172,
+    "band90": [
+     2.3049093301203247,
+     4.276516602866477
+    ],
+    "reason": null
+   }
+  },
+  {
+   "fraction": 0.25,
+   "n2": 0.485,
+   "M1": {
+    "applicable": true,
+    "estimate": 0.8133478430446158,
+    "band90": [
+     0.5388138105796543,
+     0.9440588494508925
+    ],
+    "reason": null
+   },
+   "M2": {
+    "applicable": true,
+    "estimate": 3.757794893821135,
+    "band90": [
+     2.3790087780474813,
+     4.3159807370734935
+    ],
+    "reason": null
+   }
+  },
+  {
+   "fraction": 0.3,
+   "n2": 0.435,
+   "M1": {
+    "applicable": true,
+    "estimate": 0.8318689531417005,
+    "band90": [
+     0.5571381834387814,
+     0.9535331430989384
+    ],
+    "reason": null
+   },
+   "M2": {
+    "applicable": true,
+    "estimate": 3.833635253833353,
+    "band90": [
+     2.4531082259746384,
+     4.355444871280511
+    ],
+    "reason": null
+   }
+  },
+  {
+   "fraction": 0.35,
+   "n2": 0.385,
+   "M1": {
+    "applicable": true,
+    "estimate": 0.8488936859564137,
+    "band90": [
+     0.5925636702059908,
+     0.9616542122959015
+    ],
+    "reason": null
+   },
+   "M2": {
+    "applicable": true,
+    "estimate": 3.909475613845571,
+    "band90": [
+     2.5272076739017946,
+     4.394909005487528
+    ],
+    "reason": null
+   }
+  },
+  {
+   "fraction": 0.4,
+   "n2": 0.335,
+   "M1": {
+    "applicable": true,
+    "estimate": 0.8644753673249207,
+    "band90": [
+     0.6211003676317441,
+     0.9712404275430604
+    ],
+    "reason": null
+   },
+   "M2": {
+    "applicable": true,
+    "estimate": 3.985315973857789,
+    "band90": [
+     2.6013071218289516,
+     4.434373139694546
+    ],
+    "reason": null
+   }
+  },
+  {
+   "fraction": 0.45,
+   "n2": 0.285,
+   "M1": {
+    "applicable": true,
+    "estimate": 0.8786799354077224,
+    "band90": [
+     0.6441112964467458,
+     0.9772009820315803
+    ],
+    "reason": null
+   },
+   "M2": {
+    "applicable": true,
+    "estimate": 4.061156333870007,
+    "band90": [
+     2.675406569756108,
+     4.473837273901562
+    ],
+    "reason": null
+   }
+  },
+  {
+   "fraction": 0.5,
+   "n2": 0.235,
+   "M1": {
+    "applicable": true,
+    "estimate": 0.8915824159227308,
+    "band90": [
+     0.6642930835796884,
+     0.9813222892608097
+    ],
+    "reason": null
+   },
+   "M2": {
+    "applicable": true,
+    "estimate": 4.1369966938822245,
+    "band90": [
+     2.749506017683265,
+     4.51330140810858
+    ],
+    "reason": null
+   }
+  },
+  {
+   "fraction": 0.55,
+   "n2": 0.185,
+   "M1": {
+    "applicable": false,
+    "estimate": null,
+    "band90": null,
+    "reason": "Extrapolation: no evidence. The query (O2 0.265, 0.69 atm, CO2 0.55, He 0.00) is more than 2 atmosphere-and-diluent-distance units from every CO2-diluted M1 training test; the nearest tested condition is PSI-69 PSI-69:FLEX:147 at O2 0.170, 0.70 atm, CO2 0.45, He 0.00 (atmosphere and diluent distance 2.15). FLEX tested CO2 dilution only between 14% and 24% O2."
+   },
+   "M2": {
+    "applicable": false,
+    "estimate": null,
+    "band90": null,
+    "reason": "Extrapolation: no evidence. The query (O2 0.265, 0.69 atm, CO2 0.55, He 0.00) is more than 2 atmosphere-and-diluent-distance units from every CO2-diluted M2 training test; the nearest tested condition is PSI-69 PSI-69:FLEX:147 at O2 0.170, 0.70 atm, CO2 0.45, He 0.00 (atmosphere and diluent distance 2.15). FLEX tested CO2 dilution only between 14% and 24% O2."
+   }
+  },
+  {
+   "fraction": 0.6,
+   "n2": 0.135,
+   "M1": {
+    "applicable": false,
+    "estimate": null,
+    "band90": null,
+    "reason": "Extrapolation: no evidence. The query (O2 0.265, 0.69 atm, CO2 0.60, He 0.00) is more than 2 atmosphere-and-diluent-distance units from every CO2-diluted M1 training test; the nearest tested condition is PSI-69 PSI-69:FLEX:147 at O2 0.170, 0.70 atm, CO2 0.45, He 0.00 (atmosphere and diluent distance 2.42). FLEX tested CO2 dilution only between 14% and 24% O2."
+   },
+   "M2": {
+    "applicable": false,
+    "estimate": null,
+    "band90": null,
+    "reason": "Extrapolation: no evidence. The query (O2 0.265, 0.69 atm, CO2 0.60, He 0.00) is more than 2 atmosphere-and-diluent-distance units from every CO2-diluted M2 training test; the nearest tested condition is PSI-69 PSI-69:FLEX:147 at O2 0.170, 0.70 atm, CO2 0.45, He 0.00 (atmosphere and diluent distance 2.42). FLEX tested CO2 dilution only between 14% and 24% O2."
+   }
+  },
+  {
+   "fraction": 0.65,
+   "n2": 0.085,
+   "M1": {
+    "applicable": false,
+    "estimate": null,
+    "band90": null,
+    "reason": "Extrapolation: no evidence. The query (O2 0.265, 0.69 atm, CO2 0.65, He 0.00) is more than 2 atmosphere-and-diluent-distance units from every CO2-diluted M1 training test; the nearest tested condition is PSI-69 PSI-69:FLEX:140 at O2 0.150, 0.70 atm, CO2 0.50, He 0.00 (atmosphere and diluent distance 2.75). FLEX tested CO2 dilution only between 14% and 24% O2."
+   },
+   "M2": {
+    "applicable": false,
+    "estimate": null,
+    "band90": null,
+    "reason": "Extrapolation: no evidence. The query (O2 0.265, 0.69 atm, CO2 0.65, He 0.00) is more than 2 atmosphere-and-diluent-distance units from every CO2-diluted M2 training test; the nearest tested condition is PSI-69 PSI-69:FLEX:140 at O2 0.150, 0.70 atm, CO2 0.50, He 0.00 (atmosphere and diluent distance 2.75). FLEX tested CO2 dilution only between 14% and 24% O2."
+   }
+  },
+  {
+   "fraction": 0.7,
+   "n2": 0.035,
+   "M1": {
+    "applicable": false,
+    "estimate": null,
+    "band90": null,
+    "reason": "Extrapolation: no evidence. The query (O2 0.265, 0.69 atm, CO2 0.70, He 0.00) is more than 2 atmosphere-and-diluent-distance units from every CO2-diluted M1 training test; the nearest tested condition is PSI-69 PSI-69:FLEX:140 at O2 0.150, 0.70 atm, CO2 0.50, He 0.00 (atmosphere and diluent distance 3.05). FLEX tested CO2 dilution only between 14% and 24% O2."
+   },
+   "M2": {
+    "applicable": false,
+    "estimate": null,
+    "band90": null,
+    "reason": "Extrapolation: no evidence. The query (O2 0.265, 0.69 atm, CO2 0.70, He 0.00) is more than 2 atmosphere-and-diluent-distance units from every CO2-diluted M2 training test; the nearest tested condition is PSI-69 PSI-69:FLEX:140 at O2 0.150, 0.70 atm, CO2 0.50, He 0.00 (atmosphere and diluent distance 3.05). FLEX tested CO2 dilution only between 14% and 24% O2."
+   }
+  }
+ ],
+ "dose_for_p90": null,
+ "tested": [
+  {
+   "o2": 0.14,
+   "p_atm": 1.0,
+   "fraction": 0.36,
+   "n": 2,
+   "extinctions": 2
+  },
+  {
+   "o2": 0.15,
+   "p_atm": 0.7,
+   "fraction": 0.5,
+   "n": 4,
+   "extinctions": 4
+  },
+  {
+   "o2": 0.15,
+   "p_atm": 1.0,
+   "fraction": 0.32,
+   "n": 1,
+   "extinctions": 1
+  },
+  {
+   "o2": 0.15,
+   "p_atm": 1.01,
+   "fraction": 0.32,
+   "n": 3,
+   "extinctions": 3
+  },
+  {
+   "o2": 0.16,
+   "p_atm": 1.0,
+   "fraction": 0.25,
+   "n": 1,
+   "extinctions": 1
+  },
+  {
+   "o2": 0.16,
+   "p_atm": 1.01,
+   "fraction": 0.25,
+   "n": 3,
+   "extinctions": 3
+  },
+  {
+   "o2": 0.17,
+   "p_atm": 0.7,
+   "fraction": 0.45,
+   "n": 1,
+   "extinctions": 1
+  },
+  {
+   "o2": 0.17,
+   "p_atm": 0.71,
+   "fraction": 0.45,
+   "n": 6,
+   "extinctions": 6
+  },
+  {
+   "o2": 0.17,
+   "p_atm": 0.99,
+   "fraction": 0.2,
+   "n": 2,
+   "extinctions": 2
+  },
+  {
+   "o2": 0.17,
+   "p_atm": 1.0,
+   "fraction": 0.2,
+   "n": 2,
+   "extinctions": 2
+  },
+  {
+   "o2": 0.18,
+   "p_atm": 0.69,
+   "fraction": 0.4,
+   "n": 1,
+   "extinctions": 1
+  },
+  {
+   "o2": 0.18,
+   "p_atm": 0.7,
+   "fraction": 0.4,
+   "n": 5,
+   "extinctions": 5
+  },
+  {
+   "o2": 0.18,
+   "p_atm": 1.0,
+   "fraction": 0.15,
+   "n": 5,
+   "extinctions": 4
+  },
+  {
+   "o2": 0.18,
+   "p_atm": 1.01,
+   "fraction": 0.15,
+   "n": 7,
+   "extinctions": 6
+  },
+  {
+   "o2": 0.19,
+   "p_atm": 1.0,
+   "fraction": 0.1,
+   "n": 4,
+   "extinctions": 4
+  },
+  {
+   "o2": 0.2,
+   "p_atm": 0.7,
+   "fraction": 0.35,
+   "n": 4,
+   "extinctions": 4
+  },
+  {
+   "o2": 0.2,
+   "p_atm": 0.71,
+   "fraction": 0.35,
+   "n": 1,
+   "extinctions": 1
+  },
+  {
+   "o2": 0.2,
+   "p_atm": 0.99,
+   "fraction": 0.05,
+   "n": 2,
+   "extinctions": 2
+  },
+  {
+   "o2": 0.2,
+   "p_atm": 1.0,
+   "fraction": 0.05,
+   "n": 5,
+   "extinctions": 5
+  },
+  {
+   "o2": 0.2,
+   "p_atm": 1.01,
+   "fraction": 0.05,
+   "n": 2,
+   "extinctions": 2
+  },
+  {
+   "o2": 0.21,
+   "p_atm": 0.7,
+   "fraction": 0.3,
+   "n": 3,
+   "extinctions": 2
+  },
+  {
+   "o2": 0.21,
+   "p_atm": 0.71,
+   "fraction": 0.3,
+   "n": 3,
+   "extinctions": 2
+  },
+  {
+   "o2": 0.21,
+   "p_atm": 1.01,
+   "fraction": 0.15,
+   "n": 2,
+   "extinctions": 2
+  },
+  {
+   "o2": 0.21,
+   "p_atm": 2.04,
+   "fraction": 0.7,
+   "n": 1,
+   "extinctions": 1
+  },
+  {
+   "o2": 0.21,
+   "p_atm": 2.7,
+   "fraction": 0.7,
+   "n": 1,
+   "extinctions": 1
+  },
+  {
+   "o2": 0.21,
+   "p_atm": 2.72,
+   "fraction": 0.7,
+   "n": 1,
+   "extinctions": 1
+  },
+  {
+   "o2": 0.21,
+   "p_atm": 2.73,
+   "fraction": 0.7,
+   "n": 2,
+   "extinctions": 2
+  },
+  {
+   "o2": 0.21,
+   "p_atm": 3.05,
+   "fraction": 0.7,
+   "n": 2,
+   "extinctions": 2
+  },
+  {
+   "o2": 0.23,
+   "p_atm": 0.7,
+   "fraction": 0.2,
+   "n": 2,
+   "extinctions": 1
+  },
+  {
+   "o2": 0.23,
+   "p_atm": 0.7,
+   "fraction": 0.25,
+   "n": 5,
+   "extinctions": 5
+  },
+  {
+   "o2": 0.23,
+   "p_atm": 0.71,
+   "fraction": 0.25,
+   "n": 5,
+   "extinctions": 4
+  },
+  {
+   "o2": 0.24,
+   "p_atm": 0.7,
+   "fraction": 0.2,
+   "n": 2,
+   "extinctions": 2
+  },
+  {
+   "o2": 0.24,
+   "p_atm": 0.71,
+   "fraction": 0.2,
+   "n": 2,
+   "extinctions": 2
+  },
+  {
+   "o2": 0.24,
+   "p_atm": 1.01,
+   "fraction": 0.2,
+   "n": 3,
+   "extinctions": 1
+  }
+ ],
+ "tested_o2_range": [
+  0.14,
+  0.24
+ ],
+ "gate_note": "FLEX tested CO₂ dilution only between 14% and 24% O₂ (0.69-3.05 atm). This habitat (26% O₂, 0.69 atm) is close enough to those tests (distance <= 2, ADR-0006) for CO₂ fractions up to 50%; beyond that there is no evidence and the curve has a gap. Gravity does not change these numbers; it only widens the band (ADR-0005).",
+ "safety_note": "CO₂ at these concentrations is dangerous to breathe. Spacecraft use portable CO₂ or water-mist extinguishers aimed at the fire, not cabin flooding. This shows how dilution affected flames in NASA's tests; it is not an operating procedure.",
+ "model_version": "M1 2a8ccd37105c, M2 d3f1ae64f2c0"
+}

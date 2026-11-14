@@ -1,0 +1,506 @@
+{
+ "preset_id": "iss",
+ "diluent": "he",
+ "label": "Helium",
+ "habitat": {
+  "g_m_s2": 0.0,
+  "p_psia": 14.7,
+  "o2": 0.21,
+  "u_cm_s": 10.0,
+  "L_mm": 10.0
+ },
+ "composition_rule": "O2 and total pressure are held at the habitat values; the diluent replaces nitrogen (n2 = 1 - o2 - fraction).",
+ "points": [
+  {
+   "fraction": 0.0,
+   "n2": 0.79,
+   "M1": {
+    "applicable": true,
+    "estimate": 0.9387076846641129,
+    "band90": [
+     0.824689835800796,
+     0.9815051044685926
+    ],
+    "reason": null
+   },
+   "M2": {
+    "applicable": true,
+    "estimate": 4.003825654706249,
+    "band90": [
+     2.553599868709032,
+     4.338216017632628
+    ],
+    "reason": null
+   }
+  },
+  {
+   "fraction": 0.032143,
+   "n2": 0.757857,
+   "M1": {
+    "applicable": true,
+    "estimate": 0.9452802554845494,
+    "band90": [
+     0.8441045270141998,
+     0.983789349057651
+    ],
+    "reason": null
+   },
+   "M2": {
+    "applicable": true,
+    "estimate": 4.038363762980023,
+    "band90": [
+     2.545164663756271,
+     4.365254321809341
+    ],
+    "reason": null
+   }
+  },
+  {
+   "fraction": 0.064286,
+   "n2": 0.725714,
+   "M1": {
+    "applicable": true,
+    "estimate": 0.9511846799110979,
+    "band90": [
+     0.8615303615944757,
+     0.9851639704582626
+    ],
+    "reason": null
+   },
+   "M2": {
+    "applicable": true,
+    "estimate": 4.072901871253796,
+    "band90": [
+     2.536729458803511,
+     4.3922926259860535
+    ],
+    "reason": null
+   }
+  },
+  {
+   "fraction": 0.096429,
+   "n2": 0.693571,
+   "M1": {
+    "applicable": true,
+    "estimate": 0.956481330194721,
+    "band90": [
+     0.8750674299611219,
+     0.986641140188796
+    ],
+    "reason": null
+   },
+   "M2": {
+    "applicable": true,
+    "estimate": 4.10743997952757,
+    "band90": [
+     2.528294253850751,
+     4.419330930162767
+    ],
+    "reason": null
+   }
+  },
+  {
+   "fraction": 0.128571,
+   "n2": 0.661429,
+   "M1": {
+    "applicable": true,
+    "estimate": 0.96122656078074,
+    "band90": [
+     0.8832384834228099,
+     0.9882570915508049
+    ],
+    "reason": null
+   },
+   "M2": {
+    "applicable": true,
+    "estimate": 4.141977013287195,
+    "band90": [
+     2.5198593113254226,
+     4.446368393151532
+    ],
+    "reason": null
+   }
+  },
+  {
+   "fraction": 0.160714,
+   "n2": 0.629286,
+   "M1": {
+    "applicable": true,
+    "estimate": 0.9654731788045038,
+    "band90": [
+     0.8872574905729158,
+     0.9896455780437456
+    ],
+    "reason": null
+   },
+   "M2": {
+    "applicable": true,
+    "estimate": 4.176515121560969,
+    "band90": [
+     2.5114241063726617,
+     4.473406697328246
+    ],
+    "reason": null
+   }
+  },
+  {
+   "fraction": 0.192857,
+   "n2": 0.597143,
+   "M1": {
+    "applicable": true,
+    "estimate": 0.9692695601447368,
+    "band90": [
+     0.8924960720410828,
+     0.9912701753383653
+    ],
+    "reason": null
+   },
+   "M2": {
+    "applicable": true,
+    "estimate": 4.211053229834741,
+    "band90": [
+     2.5029889014199016,
+     4.500445001504959
+    ],
+    "reason": null
+   }
+  },
+  {
+   "fraction": 0.225,
+   "n2": 0.565,
+   "M1": {
+    "applicable": true,
+    "estimate": 0.9726603325615787,
+    "band90": [
+     0.9016990250757704,
+     0.9928813107789718
+    ],
+    "reason": null
+   },
+   "M2": {
+    "applicable": true,
+    "estimate": 4.245591338108515,
+    "band90": [
+     2.494553696467141,
+     4.527483305681672
+    ],
+    "reason": null
+   }
+  },
+  {
+   "fraction": 0.257143,
+   "n2": 0.532857,
+   "M1": {
+    "applicable": true,
+    "estimate": 0.9756863548272117,
+    "band90": [
+     0.9103551087030278,
+     0.9938006033464682
+    ],
+    "reason": null
+   },
+   "M2": {
+    "applicable": true,
+    "estimate": 4.280129446382288,
+    "band90": [
+     2.4861184915143806,
+     4.5545216098583845
+    ],
+    "reason": null
+   }
+  },
+  {
+   "fraction": 0.289286,
+   "n2": 0.500714,
+   "M1": {
+    "applicable": true,
+    "estimate": 0.9783848924221682,
+    "band90": [
+     0.9137574116600414,
+     0.9948523638966773
+    ],
+    "reason": null
+   },
+   "M2": {
+    "applicable": true,
+    "estimate": 4.3146675546560616,
+    "band90": [
+     2.4776832865616205,
+     4.581559914035098
+    ],
+    "reason": null
+   }
+  },
+  {
+   "fraction": 0.321429,
+   "n2": 0.468571,
+   "M1": {
+    "applicable": true,
+    "estimate": 0.9807898200485846,
+    "band90": [
+     0.9177095145077505,
+     0.9957335677012976
+    ],
+    "reason": null
+   },
+   "M2": {
+    "applicable": true,
+    "estimate": 4.349205662929835,
+    "band90": [
+     2.46924808160886,
+     4.60859821821181
+    ],
+    "reason": null
+   }
+  },
+  {
+   "fraction": 0.353571,
+   "n2": 0.436429,
+   "M1": {
+    "applicable": true,
+    "estimate": 0.9829317770812885,
+    "band90": [
+     0.9211774085338451,
+     0.9963621533141708
+    ],
+    "reason": null
+   },
+   "M2": {
+    "applicable": true,
+    "estimate": 4.38374269668946,
+    "band90": [
+     2.4608131390835317,
+     4.635635681200577
+    ],
+    "reason": null
+   }
+  },
+  {
+   "fraction": 0.385714,
+   "n2": 0.404286,
+   "M1": {
+    "applicable": true,
+    "estimate": 0.9848386513194908,
+    "band90": [
+     0.92459262504543,
+     0.9972579730354438
+    ],
+    "reason": null
+   },
+   "M2": {
+    "applicable": true,
+    "estimate": 4.418280804963233,
+    "band90": [
+     2.452377934130771,
+     4.66267398537729
+    ],
+    "reason": null
+   }
+  },
+  {
+   "fraction": 0.417857,
+   "n2": 0.372143,
+   "M1": {
+    "applicable": true,
+    "estimate": 0.9865354064567328,
+    "band90": [
+     0.9290960931410581,
+     0.9978111470052861
+    ],
+    "reason": null
+   },
+   "M2": {
+    "applicable": true,
+    "estimate": 4.452818913237007,
+    "band90": [
+     2.443942729178011,
+     4.689712289554002
+    ],
+    "reason": null
+   }
+  },
+  {
+   "fraction": 0.45,
+   "n2": 0.34,
+   "M1": {
+    "applicable": true,
+    "estimate": 0.9880445774430494,
+    "band90": [
+     0.9368771546815273,
+     0.9982205637584822
+    ],
+    "reason": null
+   },
+   "M2": {
+    "applicable": true,
+    "estimate": 4.48735702151078,
+    "band90": [
+     2.4355075242252506,
+     4.7167505937307155
+    ],
+    "reason": null
+   }
+  }
+ ],
+ "dose_for_p90": {
+  "fraction": 0.0,
+  "metric": "M1",
+  "note": "The M1 estimate is already at or above 90% with no dilution: in FLEX most droplet flames in this atmosphere went out on their own before burnout."
+ },
+ "tested": [
+  {
+   "o2": 0.13,
+   "p_atm": 1.0,
+   "fraction": 0.4,
+   "n": 1,
+   "extinctions": 1
+  },
+  {
+   "o2": 0.14,
+   "p_atm": 1.0,
+   "fraction": 0.35,
+   "n": 2,
+   "extinctions": 2
+  },
+  {
+   "o2": 0.15,
+   "p_atm": 0.99,
+   "fraction": 0.3,
+   "n": 1,
+   "extinctions": 1
+  },
+  {
+   "o2": 0.15,
+   "p_atm": 1.0,
+   "fraction": 0.3,
+   "n": 1,
+   "extinctions": 1
+  },
+  {
+   "o2": 0.16,
+   "p_atm": 1.0,
+   "fraction": 0.25,
+   "n": 2,
+   "extinctions": 2
+  },
+  {
+   "o2": 0.17,
+   "p_atm": 0.7,
+   "fraction": 0.45,
+   "n": 4,
+   "extinctions": 3
+  },
+  {
+   "o2": 0.17,
+   "p_atm": 0.99,
+   "fraction": 0.2,
+   "n": 1,
+   "extinctions": 1
+  },
+  {
+   "o2": 0.17,
+   "p_atm": 1.0,
+   "fraction": 0.2,
+   "n": 4,
+   "extinctions": 3
+  },
+  {
+   "o2": 0.18,
+   "p_atm": 0.69,
+   "fraction": 0.4,
+   "n": 1,
+   "extinctions": 1
+  },
+  {
+   "o2": 0.18,
+   "p_atm": 0.7,
+   "fraction": 0.4,
+   "n": 4,
+   "extinctions": 4
+  },
+  {
+   "o2": 0.18,
+   "p_atm": 1.0,
+   "fraction": 0.15,
+   "n": 3,
+   "extinctions": 3
+  },
+  {
+   "o2": 0.18,
+   "p_atm": 1.01,
+   "fraction": 0.15,
+   "n": 2,
+   "extinctions": 0
+  },
+  {
+   "o2": 0.19,
+   "p_atm": 0.99,
+   "fraction": 0.1,
+   "n": 1,
+   "extinctions": 1
+  },
+  {
+   "o2": 0.2,
+   "p_atm": 0.69,
+   "fraction": 0.35,
+   "n": 2,
+   "extinctions": 2
+  },
+  {
+   "o2": 0.2,
+   "p_atm": 0.7,
+   "fraction": 0.35,
+   "n": 2,
+   "extinctions": 2
+  },
+  {
+   "o2": 0.2,
+   "p_atm": 0.99,
+   "fraction": 0.05,
+   "n": 1,
+   "extinctions": 0
+  },
+  {
+   "o2": 0.2,
+   "p_atm": 1.0,
+   "fraction": 0.05,
+   "n": 1,
+   "extinctions": 1
+  },
+  {
+   "o2": 0.21,
+   "p_atm": 0.7,
+   "fraction": 0.3,
+   "n": 5,
+   "extinctions": 5
+  },
+  {
+   "o2": 0.21,
+   "p_atm": 1.01,
+   "fraction": 0.15,
+   "n": 2,
+   "extinctions": 2
+  },
+  {
+   "o2": 0.23,
+   "p_atm": 0.7,
+   "fraction": 0.25,
+   "n": 2,
+   "extinctions": 1
+  },
+  {
+   "o2": 0.24,
+   "p_atm": 0.7,
+   "fraction": 0.2,
+   "n": 2,
+   "extinctions": 2
+  }
+ ],
+ "tested_o2_range": [
+  0.13,
+  0.24
+ ],
+ "gate_note": "FLEX tested helium dilution only between 13% and 24% O₂ (0.69-1.01 atm). This habitat (21% O₂, 1.00 atm) is close enough to those tests (distance <= 2, ADR-0006) for helium fractions up to 45%. Gravity does not change these numbers; it only widens the band (ADR-0005).",
+ "safety_note": "CO₂ at these concentrations is dangerous to breathe. Spacecraft use portable CO₂ or water-mist extinguishers aimed at the fire, not cabin flooding. This shows how dilution affected flames in NASA's tests; it is not an operating procedure.",
+ "model_version": "M1 2a8ccd37105c, M2 d3f1ae64f2c0"
+}

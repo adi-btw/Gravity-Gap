@@ -44,104 +44,104 @@
   },
   "evidence": [
     {
-      "record_id": "PSI-69:FLEX:94",
+      "record_id": "PSI-69:FLEX:36",
       "investigation_id": "PSI-69",
-      "distance": 0.5014712918762885
+      "distance": 1.3019895122079315
     },
     {
-      "record_id": "PSI-69:FLEX:249",
+      "record_id": "PSI-69:FLEX:57",
       "investigation_id": "PSI-69",
-      "distance": 0.5016686715564528
+      "distance": 1.3042478511943179
     },
     {
-      "record_id": "PSI-69:FLEX:251",
+      "record_id": "PSI-69:FLEX:45",
       "investigation_id": "PSI-69",
-      "distance": 0.5018247098572431
+      "distance": 1.4357081433610315
     },
     {
-      "record_id": "PSI-69:FLEX:95",
+      "record_id": "PSI-69:FLEX:30",
       "investigation_id": "PSI-69",
-      "distance": 0.5018782435520328
+      "distance": 1.4391165707029012
     },
     {
-      "record_id": "PSI-69:FLEX:177",
+      "record_id": "PSI-69:FLEX:5",
       "investigation_id": "PSI-69",
-      "distance": 0.5035346177097374
+      "distance": 1.6406706060111933
     },
     {
-      "record_id": "PSI-69:FLEX:253",
+      "record_id": "PSI-69:FLEX:6",
       "investigation_id": "PSI-69",
-      "distance": 0.7005012528981867
+      "distance": 1.6406706060111933
     },
     {
-      "record_id": "PSI-69:FLEX:178",
+      "record_id": "PSI-69:FLEX:202",
       "investigation_id": "PSI-69",
-      "distance": 0.7010516789624524
+      "distance": 1.641321457212153
     },
     {
-      "record_id": "PSI-69:FLEX:104",
+      "record_id": "PSI-69:FLEX:203",
       "investigation_id": "PSI-69",
-      "distance": 0.7012295496660451
+      "distance": 1.64587849562684
     },
     {
-      "record_id": "PSI-69:FLEX:99",
+      "record_id": "PSI-69:FLEX:2",
       "investigation_id": "PSI-69",
-      "distance": 0.7015841189344351
+      "distance": 1.6471808440460367
     },
     {
-      "record_id": "PSI-69:FLEX:185",
+      "record_id": "PSI-69:FLEX:3",
       "investigation_id": "PSI-69",
-      "distance": 0.7016688953700333
+      "distance": 1.6543462889728042
     },
     {
-      "record_id": "PSI-69:FLEX:186",
+      "record_id": "PSI-69:FLEX:33",
       "investigation_id": "PSI-69",
-      "distance": 0.702125243154552
+      "distance": 1.6553237123725297
     },
     {
-      "record_id": "PSI-69:FLEX:100",
+      "record_id": "PSI-69:FLEX:49",
       "investigation_id": "PSI-69",
-      "distance": 0.7023736205480974
+      "distance": 1.6566270567447348
     },
     {
-      "record_id": "PSI-69:FLEX:98",
+      "record_id": "PSI-69:FLEX:228",
       "investigation_id": "PSI-69",
-      "distance": 0.702581972650761
+      "distance": 1.6647757411665398
     },
     {
-      "record_id": "PSI-69:FLEX:101",
+      "record_id": "PSI-69:FLEX:34",
       "investigation_id": "PSI-69",
-      "distance": 0.7035005946025445
+      "distance": 1.6657538886420102
     },
     {
-      "record_id": "PSI-69:FLEX:259",
+      "record_id": "PSI-69:FLEX:35",
       "investigation_id": "PSI-69",
-      "distance": 1.1000412417900116
+      "distance": 1.6670581814552299
     },
     {
-      "record_id": "PSI-69:FLEX:258",
+      "record_id": "PSI-69:FLEX:230",
       "investigation_id": "PSI-69",
-      "distance": 1.1000804499327332
+      "distance": 1.670645535136547
     },
     {
-      "record_id": "PSI-69:FLEX:256",
+      "record_id": "PSI-69:FLEX:50",
       "investigation_id": "PSI-69",
-      "distance": 1.1002479980833888
+      "distance": 1.6735812145627884
     },
     {
-      "record_id": "PSI-69:FLEX:257",
+      "record_id": "PSI-69:FLEX:199",
       "investigation_id": "PSI-69",
-      "distance": 1.1002479980833888
+      "distance": 1.8325326249419303
     },
     {
-      "record_id": "PSI-69:FLEX:102",
+      "record_id": "PSI-69:FLEX:200",
       "investigation_id": "PSI-69",
-      "distance": 1.1008065570011847
+      "distance": 1.8385708350891647
     },
     {
-      "record_id": "PSI-69:FLEX:103",
+      "record_id": "PSI-69:FLEX:201",
       "investigation_id": "PSI-69",
-      "distance": 1.1008306134112125
+      "distance": 1.8408737496044543
     }
   ],
   "sensitivity": [
@@ -211,6 +211,6 @@
     "co2": 0.0,
     "p_atm": 0.6940664126292868,
     "widen_factor": 1.0,
-    "nearest": "nearest tested condition is PSI-69 PSI-69:FLEX:94 at O2 0.240, 0.70 atm (atmosphere distance 0.50)"
+    "nearest": "nearest tested condition is PSI-69 PSI-69:FLEX:36 at O2 0.200, 0.71 atm, CO2 0.00, He 0.00 (atmosphere and diluent distance 1.30)"
   }
 }

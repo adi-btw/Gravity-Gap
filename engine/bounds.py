@@ -2,7 +2,7 @@
 
 Contract: plan/contracts.md "Phase 2 addendum", engine/bounds.py.
 Decisions: ADR-0004 (metric definitions and exclusions), ADR-0005 (gravity
-honesty rule) in plan/decisions.md.
+honesty rule), ADR-0006 (dilution-aware gate for M1/M2) in plan/decisions.md.
 
 M1-M3 are fitted here (engine.models) on microgravity droplet (FLEX) and
 spherical-burner (CFI-G) data. Those tests have NO flow variable, so gravity
@@ -37,6 +37,10 @@ from engine.presets import PRESETS
 
 ARTIFACT_DIR = Path(__file__).resolve().parent.parent / "artifacts" / "bounds"
 GATE_DISTANCE = 2.0
+O2_SCALE = 0.05
+LN_P_SCALE = 0.3
+DILUENT_SCALE = 0.10  # ADR-0006: CO2 and He mole-fraction scale (assumption)
+DILUENT_METRICS = ("M1", "M2")  # models trained with he/co2 features use the 4-D gate
 N_EVIDENCE = 20
 N_BOOT_DEFAULT = 500
 MIXED_WIDEN = 0.5
@@ -202,11 +206,68 @@ def _model_eval(model, metric, o2, p_atm, options):
     return float(out["estimate"][0]), float(out["lo"][0]), float(out["hi"][0]), inputs
 
 
-def _distances(model, o2, p_atm) -> np.ndarray:
+def _distances(model, o2, p_atm, co2: float = 0.0, he: float = 0.0) -> np.ndarray:
+    """Gate distance to every training test.
+
+    M3: atmosphere distance over (O2, ln p) (ADR-0004).
+    M1/M2 (models that use diluents): ADR-0006 dilution-aware distance over
+    (O2/0.05, ln p/0.3, CO2/0.10, He/0.10). An undiluted query (co2 = he = 0)
+    is still compared with diluted tests, which are simply further away.
+
+    Diluent evidence rule (ADR-0006): for a query with CO2 > 0 (or He > 0) only
+    training tests that also used that diluent count as evidence; the others get
+    distance +inf. Otherwise undiluted tests at the query's O2 would vouch for a
+    dilution effect that was only ever measured at other O2 levels.
+    """
     ts = model.train
-    dx = (o2 - ts.o2) / 0.05
-    dp = (math.log(p_atm) - np.log(ts.p_atm)) / 0.3
-    return np.sqrt(dx * dx + dp * dp)
+    dx = (o2 - ts.o2) / O2_SCALE
+    dp = (math.log(p_atm) - np.log(ts.p_atm)) / LN_P_SCALE
+    d2 = dx * dx + dp * dp
+    if model.metric in DILUENT_METRICS:
+        tc = ts.X["co2"].to_numpy(dtype=float)
+        th = ts.X["he"].to_numpy(dtype=float)
+        dc = (co2 - tc) / DILUENT_SCALE
+        dh = (he - th) / DILUENT_SCALE
+        d2 = d2 + dc * dc + dh * dh
+        eligible = diluent_eligible(co2, he, tc, th)
+        d2 = np.where(eligible, d2, np.inf)
+    return np.sqrt(d2)
+
+
+def diluent_eligible(co2: float, he: float, co2_t, he_t):
+    """Which training tests may vouch for a query (ADR-0006 diluent evidence rule)."""
+    co2_t = np.asarray(co2_t, dtype=float)
+    he_t = np.asarray(he_t, dtype=float)
+    ok = np.ones(co2_t.shape, dtype=bool)
+    if co2 > 0:
+        ok &= co2_t > 0
+    if he > 0:
+        ok &= he_t > 0
+    return ok
+
+
+def diluted_o2_range(metric: str, diluent: str) -> tuple[float, float] | None:
+    """O2 range of the metric's training tests that used `diluent` ("co2" | "he")."""
+    ts = _train(metric)
+    mask = ts.X[diluent].to_numpy(dtype=float) > 0
+    if not mask.any():
+        return None
+    return float(ts.o2[mask].min()), float(ts.o2[mask].max())
+
+
+def _train(metric: str):
+    from engine.models import training_set
+    return training_set(metric)
+
+
+def dilution_distance(o2: float, p_atm: float, co2: float, he: float,
+                      o2_t: float, p_t_atm: float, co2_t: float, he_t: float) -> float:
+    """Scalar ADR-0006 distance (used by engine.coverage so covered == applicable)."""
+    dx = (o2 - o2_t) / O2_SCALE
+    dp = (math.log(p_atm) - math.log(p_t_atm)) / LN_P_SCALE
+    dc = (co2 - co2_t) / DILUENT_SCALE
+    dh = (he - he_t) / DILUENT_SCALE
+    return math.sqrt(dx * dx + dp * dp + dc * dc + dh * dh)
 
 
 def predict(
@@ -247,12 +308,18 @@ def predict(
     mc = sample_physics(g_m_s2, p_psia, o2, u_cm_s, L_mm, n=n, seed=seed)
     fr = mc["regime_fractions"]
 
-    d = _distances(model, o2, p_atm)
+    co2_q = float(options.get("co2", 0.0)) if metric in DILUENT_METRICS else 0.0
+    he_q = float(options.get("he", 0.0)) if metric in DILUENT_METRICS else 0.0
+    if co2_q < 0 or he_q < 0 or o2 + co2_q + he_q > 1 + 1e-9:
+        raise ValueError("co2 and he must be >= 0 and o2 + co2 + he <= 1")
+    d = _distances(model, o2, p_atm, co2_q, he_q)
+    if not np.isfinite(d).any():  # no test used this diluent: rank all tests for the evidence list
+        d = _distances(model, o2, p_atm, 0.0, 0.0)
     order = np.argsort(d, kind="stable")
     ts = model.train
     evidence = [
         {"record_id": ts.record_id[i], "investigation_id": ts.investigation_id[i], "distance": float(d[i])}
-        for i in order[:N_EVIDENCE]
+        for i in order[:N_EVIDENCE] if np.isfinite(d[i])
     ]
     nearest = order[0]
     applicable = bool(d[nearest] <= GATE_DISTANCE)
@@ -275,13 +342,29 @@ def predict(
         "n_train": int(len(ts.y)),
         "model_version": model.model_version,
     }
+    dil = metric in DILUENT_METRICS
+    near_dil = (f", CO2 {float(ts.X['co2'].iloc[nearest]):.2f}, He {float(ts.X['he'].iloc[nearest]):.2f}"
+                if dil else "")
     near_txt = (f"nearest tested condition is {ts.investigation_id[nearest]} {ts.record_id[nearest]} "
-                f"at O2 {ts.o2[nearest]:.3f}, {ts.p_atm[nearest]:.2f} atm "
-                f"(atmosphere distance {d[nearest]:.2f})")
+                f"at O2 {ts.o2[nearest]:.3f}, {ts.p_atm[nearest]:.2f} atm{near_dil} "
+                f"({'atmosphere and diluent' if dil else 'atmosphere'} distance {d[nearest]:.2f})")
     if not applicable:
-        out["reason"] = (f"Extrapolation: no evidence. The query (O2 {o2:.3f}, {p_atm:.2f} atm) is more than "
-                         f"{GATE_DISTANCE:g} atmosphere-distance units from every {metric} training test; "
-                         f"the {near_txt}.")
+        q_dil = f", CO2 {co2_q:.2f}, He {he_q:.2f}" if dil else ""
+        which = "every"
+        dil_txt = ""
+        if dil and (co2_q > 0 or he_q > 0):
+            names = [n for n, v in (("CO2", co2_q), ("helium", he_q)) if v > 0]
+            which = f"every {' and '.join(names)}-diluted"
+            rngs = []
+            for key, label, v in (("co2", "CO2", co2_q), ("he", "helium", he_q)):
+                r = diluted_o2_range(metric, key) if v > 0 else None
+                if r:
+                    rngs.append(f"{label} dilution only between {100 * r[0]:.0f}% and {100 * r[1]:.0f}% O2")
+            if rngs:
+                dil_txt = " FLEX tested " + "; ".join(rngs) + "."
+        out["reason"] = (f"Extrapolation: no evidence. The query (O2 {o2:.3f}, {p_atm:.2f} atm{q_dil}) is more "
+                         f"than {GATE_DISTANCE:g} {'atmosphere-and-diluent' if dil else 'atmosphere'}-distance "
+                         f"units from {which} {metric} training test; the {near_txt}.{dil_txt}")
         out["transfer"] = {"basis": "No estimate: outside the tested atmosphere range.", "confidence": "low"}
         return json_safe(out)
 
@@ -308,7 +391,7 @@ def predict(
         vals = []
         for qv in (qlo, qhi):
             o2q, pq = (qv, p_atm) if param == "o2" else (o2, qv)
-            gated = _distances(model, o2q, pq).min() > GATE_DISTANCE
+            gated = _distances(model, o2q, pq, co2_q, he_q).min() > GATE_DISTANCE
             vals.append(None if gated else _model_eval(model, metric, o2q, pq, options)[0])
         sens.append({"param": param, "low": vals[0], "high": vals[1], "baseline": est,
                      "quantity": "estimate", "input_low": qlo, "input_high": qhi})

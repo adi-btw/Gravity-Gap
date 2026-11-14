@@ -94,29 +94,9 @@
       "distance": 0.018771487389580444
     },
     {
-      "record_id": "PSI-69:FLEX:273",
-      "investigation_id": "PSI-69",
-      "distance": 0.019643402993122377
-    },
-    {
       "record_id": "PSI-69:FLEX:49",
       "investigation_id": "PSI-69",
       "distance": 0.020515090585258376
-    },
-    {
-      "record_id": "PSI-69:FLEX:169",
-      "investigation_id": "PSI-69",
-      "distance": 0.025740434568441575
-    },
-    {
-      "record_id": "PSI-69:FLEX:274",
-      "investigation_id": "PSI-69",
-      "distance": 0.026175510381018577
-    },
-    {
-      "record_id": "PSI-69:FLEX:170",
-      "investigation_id": "PSI-69",
-      "distance": 0.02835003804201968
     },
     {
       "record_id": "PSI-69:FLEX:228",
@@ -142,6 +122,26 @@
       "record_id": "PSI-69:FLEX:47",
       "investigation_id": "PSI-69",
       "distance": 0.04309932464320556
+    },
+    {
+      "record_id": "PSI-69:FLEX:50",
+      "investigation_id": "PSI-69",
+      "distance": 0.04309932464320556
+    },
+    {
+      "record_id": "PSI-69:FLEX:51",
+      "investigation_id": "PSI-69",
+      "distance": 0.04872155540628157
+    },
+    {
+      "record_id": "PSI-69:FLEX:197",
+      "investigation_id": "PSI-69",
+      "distance": 0.5385194372557361
+    },
+    {
+      "record_id": "PSI-69:FLEX:222",
+      "investigation_id": "PSI-69",
+      "distance": 0.5385346012253984
     }
   ],
   "sensitivity": [
@@ -211,6 +211,6 @@
     "co2": 0.0,
     "p_atm": 1.0002721829069134,
     "widen_factor": 1.0,
-    "nearest": "nearest tested condition is PSI-69 PSI-69:FLEX:202 at O2 0.210, 1.00 atm (atmosphere distance 0.00)"
+    "nearest": "nearest tested condition is PSI-69 PSI-69:FLEX:202 at O2 0.210, 1.00 atm, CO2 0.00, He 0.00 (atmosphere and diluent distance 0.00)"
   }
 }

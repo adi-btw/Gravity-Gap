@@ -59,3 +59,17 @@ Back to [overview](00-overview.md). One entry per decision that is hard to rever
   - Sensitivity (C11): O2 +/-0.03 and pressure +/-20% report the **estimate** at each end (`quantity: "estimate"`, `null` if that end is gated); C_b, k, dT/T and the L factor are pinned to each end of their Monte Carlo range and report the **band width** (`quantity: "band_width"`). k enters only u_eff, not Ri, so it never changes M1-M3 bands. He/CO2 are not varied (habitat queries assume N2 diluent).
   - The factors 0.5 and 1.0 are a stated assumption, not a calibrated quantity: no partial-gravity droplet or burner data exist.
 - **Consequences:** Orbit presets get high confidence and the plain model band; lunar/Mars presets (0% forced at 10 cm/s, ~70% mixed) get the same estimate with a ~1.6x wider logit band and low confidence; Earth (u = 0, 100% buoyant) gets f = 2. The UI must show that the partial-g number is a microgravity number with a wider band, not a partial-g measurement. The test planner (C12) uses these widened bands, so it ranks mixed-regime lunar/Mars tests highest.
+
+## ADR-0006: Dilution-aware honesty gate for M1/M2 (R2 suppression calculator)
+- **Status:** accepted (round 2, R2)
+- **Context:** M1 and M2 use `co2` and `he` as features, but the ADR-0004 gate looked only at O2 and pressure. Every diluted FLEX training test is at 13-24% O2 (0.69-3.05 atm; 95 CO2 and 44 He rows in M1). Without a diluent dimension the gate would vouch for "CO2 at 34% O2 / 8.2 psia". Even with a 4-D distance, the undiluted 34% O2 / 0.71 atm tests sit 0.80 from the lunar base, so CO2 fractions up to ~0.18 would still pass while the CO2 effect there is pure extrapolation of one logistic slope learned at other O2 levels.
+- **Decision:**
+  - For M1/M2 the gate distance is `sqrt(((O2-O2_t)/0.05)^2 + ((ln p - ln p_t)/0.3)^2 + ((CO2-CO2_t)/0.10)^2 + ((He-He_t)/0.10)^2)`, applicable if <= 2 to some eligible training test (`engine.bounds._distances`, `dilution_distance`). M3-M5 unchanged.
+  - **Diluent evidence rule:** a query with CO2 > 0 (He > 0) may only be vouched for by training tests that also used CO2 (He). An undiluted query (habitat air) is compared with all tests, as before.
+  - Scale 0.10 for CO2 and He is an **assumption**: it makes the gate radius +/-0.20 mole fraction, the typical spacing between tested FLEX dilution levels (0.05-0.10 steps up to 0.70 CO2 / 0.45 He), so a query between two tested levels stays covered and one far past the highest level is not. It is not calibrated against any model-error measurement. Changing it changes what the calculator shows.
+  - `engine.coverage` uses the same distance and rule (M1/M2 points carry `co2`, `he`; `habitat_status`/`coverage_for` take optional `co2`/`he`) so "covered == applicable" holds.
+  - Suppression curves hold habitat O2 and pressure and replace N2 with the diluent (`engine.suppression`).
+- **Consequences:**
+  - Preset results (undiluted queries) are unchanged: no applicable/estimate/band flip in `artifacts/bounds/`. Only the evidence lists and nearest-test text changed; exploration M1/M2 nearest distance grew (0.50 -> 0.70 / 1.30) because the nearest test was CO2-diluted.
+  - ISS air: CO2 covered up to 0.60, He up to 0.45. Exploration air: CO2 up to 0.50. Lunar/Mars base (34% O2): every CO2 or He fraction > 0 is gated, which feeds the planner as a "dilution at high O2" candidate.
+  - Out-of-fold M1 discrimination on CO2-diluted rows is weak (AUC ~0.55, `artifacts/validation_report.md`); the curve is a trend, not a dose-response measurement.
