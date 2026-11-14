@@ -20,8 +20,17 @@ export function PressureGravityExplorer({ habitat }: { habitat: Habitat }) {
   const gs = gStar(habitat.g_m_s2, habitat.p_psia);
   return (
     <div className="space-y-5">
-      <CaveatBanner>
-        G* is valid for laminar buoyant flow structure only; radiation and chemistry do not scale this way.
+      <CaveatBanner title="What G* tells you, and what it doesn't">
+        <p>
+          <span className="font-medium">G*</span> compares how strongly hot gas rises around a flame here with sea level on
+          Earth (Earth = 1). Low gravity and low cabin pressure both weaken it, and they multiply: a lunar base at 8.2 psia
+          comes out near 0.05, about 5% of Earth&apos;s.
+        </p>
+        <p className="text-muted">
+          It only describes how hot gas moves around a small, smooth flame. It does not tell you how hot the flame gets,
+          how much heat it radiates, or how the chemistry changes, because those don&apos;t shrink the same way. Use it to
+          judge which test data apply, not as a fire-safety verdict.
+        </p>
       </CaveatBanner>
 
       <div className="grid gap-3 sm:grid-cols-3" aria-live="polite">
