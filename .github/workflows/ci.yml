@@ -1,0 +1,53 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  python:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+          cache: pip
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+      - name: Run pytest
+        run: pytest
+
+  web:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Check for web app
+        id: check
+        run: |
+          if [ -f web/package.json ]; then
+            echo "exists=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "exists=false" >> "$GITHUB_OUTPUT"
+          fi
+      - uses: actions/setup-node@v4
+        if: steps.check.outputs.exists == 'true'
+        with:
+          node-version: "22"
+      - name: Install
+        if: steps.check.outputs.exists == 'true'
+        working-directory: web
+        run: npm ci
+      - name: Lint
+        if: steps.check.outputs.exists == 'true'
+        working-directory: web
+        run: npm run lint --if-present
+      - name: Test
+        if: steps.check.outputs.exists == 'true'
+        working-directory: web
+        run: npm test --if-present
+      - name: Build
+        if: steps.check.outputs.exists == 'true'
+        working-directory: web
+        run: npm run build
