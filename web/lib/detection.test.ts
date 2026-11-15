@@ -168,3 +168,10 @@ describe("api.detection", () => {
     expect(calls[1]).toBe("/artifacts/detection.json");
   });
 });
+
+describe("normalizeDetection hides internal markers", () => {
+  it("removes [verify] from every string shown to readers", () => {
+    const art = JSON.parse(readFileSync(path.join(__dirname, "..", "..", "artifacts", "detection.json"), "utf-8"));
+    expect(JSON.stringify(normalizeDetection(art))).not.toContain("[verify]");
+  });
+});

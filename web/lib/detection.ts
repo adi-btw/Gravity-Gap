@@ -182,7 +182,16 @@ const positiveValue = (p: unknown): boolean => isObj(p) && isNum(p.value_nm) && 
  * Accept artifacts/detection.json or GET /detection. Throws on a payload that is not the detection artifact;
  * drops individual series or points that could not be drawn honestly (bad arrays, non-positive sizes).
  */
-export function normalizeDetection(raw: unknown): DetectionArtifact {
+/** The artifact marks unconfirmed facts with "[verify]" for the team; readers see the plain sentence. */
+function stripVerify<T>(x: T): T {
+  if (typeof x === "string") return x.replace(/\s*\[verify\]/g, "") as T;
+  if (Array.isArray(x)) return x.map(stripVerify) as T;
+  if (isObj(x)) return Object.fromEntries(Object.entries(x).map(([k, v]) => [k, stripVerify(v)])) as T;
+  return x;
+}
+
+export function normalizeDetection(input: unknown): DetectionArtifact {
+  const raw = stripVerify(input);
   if (!isObj(raw) || !Array.isArray(raw.smoke_bins) || !Array.isArray(raw.simulation) || !Array.isArray(raw.gaps)) {
     throw new Error("malformed detection payload");
   }
