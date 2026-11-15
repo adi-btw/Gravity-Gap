@@ -1,0 +1,292 @@
+{
+  "schema_version": 1,
+  "retrieved": "2026-11-14",
+  "notes": [
+    "Source units are primary. A 'converted' block is added only where useful; its 'conversion' field states how it was obtained.",
+    "PIO2 is INSPIRED (humidified) O2 partial pressure, not ambient ppO2: PIO2 = (PB - 47) * FIO2, PB in mmHg (NASA-STD-3001 Vol 2, Table 6.2-1 header). 1 psia = 51.715 mmHg.",
+    "Values from conference papers are program baselines of their time, not agency standards; see each entry's 'caveat'."
+  ],
+  "limits": [
+    {
+      "id": "pio2_mild_hypoxia_lower_limit",
+      "label": "Mild hypoxia lower limit, PIO2 127 mmHg (1-h time-weighted average)",
+      "quantity": "o2_partial_pressure_min",
+      "value": 127,
+      "unit": "mmHg (PIO2, inspired)",
+      "converted": {"value": 2.46, "unit": "psia (PIO2)", "conversion": "stated in the same table row by the source, not computed here"},
+      "formula": "PIO2 = (PB_mmHg - 47) * FIO2",
+      "map_rule": "curve FIO2 = 127 / (p_psia * 51.715 - 47); cells to the left/below are below the limit",
+      "applies_to": "Crew exposure, indefinite with health monitoring; example given: EVA preparation incl. Exploration Atmosphere 8.2 psia / 34% O2",
+      "source": {
+        "title": "NASA-STD-3001 Volume 2, 6.0 Natural and Induced Environments (Table 6.2-1, Inspired Oxygen Partial Pressure Exposure Ranges)",
+        "org": "NASA Office of the Chief Health and Medical Officer (OCHMO)",
+        "id_or_number": "NASA-STD-3001 Vol 2 [V2 6003] (web edition updated Apr 21, 2026; OCHMO-TB-003 Rev A cites it as Vol 2 Rev D)",
+        "url": "https://www.nasa.gov/reference/6-0-natural-and-induced-environments-vol-2",
+        "page_or_section": "6.2.1.2 [V2 6003], Table 6.2-1 (image: https://www.nasa.gov/wp-content/uploads/2025/01/table-6-2-1.png)"
+      },
+      "quote": "Mild Hypoxia Lower Limit | PIO2 (mmHg) 127**** | PIO2 (psia) 2.46****",
+      "quote_note": "Table cells read from the Table 6.2-1 image; **** = 1-hour time-weighted average.",
+      "confidence": "stated"
+    },
+    {
+      "id": "pio2_absolute_hypoxia_floor",
+      "label": "Absolute hypoxia floor, PIO2 122 mmHg",
+      "quantity": "o2_partial_pressure_min",
+      "value": 122,
+      "unit": "mmHg (PIO2, inspired)",
+      "converted": {"value": 2.36, "unit": "psia (PIO2)", "conversion": "stated by the source alongside the mmHg value"},
+      "formula": "PIO2 = (PB_mmHg - 47) * FIO2",
+      "map_rule": "curve FIO2 = 122 / (p_psia * 51.715 - 47); draw dashed, below the 127 curve",
+      "applies_to": "Absolute (instantaneous) lower bound under the 1-h average 127 mmHg limit",
+      "source": {
+        "title": "NASA-STD-3001 Volume 2, 6.0 Natural and Induced Environments (Table 6.2-1 footnote ****)",
+        "org": "NASA OCHMO",
+        "id_or_number": "NASA-STD-3001 Vol 2 [V2 6003]",
+        "url": "https://www.nasa.gov/reference/6-0-natural-and-induced-environments-vol-2",
+        "page_or_section": "6.2.1.2 [V2 6003], Table 6.2-1 footnote ****; same text in OCHMO-TB-003 Rev A p.10"
+      },
+      "quote": "absolute lower limit for the minimum hypoxia range of 122 mmHg/2.36 psia",
+      "confidence": "stated"
+    },
+    {
+      "id": "pio2_normoxia_target_low",
+      "label": "Normoxia target range lower edge, PIO2 145 mmHg (range 145-155)",
+      "quantity": "o2_partial_pressure_min",
+      "value": 145,
+      "value_high": 155,
+      "unit": "mmHg (PIO2, inspired)",
+      "converted": {"value": 2.80, "value_high": 3.00, "unit": "psia (PIO2)", "conversion": "stated in the same table row by the source"},
+      "formula": "PIO2 = (PB_mmHg - 47) * FIO2",
+      "map_rule": "optional shaded band between curves FIO2 = 145/(p*51.715-47) and 155/(p*51.715-47); a target, not a hard limit",
+      "applies_to": "Habitat and spacesuit normoxia target, indefinite",
+      "source": {
+        "title": "NASA-STD-3001 Volume 2, 6.0 Natural and Induced Environments (Table 6.2-1)",
+        "org": "NASA OCHMO",
+        "id_or_number": "NASA-STD-3001 Vol 2 [V2 6003]",
+        "url": "https://www.nasa.gov/reference/6-0-natural-and-induced-environments-vol-2",
+        "page_or_section": "6.2.1.2 [V2 6003], Table 6.2-1, column 'Normoxia Target Range'"
+      },
+      "quote": "Normoxia Target Range | PIO2 (mmHg) 145-155 | PIO2 (psia) 2.80-3.00",
+      "quote_note": "Table cells read from the Table 6.2-1 image.",
+      "confidence": "stated"
+    },
+    {
+      "id": "total_pressure_min_indefinite",
+      "label": "Total pressure lower bound for indefinite crew exposure, > 5 psia",
+      "quantity": "total_pressure_min",
+      "value": 5.0,
+      "unit": "psia",
+      "converted": {"value": 34.5, "unit": "kPa", "conversion": "stated by the source alongside psia"},
+      "exclusive": true,
+      "map_rule": "horizontal line at p = 5.0 psia (exclusive bound); upper bound of the same requirement is 15.0 psia",
+      "applies_to": "Any crewed vehicle/habitat, indefinite exposure (suited ops such as DCS treatment may go outside for limited periods)",
+      "source": {
+        "title": "NASA-STD-3001 Volume 2, 6.0 Natural and Induced Environments",
+        "org": "NASA OCHMO",
+        "id_or_number": "NASA-STD-3001 Vol 2 [V2 6006]",
+        "url": "https://www.nasa.gov/reference/6-0-natural-and-induced-environments-vol-2",
+        "page_or_section": "6.2.2.1 Total Pressure Tolerance Range for Indefinite Crew Exposure [V2 6006]"
+      },
+      "quote": "34.5 kPa < pressure ≤ 103 kPa (5 psia < pressure ≤ 15.0 psia)",
+      "confidence": "stated"
+    },
+    {
+      "id": "o2_max_lsam_2007_baseline",
+      "label": "34% O2 maximum, Lunar Surface Access Module (2007 Constellation baseline)",
+      "quantity": "o2_fraction_max",
+      "value": 34,
+      "unit": "% O2 by volume",
+      "converted": {"value": 0.34, "unit": "fraction", "conversion": "34 / 100"},
+      "map_rule": "vertical line at xO2 = 0.34",
+      "applies_to": "Lunar lander (LSAM), materials flammability design maximum; Constellation-era baseline",
+      "caveat": "Program baseline in a 2007 conference paper, which itself says 'these numbers may change'; not an agency standard.",
+      "source": {
+        "title": "Oxygen Concentration Flammability Thresholds of Selected Aerospace Materials Considered for the Constellation Program (Hirsch, Williams, Harper, Beeson, Pedley; 2nd IAASS Conference, 2007)",
+        "org": "NASA JSC White Sands Test Facility / NASA JSC",
+        "id_or_number": "NTRS 20070018178",
+        "url": "https://ntrs.nasa.gov/citations/20070018178",
+        "page_or_section": "Abstract / Section 1 Introduction, p.1"
+      },
+      "quote": "34 % oxygen maximum for the Lunar Surface Access Module (LSAM)",
+      "confidence": "stated"
+    },
+    {
+      "id": "o2_max_orion_2007_baseline",
+      "label": "30% O2 maximum, Orion crew module (2007 Constellation baseline)",
+      "quantity": "o2_fraction_max",
+      "value": 30,
+      "unit": "% O2 by volume",
+      "converted": {"value": 0.30, "unit": "fraction", "conversion": "30 / 100"},
+      "map_rule": "vertical line at xO2 = 0.30",
+      "applies_to": "Orion Crew Exploration Vehicle, materials flammability design maximum; Constellation-era baseline. Also the historical Shuttle/ISS-airlock EVA-prebreathe test condition (30% O2 at 70.1 kPa / 10.2 psia).",
+      "caveat": "Program baseline in a 2007 conference paper ('these numbers may change'); not an agency standard.",
+      "source": {
+        "title": "Oxygen Concentration Flammability Thresholds of Selected Aerospace Materials Considered for the Constellation Program",
+        "org": "NASA JSC White Sands Test Facility / NASA JSC",
+        "id_or_number": "NTRS 20070018178",
+        "url": "https://ntrs.nasa.gov/citations/20070018178",
+        "page_or_section": "Abstract / Section 1 Introduction, p.1"
+      },
+      "quote": "The current baseline is 30 % oxygen maximum for the Orion Crew Exploration Module",
+      "confidence": "stated"
+    },
+    {
+      "id": "o2_max_iss_nominal",
+      "label": "ISS nominal maximum O2 concentration 24.1%",
+      "quantity": "o2_fraction_max",
+      "value": 24.1,
+      "unit": "% O2 by volume",
+      "converted": {"value": 0.241, "unit": "fraction", "conversion": "24.1 / 100"},
+      "map_rule": "short vertical segment at xO2 = 0.241 near p = 14.7 psia (ISS context only)",
+      "applies_to": "ISS cabin (nominally air), outside the airlock",
+      "caveat": "Secondary statement of the ISS operating maximum inside a NASA conference paper; the ISS program requirement document itself was not retrieved.",
+      "source": {
+        "title": "Oxygen Concentration Flammability Thresholds of Selected Aerospace Materials Considered for the Constellation Program",
+        "org": "NASA JSC White Sands Test Facility / NASA JSC",
+        "id_or_number": "NTRS 20070018178",
+        "url": "https://ntrs.nasa.gov/citations/20070018178",
+        "page_or_section": "Section 1 Introduction, p.1"
+      },
+      "quote": "(ISS) atmosphere is also nominally air (maximum oxygen concentration 24.1% by volume)",
+      "confidence": "stated"
+    },
+    {
+      "id": "o2_max_at_14p7_from_30pct_cert",
+      "label": "~25.6% O2 at 14.7 psia: highest O2 that keeps 30%/10.2-psia material certification valid",
+      "quantity": "o2_fraction_max",
+      "value": 25.6,
+      "unit": "% O2 by volume",
+      "converted": {"value": 0.256, "unit": "fraction", "conversion": "25.6 / 100"},
+      "map_rule": "a POINT at (0.256, 14.7 psia), not a line; illustrates that flammability limits depend on total pressure",
+      "applies_to": "Materials certified at 30% O2 / 10.2 psia, when used at 14.7 psia",
+      "caveat": "Derived by the authors from a linear MOC-vs-pressure fit (conservative minimum); a point, not a cabin requirement.",
+      "source": {
+        "title": "Selected Parametric Effects on Materials Flammability Limits (Hirsch, Juarez, Peyton, Harper, Olson)",
+        "org": "NASA White Sands Test Facility / NASA Glenn Research Center",
+        "id_or_number": "NTRS 20110008636",
+        "url": "https://ntrs.nasa.gov/citations/20110008636",
+        "page_or_section": "Section I Introduction, p.1-2"
+      },
+      "quote": "the oxygen concentration limit at 14.7 psia cannot be set higher than approximately 25.6% oxygen",
+      "confidence": "stated"
+    },
+    {
+      "id": "o2_max_from_min_diluent",
+      "label": "O2 at most 70% (cabin must hold at least 30% diluent gas)",
+      "quantity": "o2_fraction_max",
+      "value": 70,
+      "unit": "% O2 by volume",
+      "converted": {"value": 0.70, "unit": "fraction", "conversion": "100% - 30% diluent, 'assuming balance oxygen' as the requirement states"},
+      "map_rule": "vertical line at xO2 = 0.70 (outside the 0.15-0.40 map range; do not draw unless the axis is extended)",
+      "applies_to": "Any cabin; physiological (absorption atelectasis) limit, NOT a flammability limit",
+      "caveat": "The source states 30% minimum diluent; the 70% O2 figure is derived by subtraction.",
+      "source": {
+        "title": "NASA-STD-3001 Volume 2, 6.0 Natural and Induced Environments",
+        "org": "NASA OCHMO",
+        "id_or_number": "NASA-STD-3001 Vol 2 [V2 6002]",
+        "url": "https://www.nasa.gov/reference/6-0-natural-and-induced-environments-vol-2",
+        "page_or_section": "6.2.1.1 Inert Diluent Gas [V2 6002]"
+      },
+      "quote": "Cabin atmospheric composition shall contain at least 30% diluent gas (assuming balance oxygen).",
+      "confidence": "derived"
+    },
+    {
+      "id": "ref_exploration_atmosphere_8p2_34",
+      "label": "Exploration Atmosphere 8.2 psia / 34% O2",
+      "quantity": "reference_atmosphere",
+      "value": 8.2,
+      "unit": "psia",
+      "o2_percent": 34,
+      "pio2_mmHg_stated": 128,
+      "map_rule": "marker at (0.34, 8.2 psia); it sits on the 127-128 mmHg PIO2 curve by design",
+      "applies_to": "EVA-intensive mission phases (surface habitats, landers); revised in 2012 from the 2006 EAWG 8.0 psia / 32% recommendation and directed by an HEOMD memo (Feb 2013)",
+      "rationale": "Lower cabin ppN2 (11.6 psia at 14.7/21 vs 5.4 psia at 8.2/34) allows ~15-min O2 prebreathe and suitport EVA; 8.2/34 instead of 8/32 raises alveolar O2 by 11 mmHg, said to come without affecting DCS risk or materials concerns.",
+      "source": {
+        "title": "Evidence Report: Risk of Hypobaric Hypoxia from the Exploration Atmosphere (Norcross et al., NASA Human Research Program)",
+        "org": "NASA Johnson Space Center, Human Research Program",
+        "id_or_number": "NTRS 20150021491 (JSC-CN-34806)",
+        "url": "https://ntrs.nasa.gov/citations/20150021491",
+        "page_or_section": "Section 2 Executive Summary p.4; Sections 3 and 3.1 pp.5-6"
+      },
+      "quote": "altered to 8.2 psia and 34% O2 to reduce the hypoxic stress",
+      "confidence": "stated"
+    },
+    {
+      "id": "ref_eawg_2006_8p0_32",
+      "label": "EAWG 2006 recommendation 8.0 psia / 32% O2 (superseded by 8.2/34)",
+      "quantity": "reference_atmosphere",
+      "value": 8.0,
+      "unit": "psia",
+      "o2_percent": 32,
+      "map_rule": "optional hollow marker at (0.32, 8.0 psia) labelled 'EAWG 2006 (superseded)'",
+      "applies_to": "Long-duration lunar/Mars habitats and landers, EVA-intensive phases (Constellation era)",
+      "rationale": "Selected as 'mildly hypoxic ... with acceptable flammability risk and low O2 prebreathe overhead' (Norcross 2015 summarising the EAWG final report, NASA/TP-2010-216134).",
+      "source": {
+        "title": "Evidence Report: Risk of Hypobaric Hypoxia from the Exploration Atmosphere",
+        "org": "NASA Johnson Space Center, Human Research Program",
+        "id_or_number": "NTRS 20150021491 (JSC-CN-34806)",
+        "url": "https://ntrs.nasa.gov/citations/20150021491",
+        "page_or_section": "Section 2 Executive Summary p.4; Section 3 p.5"
+      },
+      "quote": "the 8.0 psia and 32% oxygen (O2) environment were recommended for EVA-intensive phases",
+      "confidence": "stated"
+    },
+    {
+      "id": "ref_iss_14p7_21",
+      "label": "ISS nominal 14.7 psia / 21% O2 (sea-level equivalent)",
+      "quantity": "reference_atmosphere",
+      "value": 14.7,
+      "unit": "psia",
+      "o2_percent": 21,
+      "map_rule": "marker at (0.21, 14.7 psia)",
+      "applies_to": "ISS (and Shuttle) nominal cabin",
+      "source": {
+        "title": "NASA-STD-3001 Technical Brief: Habitable Atmosphere",
+        "org": "NASA OCHMO",
+        "id_or_number": "OCHMO-TB-003 Rev A (11/30/2023)",
+        "url": "https://www.nasa.gov/wp-content/uploads/2023/12/ochmo-tb-003-habitable-atmosphere.pdf",
+        "page_or_section": "Background: Physiological Effects at Altitude and Partial Pressure, p.8 (brief is 'for reference only', derived from NASA-STD-3001)"
+      },
+      "quote": "the ISS cabin pressure is typically maintained at 14.7 psia with 21% O2",
+      "confidence": "stated"
+    },
+    {
+      "id": "ref_shuttle_staged_10p2_26p5",
+      "label": "Shuttle staged-decompression atmosphere 10.2 psia / 26.5% O2",
+      "quantity": "reference_atmosphere",
+      "value": 10.2,
+      "unit": "psia",
+      "o2_percent": 26.5,
+      "pio2_mmHg_stated": 127,
+      "map_rule": "marker at (0.265, 10.2 psia); physiologically equivalent to 8.2/34 (same PIO2 curve)",
+      "applies_to": "Space Shuttle EVA prebreathe staging, about a week per flight on 34 missions",
+      "source": {
+        "title": "Evidence Report: Risk of Hypobaric Hypoxia from the Exploration Atmosphere",
+        "org": "NASA Johnson Space Center, Human Research Program",
+        "id_or_number": "NTRS 20150021491 (JSC-CN-34806)",
+        "url": "https://ntrs.nasa.gov/citations/20150021491",
+        "page_or_section": "Section 2 Executive Summary p.4"
+      },
+      "quote": "staged decompression atmosphere of 10.2 psia / 26.5% O2 (inspired O2 pressure = 127 mmHg)",
+      "confidence": "stated"
+    }
+  ],
+  "not_found": [
+    {
+      "item": "An agency-level NASA standard that sets a maximum cabin O2 fraction for flammability in exploration habitats",
+      "tried": "NASA-STD-3001 Vol 2 ch.6 (sets diluent >= 30% for atelectasis, not a flammability cap; says OSHA's 23.5% enriched limit 'is more applicable to material flammability'); NTRS searches for NASA-STD-6001 at 34%/8.2 psia; NESC webbing briefs (report material MOCs, not a cabin cap). NASA-STD-6001B is a test method: materials are tested in the worst-case expected atmosphere of each vehicle, so the cap is set per program. Best available: Constellation baselines 30% (Orion) and 34% (LSAM) from NTRS 20070018178, marked as program baselines."
+    },
+    {
+      "item": "EAWG final report full text (NASA/TP-2010-216134, Oct 2010) and the HEOMD 'Exploration Atmospheres' memo (Feb 2013)",
+      "tried": "Web search found only library catalog records for the TP (GPO purl) and citations of the memo in NASA-STD-3001 Vol 2 and NTRS 20150021491. Values attributed to them here come via NTRS 20150021491 and NTRS 20130013505 (NASA/TM-2013-217377), which summarise them."
+    },
+    {
+      "item": "Primary ISS program requirement document (e.g. SSP 41000) for ISS O2/pressure limits",
+      "tried": "Not searched in depth within the time box; ISS values here come from OCHMO-TB-003 (14.7 psia / 21%) and NTRS 20070018178 (24.1% max), both NASA documents but secondary to the ISS program spec."
+    },
+    {
+      "item": "Revision letter of the NASA-STD-3001 Vol 2 web edition",
+      "tried": "The nasa.gov page shows 'Updated Apr 21, 2026' but no revision letter; OCHMO-TB-003 Rev A (Nov 2023) cites the same requirement numbers as Vol 2 Rev D. Table 6.2-1 values (145-155, 356, 791, 127, 122 mmHg) were read from the table image on the nasa.gov page."
+    }
+  ]
+}
