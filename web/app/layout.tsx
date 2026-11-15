@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { IBM_Plex_Mono, IBM_Plex_Sans } from "next/font/google";
+import localFont from "next/font/local";
 import { Suspense } from "react";
 import { AskProvider } from "@/components/AskDrawer";
 import { FooterFrame, HabitatSlot, MainFrame } from "@/components/RouteFrame";
@@ -7,8 +7,28 @@ import { SiteNav } from "@/components/SiteNav";
 import "./globals.css";
 
 // Type (unslop/AUDIT.md): one family, IBM Plex Sans, for interface and headlines; IBM Plex Mono as its partner for figures.
-const text = IBM_Plex_Sans({ variable: "--font-text", subsets: ["latin"], weight: ["400", "500", "600"], display: "swap" });
-const mono = IBM_Plex_Mono({ variable: "--font-mono", subsets: ["latin"], weight: ["400", "500", "600"], display: "swap" });
+// Bundled (app/fonts/, latin subset from @fontsource 5.3.0, SIL OFL 1.1) instead of next/font/google, so builds never
+// depend on downloading from Google Fonts (that download failed intermittently in CI).
+const text = localFont({
+  variable: "--font-text",
+  display: "swap",
+  fallback: ["system-ui", "sans-serif"],
+  src: [
+    { path: "./fonts/ibm-plex-sans-latin-400-normal.woff2", weight: "400", style: "normal" },
+    { path: "./fonts/ibm-plex-sans-latin-500-normal.woff2", weight: "500", style: "normal" },
+    { path: "./fonts/ibm-plex-sans-latin-600-normal.woff2", weight: "600", style: "normal" },
+  ],
+});
+const mono = localFont({
+  variable: "--font-mono",
+  display: "swap",
+  fallback: ["ui-monospace", "monospace"],
+  src: [
+    { path: "./fonts/ibm-plex-mono-latin-400-normal.woff2", weight: "400", style: "normal" },
+    { path: "./fonts/ibm-plex-mono-latin-500-normal.woff2", weight: "500", style: "normal" },
+    { path: "./fonts/ibm-plex-mono-latin-600-normal.woff2", weight: "600", style: "normal" },
+  ],
+});
 
 export const metadata: Metadata = {
   title: "Gravity Gap",
