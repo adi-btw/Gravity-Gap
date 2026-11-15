@@ -13,6 +13,7 @@ import pytest
 from engine import bounds, physics, uncertainty
 from engine import briefing as br
 from engine.presets import PRESETS
+from tests.artifact_compare import assert_same_build
 
 ROOT = Path(__file__).resolve().parents[1]
 ART_DIR = ROOT / "artifacts" / "briefing"
@@ -222,4 +223,4 @@ def test_artifact_matches_engine(docs, pid):
     assert path.exists(), "run python -m engine.briefing"
     art = json.loads(path.read_text(encoding="utf-8"))
     assert art["preset_id"] == pid
-    assert _strip(art) == _strip(docs[pid])
+    assert_same_build(_strip(art), _strip(docs[pid]))  # cross-platform: last float digits and model hashes

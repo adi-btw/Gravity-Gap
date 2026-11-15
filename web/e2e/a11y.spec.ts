@@ -22,6 +22,10 @@ const ROUTES = [
   "/compare?a=iss&b=lunar_base",
   "/trust",
   "/trust?metric=M3&scheme=wide",
+  "/briefing",
+  "/briefing?habitat=iss",
+  "/atmospheres",
+  "/atmospheres?metric=M2&gravity=mars",
 ];
 const THEMES = ["dark", "light"] as const;
 type Theme = (typeof THEMES)[number];

@@ -12,6 +12,7 @@ pytest.importorskip("fastapi")
 from fastapi.testclient import TestClient  # noqa: E402
 
 from api.main import app  # noqa: E402
+from tests.artifact_compare import assert_same_build
 
 ROOT = Path(__file__).resolve().parent.parent
 PROBLEM_KEYS = {"type", "title", "status", "detail", "instance"}
@@ -805,7 +806,7 @@ def test_bounds_drivers_lunar_base_m1_matches_engine_and_artifact(client, bounds
     assert k["share"] == 0 and k["reaches_band"] is False
     art = ROOT / "artifacts" / "uncertainty" / "lunar_base.json"
     if art.exists():
-        assert d == json.loads(art.read_text(encoding="utf-8"))["metrics"]["M1"]
+        assert_same_build(d, json.loads(art.read_text(encoding="utf-8"))["metrics"]["M1"])  # built on another platform
 
 
 def test_bounds_drivers_not_applicable_without_band(client, bounds_ready):
@@ -881,7 +882,7 @@ def test_briefing_preset_matches_engine_rules(client):
     # Same content as the cached artifact except the time stamps (and the manifest hash, which goes stale).
     art = json.loads((ROOT / "artifacts" / "briefing" / "lunar_base.json").read_text(encoding="utf-8"))
     for key in ("verdicts", "key_numbers", "gaps", "next_tests", "history", "trust"):
-        assert body[key] == art[key], key
+        assert_same_build(body[key], art[key])  # artifact built on another platform
 
 
 def test_briefing_custom_habitat_marks_omitted_flame_size_assumed(client):

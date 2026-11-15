@@ -11,6 +11,7 @@ import pytest
 
 from engine import atmosphere_map as am
 from engine import bounds
+from tests.artifact_compare import assert_same_build
 
 ROOT = Path(__file__).resolve().parents[1]
 ART_DIR = ROOT / "artifacts" / "atmosphere_map"
@@ -170,5 +171,5 @@ def test_artifacts_match_engine(maps, metric, gravity):
     assert path.exists(), "run python -m engine.atmosphere_map"
     art = json.loads(path.read_text(encoding="utf-8"))
     art.pop("generated_at")
-    assert art == maps[(metric, gravity)]
+    assert_same_build(art, maps[(metric, gravity)])  # cross-platform: last float digits and model hashes
     assert path.stat().st_size < 150_000

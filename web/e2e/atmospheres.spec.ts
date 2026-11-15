@@ -91,7 +91,7 @@ test.describe("/atmospheres evidence map", () => {
     const crew = MAP("M1", "lunar").overlays.crew_limits;
     await openMap(page);
     const legend = page.getByTestId("crew-legend");
-    await expect(legend.getByRole("listitem")).toHaveCount(crew.drawn.length);
+    await expect(legend.locator("ol > li")).toHaveCount(crew.drawn.length);
     await expect(legend.getByTestId("crew-source")).toHaveCount(crew.drawn.length);
     for (const c of crew.drawn) {
       await expect(legend.getByTestId(`crew-${c.id}`)).toContainText(c.label);
