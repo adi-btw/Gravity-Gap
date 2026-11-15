@@ -1,5 +1,7 @@
 "use client";
 
+import Link from "next/link";
+import { briefingQuery } from "@/lib/briefing";
 import { FIELDS, gFraction, matchPreset, nearestPresetAtmosphere, presetToHabitat } from "@/lib/habitat";
 import { incidentHabitat, incidentYear, matchIncident } from "@/lib/incidents";
 import { PRESETS } from "@/lib/presets";
@@ -53,6 +55,16 @@ export function HabitatBar({ compact = false }: { compact?: boolean }) {
         {active || activeIncident ? null : (
           <span className="rounded-full border border-partial px-3 py-1 text-xs text-partial">Custom</span>
         )}
+        <Link
+          href={`/briefing?${briefingQuery(habitat)}`}
+          className="ml-auto inline-flex items-center gap-1 rounded-md border border-line px-3 py-1 text-xs text-fg hover:bg-surface-2"
+          data-testid="briefing-button"
+        >
+          <svg width="12" height="12" viewBox="0 0 16 16" aria-hidden="true">
+            <path d="M3 1.5h7l3 3v10H3z M10 1.5v3h3 M5 8h6 M5 10.5h6 M5 13h4" fill="none" stroke="currentColor" strokeWidth="1.3" />
+          </svg>
+          Briefing
+        </Link>
       </div>
 
       {history.length > 0 ? (

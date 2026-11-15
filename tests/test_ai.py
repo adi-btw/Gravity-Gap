@@ -765,3 +765,107 @@ def test_trust_artifact_missing_still_safe(answer_mod, tmp_path, monkeypatch):
     res = answer_mod.ask(TRUST_Q, use_cache=False, allow_claude=False)
     assert res["intent"] == "trust" and res["validated"]
     assert "not available in this build" in res["answer_markdown"]
+
+
+# --------------------------------------------------------------------------- S1 briefing, S5 atmosphere map
+
+BRIEFING_Q = "What should a lunar base designer know about fire?"
+MAP_Q = "What cabin air does the evidence support?"
+
+
+def test_demo_questions_include_briefing_and_map(answer_mod):
+    qs = dict(answer_mod.DEMO_QUESTIONS)
+    assert qs.get(BRIEFING_Q) == "lunar_base" and qs.get(MAP_Q) == "lunar_base"
+
+
+def test_briefing_and_map_intents_do_not_capture_other_questions(answer_mod):
+    assert answer_mod.classify(BRIEFING_Q) == "briefing"
+    assert answer_mod.classify("Show me the fire-safety briefing") == "briefing"
+    assert answer_mod.classify(MAP_Q) == "atmosphere_map"
+    assert answer_mod.classify("Tell me more", ["eng:crew_limit:pio2_absolute_hypoxia_floor"]) == "atmosphere_map"
+    for q, intent in (("What should LUCI test first?", "planner"), ("Which experiments matter most for a Mars base?",
+                      "experiments"), ("What would Gravity Gap say about Apollo 1's cabin air?", "incident"),
+                      ("How do you know it works?", "trust"), ("Why is the lunar base band so wide?", "band")):
+        assert answer_mod.classify(q) == intent, q
+
+
+def test_briefing_answer_grounded_and_validated(answer_mod):
+    res = answer_mod.ask(BRIEFING_Q, "lunar_base", use_cache=False, allow_claude=False)
+    assert res["mode"] == "template" and res["intent"] == "briefing"
+    assert res["validated"], res["validation"]["errors"]
+    md = res["answer_markdown"]
+    art = json.loads((ROOT / "artifacts" / "briefing" / "lunar_base.json").read_text(encoding="utf-8"))
+    for chip in art["verdicts"]:
+        assert f"**{chip['label']}: {chip['value']}.**" in md
+    gaps = md.split("**Known gaps**", 1)[1].split("**Recommended next tests", 1)[0]
+    for m in ("M2", "M4", "M5"):
+        assert f"{m} " in gaps and f"[eng:{m}]" in gaps
+    numbers = md.split("**Numbers the evidence supports**", 1)[1].split("**What drives", 1)[0]
+    assert "M1 " in numbers and "M3 " in numbers and "M2 " not in numbers
+    assert "Not an operating procedure" in md and "safest" not in md.lower()
+    assert {"eng:briefing", "eng:planner:6", "eng:incident:artemis2", "eng:suppression:co2"} <= set(res["citations"])
+
+
+def test_briefing_cite_ids_only_when_present():
+    from engine.ai import context as ctx
+
+    pack = ctx.build_context("lunar_base", question=BRIEFING_Q)
+    assert pack["briefing"]["id"] == "eng:briefing"
+    assert set(pack["briefing"]["citations"]) <= set(pack["citable_ids"])
+    assert "artifact_set_sha256" not in json.dumps(pack["briefing"])  # goes stale at every manifest rebuild
+    assert not validate("See [eng:planner:99].", pack)["ok"]
+    plain = ctx.build_context("lunar_base", question="Why is the lunar base in the mixed regime?")
+    assert plain["briefing"] is None and "eng:briefing" not in plain["citable_ids"]
+    assert "eng:planner:6" not in plain["citable_ids"]
+
+
+def test_briefing_custom_habitat_computed_live(answer_mod):
+    hab = {"g_m_s2": 1.62, "p_psia": 8.0, "o2": 0.34, "u_cm_s": 10, "L_mm": 10}
+    res = answer_mod.ask(BRIEFING_Q, hab, use_cache=False, allow_claude=False)
+    assert res["intent"] == "briefing" and res["validated"], res["validation"]["errors"]
+    assert "Custom habitat: gravity 1.62" in res["answer_markdown"]
+
+
+def test_map_answer_states_no_evidence_share_and_never_ranks(answer_mod):
+    res = answer_mod.ask(MAP_Q, "lunar_base", use_cache=False, allow_claude=False)
+    assert res["mode"] == "template" and res["intent"] == "atmosphere_map"
+    assert res["validated"], res["validation"]["errors"]
+    md = res["answer_markdown"]
+    for m in ("M1", "M2", "M3"):
+        s = json.loads((ROOT / "artifacts" / "atmosphere_map" / f"{m}_lunar.json").read_text(encoding="utf-8"))["summary"]
+        share = answer_mod.pct(s["no_evidence_share"])
+        assert f"no evidence in {share} of the map" in md, m
+        assert f"eng:atmosphere_map:{m}" in res["citations"]
+    low = md.lower()
+    assert "does not rank" in low
+    for word in ("safest", "safer", "best", "recommend", "optimal", "ideal"):
+        assert word not in low, word
+    assert "eng:crew_limit:pio2_mild_hypoxia_lower_limit" in res["citations"]
+
+
+def test_map_cite_ids_only_for_artifact_ids():
+    from engine.ai import context as ctx
+
+    pack = ctx.build_context("lunar_base", question=MAP_Q)
+    ids = {c for c in pack["citable_ids"] if c.startswith(("eng:atmosphere_map", "eng:crew_limit"))}
+    data = json.loads((ROOT / "artifacts" / "atmosphere_map" / "M1_lunar.json").read_text(encoding="utf-8"))
+    crew = data["overlays"]["crew_limits"]
+    expected = {f"eng:atmosphere_map:{m}" for m in ("M1", "M2", "M3")}
+    expected |= {c["citation"] for part in ("drawn", "not_drawn") for c in crew[part]}
+    assert ids == expected
+    assert all("cells" not in m for m in pack["atmosphere_map"]["metrics"].values())
+    assert not validate("See [eng:atmosphere_map:M4].", pack)["ok"]
+    assert not validate("See [eng:crew_limit:made_up].", pack)["ok"]
+    plain = ctx.build_context("lunar_base", question="Why is the lunar base in the mixed regime?")
+    assert plain["atmosphere_map"] is None and not ids & set(plain["citable_ids"])
+    orbit = ctx.build_context("iss", question=MAP_Q)
+    assert orbit["atmosphere_map"]["gravity_id"] == "orbit"
+
+
+def test_map_artifact_missing_still_safe(answer_mod, tmp_path, monkeypatch):
+    from engine.ai import context as ctx
+
+    monkeypatch.setattr(ctx, "ATMOSPHERE_MAP_DIR", tmp_path)
+    res = answer_mod.ask(MAP_Q, "lunar_base", use_cache=False, allow_claude=False)
+    assert res["intent"] == "atmosphere_map" and res["validated"]
+    assert "not available in this build" in res["answer_markdown"]

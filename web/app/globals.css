@@ -108,3 +108,44 @@ g:focus-visible > .svg-focus-ring {
 input[type="range"] {
   accent-color: var(--micro);
 }
+
+/*
+ * Print (S1 briefing): A4 and Letter, black on white whatever the theme, chips readable without colour
+ * (icons, words, border styles). Site chrome is hidden by print:hidden on the header, footer and Ask drawer.
+ */
+@page {
+  margin: 10mm;
+}
+
+@media print {
+  :root,
+  :root[data-theme] {
+    color-scheme: light;
+    --bg: #ffffff;
+    --surface: #ffffff;
+    --surface-2: #ffffff;
+    --line: #8a8a8a;
+    --fg: #000000;
+    --muted: #2b2b2b;
+    --micro: #000000;
+    --normal: #000000;
+    --partial: #000000;
+    --nodata: #4b4b4b;
+    --warn: #000000;
+    --nodata-fill: rgba(0, 0, 0, 0.1);
+  }
+  html {
+    font-size: 12.5px;
+  }
+  body {
+    background: #ffffff;
+    color: #000000;
+  }
+  a {
+    color: inherit;
+    text-decoration: none;
+  }
+  nextjs-portal {
+    display: none !important;
+  }
+}

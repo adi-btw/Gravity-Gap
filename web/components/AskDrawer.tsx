@@ -127,7 +127,7 @@ function AskPanel({
   };
 
   return (
-        <div className="fixed inset-0 z-40 flex justify-end">
+        <div className="fixed inset-0 z-40 flex justify-end print:hidden">
           <button type="button" aria-label="Close assistant" className="absolute inset-0 bg-black/40" onClick={close} tabIndex={-1} />
           <aside
             ref={dialogRef}

@@ -7,19 +7,21 @@ import { AskButton } from "./AskDrawer";
 import { ThemeToggle } from "./ThemeToggle";
 
 export const NAV_ITEMS = [
-  { href: "/", label: "Home" },
-  { href: "/replay", label: "Replay" },
-  { href: "/explore", label: "Spectrum" },
-  { href: "/regime", label: "Regime" },
-  { href: "/bounds", label: "Bounds" },
-  { href: "/compare", label: "Compare" },
-  { href: "/trust", label: "Trust" },
-  { href: "/suppression", label: "Put it out" },
-  { href: "/detection", label: "Detection" },
-  { href: "/ledger", label: "Ledger" },
-  { href: "/planner", label: "Planner" },
-  { href: "/data", label: "Data" },
-  { href: "/about", label: "About" },
+  { href: "/", label: "Home", group: 0 },
+  { href: "/replay", label: "Replay", group: 0 },
+  { href: "/explore", label: "Spectrum", group: 0 },
+  { href: "/regime", label: "Regime", group: 0 },
+  { href: "/bounds", label: "Bounds", group: 1 },
+  { href: "/compare", label: "Compare", group: 1 },
+  { href: "/atmospheres", label: "Air map", group: 1 },
+  { href: "/briefing", label: "Briefing", group: 1 },
+  { href: "/trust", label: "Trust", group: 1 },
+  { href: "/suppression", label: "Put it out", group: 2 },
+  { href: "/detection", label: "Detection", group: 2 },
+  { href: "/ledger", label: "Ledger", group: 3 },
+  { href: "/planner", label: "Planner", group: 3 },
+  { href: "/data", label: "Data", group: 3 },
+  { href: "/about", label: "About", group: 3 },
 ] as const;
 
 /** Top navigation; links carry the habitat query so state follows the user. */
@@ -37,10 +39,12 @@ export function SiteNav() {
       </Link>
       <nav aria-label="Main" className="flex-1">
         <ul className="flex flex-wrap gap-1 text-sm">
-          {NAV_ITEMS.map((item) => {
+          {NAV_ITEMS.map((item, k) => {
             const active = item.href === "/" ? pathname === "/" : pathname.startsWith(item.href);
+            // A thin divider between groups (story · habitat answers · fire response · records) keeps the long nav scannable.
+            const newGroup = k > 0 && NAV_ITEMS[k - 1].group !== item.group;
             return (
-              <li key={item.href}>
+              <li key={item.href} className={newGroup ? "ml-1 border-l border-line pl-1" : undefined}>
                 <Link
                   href={`${item.href}?${queryString}`}
                   aria-current={active ? "page" : undefined}

@@ -76,6 +76,10 @@ DEMO_QUESTIONS: list[tuple[str, str | None]] = [
     ("Why is the lunar base band so wide?", "lunar_base"),
     # S2 honesty test (intent "trust"; artifacts/holdout.json in the context pack)
     ("How do you know it works?", None),
+    # S1 habitat briefing (intent "briefing"; artifacts/briefing/{preset}.json in the context pack)
+    ("What should a lunar base designer know about fire?", "lunar_base"),
+    # S5 atmosphere evidence map (intent "atmosphere_map"; artifacts/atmosphere_map summaries in the context pack)
+    ("What cabin air does the evidence support?", "lunar_base"),
 ]
 
 OUT_OF_SCOPE = ("rocket", "propellant", "propulsion", "thruster", "launch vehicle", "booster",
@@ -153,6 +157,10 @@ def classify(question: str, context_ids: Iterable[str] = ()) -> str:
         return "compare"
     if ctx.wants_holdout(question, context_ids):
         return "trust"
+    if ctx.wants_atmosphere_map(question, context_ids):
+        return "atmosphere_map"
+    if ctx.wants_briefing(question, context_ids):
+        return "briefing"
     if ctx._wants_fans_off(q) or ("fan" in q and ("off" in q or "without" in q)) or "ventilation" in q:
         return "fans_off"
     if any(w in q for w in ("test first", "luci", "fm2", "next test", "which test", "what should", "plan")):
@@ -1107,7 +1115,109 @@ def t_trust(pack: dict, question: str, metric: str | None) -> str:
     return "\n\n".join(out)
 
 
-TEMPLATES = {"trust": t_trust, "compare": t_compare, "detection": t_detection, "suppression": t_suppression, "incident": t_incident, "regime": t_regime, "band": t_band, "experiments": t_experiments, "planner": t_planner,
+# --------------------------------------------------------------------------- habitat briefing (S1)
+
+
+def _next_test_line(t: dict) -> str:
+    s = (f"- Planner candidate #{t.get('rank')}: {t.get('metric')} {t.get('type')} test at {fmt(t.get('g_m_s2'))} m/s², "
+         f"{fmt(t.get('p_psia'))} psia, {pct(t.get('o2'))} O₂, vent {fmt(t.get('u_cm_s'))} cm/s")
+    if t.get("co2"):
+        s += f", with {pct(t['co2'])} CO₂ replacing nitrogen"
+    return s + f" {_cites(t.get('citations') or [])}"
+
+
+def t_briefing(pack: dict, question: str, metric: str | None) -> str:
+    b = pack.get("briefing")
+    if not b:
+        return ("The briefing for this habitat is not available in this build, so Gravity Gap cannot summarise it "
+                "here. The Briefing page needs the live API or the precomputed preset briefings.")
+    bid = b["id"]
+    out = [f"**Fire-safety briefing: what the PSI data can and cannot say here.** {(b.get('habitat') or {}).get('line')} "
+           f"[{bid}]"]
+    chips = [f"- **{c['label']}: {c['value']}.** {c['because']} {_cites(c.get('citations') or [])}"
+             for c in b.get("verdicts") or []]
+    out.append("**Verdict per pillar** (each follows a written rule, ADR-0010):\n" + "\n".join(chips))
+    nums = [f"- {k['text']} {_cites(k.get('citations') or [])}" for k in b.get("key_numbers") or []]
+    if nums:
+        out.append("**Numbers the evidence supports** (covered metrics only):\n" + "\n".join(nums))
+    drv = [f"- {d['text']} {_cites(d.get('citations') or [])}" for d in b.get("drivers") or []]
+    if drv:
+        out.append("**What drives the uncertainty:**\n" + "\n".join(drv))
+    gaps = []
+    for g in b.get("gaps") or []:
+        line = f"- {g['text']} {_cites(g.get('citations') or [])}"
+        if g.get("safety_note"):
+            line += f" {g['safety_note']}"
+        gaps.append(line)
+    if gaps:
+        out.append("**Known gaps** (no number is given for these):\n" + "\n".join(gaps))
+    nt = b.get("next_tests") or {}
+    if nt.get("items"):
+        par = "**Recommended next tests:**\n" + "\n".join(_next_test_line(t) for t in nt["items"])
+        if nt.get("note"):
+            par += f"\n{nt['note']}"
+        out.append(par)
+    hist = b.get("history") or {}
+    if hist.get("text"):
+        out.append(f"**History check:** {hist['text']} {_cites(hist.get('citations') or [])}")
+    tr = b.get("trust") or {}
+    if tr.get("text"):
+        out.append(f"**How far to trust this:** {tr['text']} {_cites(tr.get('citations') or [])}")
+    disclaimer = (b.get("footer") or {}).get("disclaimer")
+    if disclaimer:
+        out.append(f"*{disclaimer}* The full one-page version is on the *Briefing* page.")
+    return "\n\n".join(out)
+
+
+# --------------------------------------------------------------------------- atmosphere evidence map (S5)
+
+
+def _map_metric_line(m: dict, preset_id: str | None, label: str) -> str:
+    s = m.get("summary") or {}
+    line = (f"- **{m['metric']} – {m.get('label')}** ({m.get('investigation_id')}): evidence in {s.get('n_covered')} of "
+            f"{s.get('n_cells')} map cells ({pct(s.get('evidence_share'))}); **no evidence in "
+            f"{pct(s.get('no_evidence_share'))} of the map** [{m['id']}].")
+    mark = next((p for p in m.get("presets") or [] if p.get("id") == preset_id), None)
+    if mark is not None:
+        line += (f" {label} is inside the evidence." if mark.get("covered") else
+                 f" {label} is outside it (distance {fmt(mark.get('nearest_distance'))} to the nearest test; "
+                 f"the gate is 2).")
+    return line
+
+
+def t_atmosphere_map(pack: dict, question: str, metric: str | None) -> str:
+    am = pack.get("atmosphere_map")
+    if not am:
+        return ("The atmosphere evidence map (artifacts/atmosphere_map) is not available in this build, so Gravity Gap "
+                "cannot say how much of the O₂ × pressure plane its tests cover.")
+    h = pack.get("habitat") or {}
+    ms = list((am.get("metrics") or {}).values())
+    first = ms[0]["id"]
+    out = [(f"**Gravity Gap does not rank cabin atmospheres or pick one.** It maps where NASA's PSI fire tests give "
+            f"evidence across a grid of O₂ fractions and total pressures, and leaves the rest marked "
+            f"\"no evidence\". {am.get('rule')} [{first}]"),
+           "**How much of the map has evidence:**\n" + "\n".join(_map_metric_line(m, h.get("preset_id"),
+                                                                                  h.get("label") or "This habitat")
+                                                                 for m in ms)]
+    out.append(f"**Gravity:** {am.get('what_varies')} [{first}]")
+    out.append("Each metric measures a different thing (droplet or gas flames going out on their own, or the size a "
+               "droplet flame goes out at), so the coloured cells say what the tests show there, not which air is "
+               "preferable.")
+    crew = am.get("crew_limits") or {}
+    lines = [f"- {c['label']} ({c.get('role')}): {(c.get('source') or {}).get('title')} [{c['id']}]"
+             for c in crew.get("drawn") or [] if c.get("shape") != "marker"]
+    if lines:
+        par = (f"**Crew limits are a separate question.** {crew.get('note')} The map draws them as lines from cited "
+               f"NASA documents:\n" + "\n".join(lines))
+        for c in crew.get("not_drawn") or []:
+            par += f"\nNot drawn: {c['label']}, {c.get('reason')} [{c['id']}]."
+        out.append(par)
+    out.append("The *Air map* page shows the cells, the tested points and these lines; clicking a cell loads that "
+               "atmosphere into the habitat bar.")
+    return "\n\n".join(out)
+
+
+TEMPLATES = {"atmosphere_map": t_atmosphere_map, "briefing": t_briefing, "trust": t_trust, "compare": t_compare, "detection": t_detection, "suppression": t_suppression, "incident": t_incident, "regime": t_regime, "band": t_band, "experiments": t_experiments, "planner": t_planner,
              "fans_off": t_fans_off, "explain": t_explain}
 
 
@@ -1115,7 +1225,7 @@ def template_answer(question: str, pack: dict, intent: str, metric: str | None) 
     if intent == "refusal":
         return t_refusal(pack, question)
     text = TEMPLATES.get(intent, t_explain)(pack, question, metric)
-    if intent in ("incident", "detection", "trust"):
+    if intent in ("incident", "detection", "trust", "briefing", "atmosphere_map"):
         return text  # self-contained: built only from the incident artifact, not the habitat predictions
     note = _missing_note(pack)
     return text + ("\n\n" + note if note else "")

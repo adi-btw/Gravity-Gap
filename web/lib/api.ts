@@ -8,6 +8,8 @@
  * recomputed in the browser.
  */
 import { METRIC_IDS, buildCompare, type CompareHabitat, type CompareResult, type ResolvedSide } from "./compare";
+import { normalizeAtmosphereMap, type AtmosphereMap, type MapGravity, type MapMetric } from "./atmosphereMap";
+import { normalizeBriefing, type Briefing } from "./briefing";
 import { normalizeCoverage } from "./coverage";
 import { normalizeDetection, type DetectionArtifact } from "./detection";
 import { normalizeHoldout, type HoldoutArtifact } from "./holdout";
@@ -76,6 +78,10 @@ export const CUSTOM_COMPARE_NOTE =
   "Live API needed to compare a custom habitat: precomputed bounds exist only for the six presets.";
 export const CUSTOM_DRIVERS_NOTE =
   "Needs the live API: the band-width breakdown is precomputed only for the six presets.";
+export const CUSTOM_BRIEFING_NOTE =
+  "Needs the live API: briefings are precomputed only for the six presets, so a custom habitat has no offline briefing.";
+/** A briefing runs M1..M5, the band-width breakdown and the suppression curves, so it gets a longer live timeout. */
+const BRIEFING_TIMEOUT_MS = 15_000;
 /** A compare runs M1..M5 for two habitats, so it gets the same longer live timeout as a suppression curve. */
 const COMPARE_TIMEOUT_MS = 10_000;
 /** A suppression curve runs the M1/M2 models at every fraction, so the first live call gets more time. */
@@ -472,6 +478,41 @@ export function createClient(opts: ClientOptions = {}) {
         async () => normalizeHoldout(await liveJson<unknown>("/holdout", undefined, Math.max(timeoutMs, 10_000))),
         async () => ({
           data: normalizeHoldout(await staticJson("holdout.json", "API offline and no honesty-test artifact was bundled.")),
+          source: "offline",
+          note: OFFLINE_NOTE,
+        }),
+      ),
+
+    /**
+     * S1 fire-safety briefing (POST /briefing, ADR-0010). Offline: the preset artifact artifacts/briefing/{preset}.json;
+     * a custom habitat has no honest offline briefing.
+     */
+    briefing: (presetId: string | null, h: Habitat) =>
+      withFallback<Briefing>(
+        async () =>
+          normalizeBriefing(
+            await liveJson<unknown>("/briefing", post({ habitat: presetId ?? habitatBody(h) }), Math.max(timeoutMs, BRIEFING_TIMEOUT_MS)),
+          ),
+        async () => {
+          if (!presetId) throw new OfflineUnavailableError(CUSTOM_BRIEFING_NOTE);
+          const data = normalizeBriefing(
+            await staticJson<unknown>(`briefing/${presetId}.json`, `API offline and no precomputed briefing for ${presetId}.`),
+          );
+          return { data, source: "offline", note: `${OFFLINE_NOTE} (precomputed ${data.habitat.label} briefing)` };
+        },
+      ),
+
+    /** S5 atmosphere evidence map (GET /atmosphere-map/{metric}?g=, artifacts/atmosphere_map/{metric}_{g}.json; ADR-0011). */
+    atmosphereMap: (metric: MapMetric, gravity: MapGravity) =>
+      withFallback<AtmosphereMap>(
+        async () =>
+          normalizeAtmosphereMap(
+            await liveJson<unknown>(`/atmosphere-map/${metric}?g=${gravity}`, undefined, Math.max(timeoutMs, 5_000)),
+          ),
+        async () => ({
+          data: normalizeAtmosphereMap(
+            await staticJson(`atmosphere_map/${metric}_${gravity}.json`, `API offline and no atmosphere map for ${metric} / ${gravity} was bundled.`),
+          ),
           source: "offline",
           note: OFFLINE_NOTE,
         }),

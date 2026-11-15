@@ -29,8 +29,8 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse, Response
 from starlette.exceptions import HTTPException as StarletteHTTPException
 
-from api.schemas import (AskIn, AskOut, BoundsIn, CompareIn, Health, HabitatIn, LedgerIn, PhysicsOut, RankItem,
-                         SuppressionIn, TestsPage)
+from api.schemas import (AskIn, AskOut, BoundsIn, BriefingIn, CompareIn, Health, HabitatIn, LedgerIn, PhysicsOut,
+                         RankItem, SuppressionIn, TestsPage)
 
 log = logging.getLogger("gravity_gap.api")
 
@@ -45,6 +45,9 @@ INCIDENTS_PATH = ARTIFACTS_DIR / "incidents.json"
 SUPPRESSION_REFERENCE_PATH = ARTIFACTS_DIR / "suppression_reference.json"
 DETECTION_PATH = ARTIFACTS_DIR / "detection.json"
 HOLDOUT_PATH = ARTIFACTS_DIR / "holdout.json"
+ATMOSPHERE_MAP_DIR = ARTIFACTS_DIR / "atmosphere_map"
+MAP_METRICS = ("M1", "M2", "M3")  # M4/M5 are rule tables with a box gate; not mapped (ADR-0011)
+MAP_GRAVITIES = ("orbit", "lunar", "mars", "earth")
 
 ASK_RATE_PER_MIN = int(os.environ.get("GRAVITY_GAP_ASK_RATE", "20"))
 LEDGER_RATE_PER_MIN = int(os.environ.get("GRAVITY_GAP_LEDGER_RATE", "10"))
@@ -571,6 +574,63 @@ def holdout() -> Any:
         raise HTTPException(status_code=503, detail="artifacts/holdout.json is not valid JSON") from exc
     if not isinstance(data, dict):
         raise HTTPException(status_code=503, detail="artifacts/holdout.json is not a JSON object")
+    return data
+
+
+# --------------------------------------------------------------------------- S1 briefing, S5 atmosphere map
+
+
+@app.post("/briefing")
+def briefing(body: BriefingIn) -> dict[str, Any]:
+    """S1: one-page fire-safety briefing for a preset id or habitat fields (engine.briefing.briefing, ADR-0010)."""
+    mod = engine_module("briefing")
+    if not hasattr(mod, "briefing"):
+        raise HTTPException(status_code=503, detail="engine.briefing has no briefing() yet")
+    raw: str | dict[str, Any]
+    if isinstance(body.habitat, str):
+        if body.habitat not in {p["id"] for p in engine_module("presets").PRESETS}:
+            raise HTTPException(status_code=422, detail=f"Unknown habitat preset '{body.habitat}'")
+        raw = body.habitat
+    else:
+        try:
+            hab = HabitatIn(**body.habitat)
+        except Exception as exc:  # noqa: BLE001 - pydantic ValidationError
+            raise HTTPException(status_code=422, detail=f"Invalid habitat: {exc}") from exc
+        # exclude_unset keeps "L_mm omitted" visible to the engine, which then marks it as assumed
+        raw = hab.model_dump(exclude={"weights"}, exclude_unset=True)
+        if body.habitat.get("label"):
+            raw["label"] = str(body.habitat["label"])
+        assumed = body.habitat.get("assumed")
+        if isinstance(assumed, list):
+            raw["assumed"] = [str(a) for a in assumed if str(a) in HABITAT_KEYS]
+    try:
+        out = mod.briefing(raw)
+    except NotImplementedError as exc:
+        raise HTTPException(status_code=503, detail=str(exc)) from exc
+    except ValueError as exc:
+        raise HTTPException(status_code=422, detail=str(exc)) from exc
+    return to_jsonable(out)
+
+
+@app.get("/atmosphere-map/{metric}")
+def atmosphere_map(metric: str, g: str = Query("lunar", description="Gravity preset: orbit, lunar, mars or earth")
+                   ) -> Any:
+    """S5: `artifacts/atmosphere_map/{metric}_{g}.json` unchanged (O2 x pressure evidence map, ADR-0011)."""
+    m = metric.upper()
+    if m not in MAP_METRICS:
+        raise HTTPException(status_code=404, detail=f"unknown metric {metric!r}; mapped: {list(MAP_METRICS)}")
+    if g not in MAP_GRAVITIES:
+        raise HTTPException(status_code=404, detail=f"unknown gravity {g!r}; known: {list(MAP_GRAVITIES)}")
+    path = ATMOSPHERE_MAP_DIR / f"{m}_{g}.json"
+    if not path.exists():
+        raise HTTPException(status_code=503, detail=f"artifacts/atmosphere_map/{m}_{g}.json is not built yet "
+                                                    "(python -m engine.atmosphere_map)")
+    try:
+        data = json.loads(path.read_text(encoding="utf-8"))
+    except ValueError as exc:
+        raise HTTPException(status_code=503, detail=f"artifacts/atmosphere_map/{m}_{g}.json is not valid JSON") from exc
+    if not isinstance(data, dict):
+        raise HTTPException(status_code=503, detail=f"artifacts/atmosphere_map/{m}_{g}.json is not a JSON object")
     return data
 
 

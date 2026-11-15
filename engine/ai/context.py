@@ -35,6 +35,16 @@ The pack is the *only* source of facts an answer may use. It contains:
   it" questions (or ``context_ids`` starting with ``eng:holdout``): per-metric summaries, the wide check, the worst
   misses (with their PSI rows in ``evidence``) and the SAFFIRE hindcast -> cite ``[eng:holdout]``,
   ``[eng:holdout:<group id>]`` (only the groups in the pack) and ``[eng:holdout:saffire]``
+* ``briefing`` S1 habitat fire-safety briefing (``artifacts/briefing/{preset}.json``, else
+  ``engine.briefing.briefing``; ADR-0010) for "what should a designer know about fire" / briefing questions (or
+  ``context_ids`` with ``eng:briefing``): habitat line, the four pillar chips, key numbers, levers, gaps, next tests,
+  history, trust line, disclaimer -> cite ``[eng:briefing]`` and every id in the briefing's own ``citations``
+  (``eng:M1``, ``PSI-69``, ``eng:drivers:M1``, ``eng:planner:6``, ``eng:incident:artemis2`` ...)
+* ``atmosphere_map`` S5 O2 x pressure evidence map summaries (``artifacts/atmosphere_map/{metric}_{gravity}.json``,
+  ADR-0011) for questions about which cabin air the evidence supports (or ``context_ids`` starting with
+  ``eng:atmosphere_map`` / ``eng:crew_limit``): per metric the evidence share, the no-evidence share, the reading and
+  the preset markers; the cited crew limits -> cite ``[eng:atmosphere_map:M1]`` (metrics present) and
+  ``[eng:crew_limit:<id>]`` (ids in the artifact). No cells: the map never ranks atmospheres
 * ``constants`` physical constants and thresholds the answers may quote
 * ``citable_ids`` every id a citation may use
 * ``missing``   engine pieces that were unavailable (answers must say so, not guess)
@@ -68,6 +78,8 @@ SUPPRESSION_REFERENCE_PATH = ARTIFACTS / "suppression_reference.json"
 DETECTION_PATH = ARTIFACTS / "detection.json"
 UNCERTAINTY_DIR = ARTIFACTS / "uncertainty"
 HOLDOUT_PATH = ARTIFACTS / "holdout.json"
+BRIEFING_DIR = ARTIFACTS / "briefing"
+ATMOSPHERE_MAP_DIR = ARTIFACTS / "atmosphere_map"
 
 PACK_VERSION = "context.v1"
 HABITAT_FIELDS = ("g_m_s2", "p_psia", "o2", "u_cm_s", "L_mm")
@@ -681,6 +693,140 @@ def holdout_psi_rows(block: dict) -> list[str]:
     return list(dict.fromkeys(rows))
 
 
+# --------------------------------------------------------------------------- habitat briefing (S1)
+
+BRIEFING_PATTERNS = (r"\bbriefing\b", r"\bdesigners?\b", r"\bknow about (?:a )?fires?\b", r"\bone[- ]page\b",
+                     r"\bfire[- ]safety summary\b")
+
+
+def wants_briefing(question: str, context_ids: Iterable[str] = ()) -> bool:
+    """True for "what should a habitat designer know about fire" / briefing questions (or ``eng:briefing``)."""
+    if any(str(c) == "eng:briefing" for c in context_ids or ()):
+        return True
+    q = (question or "").lower()
+    return any(re.search(p, q) for p in BRIEFING_PATTERNS)
+
+
+def _briefing_raw(h: dict) -> dict | None:
+    if h.get("preset_id"):
+        f = BRIEFING_DIR / f"{h['preset_id']}.json"
+        if f.exists():
+            try:
+                return json.loads(f.read_text(encoding="utf-8"))
+            except ValueError:
+                pass
+    mod = _engine("briefing")
+    if mod is None or not hasattr(mod, "briefing"):
+        return None
+    hab = {k: h[k] for k in HABITAT_FIELDS}
+    if h.get("label"):
+        hab["label"] = h["label"]
+    return mod.briefing(hab)
+
+
+def briefing_block(h: dict) -> dict | None:
+    """The habitat's briefing without build metadata (model hashes, manifest hash); None when unavailable."""
+    raw = _briefing_raw(h)
+    if not isinstance(raw, dict) or not isinstance(raw.get("verdicts"), list):
+        return None
+    out = {k: raw.get(k) for k in ("habitat", "verdicts", "key_numbers", "drivers", "gaps", "next_tests", "history",
+                                   "trust", "citations")}
+    foot = raw.get("footer") or {}
+    out["footer"] = {"disclaimer": foot.get("disclaimer"), "date": foot.get("date")}
+    out["id"] = raw.get("citation") or "eng:briefing"
+    return jsonable(out)
+
+
+def briefing_cite_ids(block: dict) -> list[str]:
+    return list(dict.fromkeys([block["id"], *(block.get("citations") or [])]))
+
+
+# --------------------------------------------------------------------------- atmosphere evidence map (S5)
+
+MAP_PATTERNS = (r"\bcabin air\b", r"\bair map\b", r"\batmosphere map\b", r"\bevidence map\b",
+                r"\bwhich (?:cabin )?atmospheres?\b", r"\bwhat (?:cabin )?(?:air|atmospheres?) does the evidence\b",
+                r"\bcrew (?:breathing )?limits?\b")
+MAP_METRICS = ("M1", "M2", "M3")
+MAP_GRAVITY_IDS = (("orbit", 0.0), ("lunar", 1.62), ("mars", 3.71), ("earth", 9.81))
+
+
+def wants_atmosphere_map(question: str, context_ids: Iterable[str] = ()) -> bool:
+    """True for "which cabin air does the evidence support" questions (or atmosphere-map / crew-limit ids)."""
+    if any(str(c).startswith(("eng:atmosphere_map", "eng:crew_limit")) for c in context_ids or ()):
+        return True
+    q = (question or "").lower()
+    return any(re.search(p, q) for p in MAP_PATTERNS)
+
+
+def map_gravity_id(g_m_s2: float) -> str:
+    """The map gravity preset for a habitat gravity; lunar when it matches none (estimates are the same anyway)."""
+    for gid, g in MAP_GRAVITY_IDS:
+        if math.isclose(float(g_m_s2), g, abs_tol=1e-9):
+            return gid
+    return "lunar"
+
+
+def load_atmosphere_map(metric: str, gravity: str, directory: Path | None = None) -> dict | None:
+    f = (directory or ATMOSPHERE_MAP_DIR) / f"{metric}_{gravity}.json"
+    if not f.exists():
+        return None
+    try:
+        data = json.loads(f.read_text(encoding="utf-8"))
+    except ValueError:
+        return None
+    return data if isinstance(data, dict) and isinstance(data.get("summary"), dict) else None
+
+
+def _crew_limit(c: dict) -> dict:
+    src = c.get("source") or {}
+    out = {"id": c.get("citation"), "label": c.get("label"), "role": c.get("role"), "shape": c.get("shape"),
+           "quantity": c.get("quantity"), "caveat": c.get("caveat"), "quote": c.get("quote"),
+           "source": {"title": src.get("title"), "id_or_number": src.get("id_or_number")}}
+    if c.get("reason"):
+        out["reason"] = c["reason"]
+    return out
+
+
+def atmosphere_map_block(h: dict, directory: Path | None = None) -> dict | None:
+    """Per-metric summaries of the evidence map at the habitat's gravity (no cells) + the cited crew limits."""
+    gid = map_gravity_id(h["g_m_s2"])
+    metrics: dict[str, Any] = {}
+    crew: dict | None = None
+    rule = what_varies = None
+    for m in MAP_METRICS:
+        d = load_atmosphere_map(m, gid, directory)
+        if d is None:
+            continue
+        g = d.get("gravity") or {}
+        overlays = d.get("overlays") or {}
+        metrics[m] = {"id": d.get("citation") or f"eng:atmosphere_map:{m}", "metric": m, "label": d.get("label"),
+                      "unit": d.get("unit"), "kind": d.get("kind"), "investigation_id": d.get("investigation_id"),
+                      "gravity": {k: g.get(k) for k in ("id", "label", "g_m_s2", "widen_factor")},
+                      "summary": d.get("summary"), "reading": d.get("reading"),
+                      "presets": [{k: p.get(k) for k in ("id", "label", "o2", "p_psia", "on_map", "covered",
+                                                         "nearest_distance")}
+                                  for p in overlays.get("presets") or []]}
+        if crew is None:
+            crew = overlays.get("crew_limits")
+        rule, what_varies = d.get("rule"), d.get("what_varies")
+    if not metrics:
+        return None
+    out: dict[str, Any] = {"gravity_id": gid, "rule": rule, "what_varies": what_varies, "metrics": metrics,
+                           "crew_limits": None}
+    if isinstance(crew, dict):
+        out["crew_limits"] = {"note": crew.get("note"), "source_file": crew.get("source_file"),
+                              "drawn": [_crew_limit(c) for c in crew.get("drawn") or [] if c.get("citation")],
+                              "not_drawn": [_crew_limit(c) for c in crew.get("not_drawn") or [] if c.get("citation")]}
+    return jsonable(out)
+
+
+def atmosphere_map_cite_ids(block: dict) -> list[str]:
+    ids = [m["id"] for m in block["metrics"].values()]
+    crew = block.get("crew_limits") or {}
+    ids += [c["id"] for part in ("drawn", "not_drawn") for c in crew.get(part) or []]
+    return ids
+
+
 def presets() -> list[dict]:
     mod = _engine("presets")
     return list(getattr(mod, "PRESETS", [])) if mod else []
@@ -1015,6 +1161,30 @@ def build_context(
     pack["compare"] = cmp_block
 
     pack["holdout"] = hold
+
+    # ---- habitat briefing (S1)
+    brf = None
+    if wants_briefing(question, ctx_ids):
+        try:
+            brf = briefing_block(h)
+        except Exception as exc:  # noqa: BLE001 - engine errors must not break the pack
+            missing.append(f"briefing.briefing: {type(exc).__name__}")
+        else:
+            if brf is None:
+                missing.append("artifacts/briefing")
+            else:
+                citable.update(briefing_cite_ids(brf))
+    pack["briefing"] = brf
+
+    # ---- atmosphere evidence map (S5)
+    amap = None
+    if wants_atmosphere_map(question, ctx_ids):
+        amap = atmosphere_map_block(h)
+        if amap is None:
+            missing.append("artifacts/atmosphere_map")
+        else:
+            citable.update(atmosphere_map_cite_ids(amap))
+    pack["atmosphere_map"] = amap
 
     # ---- uncertainty drivers (S3)
     drv: dict[str, Any] = {}

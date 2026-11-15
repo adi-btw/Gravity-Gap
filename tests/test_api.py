@@ -863,3 +863,72 @@ def test_holdout_real_artifact_served_unchanged(client):
     body = _strict_json(client.get("/holdout"))
     assert body == json.loads(path.read_text(encoding="utf-8"))
     assert body["citation"] == "eng:holdout" and set(body["metrics"]) == {"M1", "M2", "M3"}
+
+
+# --------------------------------------------------------------------------- S1 briefing
+
+
+def test_briefing_preset_matches_engine_rules(client):
+    body = _strict_json(client.post("/briefing", json={"habitat": "lunar_base"}))
+    assert body["artifact"] == "briefing" and body["habitat"]["preset_id"] == "lunar_base"
+    assert [c["pillar"] for c in body["verdicts"]] == ["prevention", "behaviour", "detection", "suppression"]
+    assert [c["value"] for c in body["verdicts"]] == ["partial", "partial", "partial", "no evidence"]
+    assert [k["metric"] for k in body["key_numbers"]] == ["M1", "M3"]
+    assert [g["id"] for g in body["gaps"] if g["kind"] == "metric"] == ["M2", "M4", "M5"]
+    assert "Not an operating procedure" in body["footer"]["disclaimer"]
+    assert "eng:briefing" in body["citations"]
+    assert "safest" not in json.dumps(body).lower()
+    # Same content as the cached artifact except the time stamps (and the manifest hash, which goes stale).
+    art = json.loads((ROOT / "artifacts" / "briefing" / "lunar_base.json").read_text(encoding="utf-8"))
+    for key in ("verdicts", "key_numbers", "gaps", "next_tests", "history", "trust"):
+        assert body[key] == art[key], key
+
+
+def test_briefing_custom_habitat_marks_omitted_flame_size_assumed(client):
+    custom = {k: v for k, v in LUNAR_BASE.items() if k != "L_mm"} | {"p_psia": 8.0, "label": "My base"}
+    body = _strict_json(client.post("/briefing", json={"habitat": custom}))
+    assert body["habitat"]["preset_id"] is None and body["habitat"]["label"] == "My base"
+    assert body["habitat"]["assumed"] == ["L_mm"] and body["habitat"]["L_mm"] == 10.0
+    given = _strict_json(client.post("/briefing", json={"habitat": {**LUNAR_BASE, "p_psia": 8.0}}))
+    assert given["habitat"]["assumed"] == []
+    # Fields that match a preset resolve to it.
+    assert _strict_json(client.post("/briefing", json={"habitat": LUNAR_BASE}))["habitat"]["preset_id"] == "lunar_base"
+
+
+@pytest.mark.parametrize("payload", [
+    {"habitat": "atlantis"},
+    {"habitat": {"g_m_s2": 1.62, "p_psia": 8.2}},
+    {"habitat": {**LUNAR_BASE, "o2": 2.0}},
+    {"habitat": "lunar_base", "extra": 1},
+    {},
+])
+def test_briefing_bad_body_422(client, payload):
+    _assert_problem(client.post("/briefing", json=payload), 422)
+
+
+# --------------------------------------------------------------------------- S5 atmosphere map
+
+
+def test_atmosphere_map_served_unchanged(client):
+    path = ROOT / "artifacts" / "atmosphere_map" / "M1_lunar.json"
+    body = _strict_json(client.get("/atmosphere-map/M1"))  # default gravity: lunar
+    assert body == json.loads(path.read_text(encoding="utf-8"))
+    assert len(body["cells"]) == 520 and body["gravity"]["id"] == "lunar"
+    mars = _strict_json(client.get("/atmosphere-map/m3?g=mars"))
+    assert mars["metric"] == "M3" and mars["gravity"]["id"] == "mars"
+
+
+@pytest.mark.parametrize("url", ["/atmosphere-map/M4", "/atmosphere-map/M9?g=lunar", "/atmosphere-map/M1?g=venus"])
+def test_atmosphere_map_unknown_404(client, url):
+    _assert_problem(client.get(url), 404)
+
+
+def test_atmosphere_map_missing_or_invalid_503(client, tmp_path, monkeypatch):
+    import api.main as main_mod
+
+    monkeypatch.setattr(main_mod, "ATMOSPHERE_MAP_DIR", tmp_path)
+    _assert_problem(client.get("/atmosphere-map/M1?g=orbit"), 503)
+    (tmp_path / "M1_orbit.json").write_text("not json", encoding="utf-8")
+    _assert_problem(client.get("/atmosphere-map/M1?g=orbit"), 503)
+    (tmp_path / "M1_orbit.json").write_text("[1]", encoding="utf-8")
+    _assert_problem(client.get("/atmosphere-map/M1?g=orbit"), 503)

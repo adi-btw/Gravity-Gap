@@ -32,16 +32,16 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
           Skip to content
         </a>
         <AskProvider>
-        <header className="border-b border-line bg-surface">
+        <header className="border-b border-line bg-surface print:hidden">
           <Suspense fallback={<div className="h-24" aria-hidden="true" />}>
             <SiteNav />
             <HabitatBar />
           </Suspense>
         </header>
-        <main id="main" className="mx-auto max-w-6xl px-4 py-6">
+        <main id="main" className="mx-auto max-w-6xl px-4 py-6 print:max-w-none print:p-0">
           <Suspense fallback={<p className="text-muted">Loading…</p>}>{children}</Suspense>
         </main>
-        <footer className="mx-auto max-w-6xl px-4 pb-8 pt-4 text-xs text-muted">
+        <footer className="mx-auto max-w-6xl px-4 pb-8 pt-4 text-xs text-muted print:hidden">
           Gravity Gap · NASA Space Apps 2026 · All outputs are scaling-law estimates, not measurements.
         </footer>
         </AskProvider>

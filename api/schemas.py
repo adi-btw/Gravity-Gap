@@ -163,6 +163,14 @@ class CompareIn(BaseModel):
     b: str | dict[str, Any] = Field(..., description='Habitat B: preset id (e.g. "lunar_base") or habitat fields')
 
 
+class BriefingIn(BaseModel):
+    """POST /briefing (S1): a preset id or habitat fields (optional `label`, `assumed`)."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    habitat: str | dict[str, Any] = Field(..., description='Preset id (e.g. "lunar_base") or habitat fields')
+
+
 class Problem(BaseModel):
     """RFC 7807 problem details."""
 
