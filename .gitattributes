@@ -1,0 +1,2 @@
+# Raw PSI downloads are stored byte-for-byte so their sha256 matches data/detection/manifest.json on every OS.
+data/detection/raw/** -text
