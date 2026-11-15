@@ -1,0 +1,470 @@
+{
+ "preset_id": "lunar_rover",
+ "artifact": "briefing",
+ "adr": "ADR-0010",
+ "citation": "eng:briefing",
+ "habitat": {
+  "preset_id": "lunar_rover",
+  "label": "Lunar rover",
+  "g_m_s2": 1.62,
+  "p_psia": 8.2,
+  "o2": 0.34,
+  "u_cm_s": 5.0,
+  "L_mm": 10.0,
+  "assumed": [
+   "u_cm_s",
+   "L_mm"
+  ],
+  "source": "NASA Space Apps 2026 challenge brief; NASA exploration atmosphere 8.2 psia / 34% O2 (BRE PSI-20 objectives)",
+  "line": "Lunar rover: gravity 1.62 m/s², pressure 8.2 psia, O₂ 34%, vent speed 5 cm/s (assumed), flame size 10 mm (assumed)."
+ },
+ "verdicts": [
+  {
+   "pillar": "prevention",
+   "label": "Prevention",
+   "value": "partial",
+   "rule": "evidence if M3 (gas flames) and M4 (SAFFIRE solids) are both covered at this habitat; partial if exactly one is; no evidence if neither is.",
+   "because": "M3 (gas flame self-extinction) is covered at this habitat; M4 (SAFFIRE solid-material burn extent) has no evidence here. Transfer confidence is low for M3 (the engine's own rating of how well the tests carry over to this habitat; see each metric's transfer note).",
+   "metrics": {
+    "M3": true,
+    "M4": false
+   },
+   "citations": [
+    "eng:M3",
+    "eng:M4",
+    "PSI-159",
+    "PSI-99"
+   ]
+  },
+  {
+   "pillar": "behaviour",
+   "label": "Flame behaviour",
+   "value": "partial",
+   "rule": "evidence if M1, M2 and M5 are all covered at this habitat; partial if one or two are; no evidence if none is.",
+   "because": "M1 (droplet flame self-extinction) is covered at this habitat; M2 (droplet extinction diameter) and M5 (SPICE coflow flame window) have no evidence here. Transfer confidence is low for M1 (the engine's own rating of how well the tests carry over to this habitat; see each metric's transfer note).",
+   "metrics": {
+    "M1": true,
+    "M2": false,
+    "M5": false
+   },
+   "citations": [
+    "eng:M1",
+    "eng:M2",
+    "eng:M5",
+    "PSI-107",
+    "PSI-69"
+   ]
+  },
+  {
+   "pillar": "detection",
+   "label": "Detection",
+   "value": "partial",
+   "rule": "always partial: smoke sizes were measured (SAME-R) and a simulation compares Earth gravity with microgravity (PSI-115), but there are no lunar dust data and no cited detector size sensitivity, and none of this evidence depends on the habitat's pressure or O2 (ADR-0007).",
+   "because": "Smoke particle sizes from heated spacecraft materials were measured (SAME-R, PSI-101) and one smoke-versus-dust size comparison exists (Arizona Road Dust, DAFT, PSI-47), but there are no lunar dust data and no cited source for which particle sizes detectors respond to. This evidence does not depend on the habitat's pressure or O₂. Only the PSI-115 simulation is about gravity, and it covers only Earth gravity and microgravity; 1.62 m/s² lies between them and was not simulated.",
+   "metrics": {},
+   "citations": [
+    "eng:detection",
+    "eng:detection:lunar_dust",
+    "eng:detection:detector_sensitivity",
+    "PSI-101",
+    "PSI-47",
+    "PSI-115"
+   ]
+  },
+  {
+   "pillar": "suppression",
+   "label": "Suppression",
+   "value": "no evidence",
+   "rule": "evidence if the R2 dilution curves have covered points (fraction > 0, M1 applicable) for both CO2 and helium; partial if for one of them; no evidence if for neither.",
+   "because": "No CO₂ or helium dilution point has evidence at this atmosphere: FLEX tested dilution only at lower O₂ levels.",
+   "metrics": {
+    "co2": false,
+    "he": false
+   },
+   "citations": [
+    "eng:suppression:co2",
+    "eng:suppression:he",
+    "PSI-69"
+   ]
+  }
+ ],
+ "key_numbers": [
+  {
+   "metric": "M1",
+   "label": "P(droplet flame self-extinguishes before burnout)",
+   "unit": "probability",
+   "kind": "probability",
+   "estimate": 0.20064279335457827,
+   "band90": [
+    0.007271608683920468,
+    0.7620381902167531
+   ],
+   "transfer_confidence": "low",
+   "n_train": 206,
+   "text": "M1 P(droplet flame self-extinguishes before burnout): 20.1% (90% band 0.727% to 76.2%); transfer confidence low.",
+   "citations": [
+    "eng:M1",
+    "PSI-69"
+   ]
+  },
+  {
+   "metric": "M3",
+   "label": "P(gas flame self-extinguishes vs flow-terminated)",
+   "unit": "probability",
+   "kind": "probability",
+   "estimate": 0.8722546263980915,
+   "band90": [
+    0.4835402008985605,
+    0.9899469569569669
+   ],
+   "transfer_confidence": "low",
+   "n_train": 133,
+   "text": "M3 P(gas flame self-extinguishes vs flow-terminated): 87.2% (90% band 48.4% to 99%); transfer confidence low.",
+   "citations": [
+    "eng:M3",
+    "PSI-159"
+   ]
+  }
+ ],
+ "drivers": [
+  {
+   "metric": "M1",
+   "source": "model_uncertainty",
+   "share": 0.5875,
+   "basis": "psi_data",
+   "text": "About 60% of this band comes from the model itself: 2 PSI-69 tests lie within the honesty-gate distance of this atmosphere. More tests near 34.0% O2 and 8.2 psia would shrink it the most. See Planner candidate #6.",
+   "planner_candidate": {
+    "rank": 6,
+    "metric": "M1",
+    "type": "atmosphere",
+    "g_m_s2": 3.71,
+    "p_psia": 8.2,
+    "o2": 0.34,
+    "u_cm_s": 20.0,
+    "co2": 0.0,
+    "distance": 1.8281
+   },
+   "citations": [
+    "eng:drivers:M1",
+    "eng:planner:6"
+   ]
+  },
+  {
+   "metric": "M3",
+   "source": "model_uncertainty",
+   "share": 0.5015,
+   "basis": "psi_data",
+   "text": "About 50% of this band comes from the model itself: 37 PSI-159 tests lie within the honesty-gate distance of this atmosphere. More tests near 34.0% O2 and 8.2 psia would shrink it the most. See Planner candidate #10.",
+   "planner_candidate": {
+    "rank": 10,
+    "metric": "M3",
+    "type": "atmosphere",
+    "g_m_s2": 1.62,
+    "p_psia": 8.2,
+    "o2": 0.34,
+    "u_cm_s": 10.0,
+    "co2": 0.0,
+    "distance": 0.5
+   },
+   "citations": [
+    "eng:drivers:M3",
+    "eng:planner:10"
+   ]
+  }
+ ],
+ "gaps": [
+  {
+   "kind": "metric",
+   "id": "M2",
+   "metric": "M2",
+   "label": "Extinction diameter",
+   "reason": "Extrapolation: no evidence. The query (O2 0.340, 0.56 atm, CO2 0.00, He 0.00) is more than 2 atmosphere-and-diluent-distance units from every M2 training test; the nearest tested condition is PSI-69 PSI-69:FLEX:45 at O2 0.300, 1.01 atm, CO2 0.00, He 0.00 (atmosphere and diluent distance 2.14).",
+   "nearest_distance": 2.1364,
+   "nearest_point": {
+    "o2": 0.3,
+    "p_atm": 1.01,
+    "p_psia": 14.84,
+    "investigation_id": "PSI-69",
+    "n": 2,
+    "assumed": null,
+    "co2": 0.0,
+    "he": 0.0
+   },
+   "rule_type": "distance",
+   "text": "M2 Extinction diameter: no evidence at this habitat. Nearest tested atmosphere: 30% O₂ at 14.8 psia (PSI-69, 2 tests), atmosphere distance 2.14. Rule: Covered when the habitat is within distance 2 of a tested point in O2, pressure, CO2 and helium (about +/-0.10 O2 mole fraction, a factor of ~1.8 in pressure, or +/-0.20 CO2 or helium mole fraction). A CO2- or helium-diluted habitat is compared only with tests that used that diluent. Habitat air has no CO2 or helium unless a diluent is chosen (ADR-0006).",
+   "citations": [
+    "eng:M2",
+    "PSI-69"
+   ]
+  },
+  {
+   "kind": "metric",
+   "id": "M4",
+   "metric": "M4",
+   "label": "Solid material burn extent",
+   "reason": "extrapolation, no evidence: SAFFIRE-II only tested ~22% O2 (21.5-22.1%) at ~1 atm cabin pressure and 20 cm/s flow; habitat O2 34.0% outside 20-24.0%; pressure 8.2 psia (0.56 atm) outside 0.9-1.1 atm. No estimate is given outside the tested atmosphere.",
+   "nearest_distance": 3.0735,
+   "nearest_point": {
+    "o2": 0.221,
+    "p_atm": 1.0,
+    "p_psia": 14.7,
+    "investigation_id": "PSI-99",
+    "n": 6,
+    "assumed": "pressure not in the PSI table; ~1 atm assumed"
+   },
+   "rule_type": "box",
+   "text": "M4 Solid material burn extent: no evidence at this habitat. Nearest tested atmosphere: 22.1% O₂ at 14.7 psia (PSI-99, 6 tests), atmosphere distance 3.07. That point is partly assumed: pressure not in the PSI table; ~1 atm assumed. Rule: Covered only inside the SAFFIRE-II tested box (O2 20-24%, 0.9-1.1 atm).",
+   "citations": [
+    "eng:M4",
+    "PSI-99"
+   ]
+  },
+  {
+   "kind": "metric",
+   "id": "M5",
+   "metric": "M5",
+   "label": "Supported coflow window",
+   "reason": "extrapolation, no evidence: SPICE only tested in ISS cabin air (assumed ~21% O2 / ~1 atm; the table records no atmosphere); habitat O2 34.0% outside 19-23.5%; pressure 8.2 psia (0.56 atm) outside 0.9-1.1 atm. No estimate is given outside the tested atmosphere.",
+   "nearest_distance": 3.2469,
+   "nearest_point": {
+    "o2": 0.21,
+    "p_atm": 1.0,
+    "p_psia": 14.7,
+    "investigation_id": "PSI-107",
+    "n": 431,
+    "assumed": "SPICE table records no atmosphere; ISS cabin air (~21% O2, ~1 atm) assumed"
+   },
+   "rule_type": "box",
+   "text": "M5 Supported coflow window: no evidence at this habitat. Nearest tested atmosphere: 21% O₂ at 14.7 psia (PSI-107, 431 tests), atmosphere distance 3.25. That point is partly assumed: SPICE table records no atmosphere; ISS cabin air (~21% O2, ~1 atm) assumed. Rule: Covered only inside ISS-cabin-like air (O2 19-23.5%, 0.9-1.1 atm).",
+   "citations": [
+    "eng:M5",
+    "PSI-107"
+   ]
+  },
+  {
+   "kind": "detection",
+   "id": "lunar_dust",
+   "text": "No lunar dust or lunar dust simulant data exists in these PSI files. The only dust measured (DAFT) is Arizona Road Dust. So \"could lunar dust fool a smoke detector?\" is an open question here, not an answered one.",
+   "citations": [
+    "eng:detection:lunar_dust"
+   ]
+  },
+  {
+   "kind": "detection",
+   "id": "detector_sensitivity",
+   "text": "We have no cited source for which particle sizes ionization and light-scattering smoke detectors respond to, so the page does not show detector size ranges.",
+   "citations": [
+    "eng:detection:detector_sensitivity"
+   ]
+  },
+  {
+   "kind": "suppression",
+   "id": "suppression_co2",
+   "diluent": "co2",
+   "text": "FLEX tested CO₂ dilution only between 14% and 24% O₂ (0.69-3.05 atm); at 34% O₂ and 0.56 atm there is no evidence, so no number is shown for any CO₂ fraction. An answer here needs new dilution tests at this oxygen level.",
+   "safety_note": "CO₂ at these concentrations is dangerous to breathe. Spacecraft use portable CO₂ or water-mist extinguishers aimed at the fire, not cabin flooding. This shows how dilution affected flames in NASA's tests; it is not an operating procedure.",
+   "citations": [
+    "eng:suppression:co2",
+    "PSI-69"
+   ]
+  },
+  {
+   "kind": "suppression",
+   "id": "suppression_he",
+   "diluent": "he",
+   "text": "FLEX tested helium dilution only between 13% and 24% O₂ (0.69-1.01 atm); at 34% O₂ and 0.56 atm there is no evidence, so no number is shown for any helium fraction. An answer here needs new dilution tests at this oxygen level.",
+   "safety_note": "Changing a cabin's gas mix changes what the crew breathes. This shows how helium dilution affected flames in NASA's FLEX tests; it is not an operating procedure or extinguisher guidance.",
+   "citations": [
+    "eng:suppression:he",
+    "PSI-69"
+   ]
+  }
+ ],
+ "next_tests": {
+  "rule": "Relevance = the planner's own score x its re-scoring kernel between this habitat and the candidate (atmosphere distance, gravity scale 2 m/s², vent scale 10 cm/s), in place of its three fixed target weights. A dilution candidate is a test at that cabin atmosphere with CO₂ added, so the CO₂ term is left out. Top 3 of the planner's ranked list.",
+  "items": [
+   {
+    "rank": 5,
+    "metric": "M1",
+    "type": "dilution",
+    "g_m_s2": 1.62,
+    "p_psia": 8.2,
+    "o2": 0.34,
+    "u_cm_s": 10.0,
+    "co2": 0.2,
+    "score": 0.4146327391588269,
+    "rationale": "Dilution at high O2: P(droplet flame self-extinguishes before burnout) with 20% CO2 replacing nitrogen at Moon gravity (0.165 g), 8.2 psia / 34% O2, vent 10 cm/s. FLEX tested CO2 dilution only at 14-24% O2, so the suppression calculator has no evidence here (honesty gate); 72% of physics samples are in the mixed regime, and the atmosphere is the lunar/Mars base 8.2 psia / 34% O2 target (weight 1.00). A droplet test here tells whether CO2 suppression works the same way in oxygen-enriched cabin air.",
+    "extends": [
+     "PSI-69",
+     "PSI-10",
+     "PSI-159"
+    ],
+    "kernel": 0.8825,
+    "distance": 0.5,
+    "close": true,
+    "citations": [
+     "eng:planner:5"
+    ]
+   },
+   {
+    "rank": 1,
+    "metric": "M2",
+    "type": "atmosphere",
+    "g_m_s2": 1.62,
+    "p_psia": 8.2,
+    "o2": 0.34,
+    "u_cm_s": 20.0,
+    "co2": 0.0,
+    "score": 1.0,
+    "rationale": "Extinction diameter at Moon gravity (0.165 g), 8.2 psia / 34% O2, vent 20 cm/s: there is no microgravity evidence at this atmosphere (honesty gate), 100% of physics samples are in the mixed regime where neither 0 g nor 1 g data apply, and the atmosphere is close to the lunar/Mars base 8.2 psia / 34% O2 target (weight 1.00).",
+    "extends": [
+     "PSI-69",
+     "PSI-10",
+     "PSI-159"
+    ],
+    "kernel": 0.3247,
+    "distance": 1.5,
+    "close": true,
+    "citations": [
+     "eng:planner:1"
+    ]
+   },
+   {
+    "rank": 2,
+    "metric": "M1",
+    "type": "dilution",
+    "g_m_s2": 1.62,
+    "p_psia": 8.2,
+    "o2": 0.34,
+    "u_cm_s": 20.0,
+    "co2": 0.4,
+    "score": 0.9998993612116293,
+    "rationale": "Dilution at high O2: P(droplet flame self-extinguishes before burnout) with 40% CO2 replacing nitrogen at Moon gravity (0.165 g), 8.2 psia / 34% O2, vent 20 cm/s. FLEX tested CO2 dilution only at 14-24% O2, so the suppression calculator has no evidence here (honesty gate); 100% of physics samples are in the mixed regime, and the atmosphere is the lunar/Mars base 8.2 psia / 34% O2 target (weight 1.00). A droplet test here tells whether CO2 suppression works the same way in oxygen-enriched cabin air.",
+    "extends": [
+     "PSI-69",
+     "PSI-10",
+     "PSI-159"
+    ],
+    "kernel": 0.3247,
+    "distance": 1.5,
+    "close": true,
+    "citations": [
+     "eng:planner:2"
+    ]
+   }
+  ],
+  "note": null,
+  "citations": [
+   "eng:planner:5",
+   "eng:planner:1",
+   "eng:planner:2"
+  ]
+ },
+ "history": {
+  "max_distance": 2.0,
+  "incidents_checked": 3,
+  "rule": "Closest R1 incident atmosphere by atmosphere distance (O₂ and pressure); shown only within distance 2, the same reach as the honesty gate.",
+  "status": "none_close",
+  "nearest": {
+   "id": "artemis2",
+   "name": "Artemis II smoke alarm",
+   "date": "2026-04-01",
+   "o2": 0.21,
+   "p_psia": 14.7,
+   "g_m_s2": 0.0,
+   "atmosphere_assumed": true,
+   "distance": 3.2474,
+   "citations": [
+    "eng:incident:artemis2"
+   ]
+  },
+  "close": [],
+  "text": "No replayed incident atmosphere is close to this habitat (the closest, Artemis II smoke alarm, is 21% O₂ at 14.7 psia, distance 3.25).",
+  "citations": [
+   "eng:incident:artemis2"
+  ]
+ },
+ "trust": {
+  "text": "Honesty test (ADR-0009): hiding one tested atmosphere at a time and refitting, the 90% band held for 72 of 74 M1 atmospheres and 78 of 83 M3 atmospheres under the overlap rule, which is lenient for groups of 1-3 tests. Under the strict rule (observed share inside the band) it held for 7 of 74 (M1) and 4 of 83 (M3). In the wide check (a whole 0.10 O₂ band hidden at once) M3 had only 9 covered groups, a weak test. The test ran in microgravity (0 g), so the gravity widening of partial-gravity bands is not tested by it.",
+  "metrics": {
+   "M1": {
+    "band_held": 72,
+    "n_groups": 74,
+    "interval90": [
+     0.921565,
+     0.991016
+    ],
+    "strict_held": 7,
+    "strict_n": 74,
+    "weak_test": false,
+    "wide_check_band_held": 63,
+    "wide_check_n": 67,
+    "wide_check_weak_test": false
+   },
+   "M3": {
+    "band_held": 78,
+    "n_groups": 83,
+    "interval90": [
+     0.881381,
+     0.970372
+    ],
+    "strict_held": 4,
+    "strict_n": 83,
+    "weak_test": false,
+    "wide_check_band_held": 9,
+    "wide_check_n": 9,
+    "wide_check_weak_test": true
+   }
+  },
+  "citations": [
+   "eng:holdout"
+  ]
+ },
+ "footer": {
+  "model_versions": {
+   "M1": "2a8ccd37105c",
+   "M2": "d3f1ae64f2c0",
+   "M3": "3e3a8c2d84ca",
+   "M4": "rules-m4-1.0.0+cf29fd0d386f",
+   "M5": "rules-m5-1.0.0+f744ca805556"
+  },
+  "engine_version": "0.1.0",
+  "manifest": {
+   "artifact_set_sha256": "2e978155f341403e7bf0f3f9f6d5b795ec3c76da66a766fdab2ccce90c7b524f",
+   "generated_at": "2026-11-15T00:26:58+00:00",
+   "note": "Hash of the artifact set this briefing was built with; it changes at the next manifest rebuild."
+  },
+  "generated_at": "2026-11-15T01:29:09+00:00",
+  "date": "2026-11-15",
+  "disclaimer": "Not an operating procedure. This briefing summarises what NASA's PSI test data can and cannot say about fires in this habitat; it is not a design certification or crew guidance."
+ },
+ "citations": [
+  "PSI-101",
+  "PSI-107",
+  "PSI-115",
+  "PSI-159",
+  "PSI-47",
+  "PSI-69",
+  "PSI-99",
+  "eng:M1",
+  "eng:M2",
+  "eng:M3",
+  "eng:M4",
+  "eng:M5",
+  "eng:briefing",
+  "eng:detection",
+  "eng:detection:detector_sensitivity",
+  "eng:detection:lunar_dust",
+  "eng:drivers:M1",
+  "eng:drivers:M3",
+  "eng:holdout",
+  "eng:incident:artemis2",
+  "eng:planner:1",
+  "eng:planner:10",
+  "eng:planner:2",
+  "eng:planner:5",
+  "eng:planner:6",
+  "eng:suppression:co2",
+  "eng:suppression:he"
+ ]
+}

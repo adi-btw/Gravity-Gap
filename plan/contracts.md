@@ -564,3 +564,129 @@ OVERALL = {n_groups, n_tests, n_covered, n_not_covered, n_skipped, band_coverage
 single-diameter coverage, wide-check gate numbers, SAFFIRE hindcast with its caveat), "weak test" wherever
 `weak_test` is true, the groups on the O₂ × pressure map (hit = filled, miss = hollow with a cross, not covered = grey,
 skipped = not drawn but counted), a misses table naming `psi_rows`, and the hit rules (`hit_rule`) in plain words.
+
+# Round 3 · S1 Briefing addendum (see plan/15-round-3-features.md §S1, ADR-0010)
+
+## Ownership (S1)
+| Role | Owns |
+|---|---|
+| TL | `engine/briefing.py`, `artifacts/briefing/{preset}.json`, `tests/test_briefing.py`, ADR-0010 |
+| AI | `POST /briefing`, narrative sentences (grounded template by default, optional Claude behind the validator), citable ids, cached preset briefings, manifest rebuild |
+| FE | `/briefing` page + print CSS, "Briefing" button in the habitat bar, offline from the preset artifacts |
+
+## `engine/briefing.py` (TL)
+```python
+def briefing(habitat, n=2000, seed=0, generated_at=None) -> dict   # habitat: preset id or habitat dict (+ label, assumed)
+```
+Returns (JSON-safe; `python -m engine.briefing` writes `{preset_id, ...briefing}` for the 6 presets, ~4 s):
+```
+{artifact: "briefing", adr: "ADR-0010", citation: "eng:briefing",
+ habitat: {preset_id|null, label, g_m_s2, p_psia, o2, u_cm_s, L_mm,
+           assumed: ["u_cm_s", "L_mm"],            # preset "assumed"; custom: as given, else ["L_mm"] when L_mm was omitted
+           source: str, line: str},                # "Lunar base: gravity 1.62 m/s², pressure 8.2 psia, O₂ 34%, vent speed 10 cm/s (assumed), ..."
+ verdicts: [Chip x 4],                             # order: prevention, behaviour, detection, suppression
+ key_numbers: [{metric, label, unit, kind, estimate, band90, transfer_confidence, n_train, text,
+                citations: ["eng:M1", "PSI-69"]}],  # covered metrics only, values = bounds.predict
+ drivers: [{metric, source, share, basis, text, planner_candidate|null,
+            citations: ["eng:drivers:M1", "eng:planner:6"?]}],   # covered M1-M3 only, = uncertainty.drivers(...).lever
+ gaps: [Gap],                                      # metric gaps, then detection gaps, then suppression gate notes
+ next_tests: {rule: str, note: str|null, citations,
+              items: [{rank, metric, type, g_m_s2, p_psia, o2, u_cm_s, co2, score, rationale, extends,
+                       kernel, distance, close: bool, citations: ["eng:planner:<rank>"]}]},   # ≤ 3
+ history: {status: "close"|"none_close", rule, max_distance: 2.0, incidents_checked,
+           nearest: Incident|null, close: [Incident], text, citations: ["eng:incident:<id>"]},
+ trust: {text, citations: ["eng:holdout", "eng:holdout:saffire"?],
+         metrics: {M1|M2|M3: {band_held, n_groups, interval90, strict_held, strict_n, weak_test,
+                              wide_check_band_held, wide_check_n, wide_check_weak_test}}},   # covered fitted metrics only
+ footer: {model_versions: {M1..M5}, engine_version,
+          manifest: {artifact_set_sha256|null, generated_at|null, note},
+          generated_at, date, disclaimer},          # disclaimer contains "Not an operating procedure"
+ citations: [str]}                                 # sorted union of every item's citations + "eng:briefing"
+Chip = {pillar: "prevention"|"behaviour"|"detection"|"suppression", label, value: "evidence"|"partial"|"no evidence",
+        rule: str, because: str, metrics: {M3: bool, ...} | {co2: bool, he: bool} | {}, citations: [str]}
+Gap  = {kind: "metric", id: "M2", metric, label, reason, nearest_distance, rule_type: "distance"|"box", text, citations,
+        nearest_point: {o2, p_atm, p_psia, investigation_id, n, assumed, co2?, he?} | null}
+     | {kind: "detection", id: "lunar_dust"|"detector_sensitivity", text, citations: ["eng:detection:<id>"]}
+     | {kind: "suppression", id: "suppression_co2"|"suppression_he", diluent, text (gate_note), safety_note, citations}
+Incident = {id, name, date, o2, p_psia, g_m_s2, atmosphere_assumed: bool, distance, citations}
+```
+**Chip rules** (ADR-0010, also in each chip's `rule`): Prevention = M3 + M4 (both covered → evidence, one → partial,
+none → no evidence); Flame behaviour = M1 + M2 + M5 (all → evidence, some → partial, none → no evidence); Detection =
+always partial; Suppression = CO₂ and helium R2 curves (both have covered diluted points → evidence, one → partial,
+none → no evidence). Covered = the honesty gate (`applicable`).
+
+**Wording rules:** "safest" never appears; numbers only from `key_numbers`/`gaps`/`trust`/`next_tests` fields (no
+derived numbers); no-evidence metrics are never given a number; history text describes conditions, never causes or
+blame; suppression keeps the R2 safety note; the footer disclaimer is always shown.
+
+**Citable ids** (AI must add them to `pack["citable_ids"]` when the briefing is in the pack): `eng:briefing`,
+`eng:M1`..`eng:M5`, `eng:drivers:<metric>`, `eng:planner:<rank>`, `eng:incident:<id>`, `eng:holdout`,
+`eng:holdout:saffire`, `eng:detection`, `eng:detection:lunar_dust`, `eng:detection:detector_sensitivity`,
+`eng:suppression:co2`, `eng:suppression:he`, and `PSI-xx` investigation ids. The exact set per briefing is in
+`citations`.
+
+## API (AI)
+| Method | Path | Response |
+|---|---|---|
+| POST | `/briefing` | `{habitat}` = preset id or habitat fields (`HabitatIn`, optional `label`) → `briefing(habitat)`; 422 unknown preset / invalid habitat. Offline / presets: `artifacts/briefing/{preset}.json` |
+
+## Web (FE)
+`/briefing?habitat=lunar_base` (or habitat query). Sections in the order above; chips show `value` with `because`
+and the rule on hover/disclosure; gaps listed with their text; footer fixed. One page in print (A4 and Letter).
+
+# Round 3 · S5 Atmosphere map addendum (see plan/15-round-3-features.md §S5, ADR-0011)
+
+## Ownership (S5)
+| Role | Owns |
+|---|---|
+| TL | `engine/atmosphere_map.py`, `artifacts/atmosphere_map/{metric}_{gravity}.json`, `tests/test_atmosphere_map.py`, ADR-0011 |
+| DE | `data/crew_limits.json` (sourced; schema `tests/test_crew_limits.py`) |
+| AI | `GET /atmosphere-map/{metric}?g=`, citations, cached answer "What cabin air does the evidence support?" (must state the no-evidence share) |
+| FE | `/atmospheres` heat map with hatch, markers, crew-limit toggle, click-to-load |
+
+## `engine/atmosphere_map.py` (TL)
+```python
+GRAVITIES = {"orbit": 0.0, "lunar": 1.62, "mars": 3.71, "earth": 9.81}   # m/s² (dicts with g_m_s2, label)
+def atmosphere_map(metric, gravity="lunar") -> dict    # metric M1|M2|M3; KeyError for M4/M5 or unknown gravity
+def grid(metric, g_m_s2) -> dict
+def crew_limit_overlays(path=data/crew_limits.json) -> dict
+```
+`python -m engine.atmosphere_map` writes 12 files (M1-M3 x 4 gravities, compact JSON ~85 KB each, ~1 s after fits):
+```
+{artifact: "atmosphere_map", adr: "ADR-0011", citation: "eng:atmosphere_map:M1", rule: "The map never ranks ...",
+ metric, label, unit, kind, investigation_id,
+ gravity: {id: "lunar", g_m_s2, label, u_cm_s: 10, L_mm: 10, widen_factor, regime_fractions},
+ defaults: {u_cm_s, L_mm, options, why}, what_varies: str,
+ axes: {x: {name: "o2", label, scale: "linear", values: [26]}, y: {name: "p_psia", label, scale: "log", values: [20]}},
+ gate: {max_distance: 2.0, text},
+ cells: [{i, j, o2, p_psia, covered: bool, estimate|null, band90: [lo, hi]|null, nearest_distance}],   # 520, row-major by j (pressure)
+ summary: {n_cells: 520, n_covered, evidence_share, no_evidence_share, same_for_every_gravity: true},
+ reading: str,                                       # "M1 has evidence in 370 of 520 cells (71% of this map); ..."
+ overlays: {
+   presets:   [{id, label, o2, p_psia, g_m_s2, on_map, covered, nearest_distance, citation: "eng:<metric>"}],
+   incidents: [{id, label, date, o2, p_psia, g_m_s2, atmosphere_assumed, on_map, covered, nearest_distance,
+                citation: "eng:incident:<id>"}],
+   tested:    [{o2, p_psia, n, investigation_id, on_map, co2?, he?, undiluted?}],     # engine.coverage points
+   crew_limits: {source_file, retrieved, note,
+                 drawn: [CrewLimit], not_drawn: [CrewLimit + {reason}]}},
+ rounding: "4 significant figures", model_version, generated_at}
+CrewLimit = {id, label, quantity, map_rule, citation: "eng:crew_limit:<id>", caveat|null, confidence, quote,
+             source: {title, org, id_or_number, url, page_or_section},
+             shape: "curve"|"band"|"hline"|"vline"|"tick"|"point"|"marker", role, style?, note?,
+             polyline?: [[o2, p_psia], ...] | polylines?: [[...], [...]] | point?: [o2, p_psia], formula?, exclusive?, hollow?}
+```
+Map coordinates: x = O₂ mole fraction, y = total pressure in psia (log axis). PIO₂ curves: x = PIO₂ / (p × 51.715 − 47),
+clipped to the map. `role` for the 34% / 30% lines is "program baseline" (2007, not an agency standard). 70% O₂ is in
+`not_drawn` (off the map; a lung limit, not a fire limit).
+
+**Rules:** no colour in uncovered cells (`estimate: null`); no ranking, no "best" cell, never the word "safest"; the
+evidence share is always shown; every crew line shows its source and caveat and never shares the evidence colour scale.
+Estimates and covered cells are the same in every gravity file; only `band90` changes.
+
+## API (AI)
+| Method | Path | Response |
+|---|---|---|
+| GET | `/atmosphere-map/{metric}?g=lunar` | `artifacts/atmosphere_map/{metric}_{g}.json` (g = orbit, lunar, mars, earth; default lunar); 404 unknown metric/gravity, 503 if missing |
+
+Citations: `eng:atmosphere_map:<metric>`, `eng:crew_limit:<id>` (ids from `overlays.crew_limits`), `eng:incident:<id>`,
+`eng:<metric>`.
