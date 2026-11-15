@@ -1,0 +1,122 @@
+{
+  "cleanedTests": 1710,
+  "combustionInvestigations": 24,
+  "orbitInvestigations": 19,
+  "earthInvestigations": 6,
+  "g": {
+    "moon": 1.62,
+    "mars": 3.71,
+    "earth": 9.81
+  },
+  "habitat": {
+    "p_psia": 8.2,
+    "o2": 0.34
+  },
+  "m1": {
+    "estimate": 0.20064279335457827,
+    "band90": [
+      0.012463962053841043,
+      0.6839297536218354
+    ],
+    "band0g": [
+      0.039031831205837614,
+      0.48246667475630706
+    ],
+    "widen": 1.64,
+    "confidence": "low",
+    "nTrain": 206
+  },
+  "m2": {
+    "distance": 2.14,
+    "gate": 2
+  },
+  "metrics": [
+    {
+      "metric": "M1",
+      "label": "P(droplet flame self-extinguishes before burnout)",
+      "applicable": true,
+      "estimate": 0.20064279335457827,
+      "band90": [
+        0.012463962053841043,
+        0.6839297536218354
+      ]
+    },
+    {
+      "metric": "M2",
+      "label": "Extinction diameter",
+      "applicable": false,
+      "estimate": null,
+      "band90": null
+    },
+    {
+      "metric": "M3",
+      "label": "P(gas flame self-extinguishes vs flow-terminated)",
+      "applicable": true,
+      "estimate": 0.8722546263980915,
+      "band90": [
+        0.5597213750976666,
+        0.9849158347631888
+      ]
+    },
+    {
+      "metric": "M4",
+      "label": "Solid material burn extent",
+      "applicable": false,
+      "estimate": null,
+      "band90": null
+    },
+    {
+      "metric": "M5",
+      "label": "Supported coflow window",
+      "applicable": false,
+      "estimate": null,
+      "band90": null
+    }
+  ],
+  "noEvidence": 3,
+  "trust": {
+    "held": 208,
+    "of": 222
+  },
+  "planner1": {
+    "rank": 1,
+    "g_m_s2": 1.62,
+    "p_psia": 8.2,
+    "o2": 0.34,
+    "u_cm_s": 20,
+    "metric": "M2",
+    "type": "atmosphere",
+    "co2": 0,
+    "score": 1,
+    "base_score": 1,
+    "parts": {
+      "band_width": 1,
+      "habitat_weight": 1,
+      "mixed_fraction": 1
+    },
+    "rationale": "Extinction diameter at Moon gravity (0.165 g), 8.2 psia / 34% O2, vent 20 cm/s: there is no microgravity evidence at this atmosphere (honesty gate), 100% of physics samples are in the mixed regime where neither 0 g nor 1 g data apply, and the atmosphere is close to the lunar/Mars base 8.2 psia / 34% O2 target (weight 1.00).",
+    "extends": [
+      "PSI-69",
+      "PSI-10",
+      "PSI-159"
+    ]
+  },
+  "verdicts": [
+    {
+      "label": "Prevention",
+      "value": "partial"
+    },
+    {
+      "label": "Flame behaviour",
+      "value": "partial"
+    },
+    {
+      "label": "Detection",
+      "value": "partial"
+    },
+    {
+      "label": "Suppression",
+      "value": "no evidence"
+    }
+  ]
+}

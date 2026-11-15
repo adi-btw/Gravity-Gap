@@ -1,0 +1,8 @@
+node_modules/
+out/
+dist/
+build/
+.remotion/
+.cache/
+.DS_Store
+.env
