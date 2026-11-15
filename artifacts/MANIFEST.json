@@ -1,11 +1,11 @@
 {
   "version": 1,
-  "generated_at": "2026-11-15T00:18:11+00:00",
+  "generated_at": "2026-11-15T00:26:58+00:00",
   "generated_by": "scripts/build_manifest.py",
-  "artifact_set_sha256": "2c76750f7de0fe01b5338fe0e029d2790329fe76f0235a3ed049b2e15755997c",
+  "artifact_set_sha256": "2e978155f341403e7bf0f3f9f6d5b795ec3c76da66a766fdab2ccce90c7b524f",
   "files": {
     "ai_cache.json": {
-      "sha256": "531e1a554d0786bc423425b7f040f7fff302f3e7654181eef8869cbdad926c7d",
+      "sha256": "cb485fdce4e5b014d4be31fb0985cb52eb7b5360a5ed6af6fc303a6eeaab5dee",
       "bytes": 155082
     },
     "bounds/earth_M1.json": {
@@ -153,8 +153,8 @@
       "bytes": 517
     },
     "detection.json": {
-      "sha256": "3cdf8029f12a6e2fca0b6ae93e59b5df95496b3d6c266e3d8154201555b5377f",
-      "bytes": 83571
+      "sha256": "8000963d10a3a4c63b8594b6d2802430acd8795447960e3069d904a5683afebf",
+      "bytes": 75676
     },
     "hindcast_saffire.json": {
       "sha256": "1a583b7fb4d4c0199826cde6142ec413ed8c00248eb3c3fe4cfb83c68af7e801",

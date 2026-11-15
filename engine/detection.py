@@ -667,6 +667,17 @@ def _gaps(smoke_bins: list[dict], moments: list[dict]) -> list[dict]:
     ]
 
 
+def _stable(x):
+    """Round floats to 10 significant digits so Windows and Linux builds give the same JSON."""
+    if isinstance(x, float):
+        return float(f"{x:.10g}")
+    if isinstance(x, dict):
+        return {k: _stable(v) for k, v in x.items()}
+    if isinstance(x, list):
+        return [_stable(v) for v in x]
+    return x
+
+
 def build() -> dict:
     """Assemble artifacts/detection.json in the contract shape from the committed raw files."""
     from engine import __version__
@@ -676,7 +687,7 @@ def build() -> dict:
     used = ([_raw("PSI-101", f) for _, _, f in TEM_RUNS] + [_raw("PSI-101", RESULTS_FILE)]
             + [_raw("PSI-47", DAFT_SUMMARY_FILE), _raw("PSI-47", DAFT_TABLE_FILE), _raw("PSI-115", NODE_FILE)]
             + [_raw("PSI-115", f) for f, *_ in SIM_RUNS])
-    return {
+    return _stable({
         "schema_version": SCHEMA_VERSION,
         "generated_at": dt.datetime.now(dt.UTC).replace(microsecond=0).isoformat(),
         "engine_version": __version__,
@@ -696,7 +707,7 @@ def build() -> dict:
         "smoke_runs": _smoke_runs(moments),
         "average_mass_comparison": _average_mass_comparison(moments),
         "simulation": _simulation(),
-    }
+    })
 
 
 def main() -> None:
