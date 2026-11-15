@@ -615,3 +615,45 @@ def test_detection_artifact_missing_still_safe(answer_mod, tmp_path, monkeypatch
 def test_demo_questions_include_detection(answer_mod):
     qs = dict(answer_mod.DEMO_QUESTIONS)
     assert DUST_Q in qs and SMOKE_Q in qs
+
+
+# --------------------------------------------------------------------------- S4 habitat compare
+
+COMPARE_Q = "What changes between ISS and the lunar base?"
+
+
+def test_compare_detection_of_intent():
+    from engine.ai import context as ctx
+
+    assert ctx.preset_mentions(COMPARE_Q) == ["iss", "lunar_base"]
+    assert ctx.wants_compare(COMPARE_Q)
+    assert not ctx.wants_compare("Is the lunar rover safer with the fans off?")
+    assert not ctx.wants_compare("Why is the lunar base in the mixed regime?")
+    assert ctx.wants_compare("Tell me more", ["eng:compare"])
+
+
+def test_demo_questions_include_compare(answer_mod):
+    assert dict(answer_mod.DEMO_QUESTIONS).get(COMPARE_Q) == "lunar_base"
+
+
+def test_compare_answer_grounded_and_validated(answer_mod):
+    res = answer_mod.ask(COMPARE_Q, "lunar_base", use_cache=False, allow_claude=False)
+    assert res["mode"] == "template" and res["intent"] == "compare"
+    assert res["validated"], res["validation"]["errors"]
+    assert {"eng:compare", "eng:compare:M1", "eng:compare:M2"} <= set(res["citations"])
+    md = res["answer_markdown"]
+    assert "M2, M4 and M5 lose their evidence at Lunar base" in md
+    assert "No difference shown: Lunar base has no evidence for M2." in md
+    assert "M1 goes from 93.9% to 20.1%" in md
+
+
+def test_compare_cite_ids_only_for_present_metrics():
+    from engine.ai import context as ctx
+
+    pack = ctx.build_context("lunar_base", question=COMPARE_Q)
+    assert pack["compare"]["a"]["preset_id"] == "iss" and pack["compare"]["b"]["preset_id"] == "lunar_base"
+    ids = {c for c in pack["citable_ids"] if c.startswith("eng:compare")}
+    assert ids == {"eng:compare", *(f"eng:compare:{m}" for m in pack["compare"]["metrics"])}
+    assert not validate("See [eng:compare:M9].", pack)["ok"]
+    plain = ctx.build_context("lunar_base", question="Why is the lunar base in the mixed regime?")
+    assert plain["compare"] is None and not any(c.startswith("eng:compare") for c in plain["citable_ids"])

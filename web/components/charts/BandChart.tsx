@@ -10,6 +10,8 @@ export interface BandPoint {
   fill: string;
   /** Text shown on hover/focus (e.g. evidence trace). */
   trace?: string;
+  /** Text drawn in a column with no estimate and no band (default "no basis"). */
+  emptyLabel?: string;
 }
 
 interface Props {
@@ -107,7 +109,7 @@ export function BandChart({ points, unit, domain, ariaLabel }: Props) {
             ) : null}
             {!has ? (
               <text x={x} y={(M.t + H - M.b) / 2} fontSize={11} textAnchor="middle" fill="var(--muted)">
-                no basis
+                {p.emptyLabel ?? "no basis"}
               </text>
             ) : null}
             <text x={x} y={H - M.b + 18} fontSize={12} textAnchor="middle" fill={p.color} fontWeight={600}>

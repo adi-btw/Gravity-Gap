@@ -1,0 +1,1520 @@
+{
+ "generated_by": "python -c engine.compare.compare(a, b) for preset pairs (S4 parity fixture)",
+ "pairs": {
+  "iss__lunar_base": {
+   "a": {
+    "preset_id": "iss",
+    "label": "ISS",
+    "g_m_s2": 0.0,
+    "p_psia": 14.7,
+    "o2": 0.21,
+    "u_cm_s": 10.0,
+    "L_mm": 10.0
+   },
+   "b": {
+    "preset_id": "lunar_base",
+    "label": "Lunar base",
+    "g_m_s2": 1.62,
+    "p_psia": 8.2,
+    "o2": 0.34,
+    "u_cm_s": 10.0,
+    "L_mm": 10.0
+   },
+   "inputs_diff": [
+    {
+     "field": "g_m_s2",
+     "label": "gravity",
+     "unit": "m/s²",
+     "a": 0.0,
+     "b": 1.62
+    },
+    {
+     "field": "p_psia",
+     "label": "pressure",
+     "unit": "psia",
+     "a": 14.7,
+     "b": 8.2
+    },
+    {
+     "field": "o2",
+     "label": "O₂",
+     "unit": "%",
+     "a": 0.21,
+     "b": 0.34
+    }
+   ],
+   "metrics": [
+    {
+     "metric": "M1",
+     "label": "P(droplet flame self-extinguishes before burnout)",
+     "unit": "probability",
+     "kind": "probability",
+     "a": {
+      "applicable": true,
+      "reason": null,
+      "estimate": 0.9387076846641129,
+      "band90": [
+       0.824689835800796,
+       0.9815051044685926
+      ],
+      "regime_fractions": {
+       "forced": 1.0,
+       "mixed": 0.0,
+       "buoyant": 0.0
+      },
+      "transfer": {
+       "basis": "Orbit (0 g): no buoyancy, so the microgravity tests match this case directly. The droplet and spherical-burner tests were run in microgravity with no imposed flow; the band is the model band, not widened.",
+       "confidence": "high"
+      },
+      "n_train": 206,
+      "model_version": "2a8ccd37105c",
+      "regime": "forced"
+     },
+     "b": {
+      "applicable": true,
+      "reason": null,
+      "estimate": 0.20064279335457827,
+      "band90": [
+       0.012463962053841043,
+       0.6839297536218354
+      ],
+      "regime_fractions": {
+       "forced": 0.0,
+       "mixed": 0.7165,
+       "buoyant": 0.2835
+      },
+      "transfer": {
+       "basis": "At 1.62 m/s^2 the Monte Carlo puts the flame 0% forced-flow, 72% mixed and 28% buoyancy-dominated. The droplet and spherical-burner tests were run in microgravity with no imposed flow, so gravity does not change the estimate; the 90% band is widened x1.64 to cover buoyancy the tests did not have (transfer confidence low). No 1 g reference: these investigations have no normal-gravity counterpart in the PSI data.",
+       "confidence": "low"
+      },
+      "n_train": 206,
+      "model_version": "2a8ccd37105c",
+      "regime": "mixed"
+     },
+     "diff": {
+      "regime": {
+       "a": "forced",
+       "b": "mixed",
+       "changed": true
+      },
+      "coverage": {
+       "a": true,
+       "b": true,
+       "change": "both"
+      },
+      "estimate": {
+       "a": 0.9387076846641129,
+       "b": 0.20064279335457827,
+       "delta": -0.7380648913095347,
+       "direction": "lower"
+      },
+      "estimate_note": null,
+      "band_width": {
+       "a": 0.1568152686677966,
+       "b": 0.6714657915679944,
+       "direction": "wider"
+      }
+     }
+    },
+    {
+     "metric": "M2",
+     "label": "Extinction diameter",
+     "unit": "mm",
+     "kind": "quantity",
+     "a": {
+      "applicable": true,
+      "reason": null,
+      "estimate": 4.003825654706249,
+      "band90": [
+       2.553599868709032,
+       4.338216017632628
+      ],
+      "regime_fractions": {
+       "forced": 1.0,
+       "mixed": 0.0,
+       "buoyant": 0.0
+      },
+      "transfer": {
+       "basis": "Orbit (0 g): no buoyancy, so the microgravity tests match this case directly. The droplet and spherical-burner tests were run in microgravity with no imposed flow; the band is the model band, not widened.",
+       "confidence": "high"
+      },
+      "n_train": 158,
+      "model_version": "d3f1ae64f2c0",
+      "regime": "forced"
+     },
+     "b": {
+      "applicable": false,
+      "reason": "Extrapolation: no evidence. The query (O2 0.340, 0.56 atm, CO2 0.00, He 0.00) is more than 2 atmosphere-and-diluent-distance units from every M2 training test; the nearest tested condition is PSI-69 PSI-69:FLEX:45 at O2 0.300, 1.01 atm, CO2 0.00, He 0.00 (atmosphere and diluent distance 2.14).",
+      "estimate": null,
+      "band90": null,
+      "regime_fractions": {
+       "forced": 0.0,
+       "mixed": 0.7165,
+       "buoyant": 0.2835
+      },
+      "transfer": {
+       "basis": "No estimate: outside the tested atmosphere range.",
+       "confidence": "low"
+      },
+      "n_train": 158,
+      "model_version": "d3f1ae64f2c0",
+      "regime": "mixed"
+     },
+     "diff": {
+      "regime": {
+       "a": "forced",
+       "b": "mixed",
+       "changed": true
+      },
+      "coverage": {
+       "a": true,
+       "b": false,
+       "change": "lost"
+      },
+      "estimate": null,
+      "estimate_note": "No difference shown: Lunar base has no evidence for M2.",
+      "band_width": null
+     }
+    },
+    {
+     "metric": "M3",
+     "label": "P(gas flame self-extinguishes vs flow-terminated)",
+     "unit": "probability",
+     "kind": "probability",
+     "a": {
+      "applicable": true,
+      "reason": null,
+      "estimate": 0.9718810570690523,
+      "band90": [
+       0.9450496088743562,
+       0.9909464112421233
+      ],
+      "regime_fractions": {
+       "forced": 1.0,
+       "mixed": 0.0,
+       "buoyant": 0.0
+      },
+      "transfer": {
+       "basis": "Orbit (0 g): no buoyancy, so the microgravity tests match this case directly. The droplet and spherical-burner tests were run in microgravity with no imposed flow; the band is the model band, not widened.",
+       "confidence": "high"
+      },
+      "n_train": 133,
+      "model_version": "3e3a8c2d84ca",
+      "regime": "forced"
+     },
+     "b": {
+      "applicable": true,
+      "reason": null,
+      "estimate": 0.8722546263980915,
+      "band90": [
+       0.5597213750976666,
+       0.9849158347631888
+      ],
+      "regime_fractions": {
+       "forced": 0.0,
+       "mixed": 0.7165,
+       "buoyant": 0.2835
+      },
+      "transfer": {
+       "basis": "At 1.62 m/s^2 the Monte Carlo puts the flame 0% forced-flow, 72% mixed and 28% buoyancy-dominated. The droplet and spherical-burner tests were run in microgravity with no imposed flow, so gravity does not change the estimate; the 90% band is widened x1.64 to cover buoyancy the tests did not have (transfer confidence low). No 1 g reference: these investigations have no normal-gravity counterpart in the PSI data.",
+       "confidence": "low"
+      },
+      "n_train": 133,
+      "model_version": "3e3a8c2d84ca",
+      "regime": "mixed"
+     },
+     "diff": {
+      "regime": {
+       "a": "forced",
+       "b": "mixed",
+       "changed": true
+      },
+      "coverage": {
+       "a": true,
+       "b": true,
+       "change": "both"
+      },
+      "estimate": {
+       "a": 0.9718810570690523,
+       "b": 0.8722546263980915,
+       "delta": -0.09962643067096077,
+       "direction": "lower"
+      },
+      "estimate_note": null,
+      "band_width": {
+       "a": 0.045896802367767164,
+       "b": 0.42519445966552216,
+       "direction": "wider"
+      }
+     }
+    },
+    {
+     "metric": "M4",
+     "label": "Solid material burn extent",
+     "unit": "category",
+     "kind": "category",
+     "a": {
+      "applicable": true,
+      "reason": null,
+      "estimate": "complete_burn",
+      "band90": [
+       "complete_burn",
+       "complete_burn"
+      ],
+      "regime_fractions": {
+       "forced": 1.0,
+       "mixed": 0.0,
+       "buoyant": 0.0
+      },
+      "transfer": {
+       "basis": "forced-flow dominated (100%); microgravity outcome at u_eff 10.0 cm/s; low-confidence material (footnoted / mixed-material samples or 'any' envelope). any SAFFIRE-II material (most severe): microgravity complete_burn, 1 g complete_burn (n=9, SAFFIRE-II at 20 cm/s)",
+       "confidence": "low"
+      },
+      "n_train": 9,
+      "model_version": "rules-m4-1.0.0+cf29fd0d386f",
+      "regime": "forced"
+     },
+     "b": {
+      "applicable": false,
+      "reason": "extrapolation, no evidence: SAFFIRE-II only tested ~22% O2 (21.5-22.1%) at ~1 atm cabin pressure and 20 cm/s flow; habitat O2 34.0% outside 20-24.0%; pressure 8.2 psia (0.56 atm) outside 0.9-1.1 atm. No estimate is given outside the tested atmosphere.",
+      "estimate": null,
+      "band90": null,
+      "regime_fractions": {
+       "forced": 0.0,
+       "mixed": 0.7165,
+       "buoyant": 0.2835
+      },
+      "transfer": {
+       "basis": "no transfer: habitat atmosphere outside the SAFFIRE-II test atmosphere (lunar/exploration 34% O2 / 8.2 psia is untested)",
+       "confidence": "low"
+      },
+      "n_train": 9,
+      "model_version": "rules-m4-1.0.0+cf29fd0d386f",
+      "regime": "mixed"
+     },
+     "diff": {
+      "regime": {
+       "a": "forced",
+       "b": "mixed",
+       "changed": true
+      },
+      "coverage": {
+       "a": true,
+       "b": false,
+       "change": "lost"
+      },
+      "estimate": null,
+      "estimate_note": "No difference shown: Lunar base has no evidence for M4.",
+      "band_width": null
+     }
+    },
+    {
+     "metric": "M5",
+     "label": "Supported coflow window",
+     "unit": "fraction",
+     "kind": "probability",
+     "a": {
+      "applicable": true,
+      "reason": null,
+      "estimate": 1.0,
+      "band90": [
+       0.0,
+       1.0
+      ],
+      "regime_fractions": {
+       "forced": 1.0,
+       "mixed": 0.0,
+       "buoyant": 0.0
+      },
+      "transfer": {
+       "basis": "forced-flow dominated (100%): coflow evidence transfers. SPICE flames observed at coflow 0.66-85.28 cm/s for all fuels, all nozzles (n=407 ignited rows; LOS / negative-flow rows excluded); SPICE has no O2 or pressure in its table, so the atmosphere is unknown (ISS cabin air assumed). ref_1g is the bridge model at g = 9.81 (no 1 g SPICE data)",
+       "confidence": "medium"
+      },
+      "n_train": 407,
+      "model_version": "rules-m5-1.0.0+f744ca805556",
+      "regime": "forced"
+     },
+     "b": {
+      "applicable": false,
+      "reason": "extrapolation, no evidence: SPICE only tested in ISS cabin air (assumed ~21% O2 / ~1 atm; the table records no atmosphere); habitat O2 34.0% outside 19-23.5%; pressure 8.2 psia (0.56 atm) outside 0.9-1.1 atm. No estimate is given outside the tested atmosphere.",
+      "estimate": null,
+      "band90": null,
+      "regime_fractions": {
+       "forced": 0.0,
+       "mixed": 0.7165,
+       "buoyant": 0.2835
+      },
+      "transfer": {
+       "basis": "no transfer: SPICE flames observed at coflow 0.66-85.28 cm/s for all fuels, all nozzles (n=407 ignited rows; LOS / negative-flow rows excluded); SPICE has no O2 or pressure in its table, so the atmosphere is unknown (ISS cabin air assumed)",
+       "confidence": "low"
+      },
+      "n_train": 407,
+      "model_version": "rules-m5-1.0.0+f744ca805556",
+      "regime": "mixed"
+     },
+     "diff": {
+      "regime": {
+       "a": "forced",
+       "b": "mixed",
+       "changed": true
+      },
+      "coverage": {
+       "a": true,
+       "b": false,
+       "change": "lost"
+      },
+      "estimate": null,
+      "estimate_note": "No difference shown: Lunar base has no evidence for M5.",
+      "band_width": null
+     }
+    }
+   ],
+   "summary": "Moving from ISS to Lunar base changes gravity 0 m/s² → 1.62 m/s², pressure 14.7 psia → 8.2 psia and O₂ 21% → 34%. The flame regime changes from forced flow to mixed for every metric. M2, M4 and M5 lose their evidence at Lunar base (no estimate there). Where both sides have evidence, M1 goes from 93.9% to 20.1% and M3 goes from 97.2% to 87.2%. The 90% band is wider at Lunar base for M1 and M3.",
+   "model_versions": {
+    "M1": "2a8ccd37105c",
+    "M2": "d3f1ae64f2c0",
+    "M3": "3e3a8c2d84ca",
+    "M4": "rules-m4-1.0.0+cf29fd0d386f",
+    "M5": "rules-m5-1.0.0+f744ca805556"
+   }
+  },
+  "exploration__iss": {
+   "a": {
+    "preset_id": "exploration",
+    "label": "Exploration vehicle",
+    "g_m_s2": 0.0,
+    "p_psia": 10.2,
+    "o2": 0.265,
+    "u_cm_s": 10.0,
+    "L_mm": 10.0
+   },
+   "b": {
+    "preset_id": "iss",
+    "label": "ISS",
+    "g_m_s2": 0.0,
+    "p_psia": 14.7,
+    "o2": 0.21,
+    "u_cm_s": 10.0,
+    "L_mm": 10.0
+   },
+   "inputs_diff": [
+    {
+     "field": "p_psia",
+     "label": "pressure",
+     "unit": "psia",
+     "a": 10.2,
+     "b": 14.7
+    },
+    {
+     "field": "o2",
+     "label": "O₂",
+     "unit": "%",
+     "a": 0.265,
+     "b": 0.21
+    }
+   ],
+   "metrics": [
+    {
+     "metric": "M1",
+     "label": "P(droplet flame self-extinguishes before burnout)",
+     "unit": "probability",
+     "kind": "probability",
+     "a": {
+      "applicable": true,
+      "reason": null,
+      "estimate": 0.6977943375373291,
+      "band90": [
+       0.38728921860880583,
+       0.8787640977587361
+      ],
+      "regime_fractions": {
+       "forced": 1.0,
+       "mixed": 0.0,
+       "buoyant": 0.0
+      },
+      "transfer": {
+       "basis": "Orbit (0 g): no buoyancy, so the microgravity tests match this case directly. The droplet and spherical-burner tests were run in microgravity with no imposed flow; the band is the model band, not widened.",
+       "confidence": "high"
+      },
+      "n_train": 206,
+      "model_version": "2a8ccd37105c",
+      "regime": "forced"
+     },
+     "b": {
+      "applicable": true,
+      "reason": null,
+      "estimate": 0.9387076846641129,
+      "band90": [
+       0.824689835800796,
+       0.9815051044685926
+      ],
+      "regime_fractions": {
+       "forced": 1.0,
+       "mixed": 0.0,
+       "buoyant": 0.0
+      },
+      "transfer": {
+       "basis": "Orbit (0 g): no buoyancy, so the microgravity tests match this case directly. The droplet and spherical-burner tests were run in microgravity with no imposed flow; the band is the model band, not widened.",
+       "confidence": "high"
+      },
+      "n_train": 206,
+      "model_version": "2a8ccd37105c",
+      "regime": "forced"
+     },
+     "diff": {
+      "regime": {
+       "a": "forced",
+       "b": "forced",
+       "changed": false
+      },
+      "coverage": {
+       "a": true,
+       "b": true,
+       "change": "both"
+      },
+      "estimate": {
+       "a": 0.6977943375373291,
+       "b": 0.9387076846641129,
+       "delta": 0.2409133471267838,
+       "direction": "higher"
+      },
+      "estimate_note": null,
+      "band_width": {
+       "a": 0.49147487914993027,
+       "b": 0.1568152686677966,
+       "direction": "narrower"
+      }
+     }
+    },
+    {
+     "metric": "M2",
+     "label": "Extinction diameter",
+     "unit": "mm",
+     "kind": "quantity",
+     "a": {
+      "applicable": true,
+      "reason": null,
+      "estimate": 3.3785930937600455,
+      "band90": [
+       2.0085115384116983,
+       4.118660066038408
+      ],
+      "regime_fractions": {
+       "forced": 1.0,
+       "mixed": 0.0,
+       "buoyant": 0.0
+      },
+      "transfer": {
+       "basis": "Orbit (0 g): no buoyancy, so the microgravity tests match this case directly. The droplet and spherical-burner tests were run in microgravity with no imposed flow; the band is the model band, not widened.",
+       "confidence": "high"
+      },
+      "n_train": 158,
+      "model_version": "d3f1ae64f2c0",
+      "regime": "forced"
+     },
+     "b": {
+      "applicable": true,
+      "reason": null,
+      "estimate": 4.003825654706249,
+      "band90": [
+       2.553599868709032,
+       4.338216017632628
+      ],
+      "regime_fractions": {
+       "forced": 1.0,
+       "mixed": 0.0,
+       "buoyant": 0.0
+      },
+      "transfer": {
+       "basis": "Orbit (0 g): no buoyancy, so the microgravity tests match this case directly. The droplet and spherical-burner tests were run in microgravity with no imposed flow; the band is the model band, not widened.",
+       "confidence": "high"
+      },
+      "n_train": 158,
+      "model_version": "d3f1ae64f2c0",
+      "regime": "forced"
+     },
+     "diff": {
+      "regime": {
+       "a": "forced",
+       "b": "forced",
+       "changed": false
+      },
+      "coverage": {
+       "a": true,
+       "b": true,
+       "change": "both"
+      },
+      "estimate": {
+       "a": 3.3785930937600455,
+       "b": 4.003825654706249,
+       "delta": 0.6252325609462037,
+       "direction": "higher"
+      },
+      "estimate_note": null,
+      "band_width": {
+       "a": 2.1101485276267096,
+       "b": 1.7846161489235959,
+       "direction": "narrower"
+      }
+     }
+    },
+    {
+     "metric": "M3",
+     "label": "P(gas flame self-extinguishes vs flow-terminated)",
+     "unit": "probability",
+     "kind": "probability",
+     "a": {
+      "applicable": true,
+      "reason": null,
+      "estimate": 0.9468340193869326,
+      "band90": [
+       0.884260897363689,
+       0.9847973814448931
+      ],
+      "regime_fractions": {
+       "forced": 1.0,
+       "mixed": 0.0,
+       "buoyant": 0.0
+      },
+      "transfer": {
+       "basis": "Orbit (0 g): no buoyancy, so the microgravity tests match this case directly. The droplet and spherical-burner tests were run in microgravity with no imposed flow; the band is the model band, not widened.",
+       "confidence": "high"
+      },
+      "n_train": 133,
+      "model_version": "3e3a8c2d84ca",
+      "regime": "forced"
+     },
+     "b": {
+      "applicable": true,
+      "reason": null,
+      "estimate": 0.9718810570690523,
+      "band90": [
+       0.9450496088743562,
+       0.9909464112421233
+      ],
+      "regime_fractions": {
+       "forced": 1.0,
+       "mixed": 0.0,
+       "buoyant": 0.0
+      },
+      "transfer": {
+       "basis": "Orbit (0 g): no buoyancy, so the microgravity tests match this case directly. The droplet and spherical-burner tests were run in microgravity with no imposed flow; the band is the model band, not widened.",
+       "confidence": "high"
+      },
+      "n_train": 133,
+      "model_version": "3e3a8c2d84ca",
+      "regime": "forced"
+     },
+     "diff": {
+      "regime": {
+       "a": "forced",
+       "b": "forced",
+       "changed": false
+      },
+      "coverage": {
+       "a": true,
+       "b": true,
+       "change": "both"
+      },
+      "estimate": {
+       "a": 0.9468340193869326,
+       "b": 0.9718810570690523,
+       "delta": 0.02504703768211969,
+       "direction": "higher"
+      },
+      "estimate_note": null,
+      "band_width": {
+       "a": 0.10053648408120419,
+       "b": 0.045896802367767164,
+       "direction": "narrower"
+      }
+     }
+    },
+    {
+     "metric": "M4",
+     "label": "Solid material burn extent",
+     "unit": "category",
+     "kind": "category",
+     "a": {
+      "applicable": false,
+      "reason": "extrapolation, no evidence: SAFFIRE-II only tested ~22% O2 (21.5-22.1%) at ~1 atm cabin pressure and 20 cm/s flow; habitat O2 26.5% outside 20-24.0%; pressure 10.2 psia (0.69 atm) outside 0.9-1.1 atm. No estimate is given outside the tested atmosphere.",
+      "estimate": null,
+      "band90": null,
+      "regime_fractions": {
+       "forced": 1.0,
+       "mixed": 0.0,
+       "buoyant": 0.0
+      },
+      "transfer": {
+       "basis": "no transfer: habitat atmosphere outside the SAFFIRE-II test atmosphere (lunar/exploration 34% O2 / 8.2 psia is untested)",
+       "confidence": "low"
+      },
+      "n_train": 9,
+      "model_version": "rules-m4-1.0.0+cf29fd0d386f",
+      "regime": "forced"
+     },
+     "b": {
+      "applicable": true,
+      "reason": null,
+      "estimate": "complete_burn",
+      "band90": [
+       "complete_burn",
+       "complete_burn"
+      ],
+      "regime_fractions": {
+       "forced": 1.0,
+       "mixed": 0.0,
+       "buoyant": 0.0
+      },
+      "transfer": {
+       "basis": "forced-flow dominated (100%); microgravity outcome at u_eff 10.0 cm/s; low-confidence material (footnoted / mixed-material samples or 'any' envelope). any SAFFIRE-II material (most severe): microgravity complete_burn, 1 g complete_burn (n=9, SAFFIRE-II at 20 cm/s)",
+       "confidence": "low"
+      },
+      "n_train": 9,
+      "model_version": "rules-m4-1.0.0+cf29fd0d386f",
+      "regime": "forced"
+     },
+     "diff": {
+      "regime": {
+       "a": "forced",
+       "b": "forced",
+       "changed": false
+      },
+      "coverage": {
+       "a": false,
+       "b": true,
+       "change": "gained"
+      },
+      "estimate": null,
+      "estimate_note": "No difference shown: Exploration vehicle has no evidence for M4.",
+      "band_width": null
+     }
+    },
+    {
+     "metric": "M5",
+     "label": "Supported coflow window",
+     "unit": "fraction",
+     "kind": "probability",
+     "a": {
+      "applicable": false,
+      "reason": "extrapolation, no evidence: SPICE only tested in ISS cabin air (assumed ~21% O2 / ~1 atm; the table records no atmosphere); habitat O2 26.5% outside 19-23.5%; pressure 10.2 psia (0.69 atm) outside 0.9-1.1 atm. No estimate is given outside the tested atmosphere.",
+      "estimate": null,
+      "band90": null,
+      "regime_fractions": {
+       "forced": 1.0,
+       "mixed": 0.0,
+       "buoyant": 0.0
+      },
+      "transfer": {
+       "basis": "no transfer: SPICE flames observed at coflow 0.66-85.28 cm/s for all fuels, all nozzles (n=407 ignited rows; LOS / negative-flow rows excluded); SPICE has no O2 or pressure in its table, so the atmosphere is unknown (ISS cabin air assumed)",
+       "confidence": "low"
+      },
+      "n_train": 407,
+      "model_version": "rules-m5-1.0.0+f744ca805556",
+      "regime": "forced"
+     },
+     "b": {
+      "applicable": true,
+      "reason": null,
+      "estimate": 1.0,
+      "band90": [
+       0.0,
+       1.0
+      ],
+      "regime_fractions": {
+       "forced": 1.0,
+       "mixed": 0.0,
+       "buoyant": 0.0
+      },
+      "transfer": {
+       "basis": "forced-flow dominated (100%): coflow evidence transfers. SPICE flames observed at coflow 0.66-85.28 cm/s for all fuels, all nozzles (n=407 ignited rows; LOS / negative-flow rows excluded); SPICE has no O2 or pressure in its table, so the atmosphere is unknown (ISS cabin air assumed). ref_1g is the bridge model at g = 9.81 (no 1 g SPICE data)",
+       "confidence": "medium"
+      },
+      "n_train": 407,
+      "model_version": "rules-m5-1.0.0+f744ca805556",
+      "regime": "forced"
+     },
+     "diff": {
+      "regime": {
+       "a": "forced",
+       "b": "forced",
+       "changed": false
+      },
+      "coverage": {
+       "a": false,
+       "b": true,
+       "change": "gained"
+      },
+      "estimate": null,
+      "estimate_note": "No difference shown: Exploration vehicle has no evidence for M5.",
+      "band_width": null
+     }
+    }
+   ],
+   "summary": "Moving from Exploration vehicle to ISS changes pressure 10.2 psia → 14.7 psia and O₂ 26.5% → 21%. M4 and M5 gain evidence at ISS. Where both sides have evidence, M1 goes from 69.8% to 93.9%, M2 goes from 3.38 mm to 4 mm and M3 goes from 94.7% to 97.2%. The 90% band is narrower at ISS for M1, M2 and M3.",
+   "model_versions": {
+    "M1": "2a8ccd37105c",
+    "M2": "d3f1ae64f2c0",
+    "M3": "3e3a8c2d84ca",
+    "M4": "rules-m4-1.0.0+cf29fd0d386f",
+    "M5": "rules-m5-1.0.0+f744ca805556"
+   }
+  },
+  "iss__earth": {
+   "a": {
+    "preset_id": "iss",
+    "label": "ISS",
+    "g_m_s2": 0.0,
+    "p_psia": 14.7,
+    "o2": 0.21,
+    "u_cm_s": 10.0,
+    "L_mm": 10.0
+   },
+   "b": {
+    "preset_id": "earth",
+    "label": "Earth reference",
+    "g_m_s2": 9.81,
+    "p_psia": 14.7,
+    "o2": 0.21,
+    "u_cm_s": 0.0,
+    "L_mm": 10.0
+   },
+   "inputs_diff": [
+    {
+     "field": "g_m_s2",
+     "label": "gravity",
+     "unit": "m/s²",
+     "a": 0.0,
+     "b": 9.81
+    },
+    {
+     "field": "u_cm_s",
+     "label": "vent speed",
+     "unit": "cm/s",
+     "a": 10.0,
+     "b": 0.0
+    }
+   ],
+   "metrics": [
+    {
+     "metric": "M1",
+     "label": "P(droplet flame self-extinguishes before burnout)",
+     "unit": "probability",
+     "kind": "probability",
+     "a": {
+      "applicable": true,
+      "reason": null,
+      "estimate": 0.9387076846641129,
+      "band90": [
+       0.824689835800796,
+       0.9815051044685926
+      ],
+      "regime_fractions": {
+       "forced": 1.0,
+       "mixed": 0.0,
+       "buoyant": 0.0
+      },
+      "transfer": {
+       "basis": "Orbit (0 g): no buoyancy, so the microgravity tests match this case directly. The droplet and spherical-burner tests were run in microgravity with no imposed flow; the band is the model band, not widened.",
+       "confidence": "high"
+      },
+      "n_train": 206,
+      "model_version": "2a8ccd37105c",
+      "regime": "forced"
+     },
+     "b": {
+      "applicable": true,
+      "reason": null,
+      "estimate": 0.9387076846641129,
+      "band90": [
+       0.5909880736403552,
+       0.9945913650485357
+      ],
+      "regime_fractions": {
+       "forced": 0.0,
+       "mixed": 0.0,
+       "buoyant": 1.0
+      },
+      "transfer": {
+       "basis": "At 9.81 m/s^2 the Monte Carlo puts the flame 0% forced-flow, 0% mixed and 100% buoyancy-dominated. The droplet and spherical-burner tests were run in microgravity with no imposed flow, so gravity does not change the estimate; the 90% band is widened x2.00 to cover buoyancy the tests did not have (transfer confidence low). No 1 g reference: these investigations have no normal-gravity counterpart in the PSI data.",
+       "confidence": "low"
+      },
+      "n_train": 206,
+      "model_version": "2a8ccd37105c",
+      "regime": "buoyant"
+     },
+     "diff": {
+      "regime": {
+       "a": "forced",
+       "b": "buoyant",
+       "changed": true
+      },
+      "coverage": {
+       "a": true,
+       "b": true,
+       "change": "both"
+      },
+      "estimate": {
+       "a": 0.9387076846641129,
+       "b": 0.9387076846641129,
+       "delta": 0.0,
+       "direction": "same"
+      },
+      "estimate_note": null,
+      "band_width": {
+       "a": 0.1568152686677966,
+       "b": 0.4036032914081805,
+       "direction": "wider"
+      }
+     }
+    },
+    {
+     "metric": "M2",
+     "label": "Extinction diameter",
+     "unit": "mm",
+     "kind": "quantity",
+     "a": {
+      "applicable": true,
+      "reason": null,
+      "estimate": 4.003825654706249,
+      "band90": [
+       2.553599868709032,
+       4.338216017632628
+      ],
+      "regime_fractions": {
+       "forced": 1.0,
+       "mixed": 0.0,
+       "buoyant": 0.0
+      },
+      "transfer": {
+       "basis": "Orbit (0 g): no buoyancy, so the microgravity tests match this case directly. The droplet and spherical-burner tests were run in microgravity with no imposed flow; the band is the model band, not widened.",
+       "confidence": "high"
+      },
+      "n_train": 158,
+      "model_version": "d3f1ae64f2c0",
+      "regime": "forced"
+     },
+     "b": {
+      "applicable": true,
+      "reason": null,
+      "estimate": 4.003825654706249,
+      "band90": [
+       1.1033740827118148,
+       4.672606380559007
+      ],
+      "regime_fractions": {
+       "forced": 0.0,
+       "mixed": 0.0,
+       "buoyant": 1.0
+      },
+      "transfer": {
+       "basis": "At 9.81 m/s^2 the Monte Carlo puts the flame 0% forced-flow, 0% mixed and 100% buoyancy-dominated. The droplet and spherical-burner tests were run in microgravity with no imposed flow, so gravity does not change the estimate; the 90% band is widened x2.00 to cover buoyancy the tests did not have (transfer confidence low). No 1 g reference: these investigations have no normal-gravity counterpart in the PSI data.",
+       "confidence": "low"
+      },
+      "n_train": 158,
+      "model_version": "d3f1ae64f2c0",
+      "regime": "buoyant"
+     },
+     "diff": {
+      "regime": {
+       "a": "forced",
+       "b": "buoyant",
+       "changed": true
+      },
+      "coverage": {
+       "a": true,
+       "b": true,
+       "change": "both"
+      },
+      "estimate": {
+       "a": 4.003825654706249,
+       "b": 4.003825654706249,
+       "delta": 0.0,
+       "direction": "same"
+      },
+      "estimate_note": null,
+      "band_width": {
+       "a": 1.7846161489235959,
+       "b": 3.5692322978471918,
+       "direction": "wider"
+      }
+     }
+    },
+    {
+     "metric": "M3",
+     "label": "P(gas flame self-extinguishes vs flow-terminated)",
+     "unit": "probability",
+     "kind": "probability",
+     "a": {
+      "applicable": true,
+      "reason": null,
+      "estimate": 0.9718810570690523,
+      "band90": [
+       0.9450496088743562,
+       0.9909464112421233
+      ],
+      "regime_fractions": {
+       "forced": 1.0,
+       "mixed": 0.0,
+       "buoyant": 0.0
+      },
+      "transfer": {
+       "basis": "Orbit (0 g): no buoyancy, so the microgravity tests match this case directly. The droplet and spherical-burner tests were run in microgravity with no imposed flow; the band is the model band, not widened.",
+       "confidence": "high"
+      },
+      "n_train": 133,
+      "model_version": "3e3a8c2d84ca",
+      "regime": "forced"
+     },
+     "b": {
+      "applicable": true,
+      "reason": null,
+      "estimate": 0.9718810570690523,
+      "band90": [
+       0.8953715524145727,
+       0.9971232365459479
+      ],
+      "regime_fractions": {
+       "forced": 0.0,
+       "mixed": 0.0,
+       "buoyant": 1.0
+      },
+      "transfer": {
+       "basis": "At 9.81 m/s^2 the Monte Carlo puts the flame 0% forced-flow, 0% mixed and 100% buoyancy-dominated. The droplet and spherical-burner tests were run in microgravity with no imposed flow, so gravity does not change the estimate; the 90% band is widened x2.00 to cover buoyancy the tests did not have (transfer confidence low). No 1 g reference: these investigations have no normal-gravity counterpart in the PSI data.",
+       "confidence": "low"
+      },
+      "n_train": 133,
+      "model_version": "3e3a8c2d84ca",
+      "regime": "buoyant"
+     },
+     "diff": {
+      "regime": {
+       "a": "forced",
+       "b": "buoyant",
+       "changed": true
+      },
+      "coverage": {
+       "a": true,
+       "b": true,
+       "change": "both"
+      },
+      "estimate": {
+       "a": 0.9718810570690523,
+       "b": 0.9718810570690523,
+       "delta": 0.0,
+       "direction": "same"
+      },
+      "estimate_note": null,
+      "band_width": {
+       "a": 0.045896802367767164,
+       "b": 0.10175168413137525,
+       "direction": "wider"
+      }
+     }
+    },
+    {
+     "metric": "M4",
+     "label": "Solid material burn extent",
+     "unit": "category",
+     "kind": "category",
+     "a": {
+      "applicable": true,
+      "reason": null,
+      "estimate": "complete_burn",
+      "band90": [
+       "complete_burn",
+       "complete_burn"
+      ],
+      "regime_fractions": {
+       "forced": 1.0,
+       "mixed": 0.0,
+       "buoyant": 0.0
+      },
+      "transfer": {
+       "basis": "forced-flow dominated (100%); microgravity outcome at u_eff 10.0 cm/s; low-confidence material (footnoted / mixed-material samples or 'any' envelope). any SAFFIRE-II material (most severe): microgravity complete_burn, 1 g complete_burn (n=9, SAFFIRE-II at 20 cm/s)",
+       "confidence": "low"
+      },
+      "n_train": 9,
+      "model_version": "rules-m4-1.0.0+cf29fd0d386f",
+      "regime": "forced"
+     },
+     "b": {
+      "applicable": true,
+      "reason": null,
+      "estimate": "complete_burn",
+      "band90": [
+       "complete_burn",
+       "complete_burn"
+      ],
+      "regime_fractions": {
+       "forced": 0.0,
+       "mixed": 0.0,
+       "buoyant": 1.0
+      },
+      "transfer": {
+       "basis": "buoyancy dominated (100%); 1 g outcome applies; low-confidence material (footnoted / mixed-material samples or 'any' envelope). any SAFFIRE-II material (most severe): microgravity complete_burn, 1 g complete_burn (n=9, SAFFIRE-II at 20 cm/s)",
+       "confidence": "low"
+      },
+      "n_train": 9,
+      "model_version": "rules-m4-1.0.0+cf29fd0d386f",
+      "regime": "buoyant"
+     },
+     "diff": {
+      "regime": {
+       "a": "forced",
+       "b": "buoyant",
+       "changed": true
+      },
+      "coverage": {
+       "a": true,
+       "b": true,
+       "change": "both"
+      },
+      "estimate": {
+       "a": "complete_burn",
+       "b": "complete_burn",
+       "delta": null,
+       "direction": "same"
+      },
+      "estimate_note": null,
+      "band_width": null
+     }
+    },
+    {
+     "metric": "M5",
+     "label": "Supported coflow window",
+     "unit": "fraction",
+     "kind": "probability",
+     "a": {
+      "applicable": true,
+      "reason": null,
+      "estimate": 1.0,
+      "band90": [
+       0.0,
+       1.0
+      ],
+      "regime_fractions": {
+       "forced": 1.0,
+       "mixed": 0.0,
+       "buoyant": 0.0
+      },
+      "transfer": {
+       "basis": "forced-flow dominated (100%): coflow evidence transfers. SPICE flames observed at coflow 0.66-85.28 cm/s for all fuels, all nozzles (n=407 ignited rows; LOS / negative-flow rows excluded); SPICE has no O2 or pressure in its table, so the atmosphere is unknown (ISS cabin air assumed). ref_1g is the bridge model at g = 9.81 (no 1 g SPICE data)",
+       "confidence": "medium"
+      },
+      "n_train": 407,
+      "model_version": "rules-m5-1.0.0+f744ca805556",
+      "regime": "forced"
+     },
+     "b": {
+      "applicable": true,
+      "reason": null,
+      "estimate": 0.963,
+      "band90": [
+       0.049557,
+       0.969943
+      ],
+      "regime_fractions": {
+       "forced": 0.0,
+       "mixed": 0.0,
+       "buoyant": 1.0
+      },
+      "transfer": {
+       "basis": "not forced dominated (forced 0%, mixed 0%, buoyant 100%): buoyant flow mapped through u_eff, larger uncertainty. SPICE flames observed at coflow 0.66-85.28 cm/s for all fuels, all nozzles (n=407 ignited rows; LOS / negative-flow rows excluded); SPICE has no O2 or pressure in its table, so the atmosphere is unknown (ISS cabin air assumed). ref_1g is the bridge model at g = 9.81 (no 1 g SPICE data)",
+       "confidence": "low"
+      },
+      "n_train": 407,
+      "model_version": "rules-m5-1.0.0+f744ca805556",
+      "regime": "buoyant"
+     },
+     "diff": {
+      "regime": {
+       "a": "forced",
+       "b": "buoyant",
+       "changed": true
+      },
+      "coverage": {
+       "a": true,
+       "b": true,
+       "change": "both"
+      },
+      "estimate": {
+       "a": 1.0,
+       "b": 0.963,
+       "delta": -0.03700000000000003,
+       "direction": "lower"
+      },
+      "estimate_note": null,
+      "band_width": {
+       "a": 1.0,
+       "b": 0.920386,
+       "direction": "narrower"
+      }
+     }
+    }
+   ],
+   "summary": "Moving from ISS to Earth reference changes gravity 0 m/s² → 9.81 m/s² and vent speed 10 cm/s → 0 cm/s. The flame regime changes from forced flow to buoyancy-dominated for every metric. Where both sides have evidence, M1 stays at 93.9%, M2 stays at 4 mm, M3 stays at 97.2% and M5 goes from 100% to 96.3%. M4 stays at complete burn. The 90% band is wider at Earth reference for M1, M2 and M3. The 90% band is narrower at Earth reference for M5.",
+   "model_versions": {
+    "M1": "2a8ccd37105c",
+    "M2": "d3f1ae64f2c0",
+    "M3": "3e3a8c2d84ca",
+    "M4": "rules-m4-1.0.0+cf29fd0d386f",
+    "M5": "rules-m5-1.0.0+f744ca805556"
+   }
+  },
+  "lunar_base__lunar_rover": {
+   "a": {
+    "preset_id": "lunar_base",
+    "label": "Lunar base",
+    "g_m_s2": 1.62,
+    "p_psia": 8.2,
+    "o2": 0.34,
+    "u_cm_s": 10.0,
+    "L_mm": 10.0
+   },
+   "b": {
+    "preset_id": "lunar_rover",
+    "label": "Lunar rover",
+    "g_m_s2": 1.62,
+    "p_psia": 8.2,
+    "o2": 0.34,
+    "u_cm_s": 5.0,
+    "L_mm": 10.0
+   },
+   "inputs_diff": [
+    {
+     "field": "u_cm_s",
+     "label": "vent speed",
+     "unit": "cm/s",
+     "a": 10.0,
+     "b": 5.0
+    }
+   ],
+   "metrics": [
+    {
+     "metric": "M1",
+     "label": "P(droplet flame self-extinguishes before burnout)",
+     "unit": "probability",
+     "kind": "probability",
+     "a": {
+      "applicable": true,
+      "reason": null,
+      "estimate": 0.20064279335457827,
+      "band90": [
+       0.012463962053841043,
+       0.6839297536218354
+      ],
+      "regime_fractions": {
+       "forced": 0.0,
+       "mixed": 0.7165,
+       "buoyant": 0.2835
+      },
+      "transfer": {
+       "basis": "At 1.62 m/s^2 the Monte Carlo puts the flame 0% forced-flow, 72% mixed and 28% buoyancy-dominated. The droplet and spherical-burner tests were run in microgravity with no imposed flow, so gravity does not change the estimate; the 90% band is widened x1.64 to cover buoyancy the tests did not have (transfer confidence low). No 1 g reference: these investigations have no normal-gravity counterpart in the PSI data.",
+       "confidence": "low"
+      },
+      "n_train": 206,
+      "model_version": "2a8ccd37105c",
+      "regime": "mixed"
+     },
+     "b": {
+      "applicable": true,
+      "reason": null,
+      "estimate": 0.20064279335457827,
+      "band90": [
+       0.007271608683920468,
+       0.7620381902167531
+      ],
+      "regime_fractions": {
+       "forced": 0.0,
+       "mixed": 0.119,
+       "buoyant": 0.881
+      },
+      "transfer": {
+       "basis": "At 1.62 m/s^2 the Monte Carlo puts the flame 0% forced-flow, 12% mixed and 88% buoyancy-dominated. The droplet and spherical-burner tests were run in microgravity with no imposed flow, so gravity does not change the estimate; the 90% band is widened x1.94 to cover buoyancy the tests did not have (transfer confidence low). No 1 g reference: these investigations have no normal-gravity counterpart in the PSI data.",
+       "confidence": "low"
+      },
+      "n_train": 206,
+      "model_version": "2a8ccd37105c",
+      "regime": "buoyant"
+     },
+     "diff": {
+      "regime": {
+       "a": "mixed",
+       "b": "buoyant",
+       "changed": true
+      },
+      "coverage": {
+       "a": true,
+       "b": true,
+       "change": "both"
+      },
+      "estimate": {
+       "a": 0.20064279335457827,
+       "b": 0.20064279335457827,
+       "delta": 0.0,
+       "direction": "same"
+      },
+      "estimate_note": null,
+      "band_width": {
+       "a": 0.6714657915679944,
+       "b": 0.7547665815328326,
+       "direction": "wider"
+      }
+     }
+    },
+    {
+     "metric": "M2",
+     "label": "Extinction diameter",
+     "unit": "mm",
+     "kind": "quantity",
+     "a": {
+      "applicable": false,
+      "reason": "Extrapolation: no evidence. The query (O2 0.340, 0.56 atm, CO2 0.00, He 0.00) is more than 2 atmosphere-and-diluent-distance units from every M2 training test; the nearest tested condition is PSI-69 PSI-69:FLEX:45 at O2 0.300, 1.01 atm, CO2 0.00, He 0.00 (atmosphere and diluent distance 2.14).",
+      "estimate": null,
+      "band90": null,
+      "regime_fractions": {
+       "forced": 0.0,
+       "mixed": 0.7165,
+       "buoyant": 0.2835
+      },
+      "transfer": {
+       "basis": "No estimate: outside the tested atmosphere range.",
+       "confidence": "low"
+      },
+      "n_train": 158,
+      "model_version": "d3f1ae64f2c0",
+      "regime": "mixed"
+     },
+     "b": {
+      "applicable": false,
+      "reason": "Extrapolation: no evidence. The query (O2 0.340, 0.56 atm, CO2 0.00, He 0.00) is more than 2 atmosphere-and-diluent-distance units from every M2 training test; the nearest tested condition is PSI-69 PSI-69:FLEX:45 at O2 0.300, 1.01 atm, CO2 0.00, He 0.00 (atmosphere and diluent distance 2.14).",
+      "estimate": null,
+      "band90": null,
+      "regime_fractions": {
+       "forced": 0.0,
+       "mixed": 0.119,
+       "buoyant": 0.881
+      },
+      "transfer": {
+       "basis": "No estimate: outside the tested atmosphere range.",
+       "confidence": "low"
+      },
+      "n_train": 158,
+      "model_version": "d3f1ae64f2c0",
+      "regime": "buoyant"
+     },
+     "diff": {
+      "regime": {
+       "a": "mixed",
+       "b": "buoyant",
+       "changed": true
+      },
+      "coverage": {
+       "a": false,
+       "b": false,
+       "change": "neither"
+      },
+      "estimate": null,
+      "estimate_note": "No difference shown: neither habitat has evidence for M2.",
+      "band_width": null
+     }
+    },
+    {
+     "metric": "M3",
+     "label": "P(gas flame self-extinguishes vs flow-terminated)",
+     "unit": "probability",
+     "kind": "probability",
+     "a": {
+      "applicable": true,
+      "reason": null,
+      "estimate": 0.8722546263980915,
+      "band90": [
+       0.5597213750976666,
+       0.9849158347631888
+      ],
+      "regime_fractions": {
+       "forced": 0.0,
+       "mixed": 0.7165,
+       "buoyant": 0.2835
+      },
+      "transfer": {
+       "basis": "At 1.62 m/s^2 the Monte Carlo puts the flame 0% forced-flow, 72% mixed and 28% buoyancy-dominated. The droplet and spherical-burner tests were run in microgravity with no imposed flow, so gravity does not change the estimate; the 90% band is widened x1.64 to cover buoyancy the tests did not have (transfer confidence low). No 1 g reference: these investigations have no normal-gravity counterpart in the PSI data.",
+       "confidence": "low"
+      },
+      "n_train": 133,
+      "model_version": "3e3a8c2d84ca",
+      "regime": "mixed"
+     },
+     "b": {
+      "applicable": true,
+      "reason": null,
+      "estimate": 0.8722546263980915,
+      "band90": [
+       0.4835402008985605,
+       0.9899469569569669
+      ],
+      "regime_fractions": {
+       "forced": 0.0,
+       "mixed": 0.119,
+       "buoyant": 0.881
+      },
+      "transfer": {
+       "basis": "At 1.62 m/s^2 the Monte Carlo puts the flame 0% forced-flow, 12% mixed and 88% buoyancy-dominated. The droplet and spherical-burner tests were run in microgravity with no imposed flow, so gravity does not change the estimate; the 90% band is widened x1.94 to cover buoyancy the tests did not have (transfer confidence low). No 1 g reference: these investigations have no normal-gravity counterpart in the PSI data.",
+       "confidence": "low"
+      },
+      "n_train": 133,
+      "model_version": "3e3a8c2d84ca",
+      "regime": "buoyant"
+     },
+     "diff": {
+      "regime": {
+       "a": "mixed",
+       "b": "buoyant",
+       "changed": true
+      },
+      "coverage": {
+       "a": true,
+       "b": true,
+       "change": "both"
+      },
+      "estimate": {
+       "a": 0.8722546263980915,
+       "b": 0.8722546263980915,
+       "delta": 0.0,
+       "direction": "same"
+      },
+      "estimate_note": null,
+      "band_width": {
+       "a": 0.42519445966552216,
+       "b": 0.5064067560584065,
+       "direction": "wider"
+      }
+     }
+    },
+    {
+     "metric": "M4",
+     "label": "Solid material burn extent",
+     "unit": "category",
+     "kind": "category",
+     "a": {
+      "applicable": false,
+      "reason": "extrapolation, no evidence: SAFFIRE-II only tested ~22% O2 (21.5-22.1%) at ~1 atm cabin pressure and 20 cm/s flow; habitat O2 34.0% outside 20-24.0%; pressure 8.2 psia (0.56 atm) outside 0.9-1.1 atm. No estimate is given outside the tested atmosphere.",
+      "estimate": null,
+      "band90": null,
+      "regime_fractions": {
+       "forced": 0.0,
+       "mixed": 0.7165,
+       "buoyant": 0.2835
+      },
+      "transfer": {
+       "basis": "no transfer: habitat atmosphere outside the SAFFIRE-II test atmosphere (lunar/exploration 34% O2 / 8.2 psia is untested)",
+       "confidence": "low"
+      },
+      "n_train": 9,
+      "model_version": "rules-m4-1.0.0+cf29fd0d386f",
+      "regime": "mixed"
+     },
+     "b": {
+      "applicable": false,
+      "reason": "extrapolation, no evidence: SAFFIRE-II only tested ~22% O2 (21.5-22.1%) at ~1 atm cabin pressure and 20 cm/s flow; habitat O2 34.0% outside 20-24.0%; pressure 8.2 psia (0.56 atm) outside 0.9-1.1 atm. No estimate is given outside the tested atmosphere.",
+      "estimate": null,
+      "band90": null,
+      "regime_fractions": {
+       "forced": 0.0,
+       "mixed": 0.119,
+       "buoyant": 0.881
+      },
+      "transfer": {
+       "basis": "no transfer: habitat atmosphere outside the SAFFIRE-II test atmosphere (lunar/exploration 34% O2 / 8.2 psia is untested)",
+       "confidence": "low"
+      },
+      "n_train": 9,
+      "model_version": "rules-m4-1.0.0+cf29fd0d386f",
+      "regime": "buoyant"
+     },
+     "diff": {
+      "regime": {
+       "a": "mixed",
+       "b": "buoyant",
+       "changed": true
+      },
+      "coverage": {
+       "a": false,
+       "b": false,
+       "change": "neither"
+      },
+      "estimate": null,
+      "estimate_note": "No difference shown: neither habitat has evidence for M4.",
+      "band_width": null
+     }
+    },
+    {
+     "metric": "M5",
+     "label": "Supported coflow window",
+     "unit": "fraction",
+     "kind": "probability",
+     "a": {
+      "applicable": false,
+      "reason": "extrapolation, no evidence: SPICE only tested in ISS cabin air (assumed ~21% O2 / ~1 atm; the table records no atmosphere); habitat O2 34.0% outside 19-23.5%; pressure 8.2 psia (0.56 atm) outside 0.9-1.1 atm. No estimate is given outside the tested atmosphere.",
+      "estimate": null,
+      "band90": null,
+      "regime_fractions": {
+       "forced": 0.0,
+       "mixed": 0.7165,
+       "buoyant": 0.2835
+      },
+      "transfer": {
+       "basis": "no transfer: SPICE flames observed at coflow 0.66-85.28 cm/s for all fuels, all nozzles (n=407 ignited rows; LOS / negative-flow rows excluded); SPICE has no O2 or pressure in its table, so the atmosphere is unknown (ISS cabin air assumed)",
+       "confidence": "low"
+      },
+      "n_train": 407,
+      "model_version": "rules-m5-1.0.0+f744ca805556",
+      "regime": "mixed"
+     },
+     "b": {
+      "applicable": false,
+      "reason": "extrapolation, no evidence: SPICE only tested in ISS cabin air (assumed ~21% O2 / ~1 atm; the table records no atmosphere); habitat O2 34.0% outside 19-23.5%; pressure 8.2 psia (0.56 atm) outside 0.9-1.1 atm. No estimate is given outside the tested atmosphere.",
+      "estimate": null,
+      "band90": null,
+      "regime_fractions": {
+       "forced": 0.0,
+       "mixed": 0.119,
+       "buoyant": 0.881
+      },
+      "transfer": {
+       "basis": "no transfer: SPICE flames observed at coflow 0.66-85.28 cm/s for all fuels, all nozzles (n=407 ignited rows; LOS / negative-flow rows excluded); SPICE has no O2 or pressure in its table, so the atmosphere is unknown (ISS cabin air assumed)",
+       "confidence": "low"
+      },
+      "n_train": 407,
+      "model_version": "rules-m5-1.0.0+f744ca805556",
+      "regime": "buoyant"
+     },
+     "diff": {
+      "regime": {
+       "a": "mixed",
+       "b": "buoyant",
+       "changed": true
+      },
+      "coverage": {
+       "a": false,
+       "b": false,
+       "change": "neither"
+      },
+      "estimate": null,
+      "estimate_note": "No difference shown: neither habitat has evidence for M5.",
+      "band_width": null
+     }
+    }
+   ],
+   "summary": "Moving from Lunar base to Lunar rover changes vent speed 10 cm/s → 5 cm/s. The flame regime changes from mixed to buoyancy-dominated for every metric. M2, M4 and M5 have no evidence on either side. Where both sides have evidence, M1 stays at 20.1% and M3 stays at 87.2%. The 90% band is wider at Lunar rover for M1 and M3.",
+   "model_versions": {
+    "M1": "2a8ccd37105c",
+    "M2": "d3f1ae64f2c0",
+    "M3": "3e3a8c2d84ca",
+    "M4": "rules-m4-1.0.0+cf29fd0d386f",
+    "M5": "rules-m5-1.0.0+f744ca805556"
+   }
+  }
+ }
+}

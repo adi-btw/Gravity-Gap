@@ -32,6 +32,7 @@ changed/missing/unlisted files; it never crashes. CORS allows the comma-separate
 | GET | `/data/tests` | `investigation_id?, o2_min?, o2_max?, outcome?, limit=100 (1..1000), offset=0` | `{total, limit, offset, rows[]}` |
 | GET | `/metrics` | – | `engine.bounds.METRICS` (`M1`..`M5` -> `{label, unit, kind, data, flow_dependent}`) |
 | POST | `/bounds` | habitat fields + `metric` | `engine.bounds.predict(...)` (JSON-safe; 422 unknown metric; 503 if `engine.bounds`/`engine.rules` missing) |
+| POST | `/compare` | `{a, b}`: each a preset id (`"iss"`) or habitat fields (+ optional `label`) | `engine.compare.compare(a, b)` (S4): `{a, b, inputs_diff[], metrics[{metric, label, unit, kind, a, b, diff{regime, coverage, estimate, estimate_note, band_width}}], summary, model_versions}`. `diff.estimate` is `null` unless both sides have evidence; `summary` is one rule-built line (no LLM); 422 unknown preset / invalid habitat / extra keys |
 | GET | `/coverage/{metric}` | `p_psia?, o2?, co2? (0..1), he? (0..1)` | `engine.coverage.coverage_for(...)`: tested points + rule, plus `habitat: {covered, nearest_distance, ...}` when `p_psia` and `o2` are given. For M1/M2 `co2`/`he` use the 4-D dilution-aware gate (ADR-0006); 422 if `o2 + co2 + he > 1`; 404 unknown metric |
 | GET | `/planner` | – | `artifacts/planner.json` (`items[]`, `design_implications[]`); 503 if not built |
 | GET | `/incidents` | – | `artifacts/incidents.json` (R1 real-fire replay: `{generated_at, engine_version, incidents[]}`); 503 if not built |

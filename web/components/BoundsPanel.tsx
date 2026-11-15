@@ -5,6 +5,7 @@ import { useState } from "react";
 import { api, type Sourced } from "@/lib/api";
 import { fmtBand, fmtEstimate, fmtSig, humanize } from "@/lib/format";
 import { G0 } from "@/lib/physics";
+import { compareQuery, compareWithTarget } from "@/lib/compare";
 import { coverageStatus } from "@/lib/coverage";
 import { matchPreset, type Habitat } from "@/lib/habitat";
 import type { AskAnswer, BoundsResult, MetricInfo, RefPoint, SensitivityRow } from "@/lib/types";
@@ -57,6 +58,12 @@ export function BoundsPanel() {
         <div className="flex flex-wrap items-center gap-3">
           <Link href={`/suppression?${queryString}`} className="text-sm text-micro underline hover:text-fg">
             How much CO₂ would put it out? →
+          </Link>
+          <Link
+            href={`/compare?${compareQuery(compareWithTarget(habitat).a, compareWithTarget(habitat).b, queryString)}`}
+            className="text-sm text-micro underline hover:text-fg"
+          >
+            Compare with… →
           </Link>
           {bounds.status === "ok" ? <SourceChip source={bounds.data.source} note={bounds.data.note} /> : null}
         </div>

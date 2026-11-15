@@ -24,6 +24,9 @@ The pack is the *only* source of facts an answer may use. It contains:
   smoke, dust, particles or smoke alarms (or ``context_ids`` starting with ``eng:detection``): scope note, gaps,
   size definitions and per-series stats (no raw bins) -> cite ``[eng:detection]``, a series
   ``[eng:detection:psi115_case1_micro]`` or a gap ``[eng:detection:lunar_dust]``; only ids in the artifact resolve
+* ``compare`` S4 side-by-side compare of two habitats (``engine.compare.compare``) when the question names two
+  presets with a compare cue ("What changes between ISS and the lunar base?") or ``context_ids`` has ``eng:compare``
+  -> cite ``[eng:compare]`` (summary) and ``[eng:compare:M1]`` .. ``[eng:compare:M5]`` (only metrics present)
 * ``constants`` physical constants and thresholds the answers may quote
 * ``citable_ids`` every id a citation may use
 * ``missing``   engine pieces that were unavailable (answers must say so, not guess)
@@ -355,6 +358,55 @@ def suppression_reference_block(h: dict, diluent: str, path: Path | None = None)
     max_o2 = (data.get("max_diluted_o2_by_diluent") or {}).get(diluent) if isinstance(data, dict) else None
     if isinstance(max_o2, (int, float)):
         out["max_diluted_o2"] = max_o2
+    return jsonable(out)
+
+
+# --------------------------------------------------------------------------- habitat compare (S4)
+
+# Preset names in questions (also used by engine.ai.answer.infer_habitat). Longest phrase wins at a position.
+HABITAT_WORDS = (("lunar rover", "lunar_rover"), ("rover", "lunar_rover"), ("lunar base", "lunar_base"),
+                 ("moon", "lunar_base"), ("lunar", "lunar_base"), ("luci", "lunar_base"),
+                 ("mars", "mars_base"), ("iss", "iss"), ("space station", "iss"),
+                 ("exploration", "exploration"), ("earth", "earth"))
+_HABITAT_RE = re.compile(r"\b(" + "|".join(re.escape(w) for w, _ in sorted(HABITAT_WORDS, key=lambda x: -len(x[0])))
+                         + r")\b")
+COMPARE_CUES = ("compare", "comparison", "change", "differ", "between", " vs", "versus")
+
+
+def preset_mentions(question: str) -> list[str]:
+    """Distinct preset ids named in the question, in order of appearance."""
+    words = dict(HABITAT_WORDS)
+    return list(dict.fromkeys(words[m.group(1)] for m in _HABITAT_RE.finditer((question or "").lower())))
+
+
+def wants_compare(question: str, context_ids: Iterable[str] = ()) -> bool:
+    """True when the question compares two named presets, or ``context_ids`` asks for ``eng:compare``."""
+    if any(str(c).startswith("eng:compare") for c in context_ids or ()):
+        return True
+    q = (question or "").lower()
+    return len(preset_mentions(q)) >= 2 and any(c in q for c in COMPARE_CUES)
+
+
+def compare_pair(question: str, h: dict) -> tuple[str | dict, str | dict] | None:
+    """(A, B): the first two presets named; with one named preset, A = it and B = the habitat (if different)."""
+    names = preset_mentions(question)
+    if len(names) >= 2:
+        return names[0], names[1]
+    if len(names) == 1 and h.get("preset_id") != names[0]:
+        return names[0], {k: h[k] for k in (*HABITAT_FIELDS, "preset_id", "label") if k in h}
+    return None
+
+
+def compare_block(a: str | dict, b: str | dict) -> dict | None:
+    """``engine.compare.compare`` with the same predictions as ``eng:M1`` (preset artifacts), cite ids attached."""
+    mod = _engine("compare")
+    if mod is None or not hasattr(mod, "compare"):
+        return None
+    res = mod.compare(a, b, predict_fn=lambda hab, m: prediction(hab, m))
+    out = {"id": "eng:compare", "a": res["a"], "b": res["b"], "inputs_diff": res["inputs_diff"],
+           "summary": res["summary"], "metrics": {}}
+    for row in res["metrics"]:
+        out["metrics"][row["metric"]] = {**row, "id": f"eng:compare:{row['metric']}"}
     return jsonable(out)
 
 
@@ -747,6 +799,23 @@ def build_context(
                 if any(r.get("id") == inv for r in catalog):
                     citable.add(inv)
     pack["detection"] = det
+
+    # ---- habitat compare (S4)
+    cmp_block = None
+    if wants_compare(question, ctx_ids):
+        pair = compare_pair(question, h)
+        if pair is not None:
+            try:
+                cmp_block = compare_block(*pair)
+            except Exception as exc:  # noqa: BLE001 - engine errors must not break the pack
+                missing.append(f"compare.compare: {type(exc).__name__}")
+            else:
+                if cmp_block is None:
+                    missing.append("engine.compare")
+                else:
+                    citable.add(cmp_block["id"])
+                    citable.update(m["id"] for m in cmp_block["metrics"].values())
+    pack["compare"] = cmp_block
 
     pack["constants"] = dict(CONSTANTS)
     pack["missing"] = missing

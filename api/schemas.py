@@ -154,6 +154,15 @@ class SuppressionIn(HabitatIn):
         return v.strip().lower() if isinstance(v, str) else v
 
 
+class CompareIn(BaseModel):
+    """POST /compare (S4): two habitats, each a preset id or habitat fields (optional `label`)."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    a: str | dict[str, Any] = Field(..., description='Habitat A: preset id (e.g. "iss") or habitat fields')
+    b: str | dict[str, Any] = Field(..., description='Habitat B: preset id (e.g. "lunar_base") or habitat fields')
+
+
 class Problem(BaseModel):
     """RFC 7807 problem details."""
 

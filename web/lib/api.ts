@@ -7,6 +7,7 @@
  * matches no preset gets OfflineUnavailableError ("live API needed for custom habitats"), and ranking is never
  * recomputed in the browser.
  */
+import { METRIC_IDS, buildCompare, type CompareHabitat, type CompareResult, type ResolvedSide } from "./compare";
 import { normalizeCoverage } from "./coverage";
 import { normalizeDetection, type DetectionArtifact } from "./detection";
 import { matchPreset, type Habitat } from "./habitat";
@@ -69,6 +70,10 @@ export const CUSTOM_HABITAT_NOTE =
   "Live API needed for custom habitats: precomputed bounds exist only for the six presets.";
 export const CUSTOM_SUPPRESSION_NOTE =
   "Live API needed for custom habitats: precomputed suppression curves exist only for the six presets.";
+export const CUSTOM_COMPARE_NOTE =
+  "Live API needed to compare a custom habitat: precomputed bounds exist only for the six presets.";
+/** A compare runs M1..M5 for two habitats, so it gets the same longer live timeout as a suppression curve. */
+const COMPARE_TIMEOUT_MS = 10_000;
 /** A suppression curve runs the M1/M2 models at every fraction, so the first live call gets more time. */
 const SUPPRESSION_TIMEOUT_MS = 10_000;
 
@@ -399,6 +404,30 @@ export function createClient(opts: ClientOptions = {}) {
             `API offline and no precomputed suppression curve for ${preset.label} / ${diluent === "he" ? "helium" : "CO₂"}.`,
           );
           return { data: normalizeSuppression(raw, diluent), source: "offline", note: `${OFFLINE_NOTE} (${preset.label} preset)` };
+        },
+      ),
+
+    /**
+     * S4 compare (POST /compare). Offline: both sides presets -> rebuilt from the bounds artifacts with the engine's
+     * rules (lib/compare.ts); a custom side has no honest offline answer.
+     */
+    compare: (a: ResolvedSide, b: ResolvedSide) =>
+      withFallback<CompareResult>(
+        () => {
+          const side = (s: ResolvedSide) => s.presetId ?? { ...habitatBody(s.habitat), label: s.label };
+          return liveJson<CompareResult>("/compare", post({ a: side(a), b: side(b) }), Math.max(timeoutMs, COMPARE_TIMEOUT_MS));
+        },
+        async () => {
+          if (!a.presetId || !b.presetId) throw new OfflineUnavailableError(CUSTOM_COMPARE_NOTE);
+          const load = (pid: string) =>
+            Promise.all(
+              METRIC_IDS.map((m) =>
+                staticJson<BoundsResult>(`bounds/${pid}_${m}.json`, `API offline and no precomputed bounds for ${pid} / ${m}.`),
+              ),
+            );
+          const [ba, bb] = await Promise.all([load(a.presetId), load(b.presetId)]);
+          const hab = (s: ResolvedSide): CompareHabitat => ({ ...s.habitat, preset_id: s.presetId, label: s.label });
+          return { data: buildCompare(hab(a), hab(b), ba, bb), source: "offline", note: `${OFFLINE_NOTE} (bounds of both presets)` };
         },
       ),
 

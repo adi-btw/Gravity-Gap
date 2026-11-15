@@ -16,7 +16,8 @@ Modes, in order of preference:
 Intents: incident (R1), refusal, suppression (R2: CO2 / helium dilution, answered only from
 ``engine.suppression.curve`` and ``artifacts/suppression_reference.json`` in the pack, always with
 ``SAFETY_NOTE``), detection (R3: smoke, dust and smoke-alarm questions, answered only from
-``artifacts/detection.json``, always stating its gaps), fans_off, planner, experiments, band, regime, explain.
+``artifacts/detection.json``, always stating its gaps), compare (S4: two named presets, answered only from
+``engine.compare.compare`` in the pack; no difference when a side has no evidence), fans_off, planner, experiments, band, regime, explain.
 
 Every answer is run through ``engine.ai.validator.validate`` against the context pack.
 
@@ -66,14 +67,13 @@ DEMO_QUESTIONS: list[tuple[str, str | None]] = [
     # R3 detection evidence (intent "detection"; artifacts/detection.json in the context pack)
     ("Could lunar dust trigger the smoke alarm?", None),
     ("Is smoke in space different?", None),
+    # S4 habitat compare (intent "compare"; engine.compare.compare in the context pack)
+    ("What changes between ISS and the lunar base?", "lunar_base"),
 ]
 
 OUT_OF_SCOPE = ("rocket", "propellant", "propulsion", "thruster", "launch vehicle", "booster",
                 "combustion chamber", "explosive", "bomb", "weapon", "missile", "warhead")
-HABITAT_WORDS = (("lunar rover", "lunar_rover"), ("rover", "lunar_rover"), ("lunar base", "lunar_base"),
-                 ("moon", "lunar_base"), ("lunar", "lunar_base"), ("luci", "lunar_base"),
-                 ("mars", "mars_base"), ("iss", "iss"), ("space station", "iss"),
-                 ("exploration", "exploration"), ("earth", "earth"))
+HABITAT_WORDS = ctx.HABITAT_WORDS
 REGIME_DEF = "forced Ri < 0.1, buoyant Ri > 10"
 
 
@@ -142,6 +142,8 @@ def classify(question: str, context_ids: Iterable[str] = ()) -> str:
         return "suppression"
     if ctx.wants_detection(question, context_ids):
         return "detection"
+    if ctx.wants_compare(question, context_ids):
+        return "compare"
     if ctx._wants_fans_off(q) or ("fan" in q and ("off" in q or "without" in q)) or "ventilation" in q:
         return "fans_off"
     if any(w in q for w in ("test first", "luci", "fm2", "next test", "which test", "what should", "plan")):
@@ -904,7 +906,54 @@ def t_detection(pack: dict, question: str, metric: str | None) -> str:
     return "\n\n".join(o for o in out if o)
 
 
-TEMPLATES = {"detection": t_detection, "suppression": t_suppression, "incident": t_incident, "regime": t_regime, "band": t_band, "experiments": t_experiments, "planner": t_planner,
+# --------------------------------------------------------------------------- habitat compare (S4)
+
+REGIME_WORDS = {"forced": "forced flow", "mixed": "mixed", "buoyant": "buoyancy-dominated", None: "unknown"}
+
+
+def _compare_side(row: dict, side: dict) -> str:
+    if not side.get("applicable"):
+        return "**no evidence** (outside every tested condition for this metric, so no number)"
+    b = side.get("band90") or []
+    if len(b) == 2 and isinstance(b[0], str) and b[0] == b[1]:
+        return f"outcome {val(row, side.get('estimate'))}"
+    return f"estimate {val(row, side.get('estimate'))}, 90% band {band(row, side.get('band90'))}"
+
+
+def _compare_row(row: dict, la: str, lb: str) -> str:
+    sa, sb, diff = row["a"], row["b"], row.get("diff") or {}
+    s = (f"- **{row['metric']} – {row.get('label')}** [{row['id']}]: {la} {_compare_side(row, sa)}; "
+         f"{lb} {_compare_side(row, sb)}.")
+    rg = diff.get("regime") or {}
+    if rg.get("changed"):
+        s += f" Regime {REGIME_WORDS.get(rg.get('a'))} → {REGIME_WORDS.get(rg.get('b'))}."
+    ca, cb = (sa.get("transfer") or {}).get("confidence"), (sb.get("transfer") or {}).get("confidence")
+    if sa.get("applicable") and sb.get("applicable") and ca and cb and ca != cb:
+        s += f" Transfer confidence {ca} → {cb}."
+    if diff.get("estimate_note"):
+        s += f" {diff['estimate_note']}"
+    return s
+
+
+def t_compare(pack: dict, question: str, metric: str | None) -> str:
+    block = pack.get("compare")
+    if not block:
+        return ("Gravity Gap can compare two habitats when the question names both presets, for example *What "
+                "changes between ISS and the lunar base?* (presets: ISS, exploration vehicle, lunar base, lunar "
+                "rover, Mars base, Earth). The comparison is also on the Compare page.")
+    la, lb = block["a"]["label"], block["b"]["label"]
+    rows = list((block.get("metrics") or {}).values())
+    if metric:
+        rows = [r for r in rows if r["metric"] == metric] or rows
+    out = [f"**{la} vs {lb}.** {block['summary']} [eng:compare]",
+           "**Metric by metric:**\n" + "\n".join(_compare_row(r, la, lb) for r in rows)]
+    out.append("**How to read this:** for M1–M3 gravity never moves the estimate, because those tests had no flow "
+               "variable; a change in those estimates comes from the cabin air (O₂ and pressure), and partial "
+               "gravity only widens the 90% band. Where one side has no evidence, no difference is given.")
+    return "\n\n".join(out)
+
+
+TEMPLATES = {"compare": t_compare, "detection": t_detection, "suppression": t_suppression, "incident": t_incident, "regime": t_regime, "band": t_band, "experiments": t_experiments, "planner": t_planner,
              "fans_off": t_fans_off, "explain": t_explain}
 
 

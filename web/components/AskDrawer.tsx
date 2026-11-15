@@ -33,6 +33,8 @@ const SUGGESTED = [
   // R2 suppression calculator demo questions.
   "How much CO₂ would it take to put out a flame in ISS air?",
   "Why can't Gravity Gap answer suppression for the lunar base?",
+  // S4 habitat compare demo question.
+  "What changes between ISS and the lunar base?",
 ];
 
 /**

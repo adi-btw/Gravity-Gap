@@ -754,3 +754,35 @@ def test_detection_real_artifact_served_unchanged(client):
     body = _strict_json(client.get("/detection"))
     assert body == json.loads(path.read_text(encoding="utf-8"))
     assert body["gaps"][0]["id"] == "lunar_dust"
+
+
+# --------------------------------------------------------------------------- S4 habitat compare
+
+
+def test_compare_presets_real_engine(client):
+    body = _strict_json(client.post("/compare", json={"a": "iss", "b": "lunar_base"}))
+    assert body["a"]["preset_id"] == "iss" and body["b"]["preset_id"] == "lunar_base"
+    by = {m["metric"]: m for m in body["metrics"]}
+    assert list(by) == ["M1", "M2", "M3", "M4", "M5"]
+    assert by["M2"]["a"]["applicable"] is True and by["M2"]["b"]["applicable"] is False
+    assert by["M2"]["diff"]["estimate"] is None and by["M2"]["diff"]["coverage"]["change"] == "lost"
+    assert "M2, M4 and M5 lose their evidence at Lunar base" in body["summary"]
+
+
+def test_compare_custom_habitat_with_label(client):
+    custom = {**LUNAR_BASE, "u_cm_s": 5, "label": "Rover with fans low"}
+    body = _strict_json(client.post("/compare", json={"a": LUNAR_BASE, "b": custom}))
+    assert body["a"]["preset_id"] == "lunar_base"
+    assert body["b"]["preset_id"] == "lunar_rover"  # same five values as the preset
+    assert body["b"]["label"] == "Rover with fans low"  # a given label wins
+    assert [d["field"] for d in body["inputs_diff"]] == ["u_cm_s"]
+
+
+@pytest.mark.parametrize("payload", [
+    {"a": "moonbase", "b": "iss"},
+    {"a": "iss"},
+    {"a": "iss", "b": {**LUNAR_BASE, "o2": 2}},
+    {"a": "iss", "b": "iss", "extra": 1},
+])
+def test_compare_bad_body_422(client, payload):
+    _assert_problem(client.post("/compare", json=payload), 422)

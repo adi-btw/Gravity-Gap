@@ -29,7 +29,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse, Response
 from starlette.exceptions import HTTPException as StarletteHTTPException
 
-from api.schemas import (AskIn, AskOut, BoundsIn, Health, HabitatIn, LedgerIn, PhysicsOut, RankItem,
+from api.schemas import (AskIn, AskOut, BoundsIn, CompareIn, Health, HabitatIn, LedgerIn, PhysicsOut, RankItem,
                          SuppressionIn, TestsPage)
 
 log = logging.getLogger("gravity_gap.api")
@@ -404,6 +404,22 @@ def metrics() -> dict[str, Any]:
 @app.post("/bounds")
 def bounds(body: BoundsIn) -> dict[str, Any]:
     return _predict(body.metric, body.model_dump(exclude={"weights", "metric"}))
+
+
+@app.post("/compare")
+def compare(body: CompareIn) -> dict[str, Any]:
+    """S4: M1-M5 for two habitats side by side + rule-based diff and summary (engine.compare.compare)."""
+    mod = engine_module("compare")
+    if not hasattr(mod, "compare"):
+        raise HTTPException(status_code=503, detail="engine.compare has no compare() yet")
+    a, b = _resolve_habitat(body.a), _resolve_habitat(body.b)
+    try:
+        out = mod.compare(a, b)
+    except NotImplementedError as exc:
+        raise HTTPException(status_code=503, detail=str(exc)) from exc
+    except ValueError as exc:
+        raise HTTPException(status_code=422, detail=str(exc)) from exc
+    return to_jsonable(out)
 
 
 @app.get("/coverage/{metric}")
