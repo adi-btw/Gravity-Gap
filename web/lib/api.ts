@@ -10,6 +10,8 @@
 import { METRIC_IDS, buildCompare, type CompareHabitat, type CompareResult, type ResolvedSide } from "./compare";
 import { normalizeCoverage } from "./coverage";
 import { normalizeDetection, type DetectionArtifact } from "./detection";
+import { normalizeHoldout, type HoldoutArtifact } from "./holdout";
+import { driversFromArtifact, normalizeDrivers, type Drivers } from "./uncertainty";
 import { matchPreset, type Habitat } from "./habitat";
 import { STATIC_DILUENTS, normalizeReference, normalizeSuppression } from "./suppression";
 import type {
@@ -72,6 +74,8 @@ export const CUSTOM_SUPPRESSION_NOTE =
   "Live API needed for custom habitats: precomputed suppression curves exist only for the six presets.";
 export const CUSTOM_COMPARE_NOTE =
   "Live API needed to compare a custom habitat: precomputed bounds exist only for the six presets.";
+export const CUSTOM_DRIVERS_NOTE =
+  "Needs the live API: the band-width breakdown is precomputed only for the six presets.";
 /** A compare runs M1..M5 for two habitats, so it gets the same longer live timeout as a suppression curve. */
 const COMPARE_TIMEOUT_MS = 10_000;
 /** A suppression curve runs the M1/M2 models at every fraction, so the first live call gets more time. */
@@ -439,6 +443,35 @@ export function createClient(opts: ClientOptions = {}) {
           data: normalizeReference(
             await staticJson("suppression_reference.json", "API offline and no suppression reference artifact was bundled."),
           ),
+          source: "offline",
+          note: OFFLINE_NOTE,
+        }),
+      ),
+
+    /**
+     * S3 band-width breakdown for a bounds answer: the `drivers` field of a live POST /bounds when present; else the
+     * precomputed artifacts/uncertainty/{preset}.json (offline, or an API that predates the field); a custom habitat
+     * without a live breakdown gets OfflineUnavailableError (never an invented split).
+     */
+    drivers: async (h: Habitat, metric: string, bounds: Sourced<BoundsResult>): Promise<Sourced<Drivers>> => {
+      const live = normalizeDrivers(bounds.data.drivers);
+      if (live) return { data: live, source: bounds.source, note: bounds.note };
+      const preset = matchPreset(h);
+      if (!preset) throw new OfflineUnavailableError(CUSTOM_DRIVERS_NOTE);
+      const d = driversFromArtifact(
+        await staticJson<unknown>(`uncertainty/${preset.id}.json`, `No precomputed band-width breakdown for ${preset.label}.`),
+        metric,
+      );
+      if (!d) throw new OfflineUnavailableError(`No precomputed band-width breakdown for ${preset.label} / ${metric}.`);
+      return { data: d, source: "offline", note: `precomputed breakdown (${preset.label} preset)` };
+    },
+
+    /** S2 honesty test (GET /holdout, artifacts/holdout.json unchanged; ADR-0009). About 1 MB. */
+    holdout: () =>
+      withFallback<HoldoutArtifact>(
+        async () => normalizeHoldout(await liveJson<unknown>("/holdout", undefined, Math.max(timeoutMs, 10_000))),
+        async () => ({
+          data: normalizeHoldout(await staticJson("holdout.json", "API offline and no honesty-test artifact was bundled.")),
           source: "offline",
           note: OFFLINE_NOTE,
         }),

@@ -786,3 +786,80 @@ def test_compare_custom_habitat_with_label(client):
 ])
 def test_compare_bad_body_422(client, payload):
     _assert_problem(client.post("/compare", json=payload), 422)
+
+
+# --------------------------------------------------------------------------- S3 uncertainty drivers on /bounds
+
+
+def test_bounds_drivers_lunar_base_m1_matches_engine_and_artifact(client, bounds_ready):
+    from engine.uncertainty import drivers
+
+    body = _strict_json(client.post("/bounds", json={**LUNAR_BASE, "metric": "M1"}))
+    d = body["drivers"]
+    assert d == json.loads(json.dumps(drivers("M1", **LUNAR_BASE)))
+    assert d["applicable"] is True and d["citation"] == "eng:drivers:M1"
+    assert [s["id"] for s in d["sources"]] == ["model_uncertainty", "gravity_widening", "C_b", "k", "dT_over_T",
+                                               "L_mm", "remainder"]
+    assert d["band90"] == body["band90"] and d["estimate"] == body["estimate"]
+    k = next(s for s in d["sources"] if s["id"] == "k")
+    assert k["share"] == 0 and k["reaches_band"] is False
+    art = ROOT / "artifacts" / "uncertainty" / "lunar_base.json"
+    if art.exists():
+        assert d == json.loads(art.read_text(encoding="utf-8"))["metrics"]["M1"]
+
+
+def test_bounds_drivers_not_applicable_without_band(client, bounds_ready):
+    for metric in ("M2", "M4"):  # lunar base M2: no evidence; M4: rule table
+        d = _strict_json(client.post("/bounds", json={**LUNAR_BASE, "metric": metric}))["drivers"]
+        assert d["applicable"] is False and d["reason"] and "sources" not in d
+
+
+def test_bounds_drivers_failure_never_blocks_bounds(client, bounds_ready, monkeypatch):
+    import engine.uncertainty as unc
+
+    def boom(*a, **k):
+        raise RuntimeError("drivers broke")
+
+    monkeypatch.setattr(unc, "drivers", boom)
+    body = _strict_json(client.post("/bounds", json={**LUNAR_BASE, "metric": "M1"}))
+    assert body["drivers"] is None and body["metric"] == "M1" and body["applicable"] is True
+
+
+def test_bounds_drivers_adds_little_time(client, bounds_ready):
+    import time
+
+    import engine.uncertainty as unc
+
+    client.post("/bounds", json={**LUNAR_BASE, "metric": "M1"})  # warm the model fit
+    t0 = time.perf_counter()
+    for _ in range(5):
+        unc.drivers("M1", **LUNAR_BASE)
+    assert (time.perf_counter() - t0) / 5 < 0.25  # about 6-10 ms on a laptop; generous for CI
+
+
+# --------------------------------------------------------------------------- S2 holdout
+
+
+def test_holdout_fake_missing_and_invalid(client, tmp_path, monkeypatch):
+    import api.main as main_mod
+
+    monkeypatch.setattr(main_mod, "HOLDOUT_PATH", tmp_path / "missing.json")
+    _assert_problem(client.get("/holdout"), 503)
+    path = tmp_path / "holdout.json"
+    path.write_text('{"artifact": "holdout", "metrics": {}}', encoding="utf-8")
+    monkeypatch.setattr(main_mod, "HOLDOUT_PATH", path)
+    r = client.get("/holdout")
+    assert r.status_code == 200 and r.json() == {"artifact": "holdout", "metrics": {}}
+    path.write_text("not json", encoding="utf-8")
+    _assert_problem(client.get("/holdout"), 503)
+    path.write_text("[1, 2]", encoding="utf-8")
+    _assert_problem(client.get("/holdout"), 503)
+
+
+def test_holdout_real_artifact_served_unchanged(client):
+    path = ROOT / "artifacts" / "holdout.json"
+    if not path.exists():
+        pytest.skip("artifacts/holdout.json (TL) not built yet")
+    body = _strict_json(client.get("/holdout"))
+    assert body == json.loads(path.read_text(encoding="utf-8"))
+    assert body["citation"] == "eng:holdout" and set(body["metrics"]) == {"M1", "M2", "M3"}

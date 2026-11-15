@@ -133,6 +133,8 @@ export interface BoundsResult {
   sensitivity: SensitivityRow[];
   n_train: number;
   model_version: string;
+  /** S3 band-width breakdown (optional; raw, see lib/uncertainty.ts normalizeDrivers). */
+  drivers?: unknown;
 }
 
 export interface PlannerItem {

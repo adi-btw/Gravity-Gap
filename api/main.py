@@ -44,6 +44,7 @@ PLANNER_PATH = ARTIFACTS_DIR / "planner.json"
 INCIDENTS_PATH = ARTIFACTS_DIR / "incidents.json"
 SUPPRESSION_REFERENCE_PATH = ARTIFACTS_DIR / "suppression_reference.json"
 DETECTION_PATH = ARTIFACTS_DIR / "detection.json"
+HOLDOUT_PATH = ARTIFACTS_DIR / "holdout.json"
 
 ASK_RATE_PER_MIN = int(os.environ.get("GRAVITY_GAP_ASK_RATE", "20"))
 LEDGER_RATE_PER_MIN = int(os.environ.get("GRAVITY_GAP_LEDGER_RATE", "10"))
@@ -401,9 +402,22 @@ def metrics() -> dict[str, Any]:
     return to_jsonable(bounds_module().METRICS)
 
 
+def _drivers(metric: str, hab: dict[str, Any]) -> dict[str, Any] | None:
+    """S3 band-width breakdown (engine.uncertainty.drivers, ADR-0008) for the same habitat; None on any error."""
+    try:
+        mod = importlib.import_module("engine.uncertainty")
+        return to_jsonable(mod.drivers(metric, **{k: hab[k] for k in HABITAT_KEYS}))
+    except Exception:  # noqa: BLE001 - optional field: never blocks the bounds answer
+        log.exception("drivers failed for %s", metric)
+        return None
+
+
 @app.post("/bounds")
 def bounds(body: BoundsIn) -> dict[str, Any]:
-    return _predict(body.metric, body.model_dump(exclude={"weights", "metric"}))
+    hab = body.model_dump(exclude={"weights", "metric"})
+    out = _predict(body.metric, hab)
+    out["drivers"] = _drivers(body.metric, hab)
+    return out
 
 
 @app.post("/compare")
@@ -540,6 +554,24 @@ def detection() -> Any:
     except ValueError as exc:
         raise HTTPException(status_code=503, detail="artifacts/detection.json is not valid JSON") from exc
     return to_jsonable(data)
+
+
+# --------------------------------------------------------------------------- S2 honesty test
+
+
+@app.get("/holdout")
+def holdout() -> Any:
+    """`artifacts/holdout.json` (S2 honesty test: held-out tested atmospheres, ADR-0009), served unchanged."""
+    if not HOLDOUT_PATH.exists():
+        raise HTTPException(status_code=503, detail="artifacts/holdout.json is not built yet "
+                                                    "(python -m engine.holdout)")
+    try:
+        data = json.loads(HOLDOUT_PATH.read_text(encoding="utf-8"))
+    except ValueError as exc:
+        raise HTTPException(status_code=503, detail="artifacts/holdout.json is not valid JSON") from exc
+    if not isinstance(data, dict):
+        raise HTTPException(status_code=503, detail="artifacts/holdout.json is not a JSON object")
+    return data
 
 
 @app.get("/ledger")

@@ -20,6 +20,8 @@ const ROUTES = [
   "/detection",
   "/detection?material=Kapton&cut=big_only",
   "/compare?a=iss&b=lunar_base",
+  "/trust",
+  "/trust?metric=M3&scheme=wide",
 ];
 const THEMES = ["dark", "light"] as const;
 type Theme = (typeof THEMES)[number];

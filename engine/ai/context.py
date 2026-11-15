@@ -27,6 +27,14 @@ The pack is the *only* source of facts an answer may use. It contains:
 * ``compare`` S4 side-by-side compare of two habitats (``engine.compare.compare``) when the question names two
   presets with a compare cue ("What changes between ISS and the lunar base?") or ``context_ids`` has ``eng:compare``
   -> cite ``[eng:compare]`` (summary) and ``[eng:compare:M1]`` .. ``[eng:compare:M5]`` (only metrics present)
+* ``drivers`` S3 band-width budget per covered metric (``engine.uncertainty.drivers``; preset artifacts
+  ``artifacts/uncertainty/{preset}.json``, ADR-0008) for questions about why a band is wide (or ``context_ids``
+  starting with ``eng:drivers``) -> cite ``[eng:drivers:M1]``; each source carries its share rounded to 5%
+  (``share_pct``) and its basis in words
+* ``holdout`` S2 honesty test (``artifacts/holdout.json``, ADR-0009) for "how do you know it works / can I trust
+  it" questions (or ``context_ids`` starting with ``eng:holdout``): per-metric summaries, the wide check, the worst
+  misses (with their PSI rows in ``evidence``) and the SAFFIRE hindcast -> cite ``[eng:holdout]``,
+  ``[eng:holdout:<group id>]`` (only the groups in the pack) and ``[eng:holdout:saffire]``
 * ``constants`` physical constants and thresholds the answers may quote
 * ``citable_ids`` every id a citation may use
 * ``missing``   engine pieces that were unavailable (answers must say so, not guess)
@@ -58,6 +66,8 @@ INCIDENTS_PATH = ARTIFACTS / "incidents.json"
 SUPPRESSION_DIR = ARTIFACTS / "suppression"
 SUPPRESSION_REFERENCE_PATH = ARTIFACTS / "suppression_reference.json"
 DETECTION_PATH = ARTIFACTS / "detection.json"
+UNCERTAINTY_DIR = ARTIFACTS / "uncertainty"
+HOLDOUT_PATH = ARTIFACTS / "holdout.json"
 
 PACK_VERSION = "context.v1"
 HABITAT_FIELDS = ("g_m_s2", "p_psia", "o2", "u_cm_s", "L_mm")
@@ -495,6 +505,182 @@ def detection_cite_ids(block: dict) -> list[str]:
     return ids
 
 
+# --------------------------------------------------------------------------- uncertainty drivers (S3)
+
+DRIVER_WORDS = ("band", "wide", "uncertain", "drives", "driver", "lever", "shrink", "narrow")
+BASIS_TEXT = {"psi_data": "from limited NASA tests", "honesty_rule": "honesty rule for gravity",
+              "engineering_assumption": "engineering assumption, not PSI data"}
+DRIVER_METRICS = ("M1", "M2", "M3")
+
+
+def wants_drivers(question: str, context_ids: Iterable[str] = ()) -> bool:
+    """True for questions about why a band is wide / what would shrink it (or ``eng:drivers`` context ids)."""
+    if any(str(c).startswith("eng:drivers") for c in context_ids or ()):
+        return True
+    q = (question or "").lower()
+    return any(re.search(rf"\b{w}", q) for w in DRIVER_WORDS)
+
+
+def share5(x: Any) -> int:
+    """Share rounded to 5% (same rounding as the ``engine.uncertainty`` lever text)."""
+    return int(5 * round(20 * float(x)))
+
+
+def _drivers_raw(h: dict, metric: str) -> dict | None:
+    if h.get("preset_id"):
+        f = UNCERTAINTY_DIR / f"{h['preset_id']}.json"
+        if f.exists():
+            try:
+                d = (json.loads(f.read_text(encoding="utf-8")).get("metrics") or {}).get(metric)
+            except ValueError:
+                d = None
+            if isinstance(d, dict):
+                return d
+    mod = _engine("uncertainty")
+    if mod is None or not hasattr(mod, "drivers"):
+        return None
+    return mod.drivers(metric, **_inputs(h))
+
+
+def trim_drivers(d: dict) -> dict:
+    cite = d.get("citation") or f"eng:drivers:{d.get('metric')}"
+    out: dict[str, Any] = {"id": cite, "metric": d.get("metric"), "label": d.get("label"),
+                           "applicable": bool(d.get("applicable")), "rounded_to_pct": 5}
+    if not out["applicable"]:
+        out["reason"] = d.get("reason")
+        return out
+    out.update({k: d.get(k) for k in ("kind", "unit", "estimate", "band90", "band_width", "model_band90",
+                                       "widen_factor")})
+    out["sources"] = [{"source": s.get("id"), "label": s.get("label"), "share": s.get("share"),
+                       "share_pct": share5(s.get("share") or 0.0), "basis": s.get("basis"),
+                       "basis_text": BASIS_TEXT.get(str(s.get("basis")), str(s.get("basis"))),
+                       "reaches_band": s.get("reaches_band")} for s in d.get("sources") or []]
+    md = d.get("model_detail") or {}
+    out["model_detail"] = {k: md.get(k) for k in ("tests_within_gate", "n_train", "investigation_id", "source")}
+    lev = d.get("lever") or {}
+    out["lever"] = {"source": lev.get("source"), "share_pct": share5(lev.get("share") or 0.0),
+                    "basis_text": BASIS_TEXT.get(str(lev.get("basis")), ""), "text": lev.get("text"),
+                    "planner_candidate": lev.get("planner_candidate")}
+    return out
+
+
+def drivers_block(h: dict, metrics: Iterable[str]) -> tuple[dict, list[str]]:
+    """``{metric: trimmed drivers}`` for the fitted metrics asked for, plus what failed."""
+    out: dict[str, Any] = {}
+    missing: list[str] = []
+    for m in metrics:
+        if m not in DRIVER_METRICS:
+            continue
+        try:
+            d = _drivers_raw(h, m)
+        except Exception as exc:  # noqa: BLE001 - engine errors must not break the pack
+            missing.append(f"uncertainty.drivers({m}): {type(exc).__name__}")
+            continue
+        if d is None:
+            missing.append("engine.uncertainty")
+            break
+        out[m] = trim_drivers(jsonable(d))
+    return out, missing
+
+
+# --------------------------------------------------------------------------- holdout honesty test (S2)
+
+HOLDOUT_PATTERNS = (r"how do (?:you|we|i) know", r"\btrust\b", r"\bheld[- ]?out\b", r"\bhold(?:ing)? out\b",
+                    r"\bholdout\b", r"\bhonesty test\b", r"\bcalibrat", r"does (?:it|this|the app) work",
+                    r"how often .*\b(?:right|correct|hold|inside)\b", r"\bhow (?:accurate|reliable)\b")
+HOLDOUT_WORST = 3  # worst misses per metric in the pack (the artifact keeps up to 5)
+
+
+def wants_holdout(question: str, context_ids: Iterable[str] = ()) -> bool:
+    """True for "how do you know it works / can I trust it" questions (or ``eng:holdout`` context ids)."""
+    if any(str(c).startswith("eng:holdout") for c in context_ids or ()):
+        return True
+    q = (question or "").lower()
+    return any(re.search(p, q) for p in HOLDOUT_PATTERNS)
+
+
+def load_holdout(path: Path | None = None) -> dict | None:
+    f = path or HOLDOUT_PATH
+    if not f.exists():
+        return None
+    try:
+        data = json.loads(f.read_text(encoding="utf-8"))
+    except ValueError:
+        return None
+    return data if isinstance(data, dict) and isinstance(data.get("metrics"), dict) else None
+
+
+def _holdout_misses(res: dict, k: int) -> list[dict]:
+    by_id = {g.get("id"): g for g in res.get("groups") or [] if isinstance(g, dict)}
+    out = []
+    for w in ((res.get("summary") or {}).get("worst_misses") or [])[:k]:
+        g = by_id.get(w.get("id")) or {}
+        out.append({"id": f"eng:holdout:{w.get('id')}", "metric": res.get("metric"),
+                    "atmosphere": w.get("atmosphere"), "n_tests": w.get("n_tests"), "band90": w.get("band90"),
+                    "observed": w.get("observed"), "gap": w.get("gap"),
+                    "psi_rows": [r.get("record_id") for r in g.get("psi_rows") or [] if r.get("record_id")]})
+    return out
+
+
+def _holdout_metric(res: dict, k: int) -> dict:
+    s = res.get("summary") or {}
+    keep = ("n_groups", "n_tests", "n_skipped", "n_covered", "n_not_covered", "band_coverage", "strict_coverage",
+            "no_evidence_justified", "weak_test", "brier_covered", "brier_baseline_covered",
+            "tests_inside_band_covered")
+    out = {"metric": res.get("metric"), "label": res.get("label"), "kind": res.get("kind"),
+           "investigation_id": res.get("investigation_id"), "hit_rule": res.get("hit_rule"),
+           **{key: s.get(key) for key in keep if key in s}}
+    reasons = sorted({g.get("skip_reason") for g in res.get("groups") or []
+                      if isinstance(g, dict) and g.get("status") == "skipped" and g.get("skip_reason")})
+    if reasons:
+        out["skip_reasons"] = reasons
+    out["worst_misses"] = _holdout_misses(res, k)
+    return out
+
+
+def holdout_block(path: Path | None = None) -> dict | None:
+    """Summaries of ``artifacts/holdout.json`` (no per-group list except the worst misses); None when not built."""
+    data = load_holdout(path)
+    if data is None:
+        return None
+    settings = data.get("settings") or {}
+    out: dict[str, Any] = {"id": data.get("citation") or "eng:holdout", "adr": data.get("adr"),
+                           "method": data.get("method"), "overall": data.get("overall"),
+                           "interval": settings.get("interval"), "weak_below_groups": settings.get("weak_below_groups"),
+                           "metrics": {m: _holdout_metric(r, HOLDOUT_WORST)
+                                       for m, r in (data.get("metrics") or {}).items() if isinstance(r, dict)}}
+    wide = data.get("wide_check")
+    if isinstance(wide, dict):
+        out["wide_check"] = {"what": wide.get("what"), "overall": wide.get("overall"),
+                             "metrics": {m: _holdout_metric(r, 1) for m, r in (wide.get("metrics") or {}).items()
+                                         if isinstance(r, dict)}}
+    sf = data.get("saffire_hindcast")
+    if isinstance(sf, dict) and sf.get("available"):
+        base = (sf.get("scores") or {}).get("baseline_always_more_at_1g_capped") or {}
+        out["saffire"] = {"id": sf.get("citation") or "eng:holdout:saffire", "metric": sf.get("metric"),
+                          "headline": sf.get("headline"), "constant_rule": base, "caveat": sf.get("caveat")}
+    return jsonable(out)
+
+
+def holdout_cite_ids(block: dict) -> list[str]:
+    ids = [block["id"]]
+    for part in (block, block.get("wide_check") or {}):
+        for m in (part.get("metrics") or {}).values():
+            ids += [w["id"] for w in m.get("worst_misses") or []]
+    if block.get("saffire"):
+        ids.append(block["saffire"]["id"])
+    return ids
+
+
+def holdout_psi_rows(block: dict) -> list[str]:
+    rows: list[str] = []
+    for part in (block, block.get("wide_check") or {}):
+        for m in (part.get("metrics") or {}).values():
+            for w in m.get("worst_misses") or []:
+                rows += w.get("psi_rows") or []
+    return list(dict.fromkeys(rows))
+
+
 def presets() -> list[dict]:
     mod = _engine("presets")
     return list(getattr(mod, "PRESETS", [])) if mod else []
@@ -735,10 +921,21 @@ def build_context(
                 citable.add(f"doi:{pub['doi']}")
     pack["records"] = jsonable(records)
 
+    # ---- holdout honesty test (S2): before the evidence rows so its PSI rows resolve as rec: ids
+    hold = None
+    if wants_holdout(question, ctx_ids):
+        hold = holdout_block()
+        if hold is None:
+            missing.append("artifacts/holdout.json")
+        else:
+            citable.update(holdout_cite_ids(hold))
+
     # ---- evidence rows
     ev_ids: list[str] = []
     for p in preds.values():
         ev_ids.extend(e for e in (p.get("evidence_ids") or []) if e)
+    if hold is not None:
+        ev_ids.extend(holdout_psi_rows(hold))
     ev_ids.extend(c[4:] if c.startswith("rec:") else c for c in ctx_ids
                   if c.startswith("rec:") or c.count(":") >= 2)
     evidence = []
@@ -816,6 +1013,17 @@ def build_context(
                     citable.add(cmp_block["id"])
                     citable.update(m["id"] for m in cmp_block["metrics"].values())
     pack["compare"] = cmp_block
+
+    pack["holdout"] = hold
+
+    # ---- uncertainty drivers (S3)
+    drv: dict[str, Any] = {}
+    if wants_drivers(question, ctx_ids):
+        asked = [c.split(":")[-1] for c in ctx_ids if c.startswith("eng:drivers:")]
+        drv, drv_missing = drivers_block(h, [m for m in preds if not asked or m in asked])
+        missing.extend(drv_missing)
+        citable.update(d["id"] for d in drv.values())
+    pack["drivers"] = drv
 
     pack["constants"] = dict(CONSTANTS)
     pack["missing"] = missing

@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { useEffect } from "react";
 import { api } from "@/lib/api";
 import { G0 } from "@/lib/physics";
 import { habitatToQuery } from "@/lib/habitat";
@@ -17,6 +18,11 @@ const PART_LABEL: Record<string, string> = {
 export function PlannerView() {
   const { queryString, habitat } = useHabitat();
   const plan = useAsync(() => api.planner(), "planner");
+  // Deep links such as /planner#candidate-6 (from the Bounds "biggest lever"): the list loads async, so scroll once it is there.
+  useEffect(() => {
+    if (plan.status !== "ok" || typeof window === "undefined" || !window.location.hash.startsWith("#candidate-")) return;
+    document.getElementById(window.location.hash.slice(1))?.scrollIntoView({ block: "start" });
+  }, [plan.status]);
 
   return (
     <div className="space-y-4">
@@ -44,7 +50,11 @@ export function PlannerView() {
                 const q = habitatToQuery({ g_m_s2: t.g_m_s2, p_psia: t.p_psia, o2: t.o2, u_cm_s: t.u_cm_s, L_mm: habitat.L_mm });
                 q.set("metric", t.metric);
                 return (
-                  <li key={`${t.rank}-${t.metric}`} className="rounded-lg border border-line bg-surface p-4">
+                  <li
+                    key={`${t.rank}-${t.metric}`}
+                    id={`candidate-${t.rank}`}
+                    className="scroll-mt-4 rounded-lg border border-line bg-surface p-4 target:border-2 target:border-partial"
+                  >
                     <div className="flex flex-wrap items-baseline justify-between gap-2">
                       <h2 className="text-sm font-semibold">
                         <span className="num">#{t.rank}</span> {t.metric} at{" "}

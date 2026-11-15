@@ -18,6 +18,7 @@ import { BandChart, type BandPoint } from "./charts/BandChart";
 import { CoverageChart } from "./charts/CoverageChart";
 import { RegimeFractionsBar } from "./charts/RegimeFractionsBar";
 import { TornadoChart } from "./charts/TornadoChart";
+import { DriversSection } from "./DriversPanel";
 import { EvidenceList } from "./EvidenceList";
 import { Empty, ErrorState, Loading, SourceChip } from "./ui/States";
 
@@ -65,6 +66,9 @@ export function BoundsPanel() {
           >
             Compare with… →
           </Link>
+          <Link href={`/trust?${queryString}`} className="text-sm text-micro underline hover:text-fg" data-testid="trust-link">
+            How often are these bands right? →
+          </Link>
           {bounds.status === "ok" ? <SourceChip source={bounds.data.source} note={bounds.data.note} /> : null}
         </div>
       </header>
@@ -94,7 +98,7 @@ export function BoundsPanel() {
       {bounds.status === "loading" ? <Loading label="Computing bounds…" /> : null}
       {bounds.status === "error" ? <ErrorState error={bounds.error} onRetry={bounds.reload} /> : null}
       {bounds.status === "ok" ? (
-        <BoundsView r={bounds.data.data} metricInfo={list.find((m) => m.id === metric)} queryString={queryString} habitat={habitat} />
+        <BoundsView r={bounds.data.data} sourced={bounds.data} metricInfo={list.find((m) => m.id === metric)} queryString={queryString} habitat={habitat} />
       ) : null}
     </div>
   );
@@ -102,11 +106,13 @@ export function BoundsPanel() {
 
 function BoundsView({
   r,
+  sourced,
   metricInfo,
   queryString,
   habitat,
 }: {
   r: BoundsResult;
+  sourced: Sourced<BoundsResult>;
   metricInfo?: MetricInfo;
   queryString: string;
   habitat: Habitat;
@@ -161,6 +167,8 @@ function BoundsView({
         )}
       </section>
 
+      {r.applicable && !isCategory ? <DriversSection r={r} bounds={sourced} habitat={habitat} queryString={queryString} /> : null}
+
       {r.applicable ? <CoverageSection metric={r.metric} habitat={habitat} /> : null}
 
       <div className="grid gap-4 md:grid-cols-2">
@@ -197,7 +205,14 @@ function BoundsView({
           <h2 id="sens-h" className="mb-2 text-sm font-semibold">
             Sensitivity
           </h2>
-          <Sensitivity rows={r.sensitivity} kind={kind} unit={r.unit} />
+          <details data-testid="one-at-a-time">
+            <summary className="cursor-pointer text-sm text-micro hover:text-fg">One-at-a-time view</summary>
+            <p className="mt-1 mb-2 text-xs text-muted">
+              Each input moved alone from its low to its high value while the others stay put. It is not the same as the
+              band-width shares in &ldquo;What makes this band wide&rdquo;, which split the band itself.
+            </p>
+            <Sensitivity rows={r.sensitivity} kind={kind} unit={r.unit} />
+          </details>
         </section>
       </div>
 

@@ -657,3 +657,111 @@ def test_compare_cite_ids_only_for_present_metrics():
     assert not validate("See [eng:compare:M9].", pack)["ok"]
     plain = ctx.build_context("lunar_base", question="Why is the lunar base in the mixed regime?")
     assert plain["compare"] is None and not any(c.startswith("eng:compare") for c in plain["citable_ids"])
+
+
+# --------------------------------------------------------------------------- S3 uncertainty drivers
+
+DRIVERS_Q = "Why is the lunar base band so wide?"
+
+
+def test_demo_questions_include_drivers_and_trust(answer_mod):
+    qs = dict(answer_mod.DEMO_QUESTIONS)
+    assert qs.get(DRIVERS_Q) == "lunar_base" and "How do you know it works?" in qs
+
+
+def test_drivers_answer_grounded_and_validated(answer_mod):
+    res = answer_mod.ask(DRIVERS_Q, "lunar_base", use_cache=False, allow_claude=False)
+    assert res["mode"] == "template" and res["intent"] == "band"
+    assert res["validated"], res["validation"]["errors"]
+    md = res["answer_markdown"]
+    assert "eng:drivers:M1" in res["citations"]
+    assert "What makes this band wide" in md and "rounded to 5%" in md
+    assert "from limited NASA tests" in md and "honesty rule for gravity" in md
+    assert "engineering assumption, not PSI data" in md and "it never reaches this band" in md
+    assert "Biggest lever" in md and "Why the band is wide (one input at a time)" in md
+
+
+def test_drivers_pack_only_on_band_questions_and_ids_exist():
+    from engine.ai import context as ctx
+
+    pack = ctx.build_context("lunar_base", question=DRIVERS_Q)
+    assert pack["drivers"]["M1"]["applicable"] is True and pack["drivers"]["M2"]["applicable"] is False
+    shares = {s["source"]: s["share_pct"] for s in pack["drivers"]["M1"]["sources"]}
+    assert all(v % 5 == 0 for v in shares.values()) and shares["k"] == 0
+    assert {"eng:drivers:M1", "eng:drivers:M3"} <= set(pack["citable_ids"])
+    assert not validate("See [eng:drivers:M9].", pack)["ok"]
+    plain = ctx.build_context("lunar_base", question="Why is the lunar base in the mixed regime?")
+    assert plain["drivers"] == {} and not any(c.startswith("eng:drivers") for c in plain["citable_ids"])
+    only = ctx.build_context("lunar_base", question="Tell me more", context_ids=["eng:drivers:M3"])
+    assert list(only["drivers"]) == ["M3"]
+
+
+def test_drivers_custom_habitat_computed_live():
+    from engine.ai import context as ctx
+
+    hab = {"g_m_s2": 1.62, "p_psia": 8.0, "o2": 0.34, "u_cm_s": 10, "L_mm": 10}
+    pack = ctx.build_context(hab, question="Why is the M1 band wide?")
+    assert pack["habitat"]["preset_id"] is None and pack["drivers"]["M1"]["id"] == "eng:drivers:M1"
+
+
+# --------------------------------------------------------------------------- S2 honesty test
+
+TRUST_Q = "How do you know it works?"
+
+
+@pytest.fixture
+def holdout_ready():
+    path = ROOT / "artifacts" / "holdout.json"
+    if not path.exists():
+        pytest.skip("artifacts/holdout.json (TL) not built yet (python -m engine.holdout)")
+    return json.loads(path.read_text(encoding="utf-8"))
+
+
+def test_trust_intent_does_not_capture_other_questions(answer_mod):
+    assert answer_mod.classify(TRUST_Q) == "trust"
+    assert answer_mod.classify("How often are these bands right?") == "trust"
+    assert answer_mod.classify("Can I trust it?") == "trust"
+    assert answer_mod.classify("Does helium work better than CO₂?") == "suppression"
+    assert answer_mod.classify("Why is the M1 band wide for the lunar base?") == "band"
+    assert answer_mod.classify("Is the lunar rover safer with the fans off?") == "fans_off"
+
+
+def test_trust_answer_grounded_and_validated(answer_mod, holdout_ready):
+    res = answer_mod.ask(TRUST_Q, use_cache=False, allow_claude=False)
+    assert res["mode"] == "template" and res["intent"] == "trust"
+    assert res["validated"], res["validation"]["errors"]
+    md = res["answer_markdown"]
+    ov = holdout_ready["overall"]
+    assert f"{ov['band_coverage']['k']} of {ov['band_coverage']['n']}" in md
+    m1 = holdout_ready["metrics"]["M1"]["summary"]["strict_coverage"]
+    assert f"strict rule {m1['k']} of {m1['n']}" in md
+    assert "wide check" in md.lower() and "weak test" in md and "Not discriminative" in md
+    assert {"eng:holdout", "eng:holdout:saffire"} <= set(res["citations"])
+    worst = holdout_ready["metrics"]["M1"]["summary"]["worst_misses"][0]["id"]
+    assert f"eng:holdout:{worst}" in res["citations"]
+    assert any(c.startswith("rec:PSI-69:FLEX:") for c in res["citations"])
+
+
+def test_trust_pack_is_small_and_cites_only_present_groups(holdout_ready):
+    from engine.ai import context as ctx
+
+    pack = ctx.build_context("lunar_base", question=TRUST_Q)
+    assert len(json.dumps(pack["holdout"])) < 30_000  # summaries + worst misses, not 222 groups
+    ids = {c for c in pack["citable_ids"] if c.startswith("eng:holdout")}
+    groups = {g["id"] for r in holdout_ready["metrics"].values() for g in r["groups"]}
+    assert "eng:holdout" in ids and "eng:holdout:saffire" in ids
+    assert all(i.split("eng:holdout:", 1)[1] in groups for i in ids - {"eng:holdout", "eng:holdout:saffire"})
+    assert len(ids) < 20
+    assert not validate("See [eng:holdout:M1-o2_0.999-p_9.99].", pack)["ok"]
+    assert not validate("The test held out 13579 groups [eng:holdout].", pack)["ok"]
+    plain = ctx.build_context("lunar_base", question="Why is the lunar base in the mixed regime?")
+    assert plain["holdout"] is None
+
+
+def test_trust_artifact_missing_still_safe(answer_mod, tmp_path, monkeypatch):
+    from engine.ai import context as ctx
+
+    monkeypatch.setattr(ctx, "HOLDOUT_PATH", tmp_path / "missing.json")
+    res = answer_mod.ask(TRUST_Q, use_cache=False, allow_claude=False)
+    assert res["intent"] == "trust" and res["validated"]
+    assert "not available in this build" in res["answer_markdown"]

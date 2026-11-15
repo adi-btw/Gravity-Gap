@@ -72,6 +72,11 @@ export default function AboutPage() {
             <Link href="/explore" className="text-micro underline">spectrum page</Link>.
           </li>
           <li>
+            <strong>Honesty test:</strong> each tested atmosphere is hidden from the model in turn, the model is refitted,
+            and we check whether its 90% band catches the hidden tests. Results, including the misses, are on the{" "}
+            <Link href="/trust" className="text-micro underline">Can I trust it? page</Link>.
+          </li>
+          <li>
             <strong>AI:</strong> the assistant writes explanations only from engine outputs and the catalog; a validator
             checks every number and citation. Without an API key it falls back to template or cached answers.
           </li>

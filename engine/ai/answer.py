@@ -17,7 +17,10 @@ Intents: incident (R1), refusal, suppression (R2: CO2 / helium dilution, answere
 ``engine.suppression.curve`` and ``artifacts/suppression_reference.json`` in the pack, always with
 ``SAFETY_NOTE``), detection (R3: smoke, dust and smoke-alarm questions, answered only from
 ``artifacts/detection.json``, always stating its gaps), compare (S4: two named presets, answered only from
-``engine.compare.compare`` in the pack; no difference when a side has no evidence), fans_off, planner, experiments, band, regime, explain.
+``engine.compare.compare`` in the pack; no difference when a side has no evidence), trust (S2: "how do you know it
+works?", answered only from ``artifacts/holdout.json`` in the pack, strict rate and pooled checks next to the lenient
+one, the wide check for the "no evidence" side, worst misses, SAFFIRE caveat), fans_off, planner, experiments, band
+(with the S3 band-width budget ``eng:drivers:<metric>`` when the pack has it), regime, explain.
 
 Every answer is run through ``engine.ai.validator.validate`` against the context pack.
 
@@ -69,6 +72,10 @@ DEMO_QUESTIONS: list[tuple[str, str | None]] = [
     ("Is smoke in space different?", None),
     # S4 habitat compare (intent "compare"; engine.compare.compare in the context pack)
     ("What changes between ISS and the lunar base?", "lunar_base"),
+    # S3 uncertainty drivers (intent "band"; engine.uncertainty.drivers / artifacts/uncertainty in the pack)
+    ("Why is the lunar base band so wide?", "lunar_base"),
+    # S2 honesty test (intent "trust"; artifacts/holdout.json in the context pack)
+    ("How do you know it works?", None),
 ]
 
 OUT_OF_SCOPE = ("rocket", "propellant", "propulsion", "thruster", "launch vehicle", "booster",
@@ -144,6 +151,8 @@ def classify(question: str, context_ids: Iterable[str] = ()) -> str:
         return "detection"
     if ctx.wants_compare(question, context_ids):
         return "compare"
+    if ctx.wants_holdout(question, context_ids):
+        return "trust"
     if ctx._wants_fans_off(q) or ("fan" in q and ("off" in q or "without" in q)) or "ventilation" in q:
         return "fans_off"
     if any(w in q for w in ("test first", "luci", "fm2", "next test", "which test", "what should", "plan")):
@@ -362,9 +371,37 @@ def t_band(pack: dict, question: str, metric: str | None) -> str:
         return f"No bounds prediction is available for {pack['habitat']['label']} in this build. {_missing_note(pack)}"
     out = [_habitat_line(pack), _pred_par(pred)]
     if pred.get("applicable"):
-        out.append("**Why the band is wide:** " + _why_wide(pred))
+        out.append(_drivers_par(pack, pred["metric"]))
+        out.append("**Why the band is wide (one input at a time):** " + _why_wide(pred))
     out += [_regime_par(pack), _narrow_par(pack, pred["metric"]), _evidence_par(pack, pred)]
     return "\n\n".join(o for o in out if o)
+
+
+def _share_text(share: float, pct5: int) -> str:
+    if not share:
+        return "0%"
+    return "under 5%" if pct5 == 0 else f"about {pct5}%"
+
+
+def _drivers_par(pack: dict, metric: str) -> str:
+    """S3 band-width budget (ADR-0008) from ``pack["drivers"]``; '' when the pack has none for this metric."""
+    d = (pack.get("drivers") or {}).get(metric)
+    if not d or not d.get("applicable"):
+        return ""
+    parts = []
+    for src in d.get("sources") or []:
+        if src.get("source") == "k" and not src.get("reaches_band"):
+            parts.append(f"{src['label']}: 0% (it never reaches this band)")
+            continue
+        label = "Not split between the inputs" if src.get("source") == "remainder" else src["label"]
+        parts.append(f"{label}: {_share_text(src.get('share') or 0.0, src.get('share_pct') or 0)} "
+                     f"({src.get('basis_text')})")
+    out = (f"**What makes this band wide** [{d['id']}]: the 90% band {band(d, d.get('band90'))} split by source "
+           f"(rounded to 5%): " + "; ".join(parts) + ".")
+    lev = d.get("lever") or {}
+    if lev.get("text"):
+        out += f" **Biggest lever:** {lev['text']} [{d['id']}]"
+    return out
 
 
 def t_experiments(pack: dict, question: str, metric: str | None) -> str:
@@ -953,7 +990,124 @@ def t_compare(pack: dict, question: str, metric: str | None) -> str:
     return "\n\n".join(out)
 
 
-TEMPLATES = {"compare": t_compare, "detection": t_detection, "suppression": t_suppression, "incident": t_incident, "regime": t_regime, "band": t_band, "experiments": t_experiments, "planner": t_planner,
+# --------------------------------------------------------------------------- honesty test (S2)
+
+
+def _rate(r: dict | None) -> str:
+    if not r or not r.get("n"):
+        return "no groups"
+    s = f"{r['k']} of {r['n']}"
+    if r.get("rate") is not None:
+        s += f" ({pct(r['rate'])}"
+        iv = r.get("interval90")
+        s += f", 90% interval {pct(iv[0])} to {pct(iv[1])})" if iv else ")"
+    return s
+
+
+def _atm_text(a: dict) -> str:
+    bits = [f"{pct(a.get('o2'))} O₂", f"{fmt(a.get('p_psia'))} psia"]
+    for k, name in (("co2", "CO₂"), ("he", "helium")):
+        if a.get(k):
+            bits.append(f"{name} {fmt(a[k])}")
+    return ", ".join(bits)
+
+
+def _observed_text(m: dict, w: dict) -> str:
+    o = w.get("observed") or {}
+    if m.get("kind") == "probability":
+        return f"{o.get('positives')} of {o.get('n')} self-extinguished"
+    return f"median observed diameter {fmt(o.get('median'))} mm"
+
+
+def _band_text(m: dict, b: Any) -> str:
+    if not b:
+        return "n/a"
+    if m.get("kind") == "probability":
+        return f"{pct(b[0])} to {pct(b[1])}"
+    return f"{fmt(b[0])} to {fmt(b[1])} mm"
+
+
+def _brier_word(m: dict) -> str:
+    b, base = m.get("brier_covered"), m.get("brier_baseline_covered")
+    if b is None or base is None:
+        return ""
+    return " (better)" if b < base else " (worse)" if b > base else " (the same)"
+
+
+def _trust_metric_line(m: dict) -> str:
+    s = f"- **{m['metric']} – {m.get('label')}** ({m.get('investigation_id')}): band held for {_rate(m.get('band_coverage'))}"
+    if m.get("kind") == "probability":
+        s += (f"; strict rule {_rate(m.get('strict_coverage'))}; pooled Brier score {fmt(m.get('brier_covered'))} "
+              f"vs {fmt(m.get('brier_baseline_covered'))} for the training average{_brier_word(m)}; lower is better")
+    elif m.get("tests_inside_band_covered"):
+        s += f"; single diameters inside their own band {_rate(m.get('tests_inside_band_covered'))}"
+    if m.get("weak_test"):
+        s += "; **weak test** (fewer than 10 covered groups)"
+    return s + "."
+
+
+def _wide_metric_line(m: dict) -> str:
+    s = (f"- **{m['metric']}**: {m.get('n_covered')} covered, {m.get('n_not_covered')} no evidence, "
+         f"{m.get('n_skipped')} skipped")
+    if m.get("skip_reasons"):
+        s += f" ({'; '.join(m['skip_reasons'])})"
+    s += f"; band held for {_rate(m.get('band_coverage'))}"
+    if m.get("kind") == "probability" and m.get("brier_covered") is not None:
+        s += (f"; pooled Brier {fmt(m.get('brier_covered'))} vs {fmt(m.get('brier_baseline_covered'))} for the "
+              f"training average{_brier_word(m)}")
+    elif m.get("tests_inside_band_covered"):
+        s += f"; single diameters inside their band {_rate(m.get('tests_inside_band_covered'))}"
+    if m.get("weak_test"):
+        s += "; **weak test**"
+    return s + "."
+
+
+def t_trust(pack: dict, question: str, metric: str | None) -> str:
+    hold = pack.get("holdout")
+    if not hold:
+        return ("The honesty-test artifact (artifacts/holdout.json) is not available in this build, so Gravity Gap "
+                "cannot say how often its bands were right on held-out tests.")
+    ov = hold.get("overall") or {}
+    hid = hold["id"]
+    out = [(f"**How we check it: hide tests the model was trained on, then see if its bands catch them.** "
+            f"{hold.get('method')} [{hid}]"),
+           (f"**Bands, one tested atmosphere hidden at a time:** the 90% band held for {_rate(ov.get('band_coverage'))} "
+            f"held-out groups; the target is {pct(ov.get('target_coverage'))} [{hid}]. That headline uses a lenient "
+            f"rule for small groups, so the strict rate and the pooled checks are next to it:\n"
+            + "\n".join(_trust_metric_line(m) for m in (hold.get("metrics") or {}).values()))]
+    hit_rule = next((m.get("hit_rule") for m in (hold.get("metrics") or {}).values() if m.get("kind") == "probability"),
+                    None)
+    if hit_rule:
+        out.append(f"**Hit rule (M1, M3):** {hit_rule} [{hid}]")
+    wide = hold.get("wide_check") or {}
+    wov = wide.get("overall") or {}
+    if wide:
+        nej = wov.get("no_evidence_justified") or {}
+        out.append(f"**Is \"no evidence\" the right call?** One atmosphere at a time never tests that, because every "
+                   f"hidden group still had a tested neighbour. The wide check does: {wide.get('what')} [{hid}] "
+                   f"It gave \"no evidence\" for {nej.get('n')} groups; for {nej.get('k')} of them the band, had it "
+                   f"been shown, would have missed. So in these data the gate was cautious rather than wrong: it "
+                   f"mostly held back bands that would have been right. Per metric:\n"
+                   + "\n".join(_wide_metric_line(m) for m in (wide.get("metrics") or {}).values()))
+    misses = []
+    for m in (hold.get("metrics") or {}).values():
+        for w in (m.get("worst_misses") or [])[:1]:
+            rows = " ".join(f"[rec:{r}]" for r in (w.get("psi_rows") or [])[:3])
+            misses.append(f"- {m['metric']} at {_atm_text(w.get('atmosphere') or {})}: {_observed_text(m, w)} "
+                          f"({w.get('n_tests')} tests) vs band {_band_text(m, w.get('band90'))} [{w['id']}] {rows}")
+    if misses:
+        out.append("**Worst misses (largest gap; all small groups):**\n" + "\n".join(misses))
+    sf = hold.get("saffire")
+    if sf:
+        hd = sf.get("headline") or {}
+        out.append(f"**Across investigations (SAFFIRE-II hindcast, M4):** {hd.get('hits')} of {hd.get('n')} right "
+                   f"[{sf['id']}]. {sf.get('caveat')} [{sf['id']}]")
+    out.append("**Not changed by this test:** the bands and the gate stay as they are; any change needs its own "
+               "decision record (ADR-0009). The full results are on the *Can I trust it?* page.")
+    return "\n\n".join(out)
+
+
+TEMPLATES = {"trust": t_trust, "compare": t_compare, "detection": t_detection, "suppression": t_suppression, "incident": t_incident, "regime": t_regime, "band": t_band, "experiments": t_experiments, "planner": t_planner,
              "fans_off": t_fans_off, "explain": t_explain}
 
 
@@ -961,7 +1115,7 @@ def template_answer(question: str, pack: dict, intent: str, metric: str | None) 
     if intent == "refusal":
         return t_refusal(pack, question)
     text = TEMPLATES.get(intent, t_explain)(pack, question, metric)
-    if intent in ("incident", "detection"):
+    if intent in ("incident", "detection", "trust"):
         return text  # self-contained: built only from the incident artifact, not the habitat predictions
     note = _missing_note(pack)
     return text + ("\n\n" + note if note else "")
