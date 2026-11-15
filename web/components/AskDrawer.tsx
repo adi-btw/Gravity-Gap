@@ -215,7 +215,7 @@ export function AskButton() {
     <button
       type="button"
       onClick={() => open()}
-      className="rounded-sm border border-line px-3 py-1 text-xs text-fg transition-colors hover:border-line-strong hover:bg-surface-2"
+      className="btn"
     >
       Ask
     </button>

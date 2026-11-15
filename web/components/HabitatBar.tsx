@@ -33,9 +33,9 @@ export function HabitatBar({ compact = false }: { compact?: boolean }) {
   const activeIds = new Set(history.filter((i) => matchIncident(habitat, [i])).map((i) => i.id));
 
   return (
-    <section aria-label="Habitat settings" className={`mx-auto max-w-6xl px-4 sm:px-6 ${compact ? "py-0" : "pb-3 pt-2"}`}>
-      <div className="flex flex-wrap items-center gap-1.5 border-t border-line pt-3" role="group" aria-label="Habitat presets">
-        <span className="label-mono mr-2">Habitat</span>
+    <section aria-label="Habitat settings" className={`mx-auto max-w-6xl px-4 sm:px-6 ${compact ? "py-0" : "pb-4 pt-1"}`}>
+      <div className="flex flex-wrap items-center gap-1 border-t border-line pt-3" role="group" aria-label="Habitat presets">
+        <span className="label-mono mr-3 w-14">Habitat</span>
         {PRESETS.map((p) => {
           const on = active?.id === p.id;
           return (
@@ -66,8 +66,8 @@ export function HabitatBar({ compact = false }: { compact?: boolean }) {
       </div>
 
       {history.length > 0 ? (
-        <div className="mt-2 flex flex-wrap items-center gap-1.5" role="group" aria-label="Real fire incidents">
-          <span className="label-mono mr-2">History</span>
+        <div className="mt-1 flex flex-wrap items-center gap-1" role="group" aria-label="Real fire incidents">
+          <span className="label-mono mr-3 w-14">History</span>
           {history.map((inc) => {
             const h = incidentHabitat(inc);
             const on = activeIds.has(inc.id);
@@ -78,7 +78,7 @@ export function HabitatBar({ compact = false }: { compact?: boolean }) {
                 aria-pressed={on}
                 onClick={() => h && setHabitat(h)}
                 title={`${inc.name} (${inc.date}): ${inc.phase}`}
-                className={`chip border-dashed ${on ? "chip-on" : ""}`}
+                className={`chip border-dashed ${on ? "chip-on" : "border-line"}`}
               >
                 {inc.name} <span className="num">{incidentYear(inc.date)}</span>
               </button>
@@ -87,7 +87,7 @@ export function HabitatBar({ compact = false }: { compact?: boolean }) {
         </div>
       ) : null}
 
-      <div className="mt-3 grid grid-cols-2 border-l border-t border-line sm:grid-cols-3 lg:grid-cols-5">
+      <div className="-ml-3 mt-4 grid grid-cols-2 gap-y-3 sm:grid-cols-3 lg:grid-cols-5">
         <NumberField
           {...fieldProps(FIELDS.g_m_s2)}
           value={habitat.g_m_s2}
@@ -117,7 +117,7 @@ export function HabitatBar({ compact = false }: { compact?: boolean }) {
         />
       </div>
 
-      <p className="mt-2 max-w-[100ch] text-[11px] leading-relaxed text-muted">
+      <p className="mt-3 max-w-[100ch] text-[12px] leading-relaxed text-muted">
         <span className="font-medium">Source:</span>{" "}
         {sourcePreset
           ? `${sourcePreset.label}: ${sourcePreset.source}.`

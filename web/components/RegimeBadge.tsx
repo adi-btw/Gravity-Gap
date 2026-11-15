@@ -38,7 +38,7 @@ export function RegimeIcon({ regime, size = 16 }: { regime: Regime; size?: numbe
 export function RegimeBadge({ regime, large = false }: { regime: Regime; large?: boolean }) {
   return (
     <span
-      className={`inline-flex items-center gap-1.5 rounded-md border-2 bg-surface font-semibold uppercase tracking-wide ${STYLE[regime]} ${
+      className={`inline-flex items-center gap-1.5 rounded-md border bg-surface font-medium ${STYLE[regime]} ${
         large ? "px-3 py-1.5 text-lg" : "px-2 py-0.5 text-xs"
       }`}
       title={REGIME_LABEL[regime]}

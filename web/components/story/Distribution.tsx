@@ -22,7 +22,7 @@ export function Distribution() {
     <div className="gg-dist__grid">
       <div className="gg-stack">
         <h2 id="distribution-title" className="gg-h2">
-          Choose the habitat for your copy.
+          Choose the habitat for your copy
         </h2>
         <p className="gg-soft">
           Every page of the tool opens on the habitat you mark here, and the link in your address bar carries it, so

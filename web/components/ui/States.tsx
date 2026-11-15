@@ -19,7 +19,7 @@ export function ErrorState({ error, onRetry, title }: { error: Error; onRetry?: 
       role={offline ? "status" : "alert"}
       className={`rounded-md border px-4 py-3 text-sm ${offline ? "hatch border-dashed border-line" : "border-warn bg-[var(--warn-fill)]"}`}
     >
-      <p className={`font-semibold ${offline ? "text-fg" : "text-warn"}`}>
+      <p className={`font-medium ${offline ? "text-fg" : "text-warn"}`}>
         {title ?? (offline ? "Live API needed" : "Could not load this panel")}
       </p>
       <p className="mt-1">{error.message}</p>

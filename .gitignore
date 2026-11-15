@@ -15,3 +15,6 @@ data/detection/raw/PSI-115/PSI-115_Reports_NNX17AF08A_FinalReport.pdf
 # scroll-craft verification screenshots (large; regenerate with scrollcraft/lab/*/shoot*.mjs)
 scrollcraft/lab/**/*.png
 scrollcraft/lab/**/report.json
+
+# unslop before/after screenshots (large; regenerate with unslop/shoot.cjs)
+unslop/shots/

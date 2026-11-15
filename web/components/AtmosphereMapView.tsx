@@ -79,7 +79,7 @@ export function AtmosphereMapView() {
         {res.status === "ok" ? <SourceChip source={res.data.source} note={res.data.note} /> : null}
       </header>
 
-      <div className="flex flex-wrap items-start gap-x-6 gap-y-3 rounded-lg border border-line bg-surface p-3">
+      <div className="flex flex-wrap items-start gap-x-6 gap-y-3 panel-tight">
         <div role="group" aria-label="Metric" className="flex flex-col gap-1">
           <span className="text-xs font-medium text-muted">What the colour shows</span>
           <div className="flex flex-wrap gap-1">
@@ -192,7 +192,7 @@ function MapBody({ m, gravity, overlays }: { m: AtmosphereMap; gravity: MapGravi
     <div className="space-y-3">
       <div className="flex flex-wrap items-baseline gap-x-4 gap-y-1">
         <p className="text-sm" data-testid="evidence-share">
-          <span className="num text-2xl font-semibold">{shareText(share.evidence_share)}</span> of this map has evidence for{" "}
+          <span className="num text-2xl font-medium">{shareText(share.evidence_share)}</span> of this map has evidence for{" "}
           {m.metric} ({share.n_covered} of {share.n_cells} cells);{" "}
           <span className="font-medium">{shareText(share.no_evidence_share)} has no evidence</span>.
         </p>
@@ -342,7 +342,7 @@ function MapBody({ m, gravity, overlays }: { m: AtmosphereMap; gravity: MapGravi
                           x={right ? x + 9 : x - 9}
                           y={y - 7}
                           fontSize={11}
-                          fontWeight={600}
+                          fontWeight={500}
                           textAnchor={right ? "start" : "end"}
                           fill="var(--fg)"
                           style={{ paintOrder: "stroke", stroke: "var(--surface)", strokeWidth: 3, strokeLinejoin: "round" }}
@@ -388,7 +388,7 @@ function MapBody({ m, gravity, overlays }: { m: AtmosphereMap; gravity: MapGravi
         </figure>
 
         <aside className="space-y-3">
-          <div className="rounded-lg border border-line bg-surface p-3 text-sm">
+          <div className="panel-tight text-sm">
             <p className="text-xs font-medium uppercase tracking-wider text-muted">{hover ? "Under the pointer" : "Selected cell"}</p>
             <p id={liveId} aria-live="polite" className="mt-1" data-testid="cell-info">
               {shown ? cellText(m, shown) : "–"}
@@ -421,7 +421,7 @@ function MapBody({ m, gravity, overlays }: { m: AtmosphereMap; gravity: MapGravi
               </div>
             ) : null}
           </div>
-          <div className="rounded-lg border border-line bg-surface p-3 text-xs" data-testid="gravity-note">
+          <div className="panel-tight text-xs" data-testid="gravity-note">
             <p className="font-medium">Gravity changes only the band</p>
             <p className="mt-1">
               {m.what_varies} At {g.label} gravity the band is widened by a factor of{" "}
@@ -540,8 +540,8 @@ function SourceDetails({ c }: { c: CrewLimit }) {
 
 function CrewLegend({ lines, refs, notDrawn, note }: { lines: CrewLimit[]; refs: CrewLimit[]; notDrawn: CrewLimit[]; note: string }) {
   return (
-    <section aria-labelledby="crew-h" className="rounded-lg border border-line bg-surface p-3" data-testid="crew-legend">
-      <h2 id="crew-h" className="text-sm font-semibold">
+    <section aria-labelledby="crew-h" className="panel-tight" data-testid="crew-legend">
+      <h2 id="crew-h" className="text-sm font-medium">
         Crew and materials limits on the map
       </h2>
       <p className="mt-1 text-xs text-muted">
@@ -618,7 +618,7 @@ function ColourLegend({ m, domain, hatchId }: { m: AtmosphereMap; domain: [numbe
 
 function MarkerLegend({ m }: { m: AtmosphereMap }) {
   return (
-    <div className="rounded-lg border border-line bg-surface p-3 text-xs" data-testid="marker-legend">
+    <div className="panel-tight text-xs" data-testid="marker-legend">
       <p className="font-medium">Markers</p>
       <ul className="mt-1 space-y-1">
         <li className="flex items-center gap-2">

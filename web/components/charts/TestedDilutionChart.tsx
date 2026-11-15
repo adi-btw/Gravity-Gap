@@ -70,7 +70,7 @@ export function TestedDilutionChart({ tested, habitatO2, habitatLabel, xMax, dil
 
       <g aria-hidden="true">
         <line x1={M.l} x2={W - M.r} y1={hy} y2={hy} stroke="var(--partial)" strokeWidth={2.5} />
-        <text x={M.l + 6} y={hy - 6} fontSize={12} fontWeight={600} fill="var(--partial)" className="svg-halo">
+        <text x={M.l + 6} y={hy - 6} fontSize={12} fontWeight={500} fill="var(--partial)" className="svg-halo">
           {habitatLabel}: {fmtPct(habitatO2)} O₂{above ? " (above every diluted test)" : ""}
         </text>
       </g>

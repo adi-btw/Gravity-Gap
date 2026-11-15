@@ -9,7 +9,7 @@ import { RegimeBadge } from "./RegimeBadge";
 
 function Stat({ label, value, unit, sub, testId }: { label: string; value: string; unit?: string; sub?: string; testId?: string }) {
   return (
-    <div className="rounded-md border border-line bg-surface p-3">
+    <div className="panel-tight">
       <div className="text-xs text-muted">{label}</div>
       <div className="num mt-1 text-2xl" data-testid={testId}>
         {value}
@@ -48,7 +48,7 @@ export function RegimeCalculator({ habitat }: { habitat: Habitat }) {
   return (
     <div className="space-y-5">
       <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4" aria-live="polite">
-        <div className="flex flex-col justify-center rounded-md border border-line bg-surface p-3">
+        <div className="flex flex-col justify-center panel-tight">
           <div className="text-xs text-muted">Flame regime</div>
           <div className="mt-2">
             <RegimeBadge regime={e.regime} large />
@@ -66,7 +66,7 @@ export function RegimeCalculator({ habitat }: { habitat: Habitat }) {
       </div>
 
       <p className="rounded-md border border-line bg-surface-2 p-3 text-sm">
-        <span className="font-semibold">Which evidence applies: </span>
+        <span className="font-medium">Which evidence applies: </span>
         {REGIME_EVIDENCE[e.regime]}{" "}
         {g > 0 && e.regime !== "forced"
           ? `Raising the vent above ${fmt(toForced, 1)} cm/s would put a ${L} mm flame in the forced regime, where ISS data transfers.`
@@ -74,8 +74,8 @@ export function RegimeCalculator({ habitat }: { habitat: Habitat }) {
       </p>
 
       <aside className="rounded-md border-l-4 border-partial bg-surface p-3 text-sm" aria-label="Insight">
-        <span className="font-semibold text-partial">Insight: </span>
-        At lunar gravity with 5–15 cm/s ventilation, typical cabin flames sit in the MIXED regime, the least-tested
+        <span className="font-medium text-partial">Insight: </span>
+        At lunar gravity with 5–15 cm/s ventilation, typical cabin flames sit in the mixed regime, the least-tested
         condition.
         {g > 0
           ? ` At ${gFraction(g).toFixed(3)} g, a ${L} mm flame is mixed for vent speeds from ${fmt(ventForRi(g, L, RI_BUOYANT_MIN), 1)} to ${fmt(toForced, 1)} cm/s.`
@@ -83,7 +83,7 @@ export function RegimeCalculator({ habitat }: { habitat: Habitat }) {
         {lunar && e.regime === "mixed" ? " Your current habitat is one of them." : ""}
       </aside>
 
-      <figure className="rounded-md border border-line bg-surface p-3">
+      <figure className="panel-tight">
         <figcaption className="mb-2 text-sm font-medium">
           <span className="fig-no">Fig. 1 ·</span>
           Regime map at g = {g.toFixed(2)} m/s² ({gFraction(g).toFixed(3)} g)
@@ -105,7 +105,7 @@ export function RegimeCalculator({ habitat }: { habitat: Habitat }) {
         </div>
       </figure>
 
-      <details className="rounded-md border border-line bg-surface p-3" open>
+      <details className="panel-tight" open>
         <summary className="cursor-pointer text-sm font-medium">Data table: regime values at this gravity</summary>
         <div className="mt-2 overflow-x-auto">
           <table className="num w-full text-left text-xs">

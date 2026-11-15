@@ -53,10 +53,10 @@ export function PlannerView() {
                   <li
                     key={`${t.rank}-${t.metric}`}
                     id={`candidate-${t.rank}`}
-                    className="scroll-mt-4 rounded-lg border border-line bg-surface p-4 target:border-2 target:border-partial"
+                    className="scroll-mt-4 panel target:border-2 target:border-partial"
                   >
                     <div className="flex flex-wrap items-baseline justify-between gap-2">
-                      <h2 className="text-sm font-semibold">
+                      <h2 className="text-sm font-medium">
                         <span className="num">#{t.rank}</span> {t.metric} at{" "}
                         <span className="num">
                           {(t.g_m_s2 / G0).toFixed(3)} g · {t.p_psia} psia · O₂ {(t.o2 * 100).toFixed(1)}% · vent {t.u_cm_s} cm/s
@@ -91,8 +91,8 @@ export function PlannerView() {
             <Empty>The planner produced no candidate tests.</Empty>
           )}
 
-          <section className="rounded-lg border border-line bg-surface p-4" aria-labelledby="impl-h">
-            <h2 id="impl-h" className="mb-2 text-sm font-semibold">
+          <section className="panel" aria-labelledby="impl-h">
+            <h2 id="impl-h" className="mb-2 text-sm font-medium">
               Design implications for habitats
             </h2>
             {plan.data.data.design_implications.length ? (

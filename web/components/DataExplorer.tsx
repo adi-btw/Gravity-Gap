@@ -92,7 +92,7 @@ export function DataExplorer() {
         {page.status === "ok" ? <SourceChip source={page.data.source} /> : null}
       </header>
 
-      <form className="flex flex-wrap items-end gap-3 rounded-lg border border-line bg-surface p-4" onSubmit={(e) => e.preventDefault()} aria-label="Filters">
+      <form className="flex flex-wrap items-end gap-3 panel" onSubmit={(e) => e.preventDefault()} aria-label="Filters">
         <div className="flex flex-col gap-1">
           <label htmlFor="f-inv" className="text-xs text-muted">Investigation</label>
           <select id="f-inv" value={inv} onChange={(e) => reset(setInv)(e.target.value)} className="rounded border border-line bg-bg px-2 py-1 text-sm">
@@ -151,7 +151,7 @@ export function DataExplorer() {
         </div>
       </form>
 
-      <section aria-live="polite" className="rounded-lg border border-line bg-surface p-4">
+      <section aria-live="polite" className="panel">
         {page.status === "loading" ? <Loading label="Loading tests…" /> : null}
         {page.status === "error" ? <ErrorState error={page.error} onRetry={page.reload} /> : null}
         {page.status === "ok" ? (

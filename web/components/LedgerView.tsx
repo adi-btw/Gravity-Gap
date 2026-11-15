@@ -78,9 +78,9 @@ export function LedgerView() {
 
       {rows && !parseError ? (
         rows.length ? (
-          <section className="overflow-x-auto rounded-lg border border-line bg-surface p-4">
+          <section className="overflow-x-auto panel">
             <p className="mb-2 text-sm" aria-live="polite" data-testid="ledger-verified">
-              <span className="num font-semibold">{nOk}</span> of <span className="num">{rows.length}</span> hashes
+              <span className="num font-medium">{nOk}</span> of <span className="num">{rows.length}</span> hashes
               verified in your browser.
             </p>
             <table className="w-full min-w-[56rem] text-left text-xs">
@@ -132,7 +132,7 @@ export function LedgerView() {
                             ✓ verified <span className="num text-muted">{v.computed.slice(0, 12)}…</span>
                           </span>
                         ) : (
-                          <span className="font-semibold text-warn" title={`stored ${v.expected ?? "none"} · computed ${v.computed}`}>
+                          <span className="font-medium text-warn" title={`stored ${v.expected ?? "none"} · computed ${v.computed}`}>
                             ✗ mismatch <span className="num font-normal">stored {(v.expected ?? "none").slice(0, 12)}… computed {v.computed.slice(0, 12)}…</span>
                           </span>
                         )}
@@ -148,8 +148,8 @@ export function LedgerView() {
         )
       ) : null}
 
-      <section className="rounded-lg border border-line bg-surface p-4 text-sm" aria-labelledby="luci-h">
-        <h2 id="luci-h" className="mb-2 font-semibold">
+      <section className="panel text-sm" aria-labelledby="luci-h">
+        <h2 id="luci-h" className="mb-2 font-medium">
           How to check this when LUCI reports
         </h2>
         <ol className="list-decimal space-y-1 pl-5">

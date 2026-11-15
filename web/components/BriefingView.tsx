@@ -79,7 +79,7 @@ function Cites({ ids }: { ids: string[] }) {
 function Section({ id, title, children, className = "" }: { id: string; title: string; children: React.ReactNode; className?: string }) {
   return (
     <section aria-labelledby={`${id}-h`} className={`break-inside-avoid ${className}`} data-testid={`section-${id}`}>
-      <h2 id={`${id}-h`} className="mb-1 text-xs font-semibold uppercase tracking-wider text-muted print:mb-0.5 print:text-fg">
+      <h2 id={`${id}-h`} className="mb-1 text-xs font-medium uppercase tracking-wider text-muted print:mb-0.5 print:text-fg">
         {title}
       </h2>
       {children}
@@ -121,7 +121,7 @@ function Chip({ c }: { c: BriefingChip }) {
   const t = CHIP_TEXT[c.value];
   return (
     <li className={`rounded-md p-2 print:p-1.5 ${CHIP_STYLE[c.value]}`} data-testid={`chip-${c.pillar}`} data-value={c.value} aria-label={chipLabel(c)}>
-      <p className="flex items-center gap-1.5 text-sm font-semibold">
+      <p className="flex items-center gap-1.5 text-sm font-medium">
         <ChipIcon value={c.value} />
         <span>{c.label}</span>
         <span className="ml-auto rounded border border-current px-1.5 text-[11px] uppercase tracking-wide" data-testid="chip-value">
@@ -153,7 +153,7 @@ function BriefingDoc({ b }: { b: Briefing }) {
     >
       <header>
         <p className="doc-label print:text-fg">Gravity Gap · Habitat fire-safety briefing</p>
-        <h1 id="briefing-title" className="text-xl font-semibold print:text-base">
+        <h1 id="briefing-title" className="text-xl font-medium print:text-base">
           {b.habitat.label}: what the evidence can and cannot say about fire
         </h1>
         <p className="mt-1" data-testid="briefing-habitat">
@@ -215,9 +215,9 @@ function BriefingDoc({ b }: { b: Briefing }) {
         <ul className="space-y-1 text-xs md:columns-2 md:gap-4 print:columns-2 print:gap-3 print:space-y-0.5" data-testid="gaps">
           {[...gaps.metric, ...gaps.detection, ...gaps.suppression].map((g) => (
             <li key={g.id} className="break-inside-avoid" data-testid={`gap-${g.id}`} data-kind={g.kind}>
-              {g.kind === "metric" ? <span className="font-semibold">{g.metric} · </span> : null}
-              {g.kind === "detection" ? <span className="font-semibold">Detection · </span> : null}
-              {g.kind === "suppression" ? <span className="font-semibold">Suppression · </span> : null}
+              {g.kind === "metric" ? <span className="font-medium">{g.metric} · </span> : null}
+              {g.kind === "detection" ? <span className="font-medium">Detection · </span> : null}
+              {g.kind === "suppression" ? <span className="font-medium">Suppression · </span> : null}
               {g.kind === "metric" ? g.text.replace(new RegExp(`^${g.metric}\\s+`), "") : g.text}
               {g.safety_note ? <span className="italic"> {g.safety_note}</span> : null}
               <Cites ids={g.citations} />
@@ -267,7 +267,7 @@ function BriefingDoc({ b }: { b: Briefing }) {
       </div>
 
       <footer className="border-t border-line pt-2 text-[11px] print:pt-1 print:text-[0.75rem]" data-testid="briefing-footer">
-        <p className="font-semibold">{b.footer.disclaimer}</p>
+        <p className="font-medium">{b.footer.disclaimer}</p>
         <p className="text-muted print:text-fg">
           Models {models.map(([m, v]) => `${m} ${v}`).join(", ")}; engine {b.footer.engine_version}
           {hash ? (

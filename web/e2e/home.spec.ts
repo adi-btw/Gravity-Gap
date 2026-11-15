@@ -19,15 +19,15 @@ async function visibleText(page: Page) {
 test.describe("story page", () => {
   test("renders the report with headings in order", async ({ page }) => {
     await page.goto("/");
-    await expect(page.getByRole("heading", { level: 1 })).toHaveText("NASA's fire data stops at two gravities.");
+    await expect(page.getByRole("heading", { level: 1 })).toHaveText("NASA's fire data stops at two gravities");
     const h2 = await page.locator(".gg-story h2").allTextContents();
     expect(h2.map((t) => t.trim())).toEqual([
-      "Fire is the emergency every crew plans for.",
-      "Every one of those tests burned at one of two gravities.",
-      "Two ends, and nothing in the middle.",
-      "Gravity Gap carries the orbit tests across, and pays for it in width.",
-      "Where the evidence stops, the numbers stop.",
-      "Choose the habitat for your copy.",
+      "Fire is the emergency every crew plans for",
+      "Every one of those tests burned at one of two gravities",
+      "Two ends, and nothing in the middle",
+      "Gravity Gap carries the orbit tests across, and pays for it in width",
+      "Where the evidence stops, the numbers stop",
+      "Choose the habitat for your copy",
     ]);
     // Only one h1, and the engine mounted.
     await expect(page.locator("h1")).toHaveCount(1);

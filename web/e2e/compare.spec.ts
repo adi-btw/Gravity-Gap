@@ -56,9 +56,9 @@ test.describe("habitat compare", () => {
     await expect(page.getByTestId("compare-summary")).toHaveCount(0);
   });
 
-  test("reachable from the nav and from /bounds ('Compare with…')", async ({ page }) => {
+  test("reachable from the nav and from /bounds ('Compare with another habitat')", async ({ page }) => {
     await page.goto(`/bounds?${LUNAR_BASE}`);
-    await page.getByRole("link", { name: /Compare with…/ }).click();
+    await page.getByRole("link", { name: /Compare with another habitat/ }).click();
     await expect(page).toHaveURL(/\/compare\?.*a=current.*b=iss/);
     await expect(nav(page, "Compare")).toHaveAttribute("aria-current", "page");
     await expect(page.getByTestId("compare-summary")).toContainText("Moving from Lunar base to ISS", { timeout: 30_000 });

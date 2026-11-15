@@ -57,7 +57,7 @@ function Horizontal({ data, desc }: { data: StoryData; desc: string }) {
         <line x1={X0} x2={X1} y1={AY} y2={AY} stroke="var(--s-ink)" strokeWidth="1.5" />
       </g>
       <text x={xOf(6.9)} y={190} textAnchor="middle" fontSize="15" fill="var(--s-ink)" className="gg-tick" style={{ "--at": 0.8 } as Vars}>
-        NO FIRE TEST AT ANY GRAVITY IN THIS SPAN
+        No fire test at any gravity in this span
       </text>
 
       {/* scale */}
@@ -107,8 +107,8 @@ function Horizontal({ data, desc }: { data: StoryData; desc: string }) {
 
       {/* the drop */}
       {[
-        { cls: "gg-drop-moon", v: g.moon, name: "MOON" },
-        { cls: "gg-drop-mars", v: g.mars, name: "MARS" },
+        { cls: "gg-drop-moon", v: g.moon, name: "Moon" },
+        { cls: "gg-drop-mars", v: g.mars, name: "Mars" },
       ].map(({ cls, v, name }) => (
         <g key={name} className={cls}>
           <line x1={xOf(v)} x2={xOf(v)} y1={64} y2={AY} stroke="var(--s-flame)" strokeWidth="3" />
@@ -156,9 +156,9 @@ function Vertical({ data, desc }: { data: StoryData; desc: string }) {
         <text x={AX - 12} y={Y1 + 26} textAnchor="end" fontSize="13">m/s²</text>
       </g>
       <text x={204} y={404} fontSize="15" fill="var(--s-ink)" className="gg-tick" style={{ "--at": 0.72 } as Vars}>
-        <tspan x={204}>NO FIRE TEST</tspan>
-        <tspan x={204} dy={20}>AT ANY GRAVITY</tspan>
-        <tspan x={204} dy={20}>IN THIS SPAN</tspan>
+        <tspan x={204}>No fire test</tspan>
+        <tspan x={204} dy={20}>at any gravity</tspan>
+        <tspan x={204} dy={20}>in this span</tspan>
       </text>
       <g className="gg-tip">
         <line x1={AX - 2} x2={AX + 28} y1={Y0} y2={Y0} stroke="var(--s-flame)" strokeWidth="2" />
@@ -184,8 +184,8 @@ function Vertical({ data, desc }: { data: StoryData; desc: string }) {
         </text>
       </g>
       {[
-        { cls: "gg-drop-moon", v: g.moon, name: "MOON" },
-        { cls: "gg-drop-mars", v: g.mars, name: "MARS" },
+        { cls: "gg-drop-moon", v: g.moon, name: "Moon" },
+        { cls: "gg-drop-mars", v: g.mars, name: "Mars" },
       ].map(({ cls, v, name }) => (
         <g key={name} className={cls}>
           <line x1={AX} x2={196} y1={yOf(v)} y2={yOf(v)} stroke="var(--s-flame)" strokeWidth="3" />

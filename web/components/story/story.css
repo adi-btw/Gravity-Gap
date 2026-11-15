@@ -39,7 +39,7 @@ html:has(.gg-story) {
   --s-warn: var(--warn);
   --s-nodata: var(--nodata);
   --s-nodata-fill: var(--nodata-fill);
-  --gg-ease: cubic-bezier(0.23, 1, 0.32, 1);
+  --gg-ease: cubic-bezier(0.22, 1, 0.36, 1);
   --gg-gutter: clamp(16px, 5vw, 72px);
   --gg-maxw: 1120px;
   position: relative;
@@ -81,22 +81,22 @@ html:has(.gg-story) {
 /* ------------------------------------------------------------------ type */
 .gg-story :is(h1, h2, h3) {
   margin: 0;
-  font-family: var(--font-display), Georgia, serif;
-  font-weight: 500;
+  font-family: var(--font-text), ui-sans-serif, system-ui, sans-serif;
+  font-weight: 400;
   text-wrap: balance;
   color: var(--s-ink);
 }
 .gg-h1 {
-  font-size: clamp(2.5rem, 1.1rem + 4.3vw, 4.75rem);
-  line-height: 1.01;
-  letter-spacing: -0.022em;
-  max-width: 13.5ch;
+  font-size: clamp(2.5rem, 1.1rem + 4.3vw, 4.5rem);
+  line-height: 1.02;
+  letter-spacing: -0.035em;
+  max-width: 12ch;
 }
 .gg-h2 {
-  font-size: clamp(2rem, 1.25rem + 2.3vw, 3.3rem);
-  line-height: 1.05;
-  letter-spacing: -0.018em;
-  max-width: 17ch;
+  font-size: clamp(1.875rem, 1.2rem + 2.1vw, 3rem);
+  line-height: 1.08;
+  letter-spacing: -0.028em;
+  max-width: 18ch;
 }
 .gg-story p {
   margin: 0;
@@ -114,10 +114,8 @@ html:has(.gg-story) {
 .gg-label,
 .gg-fig-no {
   font-family: var(--font-mono), ui-monospace, monospace;
-  font-size: 11.5px;
-  line-height: 1.4;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
+  font-size: 12px;
+  line-height: 1.45;
   color: var(--s-soft);
 }
 .gg-fig-no {
@@ -431,10 +429,11 @@ html:not(.sc-ready) .gg-candles > * {
   padding-block: 6rem;
 }
 .gg-between p {
-  font-family: var(--font-display), Georgia, serif;
+  font-family: var(--font-text), ui-sans-serif, system-ui, sans-serif;
+  font-weight: 400;
   font-size: clamp(1.9rem, 1.2rem + 2.4vw, 3.1rem);
-  line-height: 1.12;
-  letter-spacing: -0.015em;
+  line-height: 1.1;
+  letter-spacing: -0.03em;
   max-width: 18ch;
   margin-left: clamp(0rem, 16vw, 16rem);
 }
@@ -494,10 +493,11 @@ html:not(.sc-ready) .gg-candles > * {
   align-items: end;
 }
 .gg-gap__cap p:first-child {
-  font-family: var(--font-display), Georgia, serif;
-  font-size: clamp(1.35rem, 0.95rem + 1.3vw, 2.05rem);
-  line-height: 1.18;
-  letter-spacing: -0.01em;
+  font-family: var(--font-text), ui-sans-serif, system-ui, sans-serif;
+  font-weight: 400;
+  font-size: clamp(1.35rem, 0.95rem + 1.3vw, 2rem);
+  line-height: 1.2;
+  letter-spacing: -0.02em;
   max-width: 34ch;
 }
 .gg-gap__cap em {
@@ -664,7 +664,8 @@ html:not(.sc-ready) .gg-candles > * {
   align-items: center;
 }
 .gg-you {
-  font-family: var(--font-display), Georgia, serif;
+  font-family: var(--font-text), ui-sans-serif, system-ui, sans-serif;
+  font-weight: 400;
   font-size: clamp(1.25rem, 1rem + 0.8vw, 1.6rem);
   line-height: 1.3;
   max-width: 26ch;
@@ -683,8 +684,8 @@ html:not(.sc-ready) .gg-candles > * {
   color: var(--s-ink);
   font-family: var(--font-mono), ui-monospace, monospace;
   font-size: 0.8125rem;
-  letter-spacing: 0.02em;
   cursor: pointer;
+  border-radius: 6px;
   transition: background-color 140ms var(--gg-ease), border-color 140ms var(--gg-ease);
 }
 .gg-again:hover {
@@ -717,10 +718,8 @@ html:not(.sc-ready) .gg-candles > * {
 }
 .gg-metrics thead th {
   font-family: var(--font-mono), ui-monospace, monospace;
-  font-weight: 500;
-  font-size: 11px;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
+  font-weight: 400;
+  font-size: 12px;
   color: var(--s-soft);
   border-bottom: 1px solid var(--s-rule-strong);
 }
@@ -986,7 +985,8 @@ html:not(.sc-ready) .gg-candles > * {
 }
 .gg-cta-line {
   margin-top: 2.25rem;
-  font-family: var(--font-display), Georgia, serif;
+  font-family: var(--font-text), ui-sans-serif, system-ui, sans-serif;
+  font-weight: 400;
   font-size: clamp(1.6rem, 1.15rem + 1.6vw, 2.4rem);
   line-height: 1.15;
 }
@@ -995,10 +995,10 @@ html:not(.sc-ready) .gg-candles > * {
   text-decoration: underline;
   text-decoration-thickness: 2px;
   text-underline-offset: 6px;
-  transition: text-decoration-thickness 140ms var(--gg-ease);
+  transition: color 140ms var(--gg-ease);
 }
 .gg-cta:hover {
-  text-decoration-thickness: 3px;
+  color: var(--s-ink);
 }
 .gg-colophon {
   margin-top: clamp(4rem, 8vw, 6rem);
@@ -1013,10 +1013,8 @@ html:not(.sc-ready) .gg-candles > * {
 }
 .gg-colophon h3 {
   font-family: var(--font-mono), ui-monospace, monospace;
-  font-size: 11px;
+  font-size: 12px;
   font-weight: 500;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
   color: var(--s-ink);
   margin-bottom: 0.6rem;
 }

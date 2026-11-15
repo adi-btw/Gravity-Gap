@@ -54,7 +54,7 @@ function Rate({ r, testid }: { r: HoldoutRate | null | undefined; testid?: strin
   if (!r || !r.n) return <span className="text-muted">no groups</span>;
   return (
     <span data-testid={testid}>
-      <span className="num font-semibold">{fmtCount(r)}</span>{" "}
+      <span className="num font-medium">{fmtCount(r)}</span>{" "}
       <span className="num text-muted">
         ({fmtPct(r.rate)}, 90% interval {fmtInterval(r.interval90)})
       </span>
@@ -64,7 +64,7 @@ function Rate({ r, testid }: { r: HoldoutRate | null | undefined; testid?: strin
 
 function WeakBadge() {
   return (
-    <span className="ml-1 inline-block rounded border border-warn px-1.5 py-0.5 text-[11px] font-semibold uppercase text-warn" data-testid="weak-test">
+    <span className="ml-1 inline-block rounded border border-warn px-1.5 py-0.5 text-[11px] font-medium uppercase text-warn" data-testid="weak-test">
       weak test
     </span>
   );
@@ -78,7 +78,7 @@ function Pooled({ r }: { r: HoldoutResult }) {
       <p className="text-xs">
         Pooled Brier score <span className="num">{s.brier_covered.toFixed(3)}</span> vs{" "}
         <span className="num">{s.brier_baseline_covered.toFixed(3)}</span> for the training average:{" "}
-        <span className={better ? "" : "font-semibold text-warn"}>{better ? "better" : "worse"}</span> (lower is better).
+        <span className={better ? "" : "font-medium text-warn"}>{better ? "better" : "worse"}</span> (lower is better).
       </p>
     );
   }
@@ -87,7 +87,7 @@ function Pooled({ r }: { r: HoldoutResult }) {
     return (
       <p className="text-xs">
         Single diameters inside their own band: <Rate r={s.tests_inside_band_covered} />
-        {under ? <span className="font-semibold text-warn"> under the nominal 90%</span> : null}.
+        {under ? <span className="font-medium text-warn"> under the nominal 90%</span> : null}.
       </p>
     );
   }
@@ -97,8 +97,8 @@ function Pooled({ r }: { r: HoldoutResult }) {
 function MetricCard({ r, wide }: { r: HoldoutResult; wide?: HoldoutResult }) {
   const s = r.summary;
   return (
-    <li className="rounded-lg border border-line bg-surface p-3" data-testid={`score-${r.metric}`}>
-      <h3 className="text-sm font-semibold">
+    <li className="panel-tight" data-testid={`score-${r.metric}`}>
+      <h3 className="text-sm font-medium">
         <span className="num">{r.metric}</span> · {r.label}{" "}
         <span className="num text-xs font-normal text-muted">({r.investigation_id}, {s.n_tests} tests in {s.n_groups} groups)</span>
         {s.weak_test ? <WeakBadge /> : null}
@@ -143,12 +143,12 @@ function Scorecard({ d }: { d: HoldoutArtifact }) {
   const constant = sf?.scores?.baseline_always_more_at_1g_capped;
   return (
     <section className="space-y-3" aria-labelledby="score-h">
-      <h2 id="score-h" className="text-lg font-semibold">
+      <h2 id="score-h" className="text-lg font-medium">
         Scorecard
       </h2>
       <div className="grid gap-3 lg:grid-cols-3">
-        <div className="rounded-lg border border-line bg-surface p-3" data-testid="score-overall">
-          <h3 className="text-sm font-semibold">Do the bands hold? (one tested atmosphere hidden at a time)</h3>
+        <div className="panel-tight" data-testid="score-overall">
+          <h3 className="text-sm font-medium">Do the bands hold? (one tested atmosphere hidden at a time)</h3>
           <p className="mt-1 text-sm">
             Band held for <Rate r={ov.band_coverage} testid="coverage-overall" /> held-out groups. Target:{" "}
             <span className="num">{fmtPct(ov.target_coverage)}</span>.
@@ -159,13 +159,13 @@ function Scorecard({ d }: { d: HoldoutArtifact }) {
             pooled checks under each metric.
           </p>
         </div>
-        <div className="rounded-lg border border-line bg-surface p-3" data-testid="score-gate">
-          <h3 className="text-sm font-semibold">Is &ldquo;no evidence&rdquo; the right call? (wide check)</h3>
+        <div className="panel-tight" data-testid="score-gate">
+          <h3 className="text-sm font-medium">Is &ldquo;no evidence&rdquo; the right call? (wide check)</h3>
           {wide && nej ? (
             <>
               <p className="mt-1 text-sm">
-                <span className="num font-semibold">{nej.n}</span> groups got &ldquo;no evidence&rdquo; when a whole O₂ band of
-                tests was hidden. For <span className="num font-semibold">{nej.k}</span> of them the band, had it been shown,
+                <span className="num font-medium">{nej.n}</span> groups got &ldquo;no evidence&rdquo; when a whole O₂ band of
+                tests was hidden. For <span className="num font-medium">{nej.k}</span> of them the band, had it been shown,
                 would have missed.
               </p>
               <p className="mt-1 text-xs" data-testid="wide-what">{wide.what}</p>
@@ -179,12 +179,12 @@ function Scorecard({ d }: { d: HoldoutArtifact }) {
             <p className="mt-1 text-sm text-muted">The wide check is not in this artifact.</p>
           )}
         </div>
-        <div className="rounded-lg border border-line bg-surface p-3" data-testid="score-saffire">
-          <h3 className="text-sm font-semibold">Across investigations: SAFFIRE-II hindcast (M4)</h3>
+        <div className="panel-tight" data-testid="score-saffire">
+          <h3 className="text-sm font-medium">Across investigations: SAFFIRE-II hindcast (M4)</h3>
           {sf?.available && sf.headline ? (
             <>
               <p className="mt-1 text-sm">
-                <span className="num font-semibold">
+                <span className="num font-medium">
                   {sf.headline.hits} of {sf.headline.n}
                 </span>{" "}
                 samples called right
@@ -241,8 +241,8 @@ function MapSection({ d }: { d: HoldoutArtifact }) {
   const schemeText = scheme === "wide" ? "a whole O₂ band of tests hidden at once" : "one tested atmosphere hidden at a time";
   const aria = `Held-out ${metric} groups, ${schemeText}, on oxygen and cabin pressure: ${c.hit} band held (filled circles), ${c.miss} band missed (hollow circles with a cross), ${c.noEvidence} no evidence (grey squares), ${c.skipped} skipped (grey dashed rings).`;
   return (
-    <section className="rounded-lg border border-line bg-surface p-4" aria-labelledby="map-h">
-      <h2 id="map-h" className="text-lg font-semibold">
+    <section className="panel" aria-labelledby="map-h">
+      <h2 id="map-h" className="text-lg font-medium">
         Where the held-out tests were
       </h2>
       <div className="mt-2 flex flex-wrap gap-4">
@@ -307,8 +307,8 @@ function MissesTable({ d }: { d: HoldoutArtifact }) {
   const source = wide ? d.wide_check!.metrics : d.metrics;
   const rows = HOLDOUT_METRICS.filter((m) => source[m]).flatMap((m) => worstMissRows(source[m]).map((x) => ({ ...x, r: source[m] })));
   return (
-    <section className="rounded-lg border border-line bg-surface p-4" aria-labelledby="miss-h">
-      <h2 id="miss-h" className="text-lg font-semibold">
+    <section className="panel" aria-labelledby="miss-h">
+      <h2 id="miss-h" className="text-lg font-medium">
         Worst misses ({wide ? "wide check" : "one atmosphere at a time"})
       </h2>
       <p className="mt-1 text-xs text-muted">

@@ -134,7 +134,7 @@ function CurveView({
 
   return (
     <div className="space-y-4">
-      <section className="rounded-lg border border-line bg-surface p-4" aria-labelledby="supp-summary-h">
+      <section className="panel" aria-labelledby="supp-summary-h">
         <h2 id="supp-summary-h" className="sr-only">
           Summary
         </h2>
@@ -143,7 +143,7 @@ function CurveView({
         </p>
         <p className="mt-2 text-sm">
           Dose for 90%:{" "}
-          <span className="num font-semibold text-partial" data-testid="suppression-dose">
+          <span className="num font-medium text-partial" data-testid="suppression-dose">
             {dose ? label : DOSE_NOT_REACHED}
           </span>
         </p>
@@ -170,8 +170,8 @@ function CurveView({
         </div>
       </section>
 
-      <section className="rounded-lg border border-line bg-surface p-4" aria-labelledby="m1-h">
-        <h2 id="m1-h" className="text-base font-semibold">
+      <section className="panel" aria-labelledby="m1-h">
+        <h2 id="m1-h" className="text-base font-medium">
           Chance the flame goes out on its own before burning out <span className="num text-xs text-muted">(M1)</span>
         </h2>
         <p className="mb-2 text-xs text-muted">
@@ -199,8 +199,8 @@ function CurveView({
         </details>
       </section>
 
-      <section className="rounded-lg border border-line bg-surface p-4" aria-labelledby="m2-h">
-        <h2 id="m2-h" className="text-base font-semibold">
+      <section className="panel" aria-labelledby="m2-h">
+        <h2 id="m2-h" className="text-base font-medium">
           Droplet size when the flame went out <span className="num text-xs text-muted">(M2, extinction diameter)</span>
         </h2>
         <p className="mb-2 text-xs text-muted">Same gap rule as above. A larger extinction diameter means the flame gave up earlier.</p>
@@ -221,8 +221,8 @@ function CurveView({
         </details>
       </section>
 
-      <section className="rounded-lg border border-line bg-surface p-4" aria-labelledby="tested-h">
-        <h2 id="tested-h" className="text-base font-semibold">
+      <section className="panel" aria-labelledby="tested-h">
+        <h2 id="tested-h" className="text-base font-medium">
           Where dilution was tested
         </h2>
         <p className="mb-2 text-xs text-muted">

@@ -106,7 +106,7 @@ export function SuppressionCurveChart({
             <g key={i} data-gap="true">
               <rect x={gx} y={M.t} width={gw} height={H - M.t - M.b} fill={`url(#hatch-${pid})`} stroke="var(--nodata)" strokeDasharray="3 3" />
               {gw > 70 ? (
-                <text x={gx + gw / 2} y={M.t + 16} fontSize={11} textAnchor="middle" fill="var(--fg)" className="svg-halo" fontWeight={600}>
+                <text x={gx + gw / 2} y={M.t + 16} fontSize={11} textAnchor="middle" fill="var(--fg)" className="svg-halo" fontWeight={500}>
                   no evidence
                 </text>
               ) : null}
@@ -185,7 +185,7 @@ export function SuppressionCurveChart({
             x={x(dose.fraction) + (x(dose.fraction) > W - 200 ? -6 : 6)}
             y={M.t - 10}
             fontSize={12}
-            fontWeight={600}
+            fontWeight={500}
             textAnchor={x(dose.fraction) > W - 200 ? "end" : "start"}
             fill="var(--fg)"
             className="svg-halo"

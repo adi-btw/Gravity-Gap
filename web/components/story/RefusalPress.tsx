@@ -61,7 +61,7 @@ export function RefusalPress({ data }: { data: StoryData }) {
       <div className="gg-wrap gg-refusal__grid">
         <div className="gg-refusal__copy gg-stack">
           <h2 id="refusal-title" className="gg-h2">
-            Where the evidence stops, the numbers stop.
+            Where the evidence stops, the numbers stop
           </h2>
           <p className="gg-soft">
             Before it prints anything, the engine measures how far the habitat&apos;s air is from the nearest air that was
@@ -83,7 +83,7 @@ export function RefusalPress({ data }: { data: StoryData }) {
           <table className="gg-metrics">
             <caption id="refusal-fig">
               <span className="gg-fig-no">Fig. 6</span>
-              <span className="gg-label" style={{ textTransform: "none", letterSpacing: "0.01em" }}>
+              <span className="gg-label">
                 Lunar base ({data.g.moon} m/s², {lunarBase.p_psia} psia, {lunarBase.o2Pct}% O₂): five fire metrics
               </span>
             </caption>

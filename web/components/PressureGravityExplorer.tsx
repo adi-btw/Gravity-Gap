@@ -34,14 +34,14 @@ export function PressureGravityExplorer({ habitat }: { habitat: Habitat }) {
       </CaveatBanner>
 
       <div className="grid gap-3 sm:grid-cols-3" aria-live="polite">
-        <div className="rounded-md border border-line bg-surface p-3">
+        <div className="panel-tight">
           <div className="text-xs text-muted">G* = (g/g₀)(P/P₀)² for your habitat</div>
           <div className="num mt-1 text-2xl" data-testid="gstar-value">{fmtSig(gs, 3)}</div>
           <div className="mt-1 text-[11px] text-muted">
             {gFraction(habitat.g_m_s2).toFixed(3)} g × ({habitat.p_psia} / 14.7)²
           </div>
         </div>
-        <div className="rounded-md border border-line bg-surface p-3">
+        <div className="panel-tight">
           <div className="text-xs text-muted">O₂ partial pressure p_O₂</div>
           <div className="num mt-1 text-2xl">
             {o2PartialPressurePsia(habitat.o2, habitat.p_psia).toFixed(2)}
@@ -49,14 +49,14 @@ export function PressureGravityExplorer({ habitat }: { habitat: Habitat }) {
           </div>
           <div className="mt-1 text-[11px] text-muted">Earth sea level: 3.09 psia</div>
         </div>
-        <div className="rounded-md border border-line bg-surface p-3 text-sm">
+        <div className="panel-tight text-sm">
           <div className="text-xs text-muted">Reading this</div>
           Buoyant flow strength scales as g·P², so a lunar cabin at 8.2 psia has about 5% of Earth&apos;s buoyancy.
           Ri does not depend on P; Gr and Re do.
         </div>
       </div>
 
-      <figure className="rounded-md border border-line bg-surface p-3">
+      <figure className="panel-tight">
         <figcaption className="mb-2 text-sm font-medium">
           <span className="fig-no">Fig. 2 ·</span>
           G* over gravity × pressure
@@ -65,7 +65,7 @@ export function PressureGravityExplorer({ habitat }: { habitat: Habitat }) {
         <GStarMap markers={MARKERS} current={{ g: habitat.g_m_s2, p: habitat.p_psia }} />
       </figure>
 
-      <div className="overflow-x-auto rounded-md border border-line bg-surface p-3">
+      <div className="overflow-x-auto panel-tight">
         <table className="num w-full text-left text-xs">
           <caption className="mb-2 text-left font-sans text-sm font-medium text-fg">
             Oxygen partial pressure and G* per habitat preset
@@ -91,7 +91,7 @@ export function PressureGravityExplorer({ habitat }: { habitat: Habitat }) {
                 <td className="py-1">{gStar(p.g_m_s2, p.p_psia).toFixed(3)}</td>
               </tr>
             ))}
-            <tr className="border-t-2 border-line font-semibold">
+            <tr className="border-t-2 border-line font-medium">
               <th scope="row" className="py-1 pr-3 font-sans">Your habitat</th>
               <td className="py-1 pr-3">{habitat.g_m_s2.toFixed(2)}</td>
               <td className="py-1 pr-3">{habitat.p_psia.toFixed(1)}</td>

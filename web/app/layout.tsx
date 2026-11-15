@@ -1,19 +1,12 @@
 import type { Metadata } from "next";
-import { IBM_Plex_Mono, IBM_Plex_Sans, Newsreader } from "next/font/google";
+import { IBM_Plex_Mono, IBM_Plex_Sans } from "next/font/google";
 import { Suspense } from "react";
 import { AskProvider } from "@/components/AskDrawer";
 import { FooterFrame, HabitatSlot, MainFrame } from "@/components/RouteFrame";
 import { SiteNav } from "@/components/SiteNav";
 import "./globals.css";
 
-// Shared design floor (scrollcraft/builds/gravity-gap/BRIEF.md): Newsreader for display, Plex Sans for text, Plex Mono for data.
-const display = Newsreader({
-  variable: "--font-display",
-  subsets: ["latin"],
-  weight: ["400", "500", "600"],
-  style: ["normal", "italic"],
-  display: "swap",
-});
+// Type (unslop/AUDIT.md): one family, IBM Plex Sans, for interface and headlines; IBM Plex Mono as its partner for figures.
 const text = IBM_Plex_Sans({ variable: "--font-text", subsets: ["latin"], weight: ["400", "500", "600"], display: "swap" });
 const mono = IBM_Plex_Mono({ variable: "--font-mono", subsets: ["latin"], weight: ["400", "500", "600"], display: "swap" });
 
@@ -32,10 +25,10 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
       <head>
         <script dangerouslySetInnerHTML={{ __html: themeScript }} />
       </head>
-      <body className={`${display.variable} ${text.variable} ${mono.variable} antialiased min-h-screen`}>
+      <body className={`${text.variable} ${mono.variable} antialiased min-h-screen`}>
         <a
           href="#main"
-          className="sr-only focus:not-sr-only focus:absolute focus:left-2 focus:top-2 focus:z-50 focus:rounded-sm focus:border focus:border-line focus:bg-surface focus:px-3 focus:py-2"
+          className="sr-only focus:not-sr-only focus:absolute focus:left-2 focus:top-2 focus:z-50 focus:rounded-md focus:border focus:border-line focus:bg-surface focus:px-3 focus:py-2"
         >
           Skip to content
         </a>

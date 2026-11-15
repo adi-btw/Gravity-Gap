@@ -62,7 +62,7 @@ export function ExploreView() {
         {catalog.status === "ok" ? <SourceChip source={catalog.data.source} note={catalog.data.note} /> : null}
       </header>
 
-      <figure className="rounded-lg border border-line bg-surface p-4">
+      <figure className="panel">
         {catalog.status === "loading" ? <Loading label="Loading catalog…" /> : null}
         {catalog.status === "error" ? <ErrorState error={catalog.error} onRetry={catalog.reload} /> : null}
         {catalog.status === "ok" ? (
@@ -125,8 +125,8 @@ export function ExploreView() {
       </figure>
 
       <div className="grid gap-4 lg:grid-cols-[1fr_2fr]">
-        <section className="rounded-lg border border-line bg-surface p-4" aria-labelledby="weights-h">
-          <h2 id="weights-h" className="text-sm font-semibold">
+        <section className="panel" aria-labelledby="weights-h">
+          <h2 id="weights-h" className="text-sm font-medium">
             Relevance weights
           </h2>
           <p className="mt-1 text-xs text-muted">
@@ -162,9 +162,9 @@ export function ExploreView() {
           </button>
         </section>
 
-        <section className="rounded-lg border border-line bg-surface p-4" aria-labelledby="rank-h">
+        <section className="panel" aria-labelledby="rank-h">
           <div className="flex flex-wrap items-center justify-between gap-2">
-            <h2 id="rank-h" className="text-sm font-semibold">
+            <h2 id="rank-h" className="text-sm font-medium">
               Most relevant evidence for this habitat
             </h2>
             {ranked.status === "ok" ? <SourceChip source={ranked.data.source} note={ranked.data.note} /> : null}

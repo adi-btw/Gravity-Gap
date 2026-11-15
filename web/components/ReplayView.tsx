@@ -92,7 +92,7 @@ function IncidentCard({ inc }: { inc: Incident }) {
     >
       <header>
         <div className="flex flex-wrap items-baseline justify-between gap-2">
-          <h2 id={headingId} className="text-lg font-semibold">
+          <h2 id={headingId} className="text-lg font-medium">
             {inc.name}
           </h2>
           <time dateTime={inc.date} className="num text-xs text-muted">
@@ -102,7 +102,7 @@ function IncidentCard({ inc }: { inc: Incident }) {
         <p className="text-xs text-muted">{inc.phase}</p>
         {!inc.in_scope ? (
           <p className="mt-2">
-            <span className="rounded-sm border border-warn px-2 py-0.5 text-[11px] font-semibold uppercase tracking-wide text-warn">
+            <span className="rounded-sm border border-warn px-2 py-0.5 text-[11px] font-medium uppercase tracking-wide text-warn">
               Outside scope
             </span>
           </p>
@@ -235,7 +235,7 @@ function MetricStrip({ inc, metrics }: { inc: Incident; metrics: Record<string, 
               className={`rounded border px-2 py-1 text-xs ${ok ? "border-line" : "hatch border-dashed border-line"}`}
               data-testid={`metric-${info.id}`}
             >
-              <span className="num font-semibold">{info.id}</span>{" "}
+              <span className="num font-medium">{info.id}</span>{" "}
               {ok && m ? (
                 <>
                   <span className="num">{fmtEstimate(m.estimate, info.kind, info.unit)}</span>

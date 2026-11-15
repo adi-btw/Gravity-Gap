@@ -112,7 +112,7 @@ export function BandChart({ points, unit, domain, ariaLabel }: Props) {
                 {p.emptyLabel ?? "no basis"}
               </text>
             ) : null}
-            <text x={x} y={H - M.b + 18} fontSize={12} textAnchor="middle" fill={p.color} fontWeight={600}>
+            <text x={x} y={H - M.b + 18} fontSize={12} textAnchor="middle" fill={p.color} fontWeight={500}>
               {p.label}
             </text>
             {p.sublabel ? (

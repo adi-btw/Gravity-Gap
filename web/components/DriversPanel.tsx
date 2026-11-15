@@ -55,8 +55,8 @@ export function DriversSection({
   if (state.status === "error") {
     const offline = (state.error as { offline?: boolean }).offline;
     return (
-      <section className="rounded-lg border border-line bg-surface p-4" aria-labelledby="drivers-h" data-testid="drivers-unavailable">
-        <h2 id="drivers-h" className="mb-1 text-sm font-semibold">What makes this band wide</h2>
+      <section className="panel" aria-labelledby="drivers-h" data-testid="drivers-unavailable">
+        <h2 id="drivers-h" className="mb-1 text-sm font-medium">What makes this band wide</h2>
         {offline ? <p className="text-sm text-muted">{state.error.message}</p> : <ErrorState error={state.error} onRetry={state.reload} />}
       </section>
     );
@@ -85,9 +85,9 @@ function DriversView({
   const total = drawn.reduce((s, x) => s + x.share, 0) || 1;
   const href = plannerHref(d.lever?.planner_candidate, queryString);
   return (
-    <section className="rounded-lg border border-line bg-surface p-4" aria-labelledby="drivers-h" data-testid="drivers">
+    <section className="panel" aria-labelledby="drivers-h" data-testid="drivers">
       <div className="flex flex-wrap items-baseline justify-between gap-2">
-        <h2 id="drivers-h" className="text-sm font-semibold">
+        <h2 id="drivers-h" className="text-sm font-medium">
           What makes this band wide
         </h2>
         {source === "offline" && boundsSource === "api" ? (
@@ -119,7 +119,7 @@ function DriversView({
               key={s.id}
               data-source={s.id}
               title={`${sourceName(s)}: ${shareLabel(s.share)} (${basisText(s.basis)})`}
-              className="num flex items-center justify-center overflow-hidden text-[11px] font-semibold text-bg"
+              className="num flex items-center justify-center overflow-hidden text-[11px] font-medium text-bg"
               style={{ width: `${w}%`, background: styleFor(s).bg }}
             >
               {w >= 12 && pct > 0 ? `${pct}%` : ""}
@@ -151,7 +151,7 @@ function DriversView({
 
       {d.lever ? (
         <p className="mt-3 text-sm" data-testid="drivers-lever">
-          <span className="font-semibold">Biggest lever: </span>
+          <span className="font-medium">Biggest lever: </span>
           {d.lever.text}{" "}
           {href ? (
             <Link href={href} className="text-micro underline hover:text-fg" data-testid="drivers-planner-link">

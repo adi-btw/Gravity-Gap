@@ -81,7 +81,7 @@ function Evidence({ d }: { d: DetectionArtifact }) {
       </CaveatBanner>
 
       <section aria-labelledby="gaps-h" className="space-y-2">
-        <h2 id="gaps-h" className="text-base font-semibold">
+        <h2 id="gaps-h" className="text-base font-medium">
           What these data cannot tell you
         </h2>
         {lunar ? (
@@ -104,7 +104,7 @@ function Evidence({ d }: { d: DetectionArtifact }) {
       <AverageMass d={d} />
       <Simulation d={d} />
 
-      <details className="rounded-lg border border-line bg-surface p-4 text-xs">
+      <details className="panel text-xs">
         <summary className="cursor-pointer text-muted">Files used to build this page ({d.generated_from.length})</summary>
         <ul className="mt-2 space-y-1">
           {d.generated_from.map((f) => (
@@ -122,8 +122,8 @@ function SizeDefinitions({ d }: { d: DetectionArtifact }) {
   const defs = Object.entries(d.size_definitions);
   if (!defs.length) return null;
   return (
-    <section aria-labelledby="defs-h" className="rounded-lg border border-line bg-surface p-4">
-      <h2 id="defs-h" className="text-base font-semibold">
+    <section aria-labelledby="defs-h" className="panel">
+      <h2 id="defs-h" className="text-base font-medium">
         Four ways to measure &ldquo;size&rdquo;
       </h2>
       <p className="mb-2 text-xs text-muted">
@@ -157,8 +157,8 @@ function SmokeBins({ d }: { d: DetectionArtifact }) {
   const aria = `${s.label}. Share of ${Math.round(s.stats.particle_count)} counted particles in each size bin, against particle diameter in nanometres on a log scale (${def?.label ?? s.size_definition}). Count median ${fmtNm(s.stats.count_median_diameter_nm)}, geometric mean ${fmtNm(s.stats.geometric_mean_diameter_nm)}. Source: ${sourceText(s.source)}.`;
 
   return (
-    <section className="rounded-lg border border-line bg-surface p-4" aria-labelledby="bins-h">
-      <h2 id="bins-h" className="text-base font-semibold">
+    <section className="panel" aria-labelledby="bins-h">
+      <h2 id="bins-h" className="text-base font-medium">
         How big are smoke particles? Microscope counts
       </h2>
       <p className="mb-3 text-xs text-muted">
@@ -269,8 +269,8 @@ function SmokeRunsSection({ d }: { d: DetectionArtifact }) {
     .join("; ")}. Source: ${sourceText(r.source)}.`;
 
   return (
-    <section className="rounded-lg border border-line bg-surface p-4" aria-labelledby="runs-h">
-      <h2 id="runs-h" className="text-base font-semibold">
+    <section className="panel" aria-labelledby="runs-h">
+      <h2 id="runs-h" className="text-base font-medium">
         Smoke size in every test run
       </h2>
       <p className="mb-2 text-xs text-muted">Size measure: {def?.label ?? r.size_definition}. {def?.note}</p>
@@ -345,8 +345,8 @@ function AverageMass({ d }: { d: DetectionArtifact }) {
   const aria = `${def?.label ?? c.size_definition} in nanometres on a log scale. ${c.smoke.label}: ${c.smoke.points.length} runs from ${fmtNm(c.smoke.range_nm.min)} to ${fmtNm(c.smoke.range_nm.max)}. ${c.dust.label}: ${c.dust.points.length} bags from ${fmtNm(c.dust.range_nm.min)} to ${fmtNm(c.dust.range_nm.max)}, assuming a density of ${density} g/cm³. Sources: ${sourceText(c.smoke.source)}; ${sourceText(c.dust.source)}.`;
 
   return (
-    <section className="rounded-lg border border-line bg-surface p-4" aria-labelledby="amc-h">
-      <h2 id="amc-h" className="text-base font-semibold">
+    <section className="panel" aria-labelledby="amc-h">
+      <h2 id="amc-h" className="text-base font-medium">
         Smoke and dust on the same size measure
       </h2>
       <p className="mb-2 text-xs text-muted">Size measure: {def?.label ?? c.size_definition}. {def?.note}</p>
@@ -424,10 +424,10 @@ function Simulation({ d }: { d: DetectionArtifact }) {
   return (
     <section className="rounded-lg border border-dashed border-partial bg-surface p-4" aria-labelledby="sim-h">
       <div className="flex flex-wrap items-center gap-2">
-        <span className="rounded-sm border border-partial px-2 py-0.5 text-[11px] font-semibold uppercase tracking-wide text-partial">
+        <span className="rounded-sm border border-partial px-2 py-0.5 text-[11px] font-medium uppercase tracking-wide text-partial">
           Simulation
         </span>
-        <h2 id="sim-h" className="text-base font-semibold">
+        <h2 id="sim-h" className="text-base font-medium">
           What gravity does to smoke sizes, in a computer model
         </h2>
       </div>

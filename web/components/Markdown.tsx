@@ -76,7 +76,7 @@ function Inlines({ xs }: { xs: Inline[] }) {
 function BlockView({ b }: { b: Block }) {
   switch (b.t) {
     case "h": {
-      const cls = b.level === 1 ? "text-lg font-semibold" : b.level === 2 ? "text-base font-semibold" : "text-sm font-semibold";
+      const cls = b.level === 1 ? "text-lg font-medium" : b.level === 2 ? "text-base font-medium" : "text-sm font-medium";
       const H = (`h${b.level + 2}` as "h3" | "h4" | "h5");
       return (
         <H className={cls}>

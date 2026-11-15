@@ -26,8 +26,8 @@ export function GapHero({ currentG }: { currentG?: number }) {
         </pattern>
       </defs>
       <rect x={zoneL} y={36} width={zoneR - zoneL} height={AXIS_Y - 36} fill="url(#hero-hatch)" />
-      <text x={(zoneL + zoneR) / 2 + 90} y={58} fontSize={14} fill="var(--muted)" textAnchor="middle" fontWeight={600} className="svg-halo">
-        NO DIRECT FIRE DATA
+      <text x={(zoneL + zoneR) / 2 + 90} y={58} fontSize={14} fill="var(--muted)" textAnchor="middle" fontWeight={500} className="svg-halo">
+        No direct fire data
       </text>
 
       {/* 0 g evidence cluster */}
@@ -45,7 +45,7 @@ export function GapHero({ currentG }: { currentG?: number }) {
       ].map(({ f, label }) => (
         <g key={label}>
           <line x1={xOf(f)} x2={xOf(f)} y1={30} y2={AXIS_Y} stroke="var(--partial)" strokeWidth={2.5} />
-          <text x={xOf(f)} y={24} fontSize={13} fill="var(--partial)" textAnchor="middle" fontWeight={600}>
+          <text x={xOf(f)} y={24} fontSize={13} fill="var(--partial)" textAnchor="middle" fontWeight={500}>
             {label}
           </text>
         </g>
@@ -69,7 +69,7 @@ export function GapHero({ currentG }: { currentG?: number }) {
       {cur !== null ? (
         <g>
           <path d={`M ${xOf(cur)} ${AXIS_Y + 2} l -7 12 h 14 z`} fill="var(--fg)" />
-          <text x={xOf(cur)} y={AXIS_Y + 58} fontSize={12} fill="var(--fg)" textAnchor="middle" fontWeight={600}>
+          <text x={xOf(cur)} y={AXIS_Y + 58} fontSize={12} fill="var(--fg)" textAnchor="middle" fontWeight={500}>
             your habitat
           </text>
         </g>

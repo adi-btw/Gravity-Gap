@@ -88,16 +88,16 @@ export function RegimeMap({ g, u, L }: Props) {
       {/* region labels */}
       {g > 0 ? (
         <>
-          <text x={M.l + 8} y={M.t + 18} fontSize={12} fill="var(--normal)" fontWeight={600} className="svg-halo">
-            ↑ BUOYANT (Ri &gt; 10)
+          <text x={M.l + 8} y={M.t + 18} fontSize={12} fill="var(--normal)" fontWeight={500} className="svg-halo">
+            ↑ Buoyant (Ri &gt; 10)
           </text>
-          <text x={W - M.r - 8} y={H - M.b - 10} fontSize={12} fill="var(--micro)" fontWeight={600} textAnchor="end" className="svg-halo">
-            → FORCED (Ri &lt; 0.1)
+          <text x={W - M.r - 8} y={H - M.b - 10} fontSize={12} fill="var(--micro)" fontWeight={500} textAnchor="end" className="svg-halo">
+            → Forced (Ri &lt; 0.1)
           </text>
         </>
       ) : (
-        <text x={M.l + PW / 2} y={M.t + PH / 2} fontSize={13} fill="var(--micro)" fontWeight={600} textAnchor="middle" className="svg-halo">
-          g = 0: no buoyancy, every point is FORCED (Ri = 0)
+        <text x={M.l + PW / 2} y={M.t + PH / 2} fontSize={13} fill="var(--micro)" fontWeight={500} textAnchor="middle" className="svg-halo">
+          g = 0: no buoyancy, every point is forced (Ri = 0)
         </text>
       )}
       <text x={xOf(10)} y={M.t + PH - 6} fontSize={10} fill="var(--muted)" textAnchor="middle" className="svg-halo">
@@ -143,7 +143,7 @@ export function RegimeMap({ g, u, L }: Props) {
           y={py - 10}
           fontSize={12}
           fill="var(--fg)"
-          fontWeight={600}
+          fontWeight={500}
           textAnchor={px > W - 160 ? "end" : "start"}
         >
           Your habitat{offScale ? " (clipped to chart)" : ""}

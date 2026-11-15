@@ -104,7 +104,7 @@ export function CompareView() {
         {res.status === "ok" ? <SourceChip source={res.data.source} note={res.data.note} /> : null}
       </header>
 
-      <div className="flex flex-wrap items-end gap-3 rounded-lg border border-line bg-surface p-3" role="group" aria-label="Habitats to compare">
+      <div className="flex flex-wrap items-end gap-3 panel-tight" role="group" aria-label="Habitats to compare">
         <SidePicker id="compare-a" label="Habitat A" value={aKey} onChange={setA} currentLabel={currentLabel} />
         <button
           type="button"
@@ -141,8 +141,8 @@ export function CompareView() {
 function CompareBody({ r }: { r: CompareResult }) {
   return (
     <div className="space-y-4">
-      <section className="rounded-lg border border-line bg-surface p-4" aria-labelledby="what-changed-h">
-        <h2 id="what-changed-h" className="text-sm font-semibold">
+      <section className="panel" aria-labelledby="what-changed-h">
+        <h2 id="what-changed-h" className="text-sm font-medium">
           What changes
         </h2>
         <p className="mt-1 text-sm" data-testid="compare-summary">
@@ -162,7 +162,7 @@ function SideCard({ name, side, m, testId, tone }: { name: string; side: Compare
       <p className="text-xs font-medium">{name}</p>
       {side.applicable ? (
         <>
-          <p className="mt-1 text-lg font-semibold text-fg">
+          <p className="mt-1 text-lg font-medium text-fg">
             <span className="num">{fmtEstimate(side.estimate, m.kind, m.unit)}</span>
           </p>
           <p className="text-xs text-muted">
@@ -170,7 +170,7 @@ function SideCard({ name, side, m, testId, tone }: { name: string; side: Compare
           </p>
         </>
       ) : (
-        <p className="mt-1 text-sm font-semibold text-fg">No evidence</p>
+        <p className="mt-1 text-sm font-medium text-fg">No evidence</p>
       )}
       <div className="mt-2 flex flex-wrap gap-1.5 text-[11px]">
         <span
@@ -233,8 +233,8 @@ function MetricRow({ m, labelA, labelB, gA, gB }: { m: MetricCompare; labelA: st
   ];
   const prob = m.kind === "probability" || m.unit === "fraction";
   return (
-    <section className="rounded-lg border border-line bg-surface p-4" aria-labelledby={headingId} data-testid={`compare-row-${m.metric}`}>
-      <h2 id={headingId} className="text-base font-semibold">
+    <section className="panel" aria-labelledby={headingId} data-testid={`compare-row-${m.metric}`}>
+      <h2 id={headingId} className="text-base font-medium">
         <span className="num">{m.metric}</span> · {m.label}
       </h2>
       <p className="mt-1 text-sm" data-testid={`compare-diff-${m.metric}`}>

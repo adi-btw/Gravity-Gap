@@ -14,12 +14,12 @@ export function HomePicker() {
   const preset = matchPreset(habitat);
   return (
     <>
-      <figure className="rounded-lg border border-line bg-surface p-4">
+      <figure className="panel">
         <figcaption className="mb-2 text-sm font-medium">The gap</figcaption>
         <GapHero currentG={habitat.g_m_s2} />
       </figure>
 
-      <section aria-labelledby="quick-read" className="rounded-lg border border-line bg-surface p-4">
+      <section aria-labelledby="quick-read" className="panel">
         <h2 id="quick-read" className="text-sm font-medium">
           Quick read for {preset ? preset.label : "your custom habitat"}
         </h2>

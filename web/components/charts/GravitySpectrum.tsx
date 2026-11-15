@@ -88,8 +88,8 @@ export function GravitySpectrum({
         </pattern>
       </defs>
       <rect x={zoneL} y={30} width={zoneR - zoneL} height={AXIS_Y - 30} fill="url(#spec-hatch)" />
-      <text x={(zoneL + zoneR) / 2 + 120} y={60} fontSize={14} fill="var(--muted)" textAnchor="middle" fontWeight={600} className="svg-halo">
-        NO DIRECT FIRE DATA
+      <text x={(zoneL + zoneR) / 2 + 120} y={60} fontSize={14} fill="var(--muted)" textAnchor="middle" fontWeight={500} className="svg-halo">
+        No direct fire data
       </text>
       {[
         { f: moon, label: "Moon 0.165 g" },
@@ -97,7 +97,7 @@ export function GravitySpectrum({
       ].map(({ f, label }) => (
         <g key={label}>
           <line x1={xOf(f)} x2={xOf(f)} y1={34} y2={AXIS_Y} stroke="var(--partial)" strokeWidth={2} />
-          <text x={xOf(f)} y={26} fontSize={12} fill="var(--partial)" textAnchor="middle" fontWeight={600}>
+          <text x={xOf(f)} y={26} fontSize={12} fill="var(--partial)" textAnchor="middle" fontWeight={500}>
             {label}
           </text>
         </g>
@@ -144,7 +144,7 @@ export function GravitySpectrum({
         Earth references (1 g)
       </text>
       <path d={`M ${xOf(cur)} ${AXIS_Y + 2} l -7 12 h 14 z`} fill="var(--fg)" />
-      <text x={xOf(cur)} y={AXIS_Y + 58} fontSize={12} fill="var(--fg)" textAnchor="middle" fontWeight={600}>
+      <text x={xOf(cur)} y={AXIS_Y + 58} fontSize={12} fill="var(--fg)" textAnchor="middle" fontWeight={500}>
         your habitat
       </text>
     </svg>

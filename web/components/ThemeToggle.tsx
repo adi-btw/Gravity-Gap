@@ -29,7 +29,7 @@ export function ThemeToggle() {
         }
         listeners.forEach((l) => l());
       }}
-      className="rounded-sm border border-line px-2 py-1 text-xs text-muted transition-colors hover:border-line-strong hover:text-fg"
+      className="btn text-muted hover:text-fg"
       aria-label={`Switch to ${next} theme`}
     >
       {theme === "dark" ? "Light theme" : "Dark theme"}

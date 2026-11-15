@@ -103,16 +103,16 @@ function Card({ rec, names, fromBuild, source }: { rec: CatalogRecord; names: Re
         </button>
       </header>
 
-      <section className="rounded-lg border border-line bg-surface p-4">
-        <h2 className="text-sm font-semibold">
+      <section className="panel">
+        <h2 className="text-sm font-medium">
           Summary <span className="ml-1 rounded border border-line px-1.5 text-[10px] font-normal uppercase text-muted">from PSI metadata</span>
         </h2>
         <p className="mt-1 text-sm">{summary || "The PSI metadata has no objective text for this investigation."}</p>
       </section>
 
       <div className="grid gap-4 md:grid-cols-2">
-        <section className="rounded-lg border border-line bg-surface p-4">
-          <h2 className="mb-2 text-sm font-semibold">Facts</h2>
+        <section className="panel">
+          <h2 className="mb-2 text-sm font-medium">Facts</h2>
           <dl className="grid grid-cols-[9rem_1fr] gap-x-3 gap-y-1 text-sm">
             <dt className="text-muted">Hardware</dt>
             <dd>{rec.hardware ?? "–"}</dd>
@@ -134,8 +134,8 @@ function Card({ rec, names, fromBuild, source }: { rec: CatalogRecord; names: Re
             ) : null}
           </dl>
         </section>
-        <section className="rounded-lg border border-line bg-surface p-4">
-          <h2 className="mb-2 text-sm font-semibold">Conditions covered (computed from the test table)</h2>
+        <section className="panel">
+          <h2 className="mb-2 text-sm font-medium">Conditions covered (computed from the test table)</h2>
           {conds.length ? (
             <table className="w-full text-left text-sm">
               <tbody>
@@ -153,13 +153,13 @@ function Card({ rec, names, fromBuild, source }: { rec: CatalogRecord; names: Re
         </section>
       </div>
 
-      <section className="rounded-lg border border-line bg-surface p-4">
-        <h2 className="mb-2 text-sm font-semibold">Fire-safety pillars</h2>
+      <section className="panel">
+        <h2 className="mb-2 text-sm font-medium">Fire-safety pillars</h2>
         {rec.hazard_pillars?.length ? (
           <ul className="flex flex-wrap gap-3">
             {rec.hazard_pillars.map((p) => (
               <li key={p} className={`rounded-md border-2 px-2 py-1 text-xs ${PILLAR_STYLE[p] ?? "border-line"}`}>
-                <span className="font-semibold uppercase">{p}</span>
+                <span className="font-medium uppercase">{p}</span>
                 {rec.pillar_evidence?.[p]?.length ? (
                   <span className="ml-1 text-fg">· keywords: {rec.pillar_evidence[p].join(", ")}</span>
                 ) : null}
@@ -172,20 +172,20 @@ function Card({ rec, names, fromBuild, source }: { rec: CatalogRecord; names: Re
       </section>
 
       {rec.hypothesis ? (
-        <section className="rounded-lg border border-line bg-surface p-4">
-          <h2 className="mb-1 text-sm font-semibold">Hypothesis</h2>
+        <section className="panel">
+          <h2 className="mb-1 text-sm font-medium">Hypothesis</h2>
           <p className="whitespace-pre-line text-sm">{rec.hypothesis}</p>
         </section>
       ) : null}
       {rec.impacts ? (
-        <section className="rounded-lg border border-line bg-surface p-4">
-          <h2 className="mb-1 text-sm font-semibold">Earth applications</h2>
+        <section className="panel">
+          <h2 className="mb-1 text-sm font-medium">Earth applications</h2>
           <p className="whitespace-pre-line text-sm">{rec.impacts}</p>
         </section>
       ) : null}
 
-      <section className="rounded-lg border border-line bg-surface p-4">
-        <h2 className="mb-2 text-sm font-semibold">Lineage</h2>
+      <section className="panel">
+        <h2 className="mb-2 text-sm font-medium">Lineage</h2>
         {reuses.length || reanalyzed.length || related.length ? (
           <dl className="space-y-2 text-sm">
             {reuses.length ? (
@@ -213,8 +213,8 @@ function Card({ rec, names, fromBuild, source }: { rec: CatalogRecord; names: Re
         )}
       </section>
 
-      <section className="rounded-lg border border-line bg-surface p-4">
-        <h2 className="mb-2 text-sm font-semibold">Publications ({rec.publications?.length ?? 0})</h2>
+      <section className="panel">
+        <h2 className="mb-2 text-sm font-medium">Publications ({rec.publications?.length ?? 0})</h2>
         {rec.publications?.length ? (
           <ul className="space-y-1 text-sm">
             {rec.publications.map((p, i) => (

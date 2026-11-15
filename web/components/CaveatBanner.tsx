@@ -22,7 +22,7 @@ export function CaveatBanner({
   const t = TONES[tone];
   return (
     <div role="note" aria-label={title} className={`rounded-sm border border-l-2 px-4 py-3 text-sm ${t.box}`}>
-      <p className={`flex items-center gap-1.5 text-[13px] font-semibold ${t.label}`}>
+      <p className={`flex items-center gap-1.5 text-[13px] font-medium ${t.label}`}>
         {tone === "warn" ? (
           <svg width="12" height="12" viewBox="0 0 24 24" aria-hidden="true" className="shrink-0">
             <path d="M12 3l10 18H2L12 3z" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinejoin="round" />

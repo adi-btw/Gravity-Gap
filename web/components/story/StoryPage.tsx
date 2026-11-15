@@ -40,6 +40,8 @@ const PLATFORM_NAMES: Record<string, string> = { ISS: "ISS", Cygnus: "Cygnus car
 /**
  * The story page at "/": a flight-test report in eight sections (scrollcraft/builds/gravity-gap/SCORE.md).
  * The scroll-craft engine (public/scrollcraft, unmodified) is loaded only here and destroyed on leaving.
+ * Parallax (unslop/AUDIT.md exception): transform-only, a few dozen pixels, engine-driven and off under reduced motion,
+ * on the cover planes and title, the hazard photographs and the candle pair.
  */
 export function StoryPage({ data }: { data: StoryData }) {
   const rootRef = useRef<HTMLDivElement>(null);
@@ -79,11 +81,11 @@ export function StoryPage({ data }: { data: StoryData }) {
             <img src="/story/cover-moon.webp" alt="" width={1920} height={1920} fetchPriority="high" />
           </div>
         </div>
-        <div className="gg-cover__copy">
+        <div className="gg-cover__copy" data-sc-parallax="0.45">
           <div className="gg-wrap">
-            <p className="gg-label">Evidence report · NASA Space Apps 2026</p>
+            <p className="gg-label">Evidence report, NASA Space Apps 2026</p>
             <h1 id="cover-title" className="gg-h1">
-              NASA&apos;s fire data stops at two gravities.
+              NASA&apos;s fire data stops at two gravities
             </h1>
             <p className="gg-lede">
               Orbit and Earth. The Moon and Mars sit between them, and that is where crews will live next.
@@ -100,7 +102,7 @@ export function StoryPage({ data }: { data: StoryData }) {
         <div className="gg-wrap gg-hazard__grid">
           <div className="gg-stack" data-sc-in data-sc-stagger="70">
             <h2 id="hazard-title" className="gg-h2">
-              Fire is the emergency every crew plans for.
+              Fire is the emergency every crew plans for
             </h2>
             <p>
               A spacecraft cannot be evacuated like a building. So NASA burns things on purpose, in orbit, long before a
@@ -125,7 +127,7 @@ export function StoryPage({ data }: { data: StoryData }) {
             </dl>
           </div>
           <div className="gg-hazard__figs">
-            <figure className="gg-hazard__fig1">
+            <figure className="gg-hazard__fig1" data-sc-parallax="0.2">
               <img
                 className="gg-photo"
                 src="/story/iss-cir-epps.webp"
@@ -140,7 +142,7 @@ export function StoryPage({ data }: { data: StoryData }) {
                 investigations, 3 September 2024. NASA, iss071e582160.
               </figcaption>
             </figure>
-            <figure className="gg-hazard__inset">
+            <figure className="gg-hazard__inset" data-sc-parallax="-0.55">
               <img
                 className="gg-photo"
                 src="/story/bass2-flame.webp"
@@ -161,7 +163,7 @@ export function StoryPage({ data }: { data: StoryData }) {
       {/* 3 · two gravities ----------------------------------------------------------------------------- */}
       <section id="two-gravities" className="gg-sec gg-two" data-sc-act="flow" aria-labelledby="two-title">
         <div className="gg-wrap gg-two__grid">
-          <figure className="gg-two__fig">
+          <figure className="gg-two__fig" data-sc-parallax="-0.3">
             <div className="gg-candles__labels gg-label" aria-hidden="true">
               <span>1 g · Earth</span>
               <span>0 g · orbit</span>
@@ -193,7 +195,7 @@ export function StoryPage({ data }: { data: StoryData }) {
           </figure>
           <div className="gg-two__copy gg-stack" data-sc-in data-sc-stagger="70">
             <h2 id="two-title" className="gg-h2">
-              Every one of those tests burned at one of two gravities.
+              Every one of those tests burned at one of two gravities
             </h2>
             <p>
               On Earth hot gas rises, so a candle stands tall, yellow and sooty. In orbit nothing rises: the same candle
@@ -220,7 +222,7 @@ export function StoryPage({ data }: { data: StoryData }) {
       {/* 4 · silence (authored) ------------------------------------------------------------------------ */}
       <section className="gg-sec gg-tint gg-between" aria-label="Between orbit and Earth">
         <div className="gg-wrap">
-          <p data-sc-in>Between those two, the archive is empty.</p>
+          <p data-sc-in>Between those two, the archive is empty</p>
         </div>
       </section>
 
@@ -229,7 +231,7 @@ export function StoryPage({ data }: { data: StoryData }) {
         <div className="gg-gap__stage" data-sc-stage>
           <div className="gg-wrap gg-gap__head">
             <h2 id="gap-title" className="gg-h2" style={{ maxWidth: "15ch" }}>
-              Two ends, and nothing in the middle.
+              Two ends, and nothing in the middle
             </h2>
             <p className="gg-label">
               <span className="gg-fig-no">Fig. 4</span>
@@ -258,7 +260,7 @@ export function StoryPage({ data }: { data: StoryData }) {
         <div className="gg-wrap gg-bridge__grid">
           <div className="gg-stack" data-sc-in data-sc-stagger="70">
             <h2 id="bridge-title" className="gg-h2">
-              Gravity Gap carries the orbit tests across, and pays for it in width.
+              Gravity Gap carries the orbit tests across, and pays for it in width
             </h2>
             <p>
               At a lunar base, with the cabin fan at 10 cm/s (an assumption you can edit), a small flame is in the{" "}

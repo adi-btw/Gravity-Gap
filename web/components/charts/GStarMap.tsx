@@ -178,7 +178,7 @@ export function GStarMap({ markers, current }: Props) {
               stroke="#111827"
               strokeWidth={3}
               paintOrder="stroke"
-              fontWeight={600}
+              fontWeight={500}
               textAnchor={m.above ? "middle" : right ? "end" : "start"}
             >
               {m.label} · {fmtSig(gStar(m.g, m.p), 2)}

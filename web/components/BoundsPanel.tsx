@@ -64,7 +64,7 @@ export function BoundsPanel() {
             href={`/compare?${compareQuery(compareWithTarget(habitat).a, compareWithTarget(habitat).b, queryString)}`}
             className="text-sm text-micro underline hover:text-fg"
           >
-            Compare with… →
+            Compare with another habitat →
           </Link>
           <Link href={`/trust?${queryString}`} className="text-sm text-micro underline hover:text-fg" data-testid="trust-link">
             How often are these bands right? →
@@ -85,11 +85,11 @@ export function BoundsPanel() {
               aria-pressed={m.id === metric}
               onClick={() => setMetric(m.id)}
               title={m.data}
-              className={`rounded-md border px-3 py-1.5 text-left text-xs ${
-                m.id === metric ? "border-partial bg-surface-2 text-fg" : "border-line text-muted hover:text-fg"
+              className={`rounded-md border px-3 py-1.5 text-left text-[13px] transition-colors ${
+                m.id === metric ? "border-fg bg-fg text-bg" : "border-line text-muted hover:border-line-strong hover:text-fg"
               }`}
             >
-              <span className="num font-semibold">{m.id}</span> {m.label}
+              <span className="num font-medium">{m.id}</span> {m.label}
             </button>
           ))}
         </div>
@@ -127,21 +127,21 @@ function BoundsView({
   return (
     <div className="space-y-4">
       {r.nonmonotonic_flag ? (
-        <div role="alert" className="flex gap-2 rounded-md border-2 border-warn bg-[var(--warn-fill)] px-3 py-2 text-sm">
+        <div role="alert" className="flex gap-2 rounded-lg border border-warn bg-[var(--warn-fill)] px-4 py-3 text-sm">
           <svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true" className="mt-0.5 shrink-0 text-warn">
             <path d="M12 3l10 18H2L12 3z" fill="none" stroke="currentColor" strokeWidth="2" strokeLinejoin="round" />
             <path d="M12 10v5M12 18v.5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
           </svg>
           <div>
-            <p className="font-semibold text-warn">Non-monotonic warning: partial gravity may be worse than both references</p>
+            <p className="font-medium text-warn">Non-monotonic warning: partial gravity may be worse than both references</p>
             <p className="mt-1">{r.nonmonotonic_note ?? "The effective flow sits near the flammability peak."}</p>
           </div>
         </div>
       ) : null}
 
-      <section className="rounded-lg border border-line bg-surface p-4" aria-labelledby="estimate-h">
+      <section className="panel" aria-labelledby="estimate-h">
         <div className="flex flex-wrap items-baseline justify-between gap-2">
-          <h2 id="estimate-h" className="text-base font-semibold">
+          <h2 id="estimate-h" className="text-base font-medium">
             <span className="num">{r.metric}</span> · {r.label}
           </h2>
           <span className="num text-[11px] text-muted">
@@ -151,7 +151,7 @@ function BoundsView({
 
         {!r.applicable ? (
           <div className="hatch mt-3 rounded-md border border-dashed border-line p-4" role="status" data-testid="bounds-extrapolation">
-            <p className="text-sm font-semibold">Extrapolation: no evidence</p>
+            <p className="text-sm font-medium">Extrapolation: no evidence</p>
             <p className="mt-1 text-sm">{r.reason ?? "The habitat is outside every tested condition for this metric."}</p>
             <p className="mt-2 text-xs text-muted">
               No number is shown on purpose. The chart shows every atmosphere this metric was actually tested in; your
@@ -172,14 +172,14 @@ function BoundsView({
       {r.applicable ? <CoverageSection metric={r.metric} habitat={habitat} /> : null}
 
       <div className="grid gap-4 md:grid-cols-2">
-        <section className="rounded-lg border border-line bg-surface p-4" aria-labelledby="transfer-h">
-          <h2 id="transfer-h" className="mb-2 text-sm font-semibold">
+        <section className="panel" aria-labelledby="transfer-h">
+          <h2 id="transfer-h" className="mb-2 text-sm font-medium">
             Does microgravity evidence transfer here?
           </h2>
           {r.transfer ? (
             <>
               <span
-                className={`inline-block rounded-md border-2 px-2 py-0.5 text-xs font-semibold uppercase ${CONF_STYLE[r.transfer.confidence] ?? "border-line"}`}
+                className={`inline-block rounded-sm border px-2 py-0.5 text-xs font-medium ${CONF_STYLE[r.transfer.confidence] ?? "border-line"}`}
               >
                 transfer confidence: {r.transfer.confidence}
               </span>
@@ -201,8 +201,8 @@ function BoundsView({
           ) : null}
         </section>
 
-        <section className="rounded-lg border border-line bg-surface p-4" aria-labelledby="sens-h">
-          <h2 id="sens-h" className="mb-2 text-sm font-semibold">
+        <section className="panel" aria-labelledby="sens-h">
+          <h2 id="sens-h" className="mb-2 text-sm font-medium">
             Sensitivity
           </h2>
           <details data-testid="one-at-a-time">
@@ -216,8 +216,8 @@ function BoundsView({
         </section>
       </div>
 
-      <section className="rounded-lg border border-line bg-surface p-4" aria-labelledby="ev-h">
-        <h2 id="ev-h" className="mb-2 text-sm font-semibold">
+      <section className="panel" aria-labelledby="ev-h">
+        <h2 id="ev-h" className="mb-2 text-sm font-medium">
           Evidence ({r.evidence.length} nearest training record{r.evidence.length === 1 ? "" : "s"})
         </h2>
         <EvidenceList rows={r.evidence} queryString={queryString} />
@@ -276,7 +276,7 @@ function NumericChart({ r, kind, gLabel, trace }: { r: BoundsResult; kind: strin
       />
       <div>
         <p className="text-sm">
-          Estimate <span className="num text-2xl font-semibold text-partial" data-testid="bounds-estimate">{fmtEstimate(est, kind, r.unit)}</span>
+          Estimate <span className="num text-2xl font-medium text-partial" data-testid="bounds-estimate">{fmtEstimate(est, kind, r.unit)}</span>
         </p>
         <p className="text-sm text-muted">
           90% band <span className="num text-fg" data-testid="bounds-band">{fmtBand(r.band90, kind, r.unit)}</span>
@@ -318,7 +318,7 @@ function CategoryColumns({ r, gLabel }: { r: BoundsResult; gLabel: string }) {
           <p className="text-xs font-medium">{c.name}</p>
           {c.ref && c.ref.estimate !== null ? (
             <>
-              <p className="mt-1 text-lg font-semibold capitalize text-fg">{fmtEstimate(c.ref.estimate, "category")}</p>
+              <p className="mt-1 text-lg font-medium capitalize text-fg">{fmtEstimate(c.ref.estimate, "category")}</p>
               <p className="text-xs text-muted">
                 range: <span className="num">{fmtBand(c.ref.band90, "category")}</span>
               </p>
@@ -428,9 +428,9 @@ function Explain({ r }: { r: BoundsResult }) {
   };
 
   return (
-    <section className="rounded-lg border border-line bg-surface p-4" aria-labelledby="explain-h">
+    <section className="panel" aria-labelledby="explain-h">
       <div className="flex flex-wrap items-center justify-between gap-2">
-        <h2 id="explain-h" className="text-sm font-semibold">
+        <h2 id="explain-h" className="text-sm font-medium">
           Explain this prediction
         </h2>
         <div className="flex gap-2">
@@ -478,8 +478,11 @@ function CoverageSection({ metric, habitat, inline = false }: { metric: string; 
         const s = coverageStatus(c, habitat.o2, habitat.p_psia);
         const assumed = c.points.find((p) => p.assumed)?.assumed;
         return (
-          <>
-            <CoverageChart cov={c} status={s} habitatLabel={label} />
+          <div className="grid gap-x-10 gap-y-3 lg:grid-cols-[minmax(0,3fr)_minmax(0,2fr)] lg:items-end">
+            <div className="max-w-[680px]">
+              <CoverageChart cov={c} status={s} habitatLabel={label} />
+            </div>
+            <div>
             <ul className="mt-2 flex flex-wrap gap-x-4 gap-y-1 text-[11px] text-muted" aria-label="Chart legend">
               <li>
                 <span aria-hidden="true" className="mr-1 inline-block h-2.5 w-2.5 rounded-full bg-micro align-middle" />
@@ -507,20 +510,21 @@ function CoverageSection({ metric, habitat, inline = false }: { metric: string; 
               ) : null}
             </p>
             {assumed ? <p className="mt-1 text-[11px] text-muted">Hollow dots: {assumed}.</p> : null}
-          </>
+            </div>
+          </div>
         );
       })()
     );
   if (inline) {
     return (
-      <div className="mt-3 rounded-md border border-line bg-surface p-3" aria-label="Tested conditions for this metric">
+      <div className="mt-3 panel-tight" aria-label="Tested conditions for this metric">
         {body}
       </div>
     );
   }
   return (
-    <section className="rounded-lg border border-line bg-surface p-4" aria-labelledby="coverage-h">
-      <h2 id="coverage-h" className="mb-2 text-sm font-semibold">
+    <section className="panel" aria-labelledby="coverage-h">
+      <h2 id="coverage-h" className="mb-2 text-sm font-medium">
         Where this metric has evidence
       </h2>
       {body}

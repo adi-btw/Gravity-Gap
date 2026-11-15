@@ -160,7 +160,7 @@ export function CoverageChart({ cov, status, habitatLabel }: Props) {
           x={hx + (flip ? 4 : -4)}
           y={labelY}
           fontSize={12}
-          fontWeight={600}
+          fontWeight={500}
           textAnchor={flip ? "end" : "start"}
           fill="var(--partial)"
           className="svg-halo"
