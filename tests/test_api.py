@@ -730,3 +730,27 @@ def test_suppression_reference_real_artifact(client):
         pytest.skip("artifacts/suppression_reference.json (DE) not built yet")
     body = _strict_json(client.get("/suppression/reference"))
     assert {"co2", "he"} <= set(body["tables"])
+
+
+def test_detection_fake_and_missing(client, tmp_path, monkeypatch):
+    import api.main as main_mod
+
+    monkeypatch.setattr(main_mod, "DETECTION_PATH", tmp_path / "missing.json")
+    _assert_problem(client.get("/detection"), 503)
+    path = tmp_path / "detection.json"
+    path.write_text('{"title": "Detection evidence", "gaps": [{"id": "lunar_dust", "text": "x"}]}', encoding="utf-8")
+    monkeypatch.setattr(main_mod, "DETECTION_PATH", path)
+    r = client.get("/detection")
+    assert r.status_code == 200 and r.json() == {"title": "Detection evidence",
+                                                 "gaps": [{"id": "lunar_dust", "text": "x"}]}
+    path.write_text("not json", encoding="utf-8")
+    _assert_problem(client.get("/detection"), 503)
+
+
+def test_detection_real_artifact_served_unchanged(client):
+    path = ROOT / "artifacts" / "detection.json"
+    if not path.exists():
+        pytest.skip("artifacts/detection.json (TL) not built yet")
+    body = _strict_json(client.get("/detection"))
+    assert body == json.loads(path.read_text(encoding="utf-8"))
+    assert body["gaps"][0]["id"] == "lunar_dust"

@@ -15,7 +15,8 @@ Modes, in order of preference:
 
 Intents: incident (R1), refusal, suppression (R2: CO2 / helium dilution, answered only from
 ``engine.suppression.curve`` and ``artifacts/suppression_reference.json`` in the pack, always with
-``SAFETY_NOTE``), fans_off, planner, experiments, band, regime, explain.
+``SAFETY_NOTE``), detection (R3: smoke, dust and smoke-alarm questions, answered only from
+``artifacts/detection.json``, always stating its gaps), fans_off, planner, experiments, band, regime, explain.
 
 Every answer is run through ``engine.ai.validator.validate`` against the context pack.
 
@@ -62,6 +63,9 @@ DEMO_QUESTIONS: list[tuple[str, str | None]] = [
     ("How much CO₂ would it take to put out a flame in ISS air?", "iss"),
     ("Why can't Gravity Gap answer suppression for the lunar base?", "lunar_base"),
     ("Does helium work better than CO₂?", "iss"),
+    # R3 detection evidence (intent "detection"; artifacts/detection.json in the context pack)
+    ("Could lunar dust trigger the smoke alarm?", None),
+    ("Is smoke in space different?", None),
 ]
 
 OUT_OF_SCOPE = ("rocket", "propellant", "propulsion", "thruster", "launch vehicle", "booster",
@@ -136,6 +140,8 @@ def classify(question: str, context_ids: Iterable[str] = ()) -> str:
         return "refusal"
     if ctx.wants_suppression(question, context_ids):
         return "suppression"
+    if ctx.wants_detection(question, context_ids):
+        return "detection"
     if ctx._wants_fans_off(q) or ("fan" in q and ("off" in q or "without" in q)) or "ventilation" in q:
         return "fans_off"
     if any(w in q for w in ("test first", "luci", "fm2", "next test", "which test", "what should", "plan")):
@@ -788,7 +794,117 @@ def t_suppression(pack: dict, question: str, metric: str | None) -> str:
     return "\n\n".join(o for o in out if o)
 
 
-TEMPLATES = {"suppression": t_suppression, "incident": t_incident, "regime": t_regime, "band": t_band, "experiments": t_experiments, "planner": t_planner,
+# --------------------------------------------------------------------------- detection evidence (R3)
+
+DUST_WORDS = ("dust", "regolith", "alarm", "detector", "trigger", "fool")
+GRAVITY_WORDS = ("space", "gravity", "microgravity", "orbit", "weightless", "different")
+
+
+def _det_note(text: Any) -> str:
+    """Artifact sentence without its internal ``[verify]`` marker."""
+    return re.sub(r"\s*\[verify\]", "", str(text or "")).strip()
+
+
+def _det_gaps(det: dict, ids: Iterable[str]) -> str:
+    gaps = {g["gap_id"]: g for g in det.get("gaps") or []}
+    lines = [f"- {_det_note(gaps[i]['text'])} [{gaps[i]['id']}]" for i in ids if i in gaps]
+    return ("**What these data do not hold:**\n" + "\n".join(lines)) if lines else ""
+
+
+def _det_inv(series: dict) -> str:
+    inv = (series.get("source") or {}).get("investigation_id")
+    return f" [{inv}]" if inv else ""
+
+
+def _det_dust(det: dict) -> list[str]:
+    out = [("**Short answer: these data cannot say.** The PSI files used here hold no lunar dust and no lunar dust "
+            "simulant, and no data on which particle sizes a smoke detector responds to "
+            "[eng:detection:lunar_dust] [eng:detection:detector_sensitivity]."),
+           _det_gaps(det, ("lunar_dust", "dust_sizes", "detector_sensitivity"))]
+    comp = det.get("average_mass_comparison") or {}
+    smoke, dust = comp.get("smoke") or {}, comp.get("dust") or {}
+    sr, dr = smoke.get("range_nm") or {}, dust.get("range_nm") or {}
+    if sr and dr:
+        out.append(f"**The one like-for-like comparison (diameter of average mass).** {_det_note(comp.get('note'))} "
+                   f"{smoke.get('label')}: {fmt(sr.get('min'))} to {fmt(sr.get('max'))} nm across test runs "
+                   f"[{smoke['id']}]{_det_inv(smoke)}. {dust.get('label')}: {fmt(dr.get('min'))} to "
+                   f"{fmt(dr.get('max'))} nm across the dust bags [{dust['id']}]{_det_inv(dust)}. "
+                   f"{_det_note(dust.get('density_note'))} [{dust['id']}]")
+        out.append("This test dust is Arizona Road Dust, not lunar dust, and a size number alone does not say "
+                   "whether an alarm would go off.")
+    return out
+
+
+def _det_sim_line(s: dict) -> str:
+    st = s.get("stats") or {}
+    thr = s.get("share_threshold_um")
+    share = st.get(f"share_of_count_above_{fmt(thr)}um") if thr is not None else None
+    return (f"- {s.get('label')}: {pct(share)} of the particle count above {fmt(thr)} µm, count median diameter "
+            f"{fmt(st.get('count_median_diameter_nm'))} nm [{s['id']}]")
+
+
+def _det_space(det: dict) -> list[str]:
+    sims = {s["series_id"]: s for s in det.get("simulation") or []}
+    base = [sims[i] for i in ("psi115_case1_earth", "psi115_case1_micro", "psi115_case2_earth",
+                              "psi115_case2_micro") if i in sims]
+    if not base:
+        return [("The PSI-115 simulation is not in the detection artifact of this build, so Gravity Gap cannot "
+                 "compare smoke in Earth gravity and microgravity [eng:detection].")]
+    thr = base[0].get("share_threshold_um")
+    surrogate = base[0].get("surrogate") or "a stand-in smoke"
+    out = [(f"**Only a simulation speaks to this, and it uses a surrogate smoke.** PSI-115 is a computer model, not "
+            f"a measurement, with {surrogate} as a stand-in (surrogate) for real smoke. In the simulation, "
+            f"microgravity keeps a larger share of particles above {fmt(thr)} µm than Earth gravity, in both "
+            f"cases:"),
+           "\n".join(_det_sim_line(s) for s in base),
+           _det_gaps(det, ("simulation_units", "simulation_vs_experiment"))]
+    runs = det.get("smoke_runs") or {}
+    unaged = [b for b in runs.get("by_material") or [] if not b.get("aged")
+              and isinstance((b.get("dg_nm") or {}).get("median"), (int, float))]
+    if unaged:
+        lo = min(unaged, key=lambda b: b["dg_nm"]["median"])
+        hi = max(unaged, key=lambda b: b["dg_nm"]["median"])
+        sdef = ((det.get("size_definitions") or {}).get(runs.get("size_definition")) or {}).get("label")
+        out.append(f"**Measured smoke, on a different size measure.** For smoke from heated spacecraft materials "
+                   f"(SAME-R), the per-material median of the {str(sdef or 'middle size').lower()} for unaged runs "
+                   f"goes from {fmt(lo['dg_nm']['median'])} nm ({lo.get('material_label')}) to "
+                   f"{fmt(hi['dg_nm']['median'])} nm ({hi.get('material_label')}) [{runs['id']}]{_det_inv(runs)}. "
+                   f"That is a different size definition from the simulation's size classes, so the two are not "
+                   f"compared number to number [eng:detection:size_definitions_disagree].")
+    return out
+
+
+def _det_smoke(det: dict) -> str:
+    bins = [b for b in det.get("smoke_bins") or [] if b.get("variant") == "all"]
+    if not bins:
+        return ""
+    sdef = ((det.get("size_definitions") or {}).get(bins[0].get("size_definition")) or {}).get("label")
+    lines = [f"- {b.get('label')}: geometric mean {fmt((b.get('stats') or {}).get('geometric_mean_diameter_nm'))} nm, "
+             f"{fmt((b.get('stats') or {}).get('particle_count'))} particles [{b['id']}]{_det_inv(b)}" for b in bins]
+    return f"**Smoke sizes ({str(sdef or 'microscope images').lower()}):**\n" + "\n".join(lines)
+
+
+def t_detection(pack: dict, question: str, metric: str | None) -> str:
+    det = pack.get("detection")
+    if not det:
+        return ("The detection evidence artifact (artifacts/detection.json) is not available in this build, so "
+                "Gravity Gap cannot answer smoke or dust questions yet.")
+    q = question.lower()
+    dust = any(w in q for w in DUST_WORDS)
+    space = not dust and any(re.search(rf"\b{w}\b", q) for w in GRAVITY_WORDS)
+    out: list[str] = []
+    if dust:
+        out += _det_dust(det)
+    elif space:
+        out += _det_space(det)
+    else:
+        out.append(_det_smoke(det))
+        out.append(_det_gaps(det, ("lunar_dust", "dust_sizes", "detector_sensitivity", "size_definitions_disagree")))
+    out.append(f"**Scope:** {_det_note(det.get('scope_note'))} [{det['id']}]")
+    return "\n\n".join(o for o in out if o)
+
+
+TEMPLATES = {"detection": t_detection, "suppression": t_suppression, "incident": t_incident, "regime": t_regime, "band": t_band, "experiments": t_experiments, "planner": t_planner,
              "fans_off": t_fans_off, "explain": t_explain}
 
 
@@ -796,7 +912,7 @@ def template_answer(question: str, pack: dict, intent: str, metric: str | None) 
     if intent == "refusal":
         return t_refusal(pack, question)
     text = TEMPLATES.get(intent, t_explain)(pack, question, metric)
-    if intent == "incident":
+    if intent in ("incident", "detection"):
         return text  # self-contained: built only from the incident artifact, not the habitat predictions
     note = _missing_note(pack)
     return text + ("\n\n" + note if note else "")

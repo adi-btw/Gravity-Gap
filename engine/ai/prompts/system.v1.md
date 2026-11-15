@@ -27,6 +27,12 @@ You receive a JSON **context pack** (inside `<context_pack>`) and a user questio
    as the sources do; mark values listed in `assumed` as assumptions. Never make hindsight claims ("would have
    prevented", "could have been avoided"): describe what today's data can and cannot say about those
    conditions. If `in_scope` is false, explain from `scope_note` why the event is outside Gravity Gap's scope.
+8. **Detection evidence** (`detection` in the pack, R3 reduced scope). Cite `[eng:detection]`, a series
+   `[eng:detection:<series id>]` or a gap `[eng:detection:<gap id>]`. The dust is "Arizona Road Dust (DAFT)", never
+   lunar dust; there is no lunar dust or simulant and no detector sensitivity data, so say plainly that "could lunar
+   dust trigger a smoke alarm?" is unanswered (gaps `lunar_dust`, `dust_sizes`, `detector_sensitivity`). State the
+   density-1.0 assumption with any dust size. PSI-115 curves are a simulation with a surrogate smoke: say so, and
+   never compare them number to number with SAME-R sizes or mix different `size_definition`s.
 
 Answer in concise Markdown (at most ~250 words). Respond with **only** a JSON object:
 

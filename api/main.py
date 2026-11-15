@@ -43,6 +43,7 @@ MANIFEST_PATH = ARTIFACTS_DIR / "MANIFEST.json"
 PLANNER_PATH = ARTIFACTS_DIR / "planner.json"
 INCIDENTS_PATH = ARTIFACTS_DIR / "incidents.json"
 SUPPRESSION_REFERENCE_PATH = ARTIFACTS_DIR / "suppression_reference.json"
+DETECTION_PATH = ARTIFACTS_DIR / "detection.json"
 
 ASK_RATE_PER_MIN = int(os.environ.get("GRAVITY_GAP_ASK_RATE", "20"))
 LEDGER_RATE_PER_MIN = int(os.environ.get("GRAVITY_GAP_LEDGER_RATE", "10"))
@@ -505,6 +506,23 @@ def suppression_reference() -> Any:
         data = json.loads(SUPPRESSION_REFERENCE_PATH.read_text(encoding="utf-8"))
     except ValueError as exc:
         raise HTTPException(status_code=503, detail="artifacts/suppression_reference.json is not valid JSON") from exc
+    return to_jsonable(data)
+
+
+
+# --------------------------------------------------------------------------- R3 detection evidence
+
+
+@app.get("/detection")
+def detection() -> Any:
+    """`artifacts/detection.json` (R3 detection evidence, reduced scope per ADR-0007), served unchanged."""
+    if not DETECTION_PATH.exists():
+        raise HTTPException(status_code=503, detail="artifacts/detection.json is not built yet "
+                                                    "(python -m engine.detection)")
+    try:
+        data = json.loads(DETECTION_PATH.read_text(encoding="utf-8"))
+    except ValueError as exc:
+        raise HTTPException(status_code=503, detail="artifacts/detection.json is not valid JSON") from exc
     return to_jsonable(data)
 
 

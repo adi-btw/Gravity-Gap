@@ -20,6 +20,10 @@ The pack is the *only* source of facts an answer may use. It contains:
   a flame out with CO2 / helium (or ``context_ids`` with ``eng:suppression:co2``) -> cite ``[eng:suppression:co2]``
   (+ ``[PSI-69]``, the FLEX tests behind M1/M2); ``suppression_reference`` holds the empirical FLEX rows of
   ``artifacts/suppression_reference.json`` in the habitat's O2 band     -> cite ``[eng:suppression_reference]``
+* ``detection`` R3 detection evidence (``artifacts/detection.json``, reduced scope, ADR-0007) for questions about
+  smoke, dust, particles or smoke alarms (or ``context_ids`` starting with ``eng:detection``): scope note, gaps,
+  size definitions and per-series stats (no raw bins) -> cite ``[eng:detection]``, a series
+  ``[eng:detection:psi115_case1_micro]`` or a gap ``[eng:detection:lunar_dust]``; only ids in the artifact resolve
 * ``constants`` physical constants and thresholds the answers may quote
 * ``citable_ids`` every id a citation may use
 * ``missing``   engine pieces that were unavailable (answers must say so, not guess)
@@ -50,6 +54,7 @@ TESTS_CSV = ROOT / "data" / "clean" / "psi_tests.csv"
 INCIDENTS_PATH = ARTIFACTS / "incidents.json"
 SUPPRESSION_DIR = ARTIFACTS / "suppression"
 SUPPRESSION_REFERENCE_PATH = ARTIFACTS / "suppression_reference.json"
+DETECTION_PATH = ARTIFACTS / "detection.json"
 
 PACK_VERSION = "context.v1"
 HABITAT_FIELDS = ("g_m_s2", "p_psia", "o2", "u_cm_s", "L_mm")
@@ -353,6 +358,91 @@ def suppression_reference_block(h: dict, diluent: str, path: Path | None = None)
     return jsonable(out)
 
 
+# --------------------------------------------------------------------------- detection evidence (R3)
+
+DETECTION_WORDS = ("smoke", "dust", "regolith", "particle", "aerosol", "soot", "alarm", "detector", "detect")
+_THRESHOLD_KEY = re.compile(r"^share_of_count_above_(\d+(?:\.\d+)?)um$")
+
+
+def wants_detection(question: str, context_ids: Iterable[str] = ()) -> bool:
+    """True for questions about smoke, dust, particles or smoke alarms (R3 detection evidence)."""
+    if any(str(c).startswith("eng:detection") for c in context_ids or ()):
+        return True
+    q = (question or "").lower()
+    return any(re.search(rf"\b{w}", q) for w in DETECTION_WORDS)
+
+
+def load_detection(path: Path | None = None) -> dict | None:
+    f = path or DETECTION_PATH
+    if not f.exists():
+        return None
+    try:
+        data = json.loads(f.read_text(encoding="utf-8"))
+    except ValueError:
+        return None
+    return data if isinstance(data, dict) else None
+
+
+def _det_series(s: dict, keep: tuple[str, ...]) -> dict:
+    out = {k: s.get(k) for k in keep if k in s}
+    out["series_id"] = s.get("id")
+    out["id"] = f"eng:detection:{s.get('id')}"
+    return out
+
+
+def detection_block(path: Path | None = None) -> dict | None:
+    """Trimmed ``artifacts/detection.json`` (no raw bin arrays); None when the artifact is not built.
+
+    Every cite id is ``eng:detection:<id>`` for a series or gap id that is in the artifact, plus ``eng:detection``.
+    """
+    data = load_detection(path)
+    if data is None:
+        return None
+    out: dict[str, Any] = {"id": "eng:detection", "title": data.get("title"), "verdict": data.get("verdict"),
+                           "scope_note": data.get("scope_note"), "size_definitions": data.get("size_definitions")}
+    out["gaps"] = [{"gap_id": g["id"], "text": g.get("text"), "id": f"eng:detection:{g['id']}"}
+                   for g in data.get("gaps") or [] if isinstance(g, dict) and g.get("id")]
+    common = ("label", "size_definition", "note", "source")
+    out["smoke_bins"] = [_det_series(s, common + ("material_label", "run", "variant", "stats"))
+                         for s in data.get("smoke_bins") or [] if isinstance(s, dict) and s.get("id")]
+    runs = data.get("smoke_runs")
+    if isinstance(runs, dict) and runs.get("id"):
+        out["smoke_runs"] = _det_series(runs, common + ("by_material",))
+    amc = data.get("average_mass_comparison")
+    if isinstance(amc, dict):
+        comp: dict[str, Any] = {"size_definition": amc.get("size_definition"), "note": amc.get("note")}
+        for side, keep in (("smoke", ("label", "source", "range_nm")),
+                           ("dust", ("label", "material_text", "source", "assumed_density_g_per_cm3",
+                                     "density_note", "points", "range_nm"))):
+            if isinstance(amc.get(side), dict) and amc[side].get("id"):
+                comp[side] = _det_series(amc[side], keep)
+        out["average_mass_comparison"] = comp
+    sims = []
+    for s in data.get("simulation") or []:
+        if not isinstance(s, dict) or not s.get("id"):
+            continue
+        item = _det_series(s, common + ("case", "case_label", "gravity", "variant", "surrogate", "time_s",
+                                        "is_simulation", "stats"))
+        for k in (s.get("stats") or {}):
+            m = _THRESHOLD_KEY.match(str(k))
+            if m:  # the size threshold is part of the stat's name ("share_of_count_above_20um")
+                item["share_threshold_um"] = float(m.group(1))
+        sims.append(item)
+    out["simulation"] = sims
+    return jsonable(out)
+
+
+def detection_cite_ids(block: dict) -> list[str]:
+    ids = [block["id"]] + [g["id"] for g in block.get("gaps") or []]
+    ids += [s["id"] for s in block.get("smoke_bins") or []] + [s["id"] for s in block.get("simulation") or []]
+    if block.get("smoke_runs"):
+        ids.append(block["smoke_runs"]["id"])
+    for side in ("smoke", "dust"):
+        if (block.get("average_mass_comparison") or {}).get(side):
+            ids.append(block["average_mass_comparison"][side]["id"])
+    return ids
+
+
 def presets() -> list[dict]:
     mod = _engine("presets")
     return list(getattr(mod, "PRESETS", [])) if mod else []
@@ -644,6 +734,19 @@ def build_context(
             citable.add("PSI-69")  # FLEX: the M1/M2 models behind every suppression curve
     pack["suppression"] = supp
     pack["suppression_reference"] = supp_ref
+
+    # ---- detection evidence (R3)
+    det = None
+    if wants_detection(question, ctx_ids):
+        det = detection_block()
+        if det is None:
+            missing.append("artifacts/detection.json")
+        else:
+            citable.update(detection_cite_ids(det))
+            for inv in ("PSI-47", "PSI-101", "PSI-115"):  # the investigations behind the detection series
+                if any(r.get("id") == inv for r in catalog):
+                    citable.add(inv)
+    pack["detection"] = det
 
     pack["constants"] = dict(CONSTANTS)
     pack["missing"] = missing

@@ -528,3 +528,90 @@ def test_suppression_answers_on_real_engine(answer_mod, question, habitat, dilue
         md = res["answer_markdown"]
         assert "No evidence at any CO₂ fraction above 0" in md and "above that ceiling" in md
         assert "M1 estimate" not in md
+
+
+# --------------------------------------------------------------------------- R3 detection evidence
+
+DETECTION_PATH = ROOT / "artifacts" / "detection.json"
+DUST_Q = "Could lunar dust trigger the smoke alarm?"
+SMOKE_Q = "Is smoke in space different?"
+
+
+@pytest.fixture
+def detection_ready():
+    if not DETECTION_PATH.exists():
+        pytest.skip("artifacts/detection.json (TL) not built yet (python -m engine.detection)")
+    return json.loads(DETECTION_PATH.read_text(encoding="utf-8"))
+
+
+def test_detection_intent_and_pack(answer_mod, detection_ready):
+    from engine.ai import context as ctx
+
+    assert answer_mod.classify(DUST_Q) == "detection" and answer_mod.classify(SMOKE_Q) == "detection"
+    assert answer_mod.classify("Why is the lunar base in the mixed regime?") == "regime"
+    assert answer_mod.classify("How much CO₂ would it take to put out a flame in ISS air?") == "suppression"
+    pack = ctx.build_context("lunar_base", question=DUST_Q)
+    cites = set(pack["citable_ids"])
+    for g in detection_ready["gaps"]:
+        assert f"eng:detection:{g['id']}" in cites
+    for s in detection_ready["simulation"] + detection_ready["smoke_bins"]:
+        assert f"eng:detection:{s['id']}" in cites
+    assert {"eng:detection", "eng:detection:same_r_runs_dg", "eng:detection:daft_ard_dam"} <= cites
+    sims = pack["detection"]["simulation"]
+    assert all("diameter_nm" not in s and "fraction" not in s for s in sims)  # no raw arrays in the pack
+    other = ctx.build_context("lunar_base", question="Why is the lunar base in the mixed regime?")
+    assert other["detection"] is None and not any(c.startswith("eng:detection") for c in other["citable_ids"])
+
+
+def test_detection_citation_only_for_artifact_ids(answer_mod, detection_ready):
+    from engine.ai import context as ctx
+
+    pack = ctx.build_context("lunar_base", question=DUST_Q)
+    ok = validate("No lunar dust data [eng:detection:lunar_dust] [eng:detection:psi115_case1_micro].", pack)
+    assert ok["ok"], ok["errors"]
+    bad = validate("Regolith sizes [eng:detection:lunar_regolith].", pack)
+    assert "unresolved citation: eng:detection:lunar_regolith" in bad["errors"]
+
+
+def test_detection_dust_answer(answer_mod, detection_ready):
+    res = answer_mod.ask(DUST_Q, use_cache=False)
+    assert res["intent"] == "detection" and res["mode"] == "template"
+    assert res["validated"], res["validation"]["errors"]
+    md = res["answer_markdown"]
+    assert "no lunar dust and no lunar dust simulant" in md and "smoke detector responds to" in md
+    for gid in ("lunar_dust", "dust_sizes", "detector_sensitivity"):
+        assert f"eng:detection:{gid}" in res["citations"]
+    assert "Arizona Road Dust (DAFT)" in md and "density of 1 g/cm3" in md
+    assert "[verify]" not in md
+
+
+def test_detection_smoke_in_space_answer(answer_mod, detection_ready):
+    res = answer_mod.ask(SMOKE_Q, use_cache=False)
+    assert res["intent"] == "detection" and res["validated"], res["validation"]["errors"]
+    md = res["answer_markdown"]
+    assert "simulation" in md and "surrogate" in md and "20 µm" in md
+    assert "3.84%" in md and "0.38%" in md  # case 1: microgravity 0.0384 vs Earth 0.0038
+    assert "eng:detection:psi115_case1_micro" in res["citations"]
+    assert "different size definition" in md
+
+
+def test_detection_invented_number_rejected(answer_mod, detection_ready):
+    from engine.ai import context as ctx
+
+    pack = ctx.build_context("lunar_base", question=SMOKE_Q)
+    rep = validate("Microgravity keeps 7.7% of particles above 20 µm [eng:detection:psi115_case1_micro].", pack)
+    assert not rep["ok"] and any("7.7" in e for e in rep["errors"])
+
+
+def test_detection_artifact_missing_still_safe(answer_mod, tmp_path, monkeypatch):
+    from engine.ai import context as ctx
+
+    monkeypatch.setattr(ctx, "DETECTION_PATH", tmp_path / "missing.json")
+    res = answer_mod.ask(DUST_Q, use_cache=False)
+    assert res["intent"] == "detection" and res["validated"]
+    assert "not available in this build" in res["answer_markdown"]
+
+
+def test_demo_questions_include_detection(answer_mod):
+    qs = dict(answer_mod.DEMO_QUESTIONS)
+    assert DUST_Q in qs and SMOKE_Q in qs
