@@ -1,32 +1,14 @@
-import Link from "next/link";
-import { HomePicker } from "@/components/HomePicker";
+import type { Metadata } from "next";
+import { getStoryData } from "@/components/story/data";
+import { StoryPage } from "@/components/story/StoryPage";
 
+export const metadata: Metadata = {
+  title: "Gravity Gap · An evidence report on fire between orbit and Earth",
+  description:
+    "NASA's fire tests ran in orbit or on Earth, never at Moon or Mars gravity. Gravity Gap carries the evidence across that gap and refuses to give a number where there is none.",
+};
+
+/** The story page: a scroll-driven evidence report that leads into the tool. Data is read at build time. */
 export default function Home() {
-  return (
-    <div className="space-y-6">
-      <section>
-        <p className="text-xs uppercase tracking-wider text-micro">Partial-gravity fire prediction</p>
-        <h1 className="mt-1 max-w-4xl text-3xl font-semibold leading-tight">
-          NASA has hundreds of fire tests in orbit and on Earth, but none at the Moon&apos;s or Mars&apos; gravity,
-          where crews will live next.
-        </h1>
-        <p className="mt-2 max-w-3xl text-muted">
-          Gravity Gap bridges that gap with transparent scaling laws and tells you which evidence applies to your
-          habitat, with honest uncertainty.
-        </p>
-        <p className="mt-3">
-          <Link
-            href="/replay"
-            className="inline-flex items-center gap-1 rounded-md border border-normal px-3 py-1.5 text-sm text-normal hover:bg-surface-2"
-          >
-            Start with a real fire <span aria-hidden="true">→</span>
-          </Link>
-          <span className="ml-3 text-xs text-muted">
-            The conditions of real spacecraft fires, and what today&apos;s data can and cannot say about them.
-          </span>
-        </p>
-      </section>
-      <HomePicker />
-    </div>
-  );
+  return <StoryPage data={getStoryData()} />;
 }

@@ -19,6 +19,8 @@ const eslintConfig = [
       "out/**",
       "build/**",
       "next-env.d.ts",
+      // Vendored scroll-craft engine, copied unmodified (never edited per project).
+      "public/scrollcraft/**",
     ],
   },
 ];

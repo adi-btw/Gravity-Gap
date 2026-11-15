@@ -11,3 +11,7 @@ __pycache__/
 data/detection/raw/PSI-101/*.docx
 data/detection/raw/PSI-47/*.doc
 data/detection/raw/PSI-115/PSI-115_Reports_NNX17AF08A_FinalReport.pdf
+
+# scroll-craft verification screenshots (large; regenerate with scrollcraft/lab/*/shoot*.mjs)
+scrollcraft/lab/**/*.png
+scrollcraft/lab/**/report.json

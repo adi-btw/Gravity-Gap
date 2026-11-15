@@ -1,0 +1,1118 @@
+/*
+ * Gravity Gap story page ("/"). Grammar: flight-test report (scrollcraft/builds/gravity-gap/SCORE.md).
+ * Everything here is scoped under .gg-story, except the scroll-craft token map, which is scoped to the document
+ * only while the story is mounted (html:has(.gg-story)), so the engine's floor follows the app theme toggle and
+ * leaves no trace on other routes.
+ */
+
+html:has(.gg-story) {
+  --sc-canvas: var(--bg);
+  --sc-surface: var(--surface);
+  --sc-ink: var(--fg);
+  --sc-ink-soft: var(--muted);
+  --sc-accent: var(--accent);
+  --sc-accent-ink: var(--accent-ink);
+  --sc-font-display: var(--font-display), Georgia, serif;
+  --sc-font-text: var(--font-text), system-ui, sans-serif;
+  --sc-font-mono: var(--font-mono), ui-monospace, monospace;
+  /* The app's body size, so the shared nav on "/" sets exactly as on every other page. */
+  --sc-t-base: 15px;
+  --sc-r-sm: 2px;
+}
+
+/* ------------------------------------------------------------------ section tokens
+ * Every rule below draws with --s-*. Paper sections inherit the app theme; "space" plates (the cover and the gap)
+ * are dark in both themes, because they are photographs of space and a figure about it.
+ */
+.gg-story {
+  --s-bg: var(--bg);
+  --s-ink: var(--fg);
+  --s-soft: var(--muted);
+  --s-rule: var(--line);
+  --s-rule-strong: var(--line-strong);
+  --s-surface: var(--surface);
+  --s-surface-2: var(--surface-2);
+  --s-micro: var(--micro);
+  --s-normal: var(--normal);
+  --s-flame: var(--accent);
+  --s-flame-ink: var(--accent-ink);
+  --s-warn: var(--warn);
+  --s-nodata: var(--nodata);
+  --s-nodata-fill: var(--nodata-fill);
+  --gg-ease: cubic-bezier(0.23, 1, 0.32, 1);
+  --gg-gutter: clamp(16px, 5vw, 72px);
+  --gg-maxw: 1120px;
+  position: relative;
+  font-family: var(--font-text), ui-sans-serif, system-ui, sans-serif;
+  font-size: 1.0625rem;
+  line-height: 1.65;
+  color: var(--s-ink);
+}
+.gg-space {
+  --s-bg: #0b0c0d;
+  --s-ink: #ece8de;
+  --s-soft: #a9aaa5;
+  --s-rule: #34363a;
+  --s-rule-strong: #6a6c70;
+  --s-surface: #141517;
+  --s-micro: #8bbbe6;
+  --s-normal: #dcb963;
+  --s-flame: #f0743e;
+  --s-flame-ink: #0f1011;
+  --s-nodata: #77756e;
+  --s-nodata-fill: rgba(140, 138, 130, 0.38);
+}
+.gg-sec {
+  position: relative;
+  background: var(--s-bg);
+  color: var(--s-ink);
+}
+.gg-tint {
+  --s-bg: var(--surface-2);
+}
+
+.gg-wrap {
+  width: 100%;
+  max-width: var(--gg-maxw);
+  margin-inline: auto;
+  padding-inline: var(--gg-gutter);
+}
+
+/* ------------------------------------------------------------------ type */
+.gg-story :is(h1, h2, h3) {
+  margin: 0;
+  font-family: var(--font-display), Georgia, serif;
+  font-weight: 500;
+  text-wrap: balance;
+  color: var(--s-ink);
+}
+.gg-h1 {
+  font-size: clamp(2.5rem, 1.1rem + 4.3vw, 4.75rem);
+  line-height: 1.01;
+  letter-spacing: -0.022em;
+  max-width: 13.5ch;
+}
+.gg-h2 {
+  font-size: clamp(2rem, 1.25rem + 2.3vw, 3.3rem);
+  line-height: 1.05;
+  letter-spacing: -0.018em;
+  max-width: 17ch;
+}
+.gg-story p {
+  margin: 0;
+  max-width: 62ch;
+  text-wrap: pretty;
+}
+.gg-lede {
+  font-size: clamp(1.1rem, 1rem + 0.35vw, 1.3rem);
+  line-height: 1.5;
+  max-width: 40ch;
+}
+.gg-soft {
+  color: var(--s-soft);
+}
+.gg-label,
+.gg-fig-no {
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 11.5px;
+  line-height: 1.4;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--s-soft);
+}
+.gg-fig-no {
+  font-weight: 500;
+  margin-right: 0.5em;
+  color: var(--s-ink);
+}
+.gg-num {
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-variant-numeric: tabular-nums;
+}
+.gg-story figure {
+  margin: 0;
+}
+.gg-story figcaption {
+  margin-top: 0.7rem;
+  font-size: 0.8125rem;
+  line-height: 1.5;
+  color: var(--s-soft);
+  max-width: 60ch;
+}
+.gg-story a:not(.gg-cta) {
+  color: inherit;
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 3px;
+}
+.gg-story :focus-visible {
+  outline: 2px solid var(--s-flame);
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+.gg-stack > * + * {
+  margin-top: 1rem;
+}
+.gg-stack > :is(h2, h3) + * {
+  margin-top: 1.4rem;
+}
+.gg-story img {
+  max-width: none;
+}
+
+/* ================================================================== 1 · cover
+ * Three planes from one Apollo 11 photograph. The scene box is square (the photograph is square) and is sized
+ * off both viewport axes; --hz is where the horizon should sit inside the cover. 0.4456 is the measured horizon
+ * height of AS11-44-6549 as a fraction of the frame.
+ */
+.gg-cover {
+  --s-bg: #020203;
+  --hz: 66%;
+  --cx: 58%;
+  --sw: max(116vw, 118svh);
+  height: calc(100svh - 52px);
+  min-height: 560px;
+  max-height: 1080px;
+  overflow: clip;
+  background: var(--s-bg);
+}
+.gg-cover__scene {
+  position: absolute;
+  left: var(--cx, 50%);
+  top: calc(var(--hz) - var(--sw) * 0.4456);
+  width: var(--sw);
+  height: var(--sw);
+  margin-left: calc(var(--sw) / -2);
+  pointer-events: none;
+}
+.gg-cover__plane {
+  position: absolute;
+  inset: 0;
+}
+.gg-cover__plane img {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+.gg-cover__earth {
+  z-index: 1;
+}
+.gg-cover__moon {
+  z-index: 3;
+}
+.gg-cover__copy {
+  position: absolute;
+  z-index: 2;
+  left: 0;
+  right: 0;
+  top: clamp(2.5rem, 9vh, 6.5rem);
+}
+.gg-cover__copy .gg-label {
+  color: #b9b8b1;
+}
+.gg-cover__copy h1 {
+  margin-top: 1.1rem;
+  color: #f1ede3;
+}
+.gg-cover__copy .gg-lede {
+  margin-top: 1.4rem;
+  color: #d4d1c7;
+  max-width: 34ch;
+}
+.gg-cover__credit {
+  position: absolute;
+  z-index: 2;
+  right: var(--gg-gutter);
+  top: clamp(1.25rem, 3vh, 2rem);
+  max-width: 26ch;
+  text-align: right;
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 11px;
+  line-height: 1.45;
+  letter-spacing: 0.02em;
+  color: #a6a59e;
+}
+@media (max-width: 760px) {
+  .gg-cover {
+    --hz: 74%;
+    --cx: 50%;
+    --sw: max(100vw, 112svh);
+    height: calc(100svh - 24px);
+    min-height: 600px;
+  }
+  .gg-cover__copy {
+    top: 2rem;
+  }
+  .gg-h1 {
+    max-width: 12ch;
+  }
+  .gg-cover__credit {
+    top: auto;
+    bottom: 1rem;
+    left: var(--gg-gutter);
+    right: auto;
+    text-align: left;
+    color: #e6e3da;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.9), 0 0 6px rgba(0, 0, 0, 0.6);
+  }
+}
+
+/* ================================================================== 2 · hazard */
+.gg-hazard {
+  padding-block: clamp(4.5rem, 10vw, 9rem) clamp(4rem, 8vw, 7rem);
+}
+.gg-hazard__grid {
+  display: grid;
+  grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+  gap: clamp(2rem, 5vw, 5rem);
+  align-items: start;
+}
+.gg-ledger {
+  margin: 2rem 0 0;
+  padding: 0;
+  border-top: 1px solid var(--s-rule-strong);
+  max-width: 30rem;
+}
+.gg-ledger > div {
+  display: grid;
+  grid-template-columns: minmax(7.5rem, 1fr) minmax(0, max-content);
+  gap: 1rem;
+  align-items: baseline;
+  padding: 0.6rem 0;
+  border-bottom: 1px solid var(--s-rule);
+}
+.gg-ledger dt {
+  font-size: 0.9375rem;
+  color: var(--s-soft);
+}
+.gg-ledger dd {
+  margin: 0;
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-variant-numeric: tabular-nums;
+  font-size: 1.0625rem;
+  text-align: right;
+}
+.gg-ledger .gg-ledger__zero dd {
+  color: var(--s-flame);
+  font-weight: 500;
+}
+.gg-hazard__figs {
+  position: relative;
+  padding-bottom: clamp(6rem, 12vw, 9rem);
+}
+.gg-photo {
+  display: block;
+  width: 100%;
+  height: auto;
+  background: #111;
+}
+.gg-hazard__inset {
+  position: absolute;
+  left: clamp(-4rem, -5vw, -1rem);
+  bottom: 0;
+  width: 46%;
+  border: 6px solid var(--s-bg);
+}
+.gg-hazard__inset figcaption {
+  background: var(--s-bg);
+  margin-top: 0;
+  padding-top: 0.6rem;
+}
+.gg-hazard__fig1 figcaption {
+  margin-left: 48%;
+}
+@media (max-width: 860px) {
+  .gg-hazard__grid {
+    grid-template-columns: 1fr;
+  }
+  .gg-hazard__figs {
+    padding-bottom: 0;
+  }
+  .gg-hazard__inset {
+    position: relative;
+    left: auto;
+    width: 72%;
+    margin: -2.5rem 0 0 auto;
+  }
+  .gg-hazard__fig1 figcaption {
+    margin-left: 0;
+  }
+}
+
+/* ================================================================== 3 · two gravities */
+.gg-two {
+  padding-block: clamp(4rem, 8vw, 7rem);
+  border-top: 1px solid var(--s-rule);
+}
+.gg-two__grid {
+  display: grid;
+  grid-template-columns: minmax(0, 6fr) minmax(0, 5fr);
+  gap: clamp(2rem, 6vw, 6rem);
+  align-items: center;
+}
+.gg-two__fig {
+  max-width: 30rem;
+}
+.gg-candles__labels {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 0.5rem;
+}
+.gg-candles {
+  position: relative;
+  aspect-ratio: 813 / 1327;
+  max-height: 78svh;
+  background: #050506;
+}
+.gg-candles > * {
+  position: absolute;
+  inset: 0;
+}
+.gg-candles img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.gg-two__copy {
+  order: 2;
+}
+@media (max-width: 860px) {
+  .gg-two__grid {
+    grid-template-columns: 1fr;
+  }
+  .gg-two__fig {
+    max-width: 22rem;
+    order: 3;
+  }
+  .gg-two__copy {
+    order: 1;
+  }
+}
+/* Without the wipe (reduced motion, or before the engine runs) the two flames stand side by side. */
+@media (prefers-reduced-motion: reduce) {
+  .gg-two__fig {
+    max-width: 36rem;
+  }
+  .gg-candles {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 6px;
+    aspect-ratio: auto;
+    background: none;
+    max-height: none;
+  }
+  .gg-candles > * {
+    position: relative;
+    aspect-ratio: 813 / 1327;
+  }
+  .gg-candles img {
+    position: absolute;
+  }
+}
+html:not(.sc-ready) .gg-candles {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6px;
+  aspect-ratio: auto;
+  background: none;
+}
+html:not(.sc-ready) .gg-candles > * {
+  position: relative;
+  aspect-ratio: 813 / 1327;
+}
+
+/* ================================================================== 4 · silence */
+.gg-between {
+  min-height: 86svh;
+  display: flex;
+  align-items: center;
+  padding-block: 6rem;
+}
+.gg-between p {
+  font-family: var(--font-display), Georgia, serif;
+  font-size: clamp(1.9rem, 1.2rem + 2.4vw, 3.1rem);
+  line-height: 1.12;
+  letter-spacing: -0.015em;
+  max-width: 18ch;
+  margin-left: clamp(0rem, 16vw, 16rem);
+}
+
+/* ================================================================== 5 · the gap (peak)
+ * Every value is a pure function of --p (the act's scroll progress; 1 when there is no engine or motion is
+ * reduced), so the figure is complete and true in its static state.
+ */
+.gg-gap__stage {
+  height: 100svh;
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  padding-block: clamp(1.5rem, 5vh, 3.5rem) clamp(1.25rem, 4vh, 3rem);
+  background: var(--s-bg);
+}
+.gg-gap {
+  --p: var(--sc-p, 1);
+  --kline: clamp(0, (var(--p) - 0.04) / 0.42, 1);
+  --kearth: clamp(0, (var(--p) - 0.45) / 0.06, 1);
+  --kmoon: clamp(0, (var(--p) - 0.54) / 0.08, 1);
+  --kmars: clamp(0, (var(--p) - 0.63) / 0.08, 1);
+  --kcap: clamp(0, (var(--p) - 0.72) / 0.07, 1);
+}
+.gg-gap__head {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: end;
+  gap: 0.75rem 3rem;
+}
+.gg-gap__head .gg-label {
+  max-width: 44ch;
+}
+.gg-gap__plot {
+  min-height: 0;
+  display: flex;
+  align-items: center;
+}
+.gg-gap__plot svg {
+  width: 100%;
+  height: 100%;
+  max-height: 58svh;
+  overflow: visible;
+}
+.gg-gap svg text {
+  font-family: var(--font-mono), ui-monospace, monospace;
+}
+.gg-gap__v {
+  display: none;
+}
+.gg-gap__cap {
+  opacity: var(--kcap);
+  transform: translate3d(0, calc((1 - var(--kcap)) * 12px), 0);
+  display: grid;
+  grid-template-columns: minmax(0, 7fr) minmax(0, 4fr);
+  gap: 1rem 3rem;
+  align-items: end;
+}
+.gg-gap__cap p:first-child {
+  font-family: var(--font-display), Georgia, serif;
+  font-size: clamp(1.35rem, 0.95rem + 1.3vw, 2.05rem);
+  line-height: 1.18;
+  letter-spacing: -0.01em;
+  max-width: 34ch;
+}
+.gg-gap__cap em {
+  font-style: normal;
+  color: var(--s-flame);
+}
+/* Line-drawing parts of the figure. */
+.gg-gap .gg-axis-run {
+  transform-box: view-box;
+  transform-origin: var(--ox) var(--oy);
+  transform: scaleX(var(--kline));
+}
+.gg-gap .gg-tick {
+  opacity: clamp(0, (var(--kline) - var(--at)) * 40 + 1, 1);
+}
+.gg-gap .gg-tip {
+  transform-box: view-box;
+  transform: translate(calc(var(--kline) * var(--run) * 1px), 0);
+  opacity: calc(1 - var(--kearth));
+}
+.gg-gap .gg-earthcol {
+  opacity: var(--kearth);
+  transform-box: view-box;
+  transform: translate(0, calc((1 - var(--kearth)) * 14px));
+}
+.gg-gap .gg-drop-moon {
+  opacity: var(--kmoon);
+  transform-box: view-box;
+  transform: translate(0, calc((1 - var(--kmoon)) * -70px));
+}
+.gg-gap .gg-drop-mars {
+  opacity: var(--kmars);
+  transform-box: view-box;
+  transform: translate(0, calc((1 - var(--kmars)) * -70px));
+}
+@media (max-width: 760px) {
+  .gg-gap__h {
+    display: none;
+  }
+  .gg-gap__v {
+    display: block;
+  }
+  .gg-gap__plot svg {
+    max-height: 62svh;
+  }
+  .gg-gap .gg-axis-run {
+    transform: scaleY(var(--kline));
+  }
+  .gg-gap .gg-tip {
+    transform: translate(0, calc(var(--kline) * var(--run) * 1px));
+  }
+  .gg-gap .gg-drop-moon {
+    transform: translate(calc((1 - var(--kmoon)) * 60px), 0);
+  }
+  .gg-gap .gg-drop-mars {
+    transform: translate(calc((1 - var(--kmars)) * 60px), 0);
+  }
+  .gg-gap__cap {
+    grid-template-columns: 1fr;
+  }
+  .gg-gap__cap p + p {
+    display: none;
+  }
+}
+
+/* ================================================================== 6 · bridge */
+.gg-bridge {
+  padding-block: clamp(4.5rem, 9vw, 8rem);
+}
+.gg-bridge__grid {
+  display: grid;
+  grid-template-columns: minmax(0, 5fr) minmax(0, 6fr);
+  gap: clamp(2rem, 6vw, 6rem);
+  align-items: end;
+}
+.gg-bands {
+  border-top: 1px solid var(--s-rule-strong);
+  padding-top: 1.25rem;
+}
+.gg-band {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0.35rem;
+  padding: 0.9rem 0 1.1rem;
+  border-bottom: 1px solid var(--s-rule);
+}
+.gg-band__head {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  font-size: 0.875rem;
+}
+.gg-band__track {
+  position: relative;
+  height: 22px;
+  background-image: linear-gradient(to right, var(--s-rule) 1px, transparent 1px);
+  background-size: 10% 100%;
+  border-left: 1px solid var(--s-rule-strong);
+  border-right: 1px solid var(--s-rule);
+}
+.gg-band__bar {
+  position: absolute;
+  top: 5px;
+  bottom: 5px;
+  left: calc(var(--lo) * 100%);
+  width: calc((var(--hi) - var(--lo)) * 100%);
+  transform-origin: calc((var(--est) - var(--lo)) / (var(--hi) - var(--lo)) * 100%) 50%;
+  background: var(--s-micro);
+  opacity: 0.85;
+  transition: transform 1100ms var(--gg-ease) 250ms;
+}
+.gg-band--wide .gg-band__bar {
+  background: var(--s-flame);
+}
+.gg-band__dot {
+  position: absolute;
+  top: 1px;
+  bottom: 1px;
+  width: 2px;
+  left: calc(var(--est) * 100%);
+  background: var(--s-ink);
+}
+.gg-bands__axis {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 0.45rem;
+}
+@media (prefers-reduced-motion: no-preference) {
+  html.sc-ready .gg-band--wide:not(.sc-in) .gg-band__bar,
+  html.sc-ready .gg-bands:not(.sc-in) .gg-band--wide .gg-band__bar {
+    transform: scaleX(0.66);
+  }
+}
+@media (max-width: 860px) {
+  .gg-bridge__grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ================================================================== 7 · the refusal (signature move)
+ * --press runs 0 to 1 with the act's scroll; the "Try again" button drives it on a clock instead.
+ * Gate crossing: needle k reaches 2.00 / 2.14 of its travel at press = 0.22 + 0.40 * 0.9346 = 0.594.
+ */
+.gg-refusal__stage {
+  height: 100svh;
+  display: flex;
+  align-items: center;
+  background: var(--s-bg);
+  overflow: clip;
+}
+.gg-press {
+  width: 100%;
+  --press: var(--sc-p, 1);
+  --kprint: clamp(0, (var(--press) - 0.04) / 0.16, 1);
+  --kneedle: clamp(0, (var(--press) - 0.22) / 0.4, 1);
+  --kstamp: clamp(0, (var(--press) - 0.594) / 0.035, 1);
+  --k45: clamp(0, (var(--press) - 0.68) / 0.05, 1);
+  --kyou: clamp(0, (var(--press) - 0.72) / 0.08, 1);
+}
+.gg-refusal__grid {
+  display: grid;
+  grid-template-columns: minmax(0, 4fr) minmax(0, 6fr);
+  gap: clamp(2rem, 5vw, 5rem);
+  align-items: center;
+}
+.gg-you {
+  font-family: var(--font-display), Georgia, serif;
+  font-size: clamp(1.25rem, 1rem + 0.8vw, 1.6rem);
+  line-height: 1.3;
+  max-width: 26ch;
+  opacity: var(--kyou);
+  transform: translate3d(0, calc((1 - var(--kyou)) * 10px), 0);
+}
+.gg-again {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 1.5rem;
+  padding: 0.5rem 0.9rem;
+  border: 1px solid var(--s-rule-strong);
+  border-radius: 2px;
+  background: transparent;
+  color: var(--s-ink);
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 0.8125rem;
+  letter-spacing: 0.02em;
+  cursor: pointer;
+  transition: background-color 140ms var(--gg-ease), border-color 140ms var(--gg-ease);
+}
+.gg-again:hover {
+  background: var(--s-surface-2);
+  border-color: var(--s-ink);
+}
+.gg-again:active {
+  transform: translateY(1px);
+}
+.gg-again:disabled {
+  opacity: 0.55;
+  cursor: progress;
+}
+.gg-metrics {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.875rem;
+}
+.gg-metrics caption {
+  caption-side: top;
+  text-align: left;
+  padding-bottom: 0.6rem;
+}
+.gg-metrics th,
+.gg-metrics td {
+  text-align: left;
+  vertical-align: baseline;
+  padding: 0.45rem 0.6rem 0.45rem 0;
+  border-bottom: 1px solid var(--s-rule);
+}
+.gg-metrics thead th {
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-weight: 500;
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--s-soft);
+  border-bottom: 1px solid var(--s-rule-strong);
+}
+.gg-metrics tbody th {
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-weight: 500;
+}
+.gg-metrics .gg-val {
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+.gg-print {
+  display: inline-block;
+  clip-path: inset(0 calc((1 - var(--kprint)) * 100%) 0 0);
+}
+.gg-nil {
+  display: inline-block;
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 10.5px;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--s-warn);
+  border: 1.5px solid currentColor;
+  padding: 0.05rem 0.35rem;
+  transform: rotate(-3deg);
+}
+.gg-nil--m2 {
+  opacity: var(--kstamp);
+}
+.gg-nil--late {
+  opacity: var(--k45);
+}
+.gg-row-m2 > * {
+  background: var(--s-surface);
+}
+
+.gg-instr {
+  margin-top: 1.75rem;
+  padding: 1.25rem 1.25rem 1.1rem;
+  border: 1px solid var(--s-rule-strong);
+  background: var(--s-surface);
+}
+.gg-field {
+  position: relative;
+  display: flex;
+  align-items: baseline;
+  gap: 0.6rem;
+  margin-top: 0.75rem;
+  height: 4.25rem;
+  padding: 0 1rem;
+  border: 1px solid var(--s-rule-strong);
+  background: var(--s-bg);
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 2.3rem;
+  line-height: 4.25rem;
+}
+.gg-field__slot {
+  position: relative;
+  flex: 1;
+  height: 100%;
+}
+.gg-field__caret {
+  position: absolute;
+  left: 0;
+  top: 22%;
+  bottom: 22%;
+  width: 2px;
+  background: var(--s-ink);
+  opacity: calc(1 - var(--kstamp));
+}
+@media (prefers-reduced-motion: no-preference) {
+  .gg-field__caret {
+    animation: gg-blink 1.05s steps(1, end) infinite;
+  }
+}
+@keyframes gg-blink {
+  50% {
+    visibility: hidden;
+  }
+}
+.gg-field__unit {
+  font-size: 1rem;
+  color: var(--s-soft);
+}
+.gg-field__strike {
+  position: absolute;
+  left: 0.75rem;
+  right: 0.75rem;
+  top: 50%;
+  height: 2px;
+  background: var(--s-warn);
+  transform-origin: 0 50%;
+  transform: scaleX(var(--kstamp));
+}
+.gg-stamp {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  padding: 0.15rem 0.75rem 0.1rem;
+  border: 3px solid var(--s-warn);
+  border-radius: 3px;
+  color: var(--s-warn);
+  background: color-mix(in srgb, var(--s-bg) 82%, transparent);
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: clamp(1.15rem, 0.9rem + 1vw, 1.6rem);
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  line-height: 1.4;
+  text-transform: uppercase;
+  white-space: nowrap;
+  opacity: var(--kstamp);
+  transform: translate(-50%, -50%) rotate(-5deg) scale(calc(1.45 - 0.45 * var(--kstamp)));
+}
+.gg-gauge {
+  margin-top: 1.25rem;
+}
+.gg-gauge svg {
+  width: 100%;
+  height: auto;
+  overflow: visible;
+}
+.gg-gauge text {
+  font-family: var(--font-mono), ui-monospace, monospace;
+}
+.gg-gauge .gg-needle {
+  transform-box: view-box;
+  transform: translate(calc(var(--kneedle) * var(--run) * 1px), 0);
+}
+.gg-gauge .gg-beyond {
+  opacity: var(--kstamp);
+}
+.gg-gauge .gg-nearest {
+  opacity: calc(var(--kneedle) * var(--kneedle));
+}
+.gg-gauge__notes {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 0.25rem 1.5rem;
+  margin-top: 0.35rem;
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 0.75rem;
+  color: var(--s-soft);
+}
+.gg-status {
+  min-height: 1.5em;
+  margin-top: 0.6rem;
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 0.8125rem;
+  color: var(--s-soft);
+}
+@media (max-width: 960px) {
+  .gg-refusal__grid {
+    grid-template-columns: 1fr;
+    gap: 1.25rem;
+  }
+  .gg-refusal__copy p:not(.gg-you) {
+    display: none;
+  }
+  .gg-refusal__copy .gg-h2 {
+    font-size: clamp(1.6rem, 1.2rem + 2vw, 2.2rem);
+  }
+  .gg-metrics .gg-col-what,
+  .gg-metrics .gg-col-conf {
+    display: none;
+  }
+  .gg-instr {
+    margin-top: 1rem;
+    padding: 0.9rem;
+  }
+  .gg-field {
+    height: 3.4rem;
+    line-height: 3.4rem;
+    font-size: 1.8rem;
+  }
+  .gg-again {
+    margin-top: 0.75rem;
+  }
+  .gg-gauge text {
+    font-size: 22px;
+  }
+}
+@media (max-width: 960px) and (max-height: 900px) {
+  .gg-metrics {
+    font-size: 0.8125rem;
+  }
+  .gg-metrics th,
+  .gg-metrics td {
+    padding-block: 0.3rem;
+  }
+}
+
+/* ================================================================== 8 · distribution (close) */
+.gg-dist {
+  padding-block: clamp(4.5rem, 9vw, 8rem) clamp(3rem, 6vw, 5rem);
+  border-top: 1px solid var(--s-rule-strong);
+}
+.gg-dist__grid {
+  display: grid;
+  grid-template-columns: minmax(0, 5fr) minmax(0, 6fr);
+  gap: clamp(2rem, 6vw, 6rem);
+  align-items: start;
+}
+.gg-presets {
+  border-top: 1px solid var(--s-rule-strong);
+}
+.gg-preset {
+  display: grid;
+  grid-template-columns: 1.4rem minmax(0, 1fr) auto;
+  gap: 0.75rem;
+  align-items: baseline;
+  width: 100%;
+  padding: 0.8rem 0.25rem;
+  border: 0;
+  border-bottom: 1px solid var(--s-rule);
+  background: transparent;
+  color: var(--s-ink);
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+  transition: background-color 140ms var(--gg-ease);
+}
+.gg-preset:hover {
+  background: var(--s-surface-2);
+}
+.gg-preset__box {
+  width: 0.85rem;
+  height: 0.85rem;
+  border: 1.5px solid var(--s-ink);
+  border-radius: 1px;
+  align-self: center;
+  position: relative;
+}
+.gg-preset[aria-pressed="true"] .gg-preset__box::after {
+  content: "";
+  position: absolute;
+  inset: 2px;
+  background: var(--s-flame);
+}
+.gg-preset__name {
+  font-weight: 500;
+}
+.gg-preset__vals {
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 0.8125rem;
+  color: var(--s-soft);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+.gg-readout {
+  margin-top: 1.25rem;
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 0.875rem;
+  line-height: 1.6;
+  color: var(--s-soft);
+  min-height: 3.2em;
+}
+.gg-readout strong {
+  color: var(--s-ink);
+  font-weight: 500;
+}
+.gg-cta-line {
+  margin-top: 2.25rem;
+  font-family: var(--font-display), Georgia, serif;
+  font-size: clamp(1.6rem, 1.15rem + 1.6vw, 2.4rem);
+  line-height: 1.15;
+}
+.gg-cta {
+  color: var(--s-flame);
+  text-decoration: underline;
+  text-decoration-thickness: 2px;
+  text-underline-offset: 6px;
+  transition: text-decoration-thickness 140ms var(--gg-ease);
+}
+.gg-cta:hover {
+  text-decoration-thickness: 3px;
+}
+.gg-colophon {
+  margin-top: clamp(4rem, 8vw, 6rem);
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--s-rule);
+  display: grid;
+  grid-template-columns: minmax(0, 7fr) minmax(0, 4fr);
+  gap: 2rem 4rem;
+  font-size: 0.8125rem;
+  line-height: 1.55;
+  color: var(--s-soft);
+}
+.gg-colophon h3 {
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--s-ink);
+  margin-bottom: 0.6rem;
+}
+.gg-colophon ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.gg-colophon li + li {
+  margin-top: 0.45rem;
+}
+.gg-indep {
+  margin-top: 1rem !important;
+  color: var(--s-ink);
+  font-weight: 500;
+}
+@media (max-width: 860px) {
+  .gg-dist__grid,
+  .gg-colophon {
+    grid-template-columns: 1fr;
+  }
+  .gg-preset {
+    grid-template-columns: 1.4rem minmax(0, 1fr);
+    row-gap: 0.1rem;
+  }
+  .gg-preset__vals {
+    grid-column: 2;
+  }
+}
+
+/* ================================================================== margin contents (the report's nav) */
+.gg-contents {
+  position: fixed;
+  z-index: 40;
+  left: clamp(16px, 2vw, 32px);
+  top: 50%;
+  width: 9.5rem;
+  transform: translateY(-50%);
+  transition: opacity 200ms var(--gg-ease), visibility 200ms;
+}
+.gg-contents[data-hidden="true"] {
+  opacity: 0;
+  visibility: hidden;
+}
+.gg-contents p {
+  margin-bottom: 0.6rem;
+}
+.gg-contents ol {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  border-left: 1px solid var(--line);
+}
+.gg-contents a {
+  display: block;
+  padding: 0.28rem 0 0.28rem 0.75rem;
+  margin-left: -1px;
+  border-left: 2px solid transparent;
+  font-size: 0.8125rem;
+  line-height: 1.3;
+  color: var(--muted);
+  text-decoration: none !important;
+}
+.gg-contents a:hover {
+  color: var(--fg);
+}
+.gg-contents a[aria-current="true"] {
+  color: var(--fg);
+  border-left-color: var(--accent);
+}
+@media (max-width: 1399px) {
+  .gg-contents {
+    display: none;
+  }
+}
+
+/* ================================================================== motion floor */
+@media (prefers-reduced-motion: reduce) {
+  .gg-story [data-sc-act="pin"] {
+    height: auto !important;
+  }
+  .gg-gap,
+  .gg-press {
+    --p: 1;
+    --press: 1;
+  }
+  .gg-story .gg-gap__stage,
+  .gg-story .gg-refusal__stage {
+    height: auto;
+    min-height: 100svh;
+    padding-block: 3rem;
+  }
+}
+/* Without the engine (no JavaScript yet, or none at all) nothing is hidden. */
+html:not(.sc-ready) .gg-story [data-sc-in],
+html:not(.sc-ready) .gg-story [data-sc-stagger] > * {
+  opacity: 1;
+  transform: none;
+}

@@ -32,8 +32,8 @@ export function DetectionView() {
     <div className="space-y-4">
       <header className="flex flex-wrap items-end justify-between gap-3">
         <div>
-          <p className="text-xs uppercase tracking-wider text-micro">R3 · Smoke detection</p>
-          <h1 className="text-2xl font-semibold">Detection evidence</h1>
+          <p className="doc-label">R3 · Smoke detection</p>
+          <h1 className="page-title">Detection evidence</h1>
           <p className="mt-1 max-w-3xl text-sm text-muted">
             Smoke detectors react to particles in the air, and how well they work depends on particle size. This page
             shows how big the smoke particles from heated spacecraft materials were in NASA tests, how that compares
@@ -424,7 +424,7 @@ function Simulation({ d }: { d: DetectionArtifact }) {
   return (
     <section className="rounded-lg border border-dashed border-partial bg-surface p-4" aria-labelledby="sim-h">
       <div className="flex flex-wrap items-center gap-2">
-        <span className="rounded-full border border-partial px-2 py-0.5 text-[11px] font-semibold uppercase tracking-wide text-partial">
+        <span className="rounded-sm border border-partial px-2 py-0.5 text-[11px] font-semibold uppercase tracking-wide text-partial">
           Simulation
         </span>
         <h2 id="sim-h" className="text-base font-semibold">

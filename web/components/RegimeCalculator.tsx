@@ -85,9 +85,10 @@ export function RegimeCalculator({ habitat }: { habitat: Habitat }) {
 
       <figure className="rounded-md border border-line bg-surface p-3">
         <figcaption className="mb-2 text-sm font-medium">
+          <span className="fig-no">Fig. 1 ·</span>
           Regime map at g = {g.toFixed(2)} m/s² ({gFraction(g).toFixed(3)} g)
           <span className="ml-2 text-xs font-normal text-muted">
-            Dashed lines: Ri = 10 (amber) and Ri = 0.1 (cyan). C_b = 1, ΔT/T = 4.
+            Dashed lines: Ri = 10 (ochre) and Ri = 0.1 (blue). C_b = 1, ΔT/T = 4.
           </span>
         </figcaption>
         <RegimeMap g={g} u={u} L={L} />

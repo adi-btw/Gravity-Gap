@@ -15,14 +15,14 @@ export function AskAnswerView({ answer, source, note }: { answer: AskAnswer; sou
     <div className="space-y-3">
       <div className="flex flex-wrap items-center gap-2 text-[11px]">
         <span
-          className={`inline-flex items-center gap-1 rounded-full border px-2 py-0.5 ${
+          className={`inline-flex items-center gap-1 rounded-sm border px-2 py-0.5 ${
             answer.validated ? "border-micro text-micro" : "border-warn text-warn"
           }`}
         >
           <span aria-hidden="true">{answer.validated ? "✓" : "!"}</span>
           {answer.validated ? "validated: every number and citation traced" : "not validated: treat with care"}
         </span>
-        <span className="rounded-full border border-line px-2 py-0.5 text-muted">
+        <span className="rounded-sm border border-line px-2 py-0.5 text-muted">
           mode: {MODE_LABEL[answer.mode] ?? answer.mode}
         </span>
         <SourceChip source={source} note={note} />

@@ -49,8 +49,8 @@ export function BoundsPanel() {
     <div className="space-y-4">
       <header className="flex flex-wrap items-end justify-between gap-3">
         <div>
-          <p className="text-xs uppercase tracking-wider text-partial">F4 · Bounds panel</p>
-          <h1 className="text-2xl font-semibold">What happens to a fire in this habitat?</h1>
+          <p className="doc-label">F4 · Bounds panel</p>
+          <h1 className="page-title">What happens to a fire in this habitat?</h1>
           <p className="mt-1 max-w-3xl text-sm text-muted">
             A partial-gravity estimate with its 90% band, next to the microgravity (0 g) and Earth (1 g) references.
             Every estimate traces to the training tests listed below.
@@ -314,7 +314,7 @@ function CategoryColumns({ r, gLabel }: { r: BoundsResult; gLabel: string }) {
   return (
     <div className="mt-3 grid gap-3 sm:grid-cols-3" role="list" aria-label="Outcome at 0 g, your habitat and 1 g">
       {cols.map((c) => (
-        <div key={c.name} role="listitem" className={`rounded-md border-2 bg-surface-2 p-3 ${c.cls}`}>
+        <div key={c.name} role="listitem" className={`rounded-sm border border-l-[3px] bg-surface p-3 ${c.cls}`}>
           <p className="text-xs font-medium">{c.name}</p>
           {c.ref && c.ref.estimate !== null ? (
             <>

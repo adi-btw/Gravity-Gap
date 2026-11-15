@@ -7,7 +7,7 @@ export default function RegimePage() {
   return (
     <div className="space-y-4">
       <header>
-        <h1 className="text-2xl font-semibold">Which data family applies to your fire?</h1>
+        <h1 className="page-title">Which data family applies to your fire?</h1>
         <p className="mt-1 max-w-3xl text-sm text-muted">
           The Richardson number compares buoyancy-driven flow with ventilation. It tells you whether microgravity
           tests (forced flow), Earth tests (buoyant) or neither (mixed) describe a flame in your habitat. Everything

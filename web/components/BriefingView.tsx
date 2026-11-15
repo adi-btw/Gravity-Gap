@@ -46,7 +46,7 @@ export function BriefingView() {
     <div className="space-y-3">
       <div className="flex flex-wrap items-end justify-between gap-3 print:hidden">
         <div>
-          <p className="text-xs uppercase tracking-wider text-micro">S1 · Fire-safety briefing</p>
+          <p className="doc-label">S1 · Fire-safety briefing</p>
           <p className="mt-1 max-w-3xl text-sm text-muted">
             Everything Gravity Gap can and cannot tell a designer about fire in this habitat, on one page. Change the habitat
             in the bar above; every number comes from the engine.
@@ -57,7 +57,7 @@ export function BriefingView() {
           <button
             type="button"
             onClick={() => window.print()}
-            className="rounded-md border border-line bg-surface-2 px-3 py-1.5 text-sm hover:text-fg"
+            className="btn-primary"
             data-testid="print-briefing"
           >
             Print / save as PDF
@@ -152,7 +152,7 @@ function BriefingDoc({ b }: { b: Briefing }) {
       className="briefing space-y-3 rounded-lg border border-line bg-surface p-4 text-sm print:space-y-1.5 print:rounded-none print:border-0 print:p-0"
     >
       <header>
-        <p className="text-xs uppercase tracking-wider text-micro print:text-fg">Gravity Gap · Habitat fire-safety briefing</p>
+        <p className="doc-label print:text-fg">Gravity Gap · Habitat fire-safety briefing</p>
         <h1 id="briefing-title" className="text-xl font-semibold print:text-base">
           {b.habitat.label}: what the evidence can and cannot say about fire
         </h1>

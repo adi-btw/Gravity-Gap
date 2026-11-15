@@ -77,10 +77,10 @@ function Card({ rec, names, fromBuild, source }: { rec: CatalogRecord; names: Re
     <article className="space-y-4">
       <header className="flex flex-wrap items-start justify-between gap-3">
         <div>
-          <p className="num text-xs uppercase tracking-wider text-micro">
+          <p className="doc-label">
             {rec.id} · {rec.platform ?? "platform unknown"}
           </p>
-          <h1 className="text-2xl font-semibold">{rec.acronym ?? rec.title}</h1>
+          <h1 className="page-title">{rec.acronym ?? rec.title}</h1>
           {rec.acronym && rec.title ? <p className="text-sm text-muted">{rec.title}</p> : null}
           <div className="mt-2 flex flex-wrap gap-2 text-xs">
             {rec.doi ? (

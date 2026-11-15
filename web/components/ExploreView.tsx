@@ -52,8 +52,8 @@ export function ExploreView() {
     <div className="space-y-4">
       <header className="flex flex-wrap items-end justify-between gap-3">
         <div>
-          <p className="text-xs uppercase tracking-wider text-micro">F1 · Gravity spectrum</p>
-          <h1 className="text-2xl font-semibold">Where the fire evidence sits on the gravity axis</h1>
+          <p className="doc-label">F1 · Gravity spectrum</p>
+          <h1 className="page-title">Where the fire evidence sits on the gravity axis</h1>
           <p className="mt-1 max-w-3xl text-sm text-muted">
             Every PSI combustion investigation was run at 0 g (ISS, Cygnus) or 1 g (ground). Nothing sits in between.
             Select a mark to open its investigation card.
@@ -69,7 +69,8 @@ export function ExploreView() {
           records.length ? (
             <>
               <GravitySpectrum records={records} currentG={habitat.g_m_s2} queryString={queryString} />
-              <figcaption className="mt-2 flex flex-wrap gap-x-4 gap-y-1 text-xs text-muted">
+              <figcaption className="mt-2 flex flex-wrap items-baseline gap-x-4 gap-y-1 text-xs text-muted">
+                <span className="fig-no mr-0">Fig. 1 ·</span>
                 <span>Fuel phase:</span>
                 {Object.entries(FUEL_STYLE).map(([k, s]) => (
                   <span key={k} className="inline-flex items-center gap-1">

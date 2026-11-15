@@ -31,8 +31,8 @@ export function ReplayView() {
     <div className="space-y-5">
       <header className="flex flex-wrap items-end justify-between gap-3">
         <div>
-          <p className="text-xs uppercase tracking-wider text-normal">Replay</p>
-          <h1 className="text-2xl font-semibold">Real fires, today&apos;s data</h1>
+          <p className="doc-label">Replay</p>
+          <h1 className="page-title">Real fires, today&apos;s data</h1>
           <p className="mt-1 max-w-3xl text-sm text-muted">
             Each card holds the conditions of a real spacecraft fire event, as published by NASA, and runs them through
             the same engine as every other page: the flow regime, which PSI experiments apply, and where the honesty
@@ -102,7 +102,7 @@ function IncidentCard({ inc }: { inc: Incident }) {
         <p className="text-xs text-muted">{inc.phase}</p>
         {!inc.in_scope ? (
           <p className="mt-2">
-            <span className="rounded-full border border-warn px-2 py-0.5 text-[11px] font-semibold uppercase tracking-wide text-warn">
+            <span className="rounded-sm border border-warn px-2 py-0.5 text-[11px] font-semibold uppercase tracking-wide text-warn">
               Outside scope
             </span>
           </p>

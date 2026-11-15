@@ -61,8 +61,8 @@ export function LedgerView() {
     <div className="space-y-4">
       <header className="flex flex-wrap items-end justify-between gap-3">
         <div>
-          <p className="text-xs uppercase tracking-wider text-partial">F5 · Prediction ledger</p>
-          <h1 className="text-2xl font-semibold">Predictions we froze before anyone tested them</h1>
+          <p className="doc-label">F5 · Prediction ledger</p>
+          <h1 className="page-title">Predictions we froze before anyone tested them</h1>
           <p className="mt-1 max-w-3xl text-sm text-muted">
             Each line of <code className="num">ledger/predictions.jsonl</code> is append-only and carries a SHA-256 of
             its own content. Your browser recomputes every hash below; the git commit time of the line is the timestamp

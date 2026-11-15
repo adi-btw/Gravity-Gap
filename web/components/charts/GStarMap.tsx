@@ -15,8 +15,8 @@ export const P_RANGE = [4, 15] as const;
 const xOf = (g: number) => M.l + ((g - G_RANGE[0]) / (G_RANGE[1] - G_RANGE[0])) * PW;
 const yOf = (p: number) => M.t + (1 - (p - P_RANGE[0]) / (P_RANGE[1] - P_RANGE[0])) * PH;
 
-// Sequential ramp (dark indigo → violet → amber), legible on both themes; mapped on log10(G*).
-const RAMP = ["#1e1b4b", "#3b2a83", "#6d28d9", "#a21caf", "#db2777", "#f97316", "#fbbf24"];
+// Sequential ramp (cividis: blueprint navy to ochre, colour-blind safe), legible on both themes; mapped on log10(G*).
+const RAMP = ["#00204c", "#213d6b", "#555b6c", "#7b7a77", "#a69d75", "#d3c164", "#ffe945"];
 const LOG_MIN = -3;
 const LOG_MAX = Math.log10(gStar(9.81, 15)); // ≈ 0.018
 

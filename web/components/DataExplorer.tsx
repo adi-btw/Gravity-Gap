@@ -82,8 +82,8 @@ export function DataExplorer() {
     <div className="space-y-4">
       <header className="flex flex-wrap items-end justify-between gap-3">
         <div>
-          <p className="text-xs uppercase tracking-wider text-micro">F8 · Data explorer</p>
-          <h1 className="text-2xl font-semibold">Every PSI test row behind the predictions</h1>
+          <p className="doc-label">F8 · Data explorer</p>
+          <h1 className="page-title">Every PSI test row behind the predictions</h1>
           <p className="mt-1 max-w-3xl text-sm text-muted">
             Filter the cleaned test table and download exactly what you see. Exports start with a citation block that
             lists the DOI of every included investigation.

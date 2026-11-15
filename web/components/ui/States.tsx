@@ -49,7 +49,7 @@ export function Empty({ children }: { children: React.ReactNode }) {
 export function SourceChip({ source, note }: { source: DataSource; note?: string }) {
   if (source === "api") {
     return (
-      <span className="inline-flex items-center gap-1 rounded-full border border-line px-2 py-0.5 text-[11px] text-muted">
+      <span className="inline-flex items-center gap-1 rounded-sm border border-line px-2 py-0.5 text-[11px] text-muted">
         <span aria-hidden="true" className="h-1.5 w-1.5 rounded-full bg-micro" />
         live API
       </span>
@@ -58,7 +58,7 @@ export function SourceChip({ source, note }: { source: DataSource; note?: string
   return (
     <span
       title={note}
-      className="inline-flex items-center gap-1 rounded-full border border-dashed border-normal px-2 py-0.5 text-[11px] text-normal"
+      className="inline-flex items-center gap-1 rounded-sm border border-dashed border-normal px-2 py-0.5 text-[11px] text-normal"
     >
       <svg width="10" height="10" viewBox="0 0 24 24" aria-hidden="true">
         <path d="M3 3l18 18M8.5 16.5a5 5 0 0 1 7 0M5 13a10 10 0 0 1 5-2.7M19 13a10 10 0 0 0-2-1.6M12 20h.01" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" />

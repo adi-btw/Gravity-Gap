@@ -64,13 +64,15 @@ export function num(text: string | null): number {
 
 export async function landing(page: Page) {
   await page.goto("/");
-  await expect(page.getByRole("heading", { level: 1 })).toContainText("none at the Moon");
-  await expect(page.getByText("The gap", { exact: true })).toBeVisible();
-  await expect(page.getByRole("img", { name: /no direct fire data/i })).toBeVisible();
+  await expect(page.getByRole("heading", { level: 1 })).toContainText("stops at two gravities");
+  // The gap figure (Fig. 4) and the habitat choice on the story page's distribution sheet.
+  await expect(page.locator("#gap svg[role='img']").filter({ visible: true })).toHaveAccessibleName(/where NASA has tested fire/i);
+  await expect(page.getByRole("group", { name: "Habitat presets" })).toBeAttached();
 }
 
 export async function pickLunarBase(page: Page) {
   const btn = page.getByRole("group", { name: "Habitat presets" }).getByRole("button", { name: "Lunar base", exact: true });
+  await btn.scrollIntoViewIfNeeded();
   await btn.click();
   await expect(btn).toHaveAttribute("aria-pressed", "true");
   await expect(page).toHaveURL(/g=1\.62.*p=8\.2.*o2=0\.34.*u=10/);

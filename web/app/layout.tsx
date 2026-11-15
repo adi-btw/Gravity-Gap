@@ -1,13 +1,21 @@
 import type { Metadata } from "next";
-import { Inter, JetBrains_Mono } from "next/font/google";
+import { IBM_Plex_Mono, IBM_Plex_Sans, Newsreader } from "next/font/google";
 import { Suspense } from "react";
 import { AskProvider } from "@/components/AskDrawer";
-import { HabitatBar } from "@/components/HabitatBar";
+import { FooterFrame, HabitatSlot, MainFrame } from "@/components/RouteFrame";
 import { SiteNav } from "@/components/SiteNav";
 import "./globals.css";
 
-const inter = Inter({ variable: "--font-inter", subsets: ["latin"] });
-const mono = JetBrains_Mono({ variable: "--font-jetbrains-mono", subsets: ["latin"] });
+// Shared design floor (scrollcraft/builds/gravity-gap/BRIEF.md): Newsreader for display, Plex Sans for text, Plex Mono for data.
+const display = Newsreader({
+  variable: "--font-display",
+  subsets: ["latin"],
+  weight: ["400", "500", "600"],
+  style: ["normal", "italic"],
+  display: "swap",
+});
+const text = IBM_Plex_Sans({ variable: "--font-text", subsets: ["latin"], weight: ["400", "500", "600"], display: "swap" });
+const mono = IBM_Plex_Mono({ variable: "--font-mono", subsets: ["latin"], weight: ["400", "500", "600"], display: "swap" });
 
 export const metadata: Metadata = {
   title: "Gravity Gap",
@@ -15,35 +23,36 @@ export const metadata: Metadata = {
     "Partial-gravity fire prediction engine: bridging microgravity and Earth fire-safety data for Moon and Mars habitats.",
 };
 
-// Apply the saved theme before paint to avoid a flash of the wrong theme.
+// Apply the saved theme before paint to avoid a flash of the wrong theme. Paper ("light") is the default.
 const themeScript = `try{var t=localStorage.getItem("gg-theme");if(t==="light"||t==="dark")document.documentElement.dataset.theme=t;}catch(e){}`;
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="en" data-theme="dark" suppressHydrationWarning>
+    <html lang="en" data-theme="light" suppressHydrationWarning>
       <head>
         <script dangerouslySetInnerHTML={{ __html: themeScript }} />
       </head>
-      <body className={`${inter.variable} ${mono.variable} antialiased min-h-screen`}>
+      <body className={`${display.variable} ${text.variable} ${mono.variable} antialiased min-h-screen`}>
         <a
           href="#main"
-          className="sr-only focus:not-sr-only focus:absolute focus:left-2 focus:top-2 focus:z-50 focus:rounded focus:bg-surface focus:px-3 focus:py-2"
+          className="sr-only focus:not-sr-only focus:absolute focus:left-2 focus:top-2 focus:z-50 focus:rounded-sm focus:border focus:border-line focus:bg-surface focus:px-3 focus:py-2"
         >
           Skip to content
         </a>
         <AskProvider>
-        <header className="border-b border-line bg-surface print:hidden">
+        <header className="border-b border-line bg-bg print:hidden">
           <Suspense fallback={<div className="h-24" aria-hidden="true" />}>
             <SiteNav />
-            <HabitatBar />
+            <HabitatSlot />
           </Suspense>
         </header>
-        <main id="main" className="mx-auto max-w-6xl px-4 py-6 print:max-w-none print:p-0">
+        <MainFrame>
           <Suspense fallback={<p className="text-muted">Loading…</p>}>{children}</Suspense>
-        </main>
-        <footer className="mx-auto max-w-6xl px-4 pb-8 pt-4 text-xs text-muted print:hidden">
-          Gravity Gap · NASA Space Apps 2026 · All outputs are scaling-law estimates, not measurements.
-        </footer>
+        </MainFrame>
+        <FooterFrame>
+          <span>Gravity Gap · NASA Space Apps 2026</span>
+          <span>All outputs are scaling-law estimates, not measurements.</span>
+        </FooterFrame>
         </AskProvider>
       </body>
     </html>

@@ -42,8 +42,8 @@ export function SuppressionView() {
     <div className="space-y-4">
       <header className="flex flex-wrap items-end justify-between gap-3">
         <div>
-          <p className="text-xs uppercase tracking-wider text-partial">R2 · Suppression calculator</p>
-          <h1 className="text-2xl font-semibold">Put it out: how dilution affects flames</h1>
+          <p className="doc-label">R2 · Suppression calculator</p>
+          <h1 className="page-title">Put it out: how dilution affects flames</h1>
           <p className="mt-1 max-w-3xl text-sm text-muted">
             Adding carbon dioxide or helium to the air makes it harder for a flame to keep burning. This page shows what
             NASA&apos;s FLEX droplet-flame tests on the ISS say about that for your habitat, and where they say nothing at all.
@@ -226,7 +226,7 @@ function CurveView({
           Where dilution was tested
         </h2>
         <p className="mb-2 text-xs text-muted">
-          Each dot is a group of FLEX tests with {name} added (bigger = more tests). The violet line is your habitat&apos;s
+          Each dot is a group of FLEX tests with {name} added (bigger = more tests). The orange line is your habitat&apos;s
           oxygen.
         </p>
         {c.tested.length ? (
@@ -297,7 +297,7 @@ function Legend({ reference }: { reference: boolean }) {
       </li>
       {reference ? (
         <li>
-          <span aria-hidden="true" className="mr-1 inline-block h-2.5 w-2.5 rounded-full border-2 border-normal align-middle" />
+          <span aria-hidden="true" className="mr-1 inline-block h-2.5 w-2.5 rounded-sm border-2 border-normal align-middle" />
           FLEX tests (raw): share extinguished, with interval
         </li>
       ) : null}

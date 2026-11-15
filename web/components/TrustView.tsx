@@ -32,8 +32,8 @@ export function TrustView() {
     <div className="space-y-4">
       <header className="flex flex-wrap items-end justify-between gap-3">
         <div>
-          <p className="text-xs uppercase tracking-wider text-micro">S2 · Honesty test</p>
-          <h1 className="text-2xl font-semibold">Can I trust it?</h1>
+          <p className="doc-label">S2 · Honesty test</p>
+          <h1 className="page-title">Can I trust it?</h1>
           <p className="mt-1 max-w-3xl text-sm text-muted">
             We hid tests the models were trained on, refitted the models without them, and asked the app about those
             atmospheres exactly as you would. Then we checked whether the 90% band caught what the hidden tests really

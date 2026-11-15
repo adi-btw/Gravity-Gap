@@ -28,8 +28,8 @@ export function PlannerView() {
     <div className="space-y-4">
       <header className="flex flex-wrap items-end justify-between gap-3">
         <div>
-          <p className="text-xs uppercase tracking-wider text-normal">F6 · Test planner</p>
-          <h1 className="text-2xl font-semibold">If LUCI or FM2 can run only 10 tests, run these</h1>
+          <p className="doc-label">F6 · Test planner</p>
+          <h1 className="page-title">If LUCI or FM2 can run only 10 tests, run these</h1>
           <p className="mt-1 max-w-3xl text-sm text-muted">
             Candidates are ranked by how much they would shrink today&apos;s uncertainty in habitat-relevant conditions.
           </p>

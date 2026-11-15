@@ -21,7 +21,7 @@ export default function AboutPage() {
   return (
     <article className="max-w-3xl space-y-6">
       <header>
-        <h1 className="text-2xl font-semibold">Method and limitations</h1>
+        <h1 className="page-title">Method and limitations</h1>
         <p className="mt-1 text-sm text-muted">
           Gravity Gap bridges NASA&apos;s microgravity fire-safety data (PSI) and Earth data to estimate fire behavior
           at lunar and Martian gravity, where no direct fire data exist. Every number traces to a PSI test record or a

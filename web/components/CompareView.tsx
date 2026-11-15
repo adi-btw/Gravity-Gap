@@ -94,8 +94,8 @@ export function CompareView() {
     <div className="space-y-4">
       <header className="flex flex-wrap items-end justify-between gap-3">
         <div>
-          <p className="text-xs uppercase tracking-wider text-partial">S4 · Compare</p>
-          <h1 className="text-2xl font-semibold">Compare two habitats side by side</h1>
+          <p className="doc-label">S4 · Compare</p>
+          <h1 className="page-title">Compare two habitats side by side</h1>
           <p className="mt-1 max-w-3xl text-sm text-muted">
             Each row puts both habitats on one axis, so the estimates and the widths of their 90% bands can be compared
             by eye. When one side has no evidence, no difference is shown.
@@ -158,7 +158,7 @@ function CompareBody({ r }: { r: CompareResult }) {
 
 function SideCard({ name, side, m, testId, tone }: { name: string; side: CompareSide; m: MetricCompare; testId: string; tone: string }) {
   return (
-    <div data-testid={testId} data-applicable={side.applicable ? "true" : "false"} className={`rounded-md border-2 bg-surface-2 p-3 ${tone}`}>
+    <div data-testid={testId} data-applicable={side.applicable ? "true" : "false"} className={`rounded-sm border border-l-[3px] bg-surface p-3 ${tone}`}>
       <p className="text-xs font-medium">{name}</p>
       {side.applicable ? (
         <>
@@ -174,15 +174,15 @@ function SideCard({ name, side, m, testId, tone }: { name: string; side: Compare
       )}
       <div className="mt-2 flex flex-wrap gap-1.5 text-[11px]">
         <span
-          className={`rounded-full border px-2 py-0.5 ${side.applicable ? "border-micro text-micro" : "hatch border-dashed border-line text-fg"}`}
+          className={`rounded-sm border px-2 py-0.5 ${side.applicable ? "border-micro text-micro" : "hatch border-dashed border-line text-fg"}`}
         >
           {side.applicable ? "covered by tests" : "no evidence"}
         </span>
         {side.regime ? (
-          <span className={`rounded-full border px-2 py-0.5 ${REGIME_STYLE[side.regime]}`}>regime: {REGIME_WORDS[side.regime]}</span>
+          <span className={`rounded-sm border px-2 py-0.5 ${REGIME_STYLE[side.regime]}`}>regime: {REGIME_WORDS[side.regime]}</span>
         ) : null}
         {side.applicable && side.transfer ? (
-          <span className="rounded-full border border-line px-2 py-0.5 text-muted">transfer confidence: {side.transfer.confidence}</span>
+          <span className="rounded-sm border border-line px-2 py-0.5 text-muted">transfer confidence: {side.transfer.confidence}</span>
         ) : null}
       </div>
       {!side.applicable && side.reason ? <p className="mt-2 text-xs text-muted">{side.reason}</p> : null}

@@ -58,6 +58,7 @@ export function PressureGravityExplorer({ habitat }: { habitat: Habitat }) {
 
       <figure className="rounded-md border border-line bg-surface p-3">
         <figcaption className="mb-2 text-sm font-medium">
+          <span className="fig-no">Fig. 2 ·</span>
           G* over gravity × pressure
           <span className="ml-2 text-xs font-normal text-muted">Diamonds: habitats. Ring: your habitat. Dashed: iso-G*.</span>
         </figcaption>

@@ -29,27 +29,33 @@ export function SiteNav() {
   const pathname = usePathname();
   const { queryString } = useHabitat();
   return (
-    <div className="mx-auto flex max-w-6xl flex-wrap items-center gap-x-4 gap-y-2 px-4 pt-3">
-      <Link href={`/?${queryString}`} className="flex items-center gap-2 font-semibold tracking-tight">
-        <svg width="22" height="22" viewBox="0 0 24 24" aria-hidden="true">
-          <circle cx="12" cy="12" r="10" fill="none" stroke="var(--micro)" strokeWidth="2" />
-          <path d="M12 5c2 3 3 5 3 7a3 3 0 0 1-6 0c0-2 1-4 3-7z" fill="var(--normal)" />
-        </svg>
-        <span>Gravity Gap</span>
-      </Link>
-      <nav aria-label="Main" className="flex-1">
-        <ul className="flex flex-wrap gap-1 text-sm">
+    <div className="mx-auto max-w-6xl px-4 pt-3 sm:px-6">
+      <div className="flex flex-wrap items-center justify-between gap-x-6 gap-y-2">
+        <Link href={`/?${queryString}`} className="flex items-baseline gap-2 text-fg">
+          <svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true" className="self-center">
+            <circle cx="12" cy="12" r="10.5" fill="none" stroke="currentColor" strokeWidth="1.5" />
+            <path d="M12 5c2 3 3 5 3 7a3 3 0 0 1-6 0c0-2 1-4 3-7z" fill="var(--accent)" />
+          </svg>
+          <span className="font-display text-[1.35rem] font-medium leading-none tracking-[-0.01em]">Gravity Gap</span>
+        </Link>
+        <div className="flex items-center gap-2">
+          <AskButton />
+          <ThemeToggle />
+        </div>
+      </div>
+      <nav aria-label="Main" className="mt-2 border-t border-line">
+        <ul className="-mx-1.5 flex flex-wrap items-center gap-x-0.5 text-[13px]">
           {NAV_ITEMS.map((item, k) => {
             const active = item.href === "/" ? pathname === "/" : pathname.startsWith(item.href);
-            // A thin divider between groups (story · habitat answers · fire response · records) keeps the long nav scannable.
+            // A thin rule between groups (story · habitat answers · fire response · records) keeps the long nav scannable.
             const newGroup = k > 0 && NAV_ITEMS[k - 1].group !== item.group;
             return (
-              <li key={item.href} className={newGroup ? "ml-1 border-l border-line pl-1" : undefined}>
+              <li key={item.href} className={newGroup ? "ml-2 border-l border-line pl-2" : undefined}>
                 <Link
                   href={`${item.href}?${queryString}`}
                   aria-current={active ? "page" : undefined}
-                  className={`rounded px-2 py-1 transition-colors ${
-                    active ? "bg-surface-2 text-fg" : "text-muted hover:text-fg"
+                  className={`-mt-px block border-t-2 px-1.5 py-1.5 transition-colors ${
+                    active ? "border-accent font-medium text-fg" : "border-transparent text-muted hover:text-fg"
                   }`}
                 >
                   {item.label}
@@ -59,8 +65,6 @@ export function SiteNav() {
           })}
         </ul>
       </nav>
-      <AskButton />
-      <ThemeToggle />
     </div>
   );
 }

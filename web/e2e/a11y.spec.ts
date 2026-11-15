@@ -52,6 +52,19 @@ async function settle(page: Page) {
   });
 }
 
+/**
+ * The story page reveals its sections as they are read (fade-ins and scroll-driven figures). Audit it the way a
+ * reader leaves it: scrolled through to the close, every section revealed and every figure in its final state.
+ */
+async function readStory(page: Page) {
+  const steps = await page.evaluate(() => Math.ceil(document.documentElement.scrollHeight / (innerHeight * 0.5)));
+  for (let i = 1; i <= steps; i++) {
+    await page.evaluate((k) => window.scrollTo({ top: k * innerHeight * 0.5, behavior: "instant" }), i);
+    await page.waitForTimeout(60);
+  }
+  await page.waitForTimeout(900);
+}
+
 async function audit(page: Page, label: string) {
   const results = await new AxeBuilder({ page })
     .withTags(["wcag2a", "wcag2aa", "wcag21a", "wcag21aa", "wcag22aa", "best-practice"])
@@ -79,6 +92,7 @@ for (const theme of THEMES) {
         await page.goto(withHabitat(route));
         await expect(page.locator("html")).toHaveAttribute("data-theme", theme);
         await settle(page);
+        if (route === "/") await readStory(page);
         await audit(page, `${route} [${theme}]`);
       });
     }

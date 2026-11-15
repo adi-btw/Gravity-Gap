@@ -67,8 +67,8 @@ export function AtmosphereMapView() {
     <div className="space-y-4">
       <header className="flex flex-wrap items-end justify-between gap-3">
         <div>
-          <p className="text-xs uppercase tracking-wider text-partial">S5 · Atmosphere evidence map</p>
-          <h1 className="text-2xl font-semibold">Which cabin air does the evidence cover?</h1>
+          <p className="doc-label">S5 · Atmosphere evidence map</p>
+          <h1 className="page-title">Which cabin air does the evidence cover?</h1>
           <p className="mt-1 max-w-3xl text-sm text-muted">
             Each cell is one cabin atmosphere (oxygen share across, total pressure up). A coloured cell has NASA test evidence
             and shows the engine&rsquo;s estimate there; a hatched cell has no evidence. The map does not rank atmospheres or
@@ -380,6 +380,7 @@ function MapBody({ m, gravity, overlays }: { m: AtmosphereMap; gravity: MapGravi
             </svg>
           </div>
           <figcaption className="text-xs text-muted">
+            <span className="fig-no">Fig. 1 ·</span>
             {m.label} ({m.investigation_id}), vent {m.gravity.u_cm_s} cm/s and flame size {m.gravity.L_mm} mm. Click a cell, or
             focus the map and use the arrow keys and Enter, to load that atmosphere into the habitat bar.
           </figcaption>
@@ -550,7 +551,7 @@ function CrewLegend({ lines, refs, notDrawn, note }: { lines: CrewLimit[]; refs:
       <ol className="mt-2 grid gap-2 text-xs md:grid-cols-2">
         {lines.map((c, k) => (
           <li key={c.id} className="flex gap-2" data-testid={`crew-${c.id}`}>
-            <span className="num mt-0.5 inline-flex h-4 w-4 shrink-0 items-center justify-center rounded-full border border-fg text-[10px]">
+            <span className="num mt-0.5 inline-flex h-4 w-4 shrink-0 items-center justify-center rounded-sm border border-fg text-[10px]">
               {k + 1}
             </span>
             <LineSample c={c} />

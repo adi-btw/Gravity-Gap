@@ -128,16 +128,16 @@ function AskPanel({
 
   return (
         <div className="fixed inset-0 z-40 flex justify-end print:hidden">
-          <button type="button" aria-label="Close assistant" className="absolute inset-0 bg-black/40" onClick={close} tabIndex={-1} />
+          <button type="button" aria-label="Close assistant" className="absolute inset-0 bg-[#0f1011]/40" onClick={close} tabIndex={-1} />
           <aside
             ref={dialogRef}
             role="dialog"
             aria-modal="true"
             aria-labelledby={titleId}
-            className="relative flex h-full w-full max-w-md flex-col gap-3 overflow-y-auto border-l border-line bg-surface p-4 shadow-xl"
+            className="relative flex h-full w-full max-w-md flex-col gap-3 overflow-y-auto border-l border-line bg-surface p-5"
           >
             <div className="flex items-center justify-between">
-              <h2 id={titleId} className="text-base font-semibold">
+              <h2 id={titleId} className="font-display text-xl font-medium">
                 Ask Gravity Gap
               </h2>
               <button type="button" onClick={close} className="rounded border border-line px-2 py-0.5 text-sm hover:bg-surface-2">
@@ -170,14 +170,14 @@ function AskPanel({
                   if (e.key === "Enter" && (e.metaKey || e.ctrlKey)) void submit();
                 }}
                 rows={3}
-                className="w-full rounded border border-line bg-bg p-2 text-sm"
+                className="w-full rounded-sm border border-line bg-bg p-2 text-sm"
                 placeholder="e.g. Why is this band wide?"
               />
               <div className="flex flex-wrap items-center gap-2">
                 <button
                   type="submit"
                   disabled={!question.trim() || state.s === "loading"}
-                  className="rounded-md border border-micro px-3 py-1.5 text-sm text-micro hover:bg-surface-2 disabled:opacity-50"
+                  className="btn-primary"
                 >
                   Ask
                 </button>
@@ -189,7 +189,7 @@ function AskPanel({
                     key={s}
                     type="button"
                     onClick={() => setQuestion(s)}
-                    className="rounded-full border border-line px-2 py-0.5 text-[11px] text-muted hover:text-fg"
+                    className="rounded-sm border border-line px-2 py-0.5 text-[11px] text-muted hover:text-fg"
                   >
                     {s}
                   </button>
@@ -215,7 +215,7 @@ export function AskButton() {
     <button
       type="button"
       onClick={() => open()}
-      className="rounded-md border border-partial px-3 py-1 text-sm text-partial hover:bg-surface-2"
+      className="rounded-sm border border-line px-3 py-1 text-xs text-fg transition-colors hover:border-line-strong hover:bg-surface-2"
     >
       Ask
     </button>
