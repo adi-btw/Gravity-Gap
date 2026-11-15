@@ -289,6 +289,9 @@ def predict(
         he, co2: M1/M2 diluent mole fractions (default 0: habitat air uses N2).
         fuel_fraction: M3 fuel mole fraction in the burner stream (default 0.3, the most tested).
         n_boot: bootstrap refits for M1/M3 (default 500); boot_seed (default 0).
+        model: an already fitted engine.models.FittedModel to use instead of the cached full
+            fit (engine.holdout passes a model refitted without one tested atmosphere; the gate
+            then uses that model's training tests). Default None.
     """
     if metric not in METRICS:
         raise KeyError(f"unknown metric {metric!r}; known: {sorted(METRICS)}")
@@ -300,8 +303,13 @@ def predict(
         raise ValueError("o2 must be a mole fraction in [0, 1]")
 
     meta = METRICS[metric]
-    model = get_model(metric, n_boot=int(options.pop("n_boot", N_BOOT_DEFAULT)),
-                      seed=int(options.pop("boot_seed", 0)))
+    model = options.pop("model", None)
+    n_boot = int(options.pop("n_boot", N_BOOT_DEFAULT))
+    boot_seed = int(options.pop("boot_seed", 0))
+    if model is None:
+        model = get_model(metric, n_boot=n_boot, seed=boot_seed)
+    elif model.metric != metric:
+        raise ValueError(f"model is for {model.metric}, not {metric}")
     p_atm = p_psia / PSIA_PER_ATM
     options = {**options, "L_mm": L_mm}
 

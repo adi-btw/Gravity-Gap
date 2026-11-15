@@ -377,3 +377,190 @@ Every record gains `pillar_data: {}` or `{"detection": {"holds": str, "files": [
 5. Simulation: Earth vs microgravity per case (`fraction` vs `diameter_nm`) on its own chart, titled from `label`;
    `share_of_count_above_20um` shown as a number per curve; the two variants behind a secondary toggle.
 6. Every chart shows its source file / sheet / rows (from `source`).
+
+---
+
+# Round 3 · S4 Compare addendum (see plan/15-round-3-features.md §S4)
+
+## Ownership (S4)
+| Role | Owns |
+|---|---|
+| TL | `engine/compare.py`, `tests/test_compare.py` |
+| AI | `api/main.py` + `api/schemas.py` (`POST /compare`), `api/README.md` row, `engine/ai/context.py` (compare block), `engine/ai/answer.py` (intent `compare`, cached question), `tests/test_api.py`, `tests/test_ai.py` |
+| FE | `web/app/compare/`, `web/components/CompareView.tsx`, `web/lib/compare.ts` (+ test), `web/lib/api.ts` (`compare`), nav item, `/bounds` link, `web/e2e/compare.spec.ts`, `/compare` in `web/e2e/a11y.spec.ts` |
+No new artifact: offline compare for preset pairs is built in the browser from `artifacts/bounds/{preset}_{metric}.json`
+with the same rules. Nobody commits; the team lead rebuilds the AI cache and MANIFEST.
+
+## `engine/compare.py` (TL)
+```python
+def compare(a, b, n=2000, seed=0, predict_fn=None) -> dict   # a, b: preset id or habitat dict (+ optional label, preset_id)
+```
+`predict_fn(habitat, metric)` defaults to `engine.bounds.predict` (the AI context passes the preset artifacts, same numbers).
+Returns (JSON-safe):
+```
+{a: Habitat, b: Habitat,                     # {preset_id|null, label, g_m_s2, p_psia, o2, u_cm_s, L_mm}
+ inputs_diff: [{field, label, unit, a, b}],  # only fields that differ (math.isclose, rel 1e-9)
+ metrics: [MetricCompare],                   # M1..M5 in order
+ summary: str,                               # one plain-language line, built by rule (no LLM)
+ model_versions: {M1: str, ...}}
+MetricCompare:
+{metric, label, unit, kind,
+ a: Side, b: Side,
+ diff: {regime:   {a, b, changed: bool},                         # dominant regime of regime_fractions
+        coverage: {a: bool, b: bool, change: "both"|"neither"|"lost"|"gained"},
+        estimate: {a, b, delta: float|null, direction: "higher"|"lower"|"same"|"changed"} | null,
+        estimate_note: str|null,
+        band_width: {a, b, direction: "wider"|"narrower"|"same"} | null}}   # only when estimate is numeric on both sides
+Side: {applicable, reason, estimate, band90, regime: "forced"|"mixed"|"buoyant"|null, regime_fractions,
+       transfer: {basis, confidence}|null, n_train, model_version}
+```
+**Diff rules.**
+1. `inputs_diff`: every habitat field whose value differs, in the order g, p, O₂, vent, flame size.
+2. Regime = the largest of `regime_fractions` (ties: forced, mixed, buoyant); `changed` when the two differ.
+3. Coverage = `applicable`. "lost": covered at A, not at B; "gained": the reverse.
+4. **Estimate change only when both sides are covered.** Numbers: `delta = b - a`, direction `higher`/`lower`/`same`
+   (same when `math.isclose(a, b, rel_tol=1e-9, abs_tol=1e-12)`). Categories (M4): `delta: null`, direction `same` or
+   `changed`. When either side has no evidence, `estimate: null` and `estimate_note` says "No difference shown: <label>
+   has no evidence for <metric>." Never subtract a number from "no evidence".
+
+**Summary rule** (in this order, one sentence each, skipped when empty):
+1. "Moving from <A> to <B> changes <list of 'field a → b'>." (or "<A> and <B> have the same inputs.")
+2. Regime: "The flame regime changes from <a> to <b> (<metrics>)." (all five → "for every metric").
+3. Coverage: "<metrics> lose their evidence at <B>." / "<metrics> gain evidence at <B>." / "<metrics> have no
+   evidence on either side."
+4. Estimates (both covered, numeric): "Where both sides have evidence, M1 goes from x to y and M3 from x to y."
+   Categories that change: "M4 changes from <a> to <b>." Same: listed as "stays at".
+5. Band width (both covered, numeric): "The 90% band is wider at <B> for M1 and M3." (and/or "narrower"), so an
+   unchanged estimate never hides a change in uncertainty.
+Values: probabilities as % and quantities with unit, 3 significant figures (same `fmt` as `engine/ai/answer.py`);
+regime words "forced flow", "mixed", "buoyancy-dominated". Plain language, no hype.
+
+## API (AI)
+| Method | Path | Response |
+|---|---|---|
+| POST | `/compare` | `{a, b}`, each a preset id or habitat fields (`HabitatIn`; optional `label`) → `compare(a, b)`; 422 unknown preset / invalid habitat |
+
+## AI
+`build_context` adds `pack["compare"]` when the question names two presets with a compare cue ("compare", "change",
+"differ", "between", "vs", "versus") or `context_ids` has `eng:compare`: `{id: "eng:compare", a, b, inputs_diff, summary,
+metrics: {M1: {id: "eng:compare:M1", ...MetricCompare}}}`. Citable: `eng:compare` and `eng:compare:<metric>` for the
+metrics present. Intent `compare` (template). Cached question: "What changes between ISS and the lunar base?" (`lunar_base`).
+
+## Web (FE)
+`/compare?a=iss&b=lunar_base` (+ habitat query). `a`/`b` = preset id or `current` (the habitat bar values in the
+URL); defaults `a=iss`, `b=current`. Two pickers; one row per metric: both sides on ONE shared axis per metric
+(BandChart with two columns), regime and coverage chips, "no difference shown" when a side has no evidence; the
+summary line on top. Stacks on phone. Nav item "Compare"; "Compare with…" link on `/bounds`. Offline: both sides
+presets → computed from the bounds artifacts; a custom side → "Live API needed" state.
+
+# Round 3 · S3 Uncertainty drivers addendum (see plan/15-round-3-features.md §S3, ADR-0008)
+
+## Ownership (S3)
+| Role | Owns |
+|---|---|
+| TL | `engine/uncertainty.py`, `artifacts/uncertainty/{preset}.json`, `tests/test_uncertainty.py`, ADR-0008 |
+| AI | `drivers` field on `/bounds`, AI context + citation `eng:drivers:<metric>`, cached answer "Why is the lunar base band so wide?" |
+| FE | stacked bar under each band on `/bounds`; the existing tornado moves under a "one-at-a-time view" disclosure |
+
+## `engine/uncertainty.py` (TL)
+```python
+def drivers(metric, g_m_s2, p_psia, o2, u_cm_s, L_mm, co2=0, he=0, n=2000, seed=0, n_boot=500, **options) -> dict
+def first_order_indices(inputs: dict[str, array], y, n_bins=10) -> dict[str, float]
+```
+`options` are passed to `bounds.predict` (fuel, droplet_mm, fuel_fraction). `co2`/`he` are used for M1/M2 only.
+Not applicable (no evidence, or M4/M5): `{metric, label, citation, adr: "ADR-0008", applicable: false, reason}`.
+Applicable (JSON-safe):
+```
+{metric, label, citation: "eng:drivers:M1", adr: "ADR-0008", applicable: true, kind, unit,
+ estimate, band90: [lo, hi], band_width,                 # same estimate/band as bounds.predict
+ model_band90: [lo, hi], model_band_width,               # unwidened (= ref_0g band)
+ widen_factor, widen_factor_min, regime_fractions: {forced, mixed, buoyant},
+ what_varies: {estimate: str, band: str},
+ sources: [                                              # always these 7, in this order; shares sum to 1
+   {id: "model_uncertainty", label, share, basis: "psi_data",               reaches_band: true, note},
+   {id: "gravity_widening",  label, share, basis: "honesty_rule",           reaches_band: true, note},
+   {id: "C_b" | "k" | "dT_over_T" | "L_mm", label, share, basis: "engineering_assumption", reaches_band, note},
+   {id: "remainder", label: "Interactions / not split", share, basis: "engineering_assumption", reaches_band: true, note}],
+ shares_sum,                                             # 1.0
+ first_order: {C_b, k, dT_over_T, L_mm, sum, n_bins, output},   # S_i of the per-sample band width
+ model_detail: {band90_unwidened, tests_within_gate, n_train, investigation_id,
+                source: "bootstrap" | "quantile_spread", n_boot | null, boot_sd | null, note},
+ lever: {source, share, basis, text,
+         planner_candidate: {rank, metric, type, g_m_s2, p_psia, o2, u_cm_s, co2, distance} | null},
+ method: str, n, seed, model_version}
+```
+Rules: `share` in [0, 1] except `remainder` ≥ −0.05; `k` is always 0 with `reaches_band: false` (k is not in Ri);
+`lever.source` is never `remainder`; `planner_candidate` is the nearest same-metric item of `artifacts/planner.json`
+within planner-kernel distance 2, else null.
+
+## `artifacts/uncertainty/{preset}.json` (TL, `python -m engine.uncertainty`)
+`{preset_id, habitat: {g_m_s2, p_psia, o2, u_cm_s, L_mm}, method, adr: "ADR-0008", metrics: {M1..M5: drivers(...)}}`
+for the 6 presets (M4/M5 always `applicable: false`).
+
+## API (AI)
+`/bounds` response gains an **optional** field `drivers` = `drivers(metric, same habitat and options)` (omit or null
+on error; never blocks the bounds answer). Offline: read `artifacts/uncertainty/{preset}.json`. Citation
+`eng:drivers:<metric>`; answers must name the basis ("engineering assumption, not PSI data" for C_b/k/dT/T/L).
+
+## Web (FE)
+Stacked bar per covered metric, shares rounded to 5% (labels from `sources[].label`, a basis tag on each segment,
+`remainder` shown as "not split"), screen-reader text listing the shares, the `lever.text` under it with a Planner
+link when `planner_candidate` is not null, one-sentence method + link to ADR-0008. No bar when `applicable` is false.
+
+# Round 3 · S2 Holdout addendum (see plan/15-round-3-features.md §S2, ADR-0009)
+
+## Ownership (S2)
+| Role | Owns |
+|---|---|
+| TL | `engine/holdout.py`, `artifacts/holdout.json`, `tests/test_holdout.py`, S2 section of `artifacts/validation_report.md` (`engine.validation.holdout_section`), ADR-0009; optional hooks `engine.models.fit_model(metric, train, n_boot, seed)`, `TrainingSet.subset(mask)`, `bounds.predict(..., model=)` |
+| AI | `GET /holdout`, citations `eng:holdout` / `eng:holdout:<group id>` / `eng:holdout:saffire`, cached answer "How do you know it works?" |
+| FE | `/trust` page "Can I trust it?" |
+
+## `artifacts/holdout.json` (TL, `python -m engine.holdout`, ~1.5 min)
+```
+{artifact: "holdout", adr: "ADR-0009", citation: "eng:holdout", method, generated_at, runtime_s,
+ settings: {n_boot, boot_seed, grouping: {o2_decimals: 3, p_atm_decimals: 2, diluent_decimals: 3, same_as, diluents_in_key},
+            query: {g_m_s2: 0, u_cm_s: 10, L_mm: str, options: str, why: str}, group_band, interval, weak_below_groups: 10,
+            max_groups: null},
+ metrics: {M1|M2|M3: RESULT},                 # primary: one tested atmosphere at a time
+ overall: OVERALL,
+ wide_check: {scheme: "o2_band", what: str, metrics: {M1|M2|M3: RESULT}, overall: OVERALL},
+ saffire_hindcast: {available, source, metric: "M4", headline, scores: {name: {hits, n, accuracy}}, caveat, citation}}
+
+RESULT  = {metric, label, kind, investigation_id, scheme: "atmosphere" | "o2_band", hit_rule: str,
+           units: [{id, n_tests, n_train_remaining, refit: bool}], groups: [GROUP], summary: SUMMARY}
+GROUP   = {id: "M1-o2_0.210-p_1.01-co2_0.000-he_0.000" | "M3-o2_0.354-p_0.50", citation: "eng:holdout:<id>",
+           metric, atmosphere: {o2, p_atm, p_psia, co2?, he?}, n_tests,
+           psi_rows: [{record_id, investigation_id, source_file, source_row}],   # cleaned table data/clean/psi_tests.csv
+           held_out_unit, status: "evaluated" | "skipped",
+           # skipped: skip_reason, covered: null, hit: null
+           covered: bool, nearest_remaining_distance, n_train_remaining, model_version,
+           query: {g_m_s2, u_cm_s, L_mm, per_test_options: [...]},
+           predicted: {estimate, band90: [lo, hi], shown_to_user: bool, note},   # band shown only if covered
+           hit: bool, strict_hit: bool, gap, error,
+           # M1/M3: observed: {positives, n, rate, interval90}, brier, brier_baseline, baseline_rate
+           # M2:    observed: {n, median, min, max, values}, tests_inside_band}
+SUMMARY = {metric, n_groups, n_tests, n_skipped, n_covered, n_not_covered,
+           band_coverage, strict_coverage, gate_precision, no_evidence_justified: RATE,
+           weak_test: bool,                      # fewer than 10 covered groups
+           brier_covered, brier_baseline_covered (M1/M3) | tests_inside_band_covered: RATE (M2),
+           worst_misses: [{id, atmosphere, n_tests, band90, observed, gap, error}] (≤5, largest gap first),
+           largest_errors: [{id, n_tests, error, hit}] (≤5)}
+RATE    = {k, n, rate | null, interval90: [lo, hi] | null}       # Wilson 90%
+OVERALL = {n_groups, n_tests, n_covered, n_not_covered, n_skipped, band_coverage, gate_precision,
+           no_evidence_justified: RATE, weak_test, target_coverage: 0.9}
+```
+`gate_precision` = covered groups whose band held (same count as `band_coverage` under the overlap rule).
+`no_evidence_justified` = "no evidence" groups where the ungated band would have missed (k) out of all of them (n).
+`gap` is in probability (M1/M3) or mm (M2).
+
+## API (AI)
+| Method | Path | Response |
+|---|---|---|
+| GET | `/holdout` | `artifacts/holdout.json` unchanged; 503 problem if missing or not valid JSON (as `/detection`) |
+
+## Web (FE)
+`/trust`: scorecard (primary band coverage with its interval and n, the strict rate next to it, pooled Brier /
+single-diameter coverage, wide-check gate numbers, SAFFIRE hindcast with its caveat), "weak test" wherever
+`weak_test` is true, the groups on the O₂ × pressure map (hit = filled, miss = hollow with a cross, not covered = grey,
+skipped = not drawn but counted), a misses table naming `psi_rows`, and the hit rules (`hit_rule`) in plain words.

@@ -179,6 +179,80 @@ def _f(x, nd=3):
     return "n/a" if x is None else f"{x:.{nd}f}"
 
 
+HOLDOUT_PATH = Path(__file__).resolve().parent.parent / "artifacts" / "holdout.json"
+
+
+def _rate_txt(r: dict) -> str:
+    if not r["n"]:
+        return "n/a (0 groups)"
+    ci = r["interval90"]
+    return f"{r['k']}/{r['n']} = {_f(r['rate'], 2)} (90% interval {_f(ci[0], 2)}-{_f(ci[1], 2)})"
+
+
+def holdout_section(path: Path = HOLDOUT_PATH) -> list[str]:
+    """S2 (ADR-0009): summary of artifacts/holdout.json; read, never recomputed (it takes ~1.5 min)."""
+    import json
+
+    L = ["", "## S2 Honesty test: held-out tested atmospheres (ADR-0009)", ""]
+    try:
+        doc = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, ValueError):
+        return L + ["`artifacts/holdout.json` is missing: run `python -m engine.holdout`, then rebuild this "
+                    "report.", ""]
+    L += [f"From `artifacts/holdout.json` (generated {doc.get('generated_at', 'n/a')}, {doc['settings']['n_boot']} "
+          "bootstrap refits per hold-out). " + doc["method"], "",
+          "Hit rules: " + " ".join(f"{m}: {doc['metrics'][m]['hit_rule']}" for m in ("M1", "M2")), ""]
+    for title, block in (("Primary: one tested atmosphere at a time", doc),
+                         ("Wide check: one 0.10-wide O2 band at a time", doc["wide_check"])):
+        L += [f"### {title}", "",
+              "| Metric | groups (tests) | covered | no evidence | skipped | band coverage (overlap rule) | "
+              "strict (inside band) | no-evidence calls the ungated band would have missed | pooled |",
+              "|---|---|---|---|---|---|---|---|---|"]
+        for m, res in block["metrics"].items():
+            s = res["summary"]
+            pooled = (f"Brier {_f(s['brier_covered'])} vs training average {_f(s['brier_baseline_covered'])}"
+                      if "brier_covered" in s else
+                      f"single diameters inside their band {_rate_txt(s['tests_inside_band_covered'])}")
+            L.append(f"| {m}{' (weak test)' if s['weak_test'] else ''} | {s['n_groups']} ({s['n_tests']}) | "
+                     f"{s['n_covered']} | {s['n_not_covered']} | {s['n_skipped']} | {_rate_txt(s['band_coverage'])} | "
+                     f"{_rate_txt(s['strict_coverage'])} | {_rate_txt(s['no_evidence_justified'])} | {pooled} |")
+        o = block["overall"]
+        L += ["", f"Overall: {o['n_covered']} covered groups, band coverage {_rate_txt(o['band_coverage'])} "
+                  f"(target {o['target_coverage']:.2f})" + ("; weak test (fewer than 10 covered groups)."
+                                                             if o["weak_test"] else "."), ""]
+        misses = [(m, w) for m, res in block["metrics"].items() for w in res["summary"]["worst_misses"][:3]]
+        if misses:
+            L += ["Worst misses per metric (covered, band missed; gap in probability for M1/M3, mm for M2):", ""]
+            for m, w in misses:
+                obs = w["observed"]
+                obs_txt = (f"{obs['positives']}/{obs['n']} self-extinguished" if "positives" in obs
+                           else f"median {_f(obs['median'], 2)} mm of {obs['n']} test(s)")
+                L.append(f"- {w['id']}: band [{_f(w['band90'][0])}, {_f(w['band90'][1])}], observed {obs_txt}, "
+                         f"gap {_f(w['gap'])}.")
+            L.append("")
+        skipped = {res["summary"]["metric"]: [u["id"] for u in res["units"] if not u["refit"]]
+                   for res in block["metrics"].values()}
+        for m, ids in skipped.items():
+            if ids:
+                L += [f"{m}: hold-out unit(s) {', '.join(ids)} not scored: the remaining tests have one outcome only "
+                      "(or fewer than 5 tests), so no model can be refitted.", ""]
+        for m, res in block["metrics"].items():
+            s = res["summary"]
+            if s.get("brier_covered") is not None and s["brier_covered"] >= s["brier_baseline_covered"]:
+                L += [f"{m}: on these held-out tests the model's Brier score ({_f(s['brier_covered'])}) is NOT better "
+                      f"than predicting the training average ({_f(s['brier_baseline_covered'])}).", ""]
+    L += ["### Reading this honestly", "",
+          "- One atmosphere at a time, every held-out group still had a tested neighbour within the gate (the "
+          "coverage rounding keeps near-duplicate atmospheres such as 1.00 and 1.01 atm apart), so the primary "
+          "test checks the bands, not the 'no evidence' side of the gate. The wide check is the gate test.",
+          "- The overlap rule is lenient for groups of 1-3 tests (a 0/1 or 1/1 group has a wide Wilson interval). "
+          "The strict rate and the pooled Brier score / single-diameter coverage are the sharper numbers.",
+          "- No band or gate was changed because of these results (ADR-0009); any change needs its own ADR.", ""]
+    sf = doc.get("saffire_hindcast", {})
+    L += ["### Cross-investigation: SAFFIRE-II hindcast (unchanged)", "", sf.get("caveat", "n/a"), ""]
+    return L
+
+
 def build_report() -> str:
     c1, c3 = cv_classifier("M1"), cv_classifier("M3")
     q2 = cv_quantile("M2")
@@ -291,6 +365,7 @@ def build_report() -> str:
         L.append(f"| {r['preset']} | {r['metric']} | {_f(r['estimate'])} | [{_f(r['band90'][0])}, "
                  f"{_f(r['band90'][1])}] | {r['confidence']} | {r['top_estimate_param']} "
                  f"({_f(r['top_estimate_swing'])}) | {r['top_band_param']} ({_f(r['top_band_swing'])}) |")
+    L += holdout_section()
     L += ["", "## Not done", "",
           "- V4 literature sanity check (needs E4 papers).",
           "- No partial-gravity ground truth exists; the widened bands (ADR-0005) are a stated assumption, "

@@ -17,6 +17,7 @@ dropped, never imputed (data/clean/README.md "no invented values").
 
 Public API:
     get_model(metric, n_boot=500, seed=0) -> FittedModel   (cached)
+    fit_model(metric, train, n_boot=500, seed=0)          (explicit subset, not cached)
     MODEL_SPECS                                           (feature metadata)
 """
 
@@ -98,6 +99,15 @@ class TrainingSet:
     o2: np.ndarray
     p_atm: np.ndarray
     excluded: dict = field(default_factory=dict)
+
+    def subset(self, mask) -> "TrainingSet":
+        """Rows where ``mask`` is True (used by engine.holdout to drop a tested atmosphere)."""
+        m = np.asarray(mask, dtype=bool)
+        return TrainingSet(
+            metric=self.metric, X=self.X[m].reset_index(drop=True), y=self.y[m],
+            record_id=self.record_id[m], investigation_id=self.investigation_id[m],
+            o2=self.o2[m], p_atm=self.p_atm[m], excluded=dict(self.excluded),
+        )
 
     def data_hash(self) -> str:
         h = hashlib.sha256()
@@ -235,8 +245,8 @@ def fit_point(metric: str, X: np.ndarray, y: np.ndarray):
     return _pred
 
 
-def _fit(metric: str, n_boot: int, seed: int) -> FittedModel:
-    ts = training_set(metric)
+def _fit(metric: str, n_boot: int, seed: int, train: TrainingSet | None = None) -> FittedModel:
+    ts = training_set(metric) if train is None else train
     feats = {"M1": M1_FEATURES, "M2": M2_FEATURES, "M3": M3_FEATURES}[metric]
     X = ts.X[feats].to_numpy(dtype=float)
     y = ts.y
@@ -262,6 +272,11 @@ def _fit(metric: str, n_boot: int, seed: int) -> FittedModel:
         metric, "probability", feats, ts, B, seed, version,
         mu=mu, sd=sd, w=w, b=b, boot_mu=bm, boot_sd=bs, boot_w=bw, boot_b=bb,
     )
+
+
+def fit_model(metric: str, train: TrainingSet, n_boot: int = 500, seed: int = 0) -> FittedModel:
+    """Fit on an explicit training subset; NOT cached (engine.holdout, tests)."""
+    return _fit(metric, n_boot, seed, train=train)
 
 
 def get_model(metric: str, n_boot: int = 500, seed: int = 0) -> FittedModel:

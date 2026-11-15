@@ -1,0 +1,304 @@
+{
+  "preset_id": "lunar_rover",
+  "habitat": {
+    "g_m_s2": 1.62,
+    "p_psia": 8.2,
+    "o2": 0.34,
+    "u_cm_s": 5.0,
+    "L_mm": 10.0
+  },
+  "method": "Shares of the final 90% band width: the unwidened model band, the gravity widening every plausible flame gets, and the extra widening split between the Monte Carlo inputs by first-order (decile-binned) variance shares (ADR-0008).",
+  "adr": "ADR-0008",
+  "metrics": {
+    "M1": {
+      "metric": "M1",
+      "label": "P(droplet flame self-extinguishes before burnout)",
+      "citation": "eng:drivers:M1",
+      "adr": "ADR-0008",
+      "applicable": true,
+      "kind": "probability",
+      "unit": "probability",
+      "estimate": 0.20064279335457827,
+      "band90": [
+        0.007271608683920468,
+        0.7620381902167531
+      ],
+      "band_width": 0.7547665815328326,
+      "model_band90": [
+        0.039031831205837614,
+        0.48246667475630706
+      ],
+      "model_band_width": 0.44343484355046947,
+      "widen_factor": 1.9405,
+      "widen_factor_min": 1.5,
+      "regime_fractions": {
+        "forced": 0.0,
+        "mixed": 0.119,
+        "buoyant": 0.881
+      },
+      "what_varies": {
+        "estimate": "Only the atmosphere (O2, pressure, diluents) and fuel options move the estimate; gravity, vent speed and the Monte Carlo inputs do not (ADR-0005).",
+        "band": "The Monte Carlo inputs reach the band only through the regime fractions that set the gravity widening; k never reaches it."
+      },
+      "sources": [
+        {
+          "id": "model_uncertainty",
+          "label": "Model uncertainty (limited tests)",
+          "share": 0.5875,
+          "basis": "psi_data",
+          "reaches_band": true,
+          "note": "Unwidened model band: limited tests at this atmosphere."
+        },
+        {
+          "id": "gravity_widening",
+          "label": "Gravity widening (honesty rule)",
+          "share": 0.2423,
+          "basis": "honesty_rule",
+          "reaches_band": true,
+          "note": "Widening every plausible flame gets at this gravity and vent speed (ADR-0005)."
+        },
+        {
+          "id": "C_b",
+          "label": "Buoyant velocity coefficient C_b",
+          "share": 0.0684,
+          "basis": "engineering_assumption",
+          "reaches_band": true,
+          "note": "Moves the buoyant velocity, so it can tip a sample between regimes."
+        },
+        {
+          "id": "k",
+          "label": "Flow-mixing coefficient k",
+          "share": 0.0,
+          "basis": "engineering_assumption",
+          "reaches_band": false,
+          "note": "Enters only the effective flow speed, not the Richardson number, so it never changes this band."
+        },
+        {
+          "id": "dT_over_T",
+          "label": "Flame temperature rise dT/T",
+          "share": 0.0042,
+          "basis": "engineering_assumption",
+          "reaches_band": true,
+          "note": "Moves the buoyant velocity, so it can tip a sample between regimes."
+        },
+        {
+          "id": "L_mm",
+          "label": "Flame size L",
+          "share": 0.0118,
+          "basis": "engineering_assumption",
+          "reaches_band": true,
+          "note": "Moves the buoyant velocity, so it can tip a sample between regimes."
+        },
+        {
+          "id": "remainder",
+          "label": "Interactions / not split",
+          "share": 0.0856,
+          "basis": "engineering_assumption",
+          "reaches_band": true,
+          "note": "Interactions between the inputs: not split to one input."
+        }
+      ],
+      "shares_sum": 1.0,
+      "first_order": {
+        "C_b": 0.4023,
+        "k": 0.0,
+        "dT_over_T": 0.0249,
+        "L_mm": 0.0694,
+        "sum": 0.4966,
+        "n_bins": 10,
+        "output": "per-sample band width W(f_i)"
+      },
+      "model_detail": {
+        "band90_unwidened": [
+          0.039031831205837614,
+          0.48246667475630706
+        ],
+        "tests_within_gate": 2,
+        "n_train": 206,
+        "investigation_id": "PSI-69",
+        "source": "bootstrap",
+        "n_boot": 500,
+        "boot_sd": 0.13689852174641637,
+        "note": "Spread of 500 bootstrap refits of the logistic model at this atmosphere (physics fixed)."
+      },
+      "lever": {
+        "source": "model_uncertainty",
+        "share": 0.5875,
+        "basis": "psi_data",
+        "text": "About 60% of this band comes from the model itself: 2 PSI-69 tests lie within the honesty-gate distance of this atmosphere. More tests near 34.0% O2 and 8.2 psia would shrink it the most. See Planner candidate #6.",
+        "planner_candidate": {
+          "rank": 6,
+          "metric": "M1",
+          "type": "atmosphere",
+          "g_m_s2": 3.71,
+          "p_psia": 8.2,
+          "o2": 0.34,
+          "u_cm_s": 20.0,
+          "co2": 0.0,
+          "distance": 1.8281
+        }
+      },
+      "method": "Shares of the final 90% band width: the unwidened model band, the gravity widening every plausible flame gets, and the extra widening split between the Monte Carlo inputs by first-order (decile-binned) variance shares (ADR-0008).",
+      "n": 2000,
+      "seed": 0,
+      "model_version": "2a8ccd37105c"
+    },
+    "M2": {
+      "metric": "M2",
+      "label": "Extinction diameter",
+      "citation": "eng:drivers:M2",
+      "adr": "ADR-0008",
+      "applicable": false,
+      "reason": "No evidence at this atmosphere (honesty gate), so there is no band to break down."
+    },
+    "M3": {
+      "metric": "M3",
+      "label": "P(gas flame self-extinguishes vs flow-terminated)",
+      "citation": "eng:drivers:M3",
+      "adr": "ADR-0008",
+      "applicable": true,
+      "kind": "probability",
+      "unit": "probability",
+      "estimate": 0.8722546263980915,
+      "band90": [
+        0.4835402008985605,
+        0.9899469569569669
+      ],
+      "band_width": 0.5064067560584065,
+      "model_band90": [
+        0.7103589981815119,
+        0.9643024798877307
+      ],
+      "model_band_width": 0.2539434817062187,
+      "widen_factor": 1.9405,
+      "widen_factor_min": 1.5,
+      "regime_fractions": {
+        "forced": 0.0,
+        "mixed": 0.119,
+        "buoyant": 0.881
+      },
+      "what_varies": {
+        "estimate": "Only the atmosphere (O2, pressure, diluents) and fuel options move the estimate; gravity, vent speed and the Monte Carlo inputs do not (ADR-0005).",
+        "band": "The Monte Carlo inputs reach the band only through the regime fractions that set the gravity widening; k never reaches it."
+      },
+      "sources": [
+        {
+          "id": "model_uncertainty",
+          "label": "Model uncertainty (limited tests)",
+          "share": 0.5015,
+          "basis": "psi_data",
+          "reaches_band": true,
+          "note": "Unwidened model band: limited tests at this atmosphere."
+        },
+        {
+          "id": "gravity_widening",
+          "label": "Gravity widening (honesty rule)",
+          "share": 0.262,
+          "basis": "honesty_rule",
+          "reaches_band": true,
+          "note": "Widening every plausible flame gets at this gravity and vent speed (ADR-0005)."
+        },
+        {
+          "id": "C_b",
+          "label": "Buoyant velocity coefficient C_b",
+          "share": 0.0952,
+          "basis": "engineering_assumption",
+          "reaches_band": true,
+          "note": "Moves the buoyant velocity, so it can tip a sample between regimes."
+        },
+        {
+          "id": "k",
+          "label": "Flow-mixing coefficient k",
+          "share": 0.0,
+          "basis": "engineering_assumption",
+          "reaches_band": false,
+          "note": "Enters only the effective flow speed, not the Richardson number, so it never changes this band."
+        },
+        {
+          "id": "dT_over_T",
+          "label": "Flame temperature rise dT/T",
+          "share": 0.0059,
+          "basis": "engineering_assumption",
+          "reaches_band": true,
+          "note": "Moves the buoyant velocity, so it can tip a sample between regimes."
+        },
+        {
+          "id": "L_mm",
+          "label": "Flame size L",
+          "share": 0.0164,
+          "basis": "engineering_assumption",
+          "reaches_band": true,
+          "note": "Moves the buoyant velocity, so it can tip a sample between regimes."
+        },
+        {
+          "id": "remainder",
+          "label": "Interactions / not split",
+          "share": 0.1191,
+          "basis": "engineering_assumption",
+          "reaches_band": true,
+          "note": "Interactions between the inputs: not split to one input."
+        }
+      ],
+      "shares_sum": 1.0,
+      "first_order": {
+        "C_b": 0.4023,
+        "k": 0.0,
+        "dT_over_T": 0.0249,
+        "L_mm": 0.0694,
+        "sum": 0.4966,
+        "n_bins": 10,
+        "output": "per-sample band width W(f_i)"
+      },
+      "model_detail": {
+        "band90_unwidened": [
+          0.7103589981815119,
+          0.9643024798877307
+        ],
+        "tests_within_gate": 37,
+        "n_train": 133,
+        "investigation_id": "PSI-159",
+        "source": "bootstrap",
+        "n_boot": 500,
+        "boot_sd": 0.08247957119183108,
+        "note": "Spread of 500 bootstrap refits of the logistic model at this atmosphere (physics fixed)."
+      },
+      "lever": {
+        "source": "model_uncertainty",
+        "share": 0.5015,
+        "basis": "psi_data",
+        "text": "About 50% of this band comes from the model itself: 37 PSI-159 tests lie within the honesty-gate distance of this atmosphere. More tests near 34.0% O2 and 8.2 psia would shrink it the most. See Planner candidate #10.",
+        "planner_candidate": {
+          "rank": 10,
+          "metric": "M3",
+          "type": "atmosphere",
+          "g_m_s2": 1.62,
+          "p_psia": 8.2,
+          "o2": 0.34,
+          "u_cm_s": 10.0,
+          "co2": 0.0,
+          "distance": 0.5
+        }
+      },
+      "method": "Shares of the final 90% band width: the unwidened model band, the gravity widening every plausible flame gets, and the extra widening split between the Monte Carlo inputs by first-order (decile-binned) variance shares (ADR-0008).",
+      "n": 2000,
+      "seed": 0,
+      "model_version": "3e3a8c2d84ca"
+    },
+    "M4": {
+      "metric": "M4",
+      "label": "Solid-material burn extent: microgravity vs 1 g",
+      "citation": "eng:drivers:M4",
+      "adr": "ADR-0008",
+      "applicable": false,
+      "reason": "M4 is a rule table with categories, not a numeric band, so there is no band width to split."
+    },
+    "M5": {
+      "metric": "M5",
+      "label": "Flame existence vs coflow speed",
+      "citation": "eng:drivers:M5",
+      "adr": "ADR-0008",
+      "applicable": false,
+      "reason": "M5 is a rule table with categories, not a numeric band, so there is no band width to split."
+    }
+  }
+}
