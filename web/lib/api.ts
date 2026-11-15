@@ -8,6 +8,7 @@
  * recomputed in the browser.
  */
 import { normalizeCoverage } from "./coverage";
+import { normalizeDetection, type DetectionArtifact } from "./detection";
 import { matchPreset, type Habitat } from "./habitat";
 import { STATIC_DILUENTS, normalizeReference, normalizeSuppression } from "./suppression";
 import type {
@@ -409,6 +410,17 @@ export function createClient(opts: ClientOptions = {}) {
           data: normalizeReference(
             await staticJson("suppression_reference.json", "API offline and no suppression reference artifact was bundled."),
           ),
+          source: "offline",
+          note: OFFLINE_NOTE,
+        }),
+      ),
+
+    /** R3 detection evidence (GET /detection, artifacts/detection.json unchanged; ADR-0007). */
+    detection: () =>
+      withFallback<DetectionArtifact>(
+        async () => normalizeDetection(await liveJson<unknown>("/detection")),
+        async () => ({
+          data: normalizeDetection(await staticJson("detection.json", "API offline and no detection artifact was bundled.")),
           source: "offline",
           note: OFFLINE_NOTE,
         }),

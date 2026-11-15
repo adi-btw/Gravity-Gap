@@ -210,6 +210,12 @@ function IncidentCard({ inc }: { inc: Incident }) {
           ) : null}
         </div>
       ) : null}
+
+      {inc.id === "artemis2" ? (
+        <Link href="/detection" className="text-sm text-muted underline hover:text-fg" data-testid="detection-link">
+          What do NASA tests say about smoke particle sizes?<span className="sr-only"> (detection evidence, {inc.name})</span>
+        </Link>
+      ) : null}
     </article>
   );
 }

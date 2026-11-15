@@ -1,12 +1,12 @@
 {
   "version": 1,
-  "generated_at": "2026-11-14T23:26:58+00:00",
+  "generated_at": "2026-11-15T00:18:11+00:00",
   "generated_by": "scripts/build_manifest.py",
-  "artifact_set_sha256": "854aa5baa3aaa93799fc76b1cee43e78a5add045e648bb5038da78ec9193af15",
+  "artifact_set_sha256": "2c76750f7de0fe01b5338fe0e029d2790329fe76f0235a3ed049b2e15755997c",
   "files": {
     "ai_cache.json": {
-      "sha256": "72d6b7bd3e6fb5b419a86f1831d5f12e37c8a966ba90106489199ec2af0498d7",
-      "bytes": 141395
+      "sha256": "531e1a554d0786bc423425b7f040f7fff302f3e7654181eef8869cbdad926c7d",
+      "bytes": 155082
     },
     "bounds/earth_M1.json": {
       "sha256": "2a2e5ae1373eea62f08eae0c1648a62a990bae097d408d2e0424d1965329829d",
@@ -129,8 +129,8 @@
       "bytes": 4179
     },
     "catalog.json": {
-      "sha256": "e846c760a79abf060836d0ef8a07c3c78e6a914042d95532bae185b5017b080e",
-      "bytes": 171827
+      "sha256": "e4536fdc54d6fec03bf61075459f9bf3e1cbb137973d3fa25ae3ea2c3c60bbb9",
+      "bytes": 175085
     },
     "coverage/M1.json": {
       "sha256": "372b668d386db223ce608a24d4e23b9b72e69ffbd6d68c5b0401639a79516344",
@@ -151,6 +151,10 @@
     "coverage/M5.json": {
       "sha256": "34388be47b9c92c4eebfe435fe3f62c3332b9a865896d26ecadc01c334f0a1e4",
       "bytes": 517
+    },
+    "detection.json": {
+      "sha256": "3cdf8029f12a6e2fca0b6ae93e59b5df95496b3d6c266e3d8154201555b5377f",
+      "bytes": 83571
     },
     "hindcast_saffire.json": {
       "sha256": "1a583b7fb4d4c0199826cde6142ec413ed8c00248eb3c3fe4cfb83c68af7e801",

@@ -29,6 +29,8 @@ export interface CatalogRecord {
   outcomes_available: boolean;
   hazard_pillars: string[];
   pillar_evidence?: Record<string, string[]>;
+  /** Catalog 1.2.0 (R3): which data files back a pillar, e.g. detection for PSI-101/102/47/115. */
+  pillar_data?: { detection?: { holds: string; files: string[]; artifact: string | null } };
   objective: string | null;
   hypothesis: string | null;
   impacts: string | null;
