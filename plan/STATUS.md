@@ -1,28 +1,9 @@
 # Project status
 
-> ## Resume here (paused 2026-11-15)
-> Round 3 ([plan 15](15-round-3-features.md)) is mostly done. **Done and pushed:** S4 compare (`/compare`),
-> S3 drivers (Bounds "What makes this band wide"), S2 honesty test (`/trust`), crew limits (`data/crew_limits.json`),
-> and the S1 briefing + S5 atmosphere-map **engines** with artifacts (`engine/briefing.py`, `engine/atmosphere_map.py`).
->
-> **Unfinished (committed as work in progress, not verified):** the S1/S5 API, AI and web parts. The agent was stopped
-> while writing them. Present: `POST /briefing`, `GET /atmosphere-map/{metric}` and AI changes in `api/` and
-> `engine/ai/`; `web/app/{briefing,atmospheres}`, `web/components/{BriefingView,AtmosphereMapView}.tsx`,
-> `web/lib/{briefing,atmosphereMap}.ts`, `web/e2e/{briefing,atmospheres}.spec.ts`. At pause: pytest 723 passed,
-> tsc clean, vitest 162 passed; Playwright for the two new pages **not run** (CI e2e may fail until they are finished).
->
-> **Next steps, in order:**
-> 1. Finish S1/S5 web: briefing page (one page per preset, print CSS, "Briefing" button in the habitat bar) and the
->    atmosphere map (hatch for no evidence, crew-limit overlay with sources, click-to-load, keyboard access). Add vitest
->    for the two lib files, the axe routes, and the demo questions "What should a lunar base designer know about fire?"
->    and "What cabin air does the evidence support?" (template mode validated). Spec: plan/15 S1 + S5, contracts.md.
-> 2. Make the lever consistent: for lunar base M1 the drivers lever names Planner #6 (Mars gravity) while
->    "what would narrow it" names #2 (same habitat). Pick one rule.
-> 3. Final rebuild in this order: `python -m engine.briefing` → `python -m engine.ai.answer --build-cache` →
->    `python scripts/build_manifest.py` → `--check`; copy artifacts to web; full pytest, vitest, Playwright; restart the
->    API and check every new page live; push; confirm all 5 CI jobs; update docs/DEMO_SCRIPT.md (open on /compare, close
->    on the briefing, `/trust` for "how do you know?").
-> 4. Servers were stopped. Restart with the `api` and `web` entries in `.claude/launch.json`.
+> ## Round 3 status (2026-11-15)
+> Round 3 ([plan 15](15-round-3-features.md)) is complete: S4 `/compare`, S3 drivers on `/bounds`, S2 `/trust`,
+> S1 `/briefing` (printable), S5 `/atmospheres` (Air map with sourced crew limits). The drivers lever and the AI's
+> "What would narrow it" now name the same Planner test. Demo script updated (section 1b).
 
 Back to [overview](00-overview.md). Owner: TL (PM hat). Snapshot: **2026-11-14, phase 3 in progress** (M5 → M7).
 Backlog IDs from [12-backlog.md](12-backlog.md); commit hashes from `git log --oneline`. "Phase 3 (uncommitted)" means

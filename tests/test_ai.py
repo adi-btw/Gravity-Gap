@@ -816,7 +816,10 @@ def test_briefing_cite_ids_only_when_present():
     assert not validate("See [eng:planner:99].", pack)["ok"]
     plain = ctx.build_context("lunar_base", question="Why is the lunar base in the mixed regime?")
     assert plain["briefing"] is None and "eng:briefing" not in plain["citable_ids"]
-    assert "eng:planner:6" not in plain["citable_ids"]
+    # Planner #6 is citable in every lunar-base pack now (nearest M1 test, same rule as the drivers lever);
+    # a briefing-only id must still stay out.
+    assert "eng:planner:6" in plain["citable_ids"]
+    assert "eng:incident:artemis2" not in plain["citable_ids"]
 
 
 def test_briefing_custom_habitat_computed_live(answer_mod):

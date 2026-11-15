@@ -1020,7 +1020,16 @@ def build_context(
         pack["planner"] = []
         pack["design_implications"] = []
     else:
-        tests = list(plan.get("tests") or plan.get("items") or [])[:PLANNER_TOP]
+        all_tests = list(plan.get("tests") or plan.get("items") or [])
+        tests = all_tests[:PLANNER_TOP]
+        # Also include each metric's nearest Planner test (the drivers lever, engine.uncertainty), so answers can
+        # name the same test as the "What makes this band wide" panel even when it is outside the top list.
+        from engine.uncertainty import nearest_planner_candidate
+
+        for m in ("M1", "M2", "M3"):
+            near = nearest_planner_candidate(m, h["g_m_s2"], h["p_psia"], h["o2"], h["u_cm_s"])
+            if near and all(t.get("rank") != near["rank"] for t in tests):
+                tests += [t for t in all_tests if t.get("rank") == near["rank"]]
         items = []
         for i, t in enumerate(tests, start=1):
             rank_no = t.get("rank", i)

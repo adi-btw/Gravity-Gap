@@ -1,13 +1,13 @@
 {
   "version": "v1",
-  "generated_at": "2026-11-15T00:26:57+00:00",
+  "generated_at": "2026-11-15T13:27:50+00:00",
   "generated_by": "python -m engine.ai.answer --build-cache",
   "entries": [
     {
       "question": "Why is the lunar base in the mixed regime?",
       "question_key": "why is the lunar base in the mixed regime",
       "habitat": "lunar_base",
-      "fingerprint": "0026997cca1ed0c74cb8ade708fccf104122d5f56ae01683e747d56a918deac3",
+      "fingerprint": "4b1c9513330e73abc5bf9c00f26c459f56d3f8b76a7bf09686e1ed7ab028c840",
       "intent": "regime",
       "mode_generated": "template",
       "answer_markdown": "Lunar base: 1.62 m/s² (0.165 g), 8.2 psia, 34% O₂, vent 10 cm/s, flame size 10 mm.\n\n**Regime: mixed.** For Lunar base the buoyant velocity is 25.5 cm/s against a vent flow of 10 cm/s, so the Richardson number Ri = u_b²/u_f² is 6.48 (forced Ri < 0.1, buoyant Ri > 10) [eng:physics]. Sampling the uncertain constants gives 0% forced, 71.7% mixed and 28.3% buoyant flames [eng:physics].\n\nIn the mixed regime neither the 0 g (ISS, forced-flow) data nor 1 g (buoyant) data apply directly: buoyancy and the vent flow are comparable, which is exactly the condition PSI never tested.\n\nDesign implication: At lunar gravity a 10 mm flame stays forced-flow dominated (Ri < 0.1, where microgravity evidence transfers) only above about 80 cm/s of vent flow at the median coefficients, and above 139 cm/s to cover 95% of the Monte Carlo samples (u_b p50 25.4 cm/s, p95 43.8 cm/s). Typical cabin vents (5-20 cm/s) are far below this, so lunar fires are mixed or buoyancy-dominated. [eng:design:1]\n\nConsequence for the predictions: **M1 – P(droplet flame self-extinguishes before burnout)**: estimate 20.1%, 90% band 1.25% to 68.4% [eng:M1]. The microgravity-only band is 3.9% to 48.2%. Transfer confidence: **low**.",
@@ -230,14 +230,15 @@
       "question": "Why is the M1 band wide for the lunar base?",
       "question_key": "why is the m1 band wide for the lunar base",
       "habitat": "lunar_base",
-      "fingerprint": "4cd31f74195f4981fceaa25d37d4b2a38e34b9c041dcad5c3b6ab448de953c67",
+      "fingerprint": "491398552aa02c9c0f04423645b33fa25d48f3251ee7b07c1507fe80e2c68d91",
       "intent": "band",
       "mode_generated": "template",
-      "answer_markdown": "Lunar base: 1.62 m/s² (0.165 g), 8.2 psia, 34% O₂, vent 10 cm/s, flame size 10 mm.\n\n**M1 – P(droplet flame self-extinguishes before burnout)**: estimate 20.1%, 90% band 1.25% to 68.4% [eng:M1]. The microgravity-only band is 3.9% to 48.2%. Transfer confidence: **low**.\n\n**Why the band is wide:** The training tests had no buoyancy, so the band is widened ×1.64 for the 71.7% mixed and 28.3% buoyant share of flames. The largest atmosphere sensitivity is O₂ fraction: moving it from 0.31 to 0.37 moves the estimate from 35.3% to 10.4%. Among the physics constants, buoyancy coefficient C_b matters most: over 0.5 to 1.5 the band width goes from 62.6% to 75.2%. [eng:M1]\n\n**Regime: mixed.** For Lunar base the buoyant velocity is 25.5 cm/s against a vent flow of 10 cm/s, so the Richardson number Ri = u_b²/u_f² is 6.48 (forced Ri < 0.1, buoyant Ri > 10) [eng:physics]. Sampling the uncertain constants gives 0% forced, 71.7% mixed and 28.3% buoyant flames [eng:physics].\n\n**What would narrow it:** Planner rank 2: M1 at 1.62 m/s², 8.2 psia, 34% O₂, vent 20 cm/s (score 1) [eng:planner:2]. Dilution at high O2: P(droplet flame self-extinguishes before burnout) with 40% CO2 replacing nitrogen at Moon gravity (0.165 g), 8.2 psia / 34% O2, vent 20 cm/s. FLEX tested CO2 dilution only at 14-24% O2, so the suppression calculator has no evidence here (honesty gate); 100% of physics samples are in the mixed regime, and the atmosphere is the lunar/Mars base 8.2 psia / 34% O2 target (weight 1.00). A droplet test here tells whether CO2 suppression works the same way in oxygen-enriched cabin air. It extends [PSI-69] [PSI-10] [PSI-159].\n\nNearest evidence [PSI-69]: Methanol, 34% O₂, 0.71 atm, completion [rec:PSI-69:FLEX:20]; Methanol, 30% O₂, 0.707 atm, completion [rec:PSI-69:FLEX:25]; Methanol, 30% O₂, 1.01 atm, completion [rec:PSI-69:FLEX:29].",
+      "answer_markdown": "Lunar base: 1.62 m/s² (0.165 g), 8.2 psia, 34% O₂, vent 10 cm/s, flame size 10 mm.\n\n**M1 – P(droplet flame self-extinguishes before burnout)**: estimate 20.1%, 90% band 1.25% to 68.4% [eng:M1]. The microgravity-only band is 3.9% to 48.2%. Transfer confidence: **low**.\n\n**What makes this band wide** [eng:drivers:M1]: the 90% band 1.25% to 68.4% split by source (rounded to 5%): Model uncertainty (limited tests): about 65% (from limited NASA tests); Gravity widening (honesty rule): about 25% (honesty rule for gravity); Buoyant velocity coefficient C_b: about 5% (engineering assumption, not PSI data); Flow-mixing coefficient k: 0% (it never reaches this band); Flame temperature rise dT/T: under 5% (engineering assumption, not PSI data); Flame size L: under 5% (engineering assumption, not PSI data); Not split between the inputs: under 5% (engineering assumption, not PSI data). **Biggest lever:** About 65% of this band comes from the model itself: 2 PSI-69 tests lie within the honesty-gate distance of this atmosphere. More tests near 34.0% O2 and 8.2 psia would shrink it the most. See Planner candidate #6. [eng:drivers:M1]\n\n**Why the band is wide (one input at a time):** The training tests had no buoyancy, so the band is widened ×1.64 for the 71.7% mixed and 28.3% buoyant share of flames. The largest atmosphere sensitivity is O₂ fraction: moving it from 0.31 to 0.37 moves the estimate from 35.3% to 10.4%. Among the physics constants, buoyancy coefficient C_b matters most: over 0.5 to 1.5 the band width goes from 62.6% to 75.2%. [eng:M1]\n\n**Regime: mixed.** For Lunar base the buoyant velocity is 25.5 cm/s against a vent flow of 10 cm/s, so the Richardson number Ri = u_b²/u_f² is 6.48 (forced Ri < 0.1, buoyant Ri > 10) [eng:physics]. Sampling the uncertain constants gives 0% forced, 71.7% mixed and 28.3% buoyant flames [eng:physics].\n\n**What would narrow it:** Planner rank 6: M1 at 3.71 m/s², 8.2 psia, 34% O₂, vent 20 cm/s (score 0.372) [eng:planner:6]. P(droplet flame self-extinguishes before burnout) at Mars gravity (0.378 g), 8.2 psia / 34% O2, vent 20 cm/s: the current 90% band is 0.64 wide, 93% of physics samples are in the mixed regime where neither 0 g nor 1 g data apply, and the atmosphere is close to the lunar/Mars base 8.2 psia / 34% O2 target (weight 1.00). It extends [PSI-69] [PSI-10] [PSI-159].\n\nNearest evidence [PSI-69]: Methanol, 34% O₂, 0.71 atm, completion [rec:PSI-69:FLEX:20]; Methanol, 30% O₂, 0.707 atm, completion [rec:PSI-69:FLEX:25]; Methanol, 30% O₂, 1.01 atm, completion [rec:PSI-69:FLEX:29].",
       "citations": [
         "eng:M1",
+        "eng:drivers:M1",
         "eng:physics",
-        "eng:planner:2",
+        "eng:planner:6",
         "PSI-69",
         "PSI-10",
         "PSI-159",
@@ -258,6 +259,22 @@
         68.4,
         3.9,
         48.2,
+        90.0,
+        1.25,
+        68.4,
+        5.0,
+        65.0,
+        25.0,
+        5.0,
+        0.0,
+        5.0,
+        5.0,
+        5.0,
+        65.0,
+        2.0,
+        34.0,
+        8.2,
+        6.0,
         1.64,
         71.7,
         28.3,
@@ -277,20 +294,21 @@
         0.0,
         71.7,
         28.3,
-        2.0,
-        1.62,
+        6.0,
+        3.71,
         8.2,
         34.0,
         20.0,
+        0.372,
+        0.378,
+        8.2,
+        34.0,
+        20.0,
+        90.0,
+        0.64,
+        93.0,
+        0.0,
         1.0,
-        40.0,
-        0.165,
-        8.2,
-        34.0,
-        20.0,
-        14.0,
-        24.0,
-        100.0,
         8.2,
         34.0,
         1.0,
@@ -365,6 +383,86 @@
             "text": "48.2%",
             "value": 48.2,
             "source": "predictions.M1.ref_0g.band90[1]"
+          },
+          {
+            "text": "90%",
+            "value": 90.0,
+            "source": "predictions.M1.transfer.basis~text"
+          },
+          {
+            "text": "1.25%",
+            "value": 1.25,
+            "source": "predictions.M1.band90[0]"
+          },
+          {
+            "text": "68.4%",
+            "value": 68.4,
+            "source": "predictions.M1.band90[1]"
+          },
+          {
+            "text": "5%",
+            "value": 5.0,
+            "source": "planner[4].rank"
+          },
+          {
+            "text": "65%",
+            "value": 65.0,
+            "source": "drivers.M1.sources[0].share_pct"
+          },
+          {
+            "text": "25%",
+            "value": 25.0,
+            "source": "drivers.M1.sources[1].share_pct"
+          },
+          {
+            "text": "5%",
+            "value": 5.0,
+            "source": "planner[4].rank"
+          },
+          {
+            "text": "0%",
+            "value": 0.0,
+            "source": "physics.mc.regime_fractions.forced"
+          },
+          {
+            "text": "5%",
+            "value": 5.0,
+            "source": "planner[4].rank"
+          },
+          {
+            "text": "5%",
+            "value": 5.0,
+            "source": "planner[4].rank"
+          },
+          {
+            "text": "5%",
+            "value": 5.0,
+            "source": "planner[4].rank"
+          },
+          {
+            "text": "65%",
+            "value": 65.0,
+            "source": "drivers.M1.sources[0].share_pct"
+          },
+          {
+            "text": "2",
+            "value": 2.0,
+            "source": "predictions.M1.transfer.basis~text"
+          },
+          {
+            "text": "34.0%",
+            "value": 34.0,
+            "source": "habitat.o2_percent"
+          },
+          {
+            "text": "8.2",
+            "value": 8.2,
+            "source": "habitat.p_psia"
+          },
+          {
+            "text": "6",
+            "value": 6.0,
+            "source": "predictions.M1.sensitivity[4].input_high"
           },
           {
             "text": "1.64",
@@ -462,14 +560,14 @@
             "source": "physics.mc.regime_fractions.buoyant"
           },
           {
-            "text": "2",
-            "value": 2.0,
-            "source": "predictions.M1.transfer.basis~text"
+            "text": "6",
+            "value": 6.0,
+            "source": "predictions.M1.sensitivity[4].input_high"
           },
           {
-            "text": "1.62",
-            "value": 1.62,
-            "source": "habitat.g_m_s2"
+            "text": "3.71",
+            "value": 3.71,
+            "source": "planner[2].g_m_s2"
           },
           {
             "text": "8.2",
@@ -485,51 +583,56 @@
             "text": "20",
             "value": 20.0,
             "source": "predictions.M4.reason~text"
+          },
+          {
+            "text": "0.372",
+            "value": 0.372,
+            "source": "planner[5].score"
+          },
+          {
+            "text": "0.378",
+            "value": 0.378,
+            "source": "planner[2].rationale~text"
+          },
+          {
+            "text": "8.2",
+            "value": 8.2,
+            "source": "habitat.p_psia"
+          },
+          {
+            "text": "34%",
+            "value": 34.0,
+            "source": "habitat.o2_percent"
+          },
+          {
+            "text": "20",
+            "value": 20.0,
+            "source": "predictions.M4.reason~text"
+          },
+          {
+            "text": "90%",
+            "value": 90.0,
+            "source": "predictions.M1.transfer.basis~text"
+          },
+          {
+            "text": "0.64",
+            "value": 0.64,
+            "source": "planner[5].parts.band_width"
+          },
+          {
+            "text": "93%",
+            "value": 93.0,
+            "source": "planner[2].rationale~text"
+          },
+          {
+            "text": "0",
+            "value": 0.0,
+            "source": "physics.mc.regime_fractions.forced"
           },
           {
             "text": "1",
             "value": 1.0,
             "source": "metrics.M4.label~text"
-          },
-          {
-            "text": "40%",
-            "value": 40.0,
-            "source": "planner[1].rationale~text"
-          },
-          {
-            "text": "0.165",
-            "value": 0.165,
-            "source": "habitat.g_over_g0"
-          },
-          {
-            "text": "8.2",
-            "value": 8.2,
-            "source": "habitat.p_psia"
-          },
-          {
-            "text": "34%",
-            "value": 34.0,
-            "source": "habitat.o2_percent"
-          },
-          {
-            "text": "20",
-            "value": 20.0,
-            "source": "predictions.M4.reason~text"
-          },
-          {
-            "text": "14",
-            "value": 14.0,
-            "source": "planner[1].rationale~text"
-          },
-          {
-            "text": "24%",
-            "value": 24.0,
-            "source": "predictions.M4.reason~text"
-          },
-          {
-            "text": "100%",
-            "value": 100.0,
-            "source": "planner[0].rationale~text"
           },
           {
             "text": "8.2",
@@ -583,11 +686,15 @@
             "resolved": true
           },
           {
+            "id": "eng:drivers:M1",
+            "resolved": true
+          },
+          {
             "id": "eng:physics",
             "resolved": true
           },
           {
-            "id": "eng:planner:2",
+            "id": "eng:planner:6",
             "resolved": true
           },
           {
@@ -621,7 +728,7 @@
       "question": "Which experiments matter most for a Mars base?",
       "question_key": "which experiments matter most for a mars base",
       "habitat": "mars_base",
-      "fingerprint": "5d04ef0cee95d066cc4e130cf313c5a044eacb74b0c9eabb53399dd91d3ab200",
+      "fingerprint": "e51cb13bd5e2c70822651e66596553847cde0b205cccddd8f21a27ed76f2468f",
       "intent": "experiments",
       "mode_generated": "template",
       "answer_markdown": "Mars base: 3.71 m/s² (0.378 g), 8.2 psia, 34% O₂, vent 10 cm/s, flame size 10 mm.\n\n**Most relevant PSI investigations** (relevance score: atmosphere match, fire-safety pillars, fuel realism, outcome data, test count):\n1. FLEX [PSI-69] score 0.692 (atmosphere 0.698, fuel realism 0.6)\n2. ACME CFI-G [PSI-159] score 0.606 (atmosphere 1, fuel realism 0.4)\n3. ACME/Flame Design [PSI-10] score 0.605 (atmosphere 1, fuel realism 0.4)\n4. SAFFIRE-II [PSI-99] score 0.552 (atmosphere 0.215, fuel realism 1)\n5. BASS-II [PSI-25] score 0.445 (atmosphere 0.217, fuel realism 1)\n\n**Data behind the predictions here:** M1 uses [PSI-69] (206 training tests, estimate) [eng:M1]; M2 uses [PSI-69] (158 training tests, no estimate (outside tested atmosphere)) [eng:M2]; M3 uses [PSI-159] (133 training tests, estimate) [eng:M3]; M4 uses [PSI-99] (9 training tests, no estimate (outside tested atmosphere)) [eng:M4]; M5 uses [PSI-107] (407 training tests, no estimate (outside tested atmosphere)) [eng:M5].\n\n**Where new experiments matter most:** Planner rank 3: M1 at 3.71 m/s², 8.2 psia, 34% O₂, vent 20 cm/s (score 0.834) [eng:planner:3]. Dilution at high O2: P(droplet flame self-extinguishes before burnout) with 20% CO2 replacing nitrogen at Mars gravity (0.378 g), 8.2 psia / 34% O2, vent 20 cm/s. FLEX tested CO2 dilution only at 14-24% O2, so the suppression calculator has no evidence here (honesty gate); 93% of physics samples are in the mixed regime, and the atmosphere is the lunar/Mars base 8.2 psia / 34% O2 target (weight 1.00). A droplet test here tells whether CO2 suppression works the same way in oxygen-enriched cabin air. It extends [PSI-69] [PSI-10] [PSI-159].\n\n**Regime: buoyant.** For Mars base the buoyant velocity is 38.5 cm/s against a vent flow of 10 cm/s, so the Richardson number Ri = u_b²/u_f² is 14.8 (forced Ri < 0.1, buoyant Ri > 10) [eng:physics]. Sampling the uncertain constants gives 0% forced, 32.3% mixed and 67.7% buoyant flames [eng:physics].",
@@ -1014,7 +1121,7 @@
       "question": "What should LUCI test first?",
       "question_key": "what should luci test first",
       "habitat": "lunar_base",
-      "fingerprint": "e33206fe019f41bb06da81ab16b20ef02cd9bb3f8207a6a68055ca18540254d0",
+      "fingerprint": "256387f467b204f9a46783cbcc782c8d5ef03f2466a410c675b27f9919c259b4",
       "intent": "planner",
       "mode_generated": "template",
       "answer_markdown": "**First test:** Planner rank 1: M2 at 1.62 m/s², 8.2 psia, 34% O₂, vent 20 cm/s (score 1) [eng:planner:1]. Extinction diameter at Moon gravity (0.165 g), 8.2 psia / 34% O2, vent 20 cm/s: there is no microgravity evidence at this atmosphere (honesty gate), 100% of physics samples are in the mixed regime where neither 0 g nor 1 g data apply, and the atmosphere is close to the lunar/Mars base 8.2 psia / 34% O2 target (weight 1.00). It extends [PSI-69] [PSI-10] [PSI-159].\n\n**Then:** rank 2: M1 at 1.62 m/s², 8.2 psia, 34% O₂, vent 20 cm/s [eng:planner:2]; rank 3: M1 at 3.71 m/s², 8.2 psia, 34% O₂, vent 20 cm/s [eng:planner:3].\n\nRanking = current band width × habitat weight × mixed-regime fraction, so tests sit where the predictions are least certain and the habitat atmosphere matters most.\n\nToday, for Lunar base: **M1 – P(droplet flame self-extinguishes before burnout)**: estimate 20.1%, 90% band 1.25% to 68.4% [eng:M1]. The microgravity-only band is 3.9% to 48.2%. Transfer confidence: **low**.",
@@ -1263,7 +1370,7 @@
       "question": "Is the lunar rover safer with the fans off?",
       "question_key": "is the lunar rover safer with the fans off",
       "habitat": "lunar_rover",
-      "fingerprint": "98c50357f9deead4579be7028875a0ccd499e92d7ca951670ba598fc9242c366",
+      "fingerprint": "9ea9733ee7bbc45eb2bfd3dd65697ca262155937293f76dc66fdf3ec2836f70e",
       "intent": "fans_off",
       "mode_generated": "template",
       "answer_markdown": "Lunar rover: 1.62 m/s² (0.165 g), 8.2 psia, 34% O₂, vent 5 cm/s, flame size 10 mm.\n\n**With the fans on:** **Regime: buoyant.** For Lunar rover the buoyant velocity is 25.5 cm/s against a vent flow of 5 cm/s, so the Richardson number Ri = u_b²/u_f² is 25.9 (forced Ri < 0.1, buoyant Ri > 10) [eng:physics]. Sampling the uncertain constants gives 0% forced, 11.9% mixed and 88.1% buoyant flames [eng:physics].\n\n**With the fans off:** **Regime: buoyant.** For Lunar rover with fans off the buoyant velocity is 25.5 cm/s against a vent flow of 0 cm/s, so the Richardson number Ri = u_b²/u_f² is unbounded (no forced flow) (forced Ri < 0.1, buoyant Ri > 10) [eng:fans_off:physics]. Sampling the uncertain constants gives 0% forced, 0% mixed and 100% buoyant flames [eng:fans_off:physics].\n\nFans on: **M1 – P(droplet flame self-extinguishes before burnout)**: estimate 20.1%, 90% band 0.727% to 76.2% [eng:M1]. The microgravity-only band is 3.9% to 48.2%. Transfer confidence: **low**.\n\nFans off: **M1 – P(droplet flame self-extinguishes before burnout)**: estimate 20.1%, 90% band 0.653% to 77.6% [eng:fans_off:M1]. The microgravity-only band is 3.9% to 48.2%. Transfer confidence: **low**.\n\n**Not safer by this evidence.** Without ventilation the flame is not microgravity-like: buoyancy takes over and the 90% band gets wider. For M1–M3 the engine never shifts the estimate with gravity or flow (gravity honesty rule), it only widens the band, so 'safer' cannot be claimed from these data.\n\nDesign implication: At lunar gravity a 10 mm flame becomes buoyancy-dominated (Ri > 10) when the vent flow is below about 8.0 cm/s (median coefficients): turning ventilation off does not create a microgravity-like quiescent flame. [eng:design:2]",
@@ -1532,7 +1639,7 @@
       "question": "Can you predict rocket engine fires?",
       "question_key": "can you predict rocket engine fires",
       "habitat": "lunar_base",
-      "fingerprint": "115cb1768fbe8ea9150131b11ffb22eebb6901c8edf1cd51af6451050655a934",
+      "fingerprint": "6b273af6d45cd0c5354e528fb2eb5e2d054ee603cc239cfd8c8051d6d4d7cb4a",
       "intent": "refusal",
       "mode_generated": "template",
       "answer_markdown": "This is outside Gravity Gap's scope. Gravity Gap predicts **cabin fires** in spacecraft and habitats (burning materials, fuel droplets, small gas flames, ventilation and cabin atmosphere) from NASA PSI microgravity combustion experiments. Rocket engines, propellants and propulsion combustion are a different problem and are not covered by this data or model; please consult propulsion-specific resources for that. Within scope you can ask, for example, *Why is the lunar base in the mixed regime?* or *What should LUCI test first?*",
@@ -1550,7 +1657,7 @@
       "question": "What does Gravity Gap say about the Mir fire?",
       "question_key": "what does gravity gap say about the mir fire",
       "habitat": "incident:mir1997",
-      "fingerprint": "d6fac945aaacb877496ebfca0f302e62bd4e19cde8ec26467cb4c8e85db6e514",
+      "fingerprint": "360698f93da4869093e3fbe7cf32987cbcd5a5ab3212a220d7ac1690f03e5c11",
       "intent": "incident",
       "mode_generated": "template",
       "answer_markdown": "**Mir oxygen-generator fire (1997)**: in orbit, aboard the Mir space station (Kvant-1 module) [eng:incident:mir1997].\n\nOn Feb. 24, 1997, a solid-fuel oxygen generator ignited in Mir's Kvant-1 module, producing a flame and dense smoke; the station's life support system cleared the smoke over the following hours. Cabin pressure and oxygen here are assumed sea-level air, not values quoted from a NASA page. [eng:incident:mir1997] [https://www.nasa.gov/history/25-years-ago-fire-aboard-space-station-mir/]\n\n**Scope:** inside Gravity Gap's scope (a fire in a crew-cabin atmosphere) [eng:incident:mir1997].\n\n**Conditions used** [eng:incident:mir1997]: gravity 0 m/s² [https://www.nasa.gov/history/25-years-ago-fire-aboard-space-station-mir/]; pressure 14.7 psia (assumed; not stated in the sources); O₂ 21% (assumed; not stated in the sources); vent flow 10 cm/s (assumed; not stated in the sources); flame size 10 mm (assumed; not stated in the sources). Mir operated a sea-level-like air atmosphere; cabin pressure (14.7 psia) and oxygen fraction (0.21) are not quoted from a NASA page. Ventilation speed and fuel length are engineering assumptions matching the app presets.\n\n**Regime: forced.** Buoyant velocity 0 cm/s against a vent flow of 10 cm/s gives Ri = 0 (forced Ri < 0.1, buoyant Ri > 10) [eng:incident:mir1997]. Sampling the uncertain constants gives 100% forced, 0% mixed and 0% buoyant flames [eng:incident:mir1997].\n\n**What today's data can and cannot say:**\n- **M1 – P(droplet flame self-extinguishes before burnout)**: estimate 93.9%, 90% band 82.5% to 98.2%, transfer confidence **high** (nearest tested condition at distance 0.0009) [eng:incident:mir1997]\n- **M2 – Extinction diameter**: estimate 4 mm, 90% band 2.55 mm to 4.34 mm, transfer confidence **high** (nearest tested condition at distance 0.0009) [eng:incident:mir1997]\n- **M3 – P(gas flame self-extinguishes vs flow-terminated)**: estimate 97.2%, 90% band 94.5% to 99.1%, transfer confidence **high** (nearest tested condition at distance 0.0009) [eng:incident:mir1997]\n- **M4 – Solid-material burn extent: microgravity vs 1 g**: estimate complete burn, 90% band complete burn to complete burn, transfer confidence **low** (nearest tested condition at distance 0.1) [eng:incident:mir1997]\n- **M5 – Flame existence vs coflow speed**: estimate 1, 90% band 0 to 1, transfer confidence **medium** (nearest tested condition at distance 0.0009) [eng:incident:mir1997]\n\n**Findings:** In orbit (0 g) with the assumed 10 cm/s ventilation the flame is forced-flow (Ri 0; Monte Carlo: 100% forced, 0% mixed, 0% buoyant): the regime ISS data covers best. With the assumed atmosphere (O2 21% at 14.7 psia) the oxygen partial pressure is 3.09 psia (sea-level air is about 3.08 psia). [eng:incident:mir1997]\n\n**What the sources say:**\n- date: “On Feb. 24, 1997, the six crew members aboard the Russian space station Mir faced significant danger” [https://www.nasa.gov/history/25-years-ago-fire-aboard-space-station-mir/]\n- summary: “when a fire ignited in an oxygen generating system.” [https://www.nasa.gov/history/25-years-ago-fire-aboard-space-station-mir/]\n- summary: “as Lazutkin activated a solid-fuel oxygen generator in Mir’s Kvant-1 module, the canister ignited” [https://www.nasa.gov/history/25-years-ago-fire-aboard-space-station-mir/]\n- g_m_s2: “the worst in-orbit fire incident in the history of spaceflight.” [https://www.nasa.gov/history/25-years-ago-fire-aboard-space-station-mir/]\n\nThis is what today's PSI data can and cannot say about these conditions. It is not a reconstruction of the event and not a judgement of the crew or of the people who worked on it.",
@@ -1894,7 +2001,7 @@
       "question": "What would Gravity Gap say about Apollo 1's cabin air?",
       "question_key": "what would gravity gap say about apollo 1 s cabin air",
       "habitat": "incident:apollo1",
-      "fingerprint": "01c5474ba87cd248e5c2708af8a59babec5d9a26ebcbde6d611356151ab9ed71",
+      "fingerprint": "ad6ad8f15a0f79e3fc40673df3e7642aa00dc18c7622e138bd891385c6d43c2f",
       "intent": "incident",
       "mode_generated": "template",
       "answer_markdown": "**Apollo 1 (1967)**: pre-launch \"plugs out\" test on the launch pad (AS-204) [eng:incident:apollo1].\n\nDuring a preflight test on the launch pad on Jan. 27, 1967, a fire swept through the AS-204 Command Module, which was pressurized with pure oxygen, and astronauts Grissom, White and Chaffee lost their lives. [eng:incident:apollo1] [https://sma.nasa.gov/sma-disciplines/accllp/apollo-1]\n\n**Scope:** inside Gravity Gap's scope (a fire in a crew-cabin atmosphere) [eng:incident:apollo1].\n\n**Conditions used** [eng:incident:apollo1]: gravity 9.81 m/s² [https://sma.nasa.gov/sma-disciplines/accllp/apollo-1]; pressure 16.7 psia [https://www.nasa.gov/history/Apollo204/chariot.html]; O₂ 100% [https://sma.nasa.gov/sma-disciplines/accllp/apollo-1]; vent flow 10 cm/s (assumed; not stated in the sources); flame size 10 mm (assumed; not stated in the sources). Ventilation speed (10 cm/s) and fuel length (10 mm) are engineering assumptions matching the app presets, not values from a NASA page.\n\n**Regime: buoyant.** Buoyant velocity 62.6 cm/s against a vent flow of 10 cm/s gives Ri = 39.2 (forced Ri < 0.1, buoyant Ri > 10) [eng:incident:apollo1]. Sampling the uncertain constants gives 0% forced, 3.65% mixed and 96.4% buoyant flames [eng:incident:apollo1].\n\n**What today's data can and cannot say:**\n- **M1 – P(droplet flame self-extinguishes before burnout)**: **no evidence** – Extrapolation: no evidence. The query (O2 1.000, 1.14 atm, CO2 0.00, He 0.00) is more than 2 atmosphere-and-diluent-distance units from every M1 training test; the nearest tested condition is PSI-69 PSI-69:FLEX:20 at O2 0.340, 0.71 atm, CO2 0.00, He 0.00 (atmosphere and diluent distance 13.29). (nearest tested condition at distance 13.3) [eng:incident:apollo1]\n- **M2 – Extinction diameter**: **no evidence** – Extrapolation: no evidence. The query (O2 1.000, 1.14 atm, CO2 0.00, He 0.00) is more than 2 atmosphere-and-diluent-distance units from every M2 training test; the nearest tested condition is PSI-69 PSI-69:FLEX:30 at O2 0.300, 1.01 atm, CO2 0.00, He 0.00 (atmosphere and diluent distance 14.01). (nearest tested condition at distance 14) [eng:incident:apollo1]\n- **M3 – P(gas flame self-extinguishes vs flow-terminated)**: **no evidence** – Extrapolation: no evidence. The query (O2 1.000, 1.14 atm) is more than 2 atmosphere-distance units from every M3 training test; the nearest tested condition is PSI-159 PSI-159:CFI-G_Normal_Flames:139 at O2 0.400, 1.00 atm (atmosphere distance 12.01). (nearest tested condition at distance 12) [eng:incident:apollo1]\n- **M4 – Solid-material burn extent: microgravity vs 1 g**: **no evidence** – extrapolation, no evidence: SAFFIRE-II only tested ~22% O2 (21.5-22.1%) at ~1 atm cabin pressure and 20 cm/s flow; habitat O2 100.0% outside 20-24.0%; pressure 16.7 psia (1.14 atm) outside 0.9-1.1 atm. No estimate is given outside the tested atmosphere. (nearest tested condition at distance 15.6) [eng:incident:apollo1]\n- **M5 – Flame existence vs coflow speed**: **no evidence** – extrapolation, no evidence: SPICE only tested in ISS cabin air (assumed ~21% O2 / ~1 atm; the table records no atmosphere); habitat O2 100.0% outside 19-23.5%; pressure 16.7 psia (1.14 atm) outside 0.9-1.1 atm. No estimate is given outside the tested atmosphere. (nearest tested condition at distance 15.8) [eng:incident:apollo1]\n\n**Findings:** At Earth gravity (9.81 m/s²) with the assumed 10 cm/s ventilation the flame is buoyancy-dominated (Ri 39.2; Monte Carlo: 0% forced, 4% mixed, 96% buoyant). At the sourced atmosphere (O2 100% at 16.7 psia) the oxygen partial pressure is 16.7 psia (sea-level air is about 3.08 psia). O2 100% at 16.7 psia is outside every tested atmosphere: no evidence for M1–M5 (nearest tested atmosphere distance 12.0; the evidence gate is 2.0). [eng:incident:apollo1]\n\n**What the sources say:**\n- date: “On Jan. 27, 1967, astronauts Virgil “Gus” Grissom, Edward White and Robert Chaffee lost their lives during a preflight test for AS-204” [https://sma.nasa.gov/sma-disciplines/accllp/apollo-1]\n- summary: “during a preflight test for AS-204 when a fire swept through the Command Module (CM).” [https://sma.nasa.gov/sma-disciplines/accllp/apollo-1]\n- g_m_s2: “On Jan. 27, Grissom, White and Chaffee were scheduled to conduct a key test on the launch pad” [https://sma.nasa.gov/sma-disciplines/accllp/apollo-1]\n- o2: “the spacecraft’s hatches closed and the cabin pressurized with 100% oxygen.” [https://sma.nasa.gov/sma-disciplines/accllp/apollo-1]\n- p_psia: “pure oxygen at a pressure of 11.5 newtons per square centimeter (16.7 pounds per square inch) was substituted.” [https://www.nasa.gov/history/Apollo204/chariot.html]\n- phase: “During this \"plugs out\" test, all electrical, environmental, and ground checkout cables would be disconnected” [https://www.nasa.gov/history/Apollo204/chariot.html]\n\nThis is what today's PSI data can and cannot say about these conditions. It is not a reconstruction of the event and not a judgement of the crew or of the people who worked on it.",
@@ -2487,7 +2594,7 @@
       "question": "Is Apollo 13 in scope?",
       "question_key": "is apollo 13 in scope",
       "habitat": "incident:apollo13",
-      "fingerprint": "832a25961bc7049877f945483cb6c7a76ac1a6dbe9c8b5cb5520903685caedfa",
+      "fingerprint": "a5f8a76825acf86bc92485989e7b9844bc5492f6678928d1420269c092a49cd6",
       "intent": "incident",
       "mode_generated": "template",
       "answer_markdown": "**Apollo 13 (1970)**: third day of the mission, translunar flight (launched April 11, 1970) [eng:incident:apollo13].\n\n**Outside Gravity Gap's scope.** Apollo 13 was a failure of a high-pressure oxygen tank in the Service Module, not a cabin fire, so the PSI combustion data and this tool do not apply. Gravity Gap studies cabin fires (burning materials, fuel droplets and small gas flames in a cabin atmosphere with ventilation) using NASA PSI combustion experiments, so it gives no regime, estimate or band for this event [eng:incident:apollo13].\n\nOn the third day of the Apollo 13 mission, oxygen tank number two failed, followed by tank number one; the lunar landing was called off and the crew returned to Earth safely. [eng:incident:apollo13] [https://sma.nasa.gov/sma-disciplines/accllp/apollo-13]\n\n**What the sources say:**\n- summary: “oxygen tank number two blew up, leading to the subsequent failure of tank number one.” [https://sma.nasa.gov/sma-disciplines/accllp/apollo-13]\n- date: “Things went smoothly until the third day of the mission” [https://sma.nasa.gov/sma-disciplines/accllp/apollo-13]\n- date: “Launch April 11, 1970” [https://www.nasa.gov/mission/apollo-13/]\n\nGravity Gap makes no prediction about this event. This is not a judgement of the crew or of the people who worked on it.",
@@ -2566,7 +2673,7 @@
       "question": "How much CO₂ would it take to put out a flame in ISS air?",
       "question_key": "how much co₂ would it take to put out a flame in iss air",
       "habitat": "iss",
-      "fingerprint": "b41d1e654ecccc4456702e6800b500079437ff28a94e4564a97bb60b85edadf1",
+      "fingerprint": "815fdcac3fda5a8be112d144818ee699a6c96b50e8e4a45546fb85f09182f23c",
       "intent": "suppression",
       "mode_generated": "template",
       "answer_markdown": "ISS: 0 m/s² (0 g), 14.7 psia, 21% O₂, vent 10 cm/s, flame size 10 mm.\n\n**Carbon dioxide (CO2)** replacing nitrogen at the habitat's 21% O₂ and 14.7 psia [eng:suppression:co2]. The curve is the M1 chance that a droplet flame self-extinguishes before burnout, from the FLEX droplet tests [PSI-69].\n\n**Dilution for 90% self-extinction:** none needed in the model [eng:suppression:co2]. The M1 estimate is already at or above 90% with no dilution: in FLEX most droplet flames in this atmosphere went out on their own before burnout.\n\n**Estimates along the curve** [eng:suppression:co2]:\n- 5% CO₂: M1 estimate 94.6%, 90% band 84.5% to 98.4%; M2 extinction diameter 4.08 mm (90% band 2.63 mm to 4.38 mm)\n- 20% CO₂: M1 estimate 96.2%, 90% band 88.6% to 99.1%; M2 extinction diameter 4.31 mm (90% band 2.85 mm to 4.5 mm)\n- 40% CO₂: M1 estimate 97.7%, 90% band 92.6% to 99.6%; M2 extinction diameter 4.61 mm (90% band 3.15 mm to 4.65 mm)\n- 60% CO₂: M1 estimate 98.6%, 90% band 94.3% to 99.8%; M2 extinction diameter 4.81 mm (90% band 3.44 mm to 4.91 mm)\n\n**Tested conditions:** FLEX tested CO₂ dilution only between 14% and 24% O₂ (0.69-3.05 atm). This habitat (21% O₂, 1.00 atm) is close enough to those tests (distance <= 2, ADR-0006) for CO₂ fractions up to 60%; beyond that there is no evidence and the curve has a gap. Gravity does not change these numbers; it only widens the band (ADR-0005). [eng:suppression:co2]\n\n**Raw FLEX outcomes, 0.17 < O2 <= 0.22** (counted from the test records, no model; bins mix pressures and droplet sizes, so they show direction, not magnitude) [eng:suppression_reference]:\n- Heptane, no CO₂: 8 self-extinguished, 6 burned out (57.1% self-extinction)\n- Heptane, 0% to 10% CO₂: 5 self-extinguished, 0 burned out (100% self-extinction)\n- Heptane, 10% to 20% CO₂: 5 self-extinguished, 1 burned out (83.3% self-extinction)\n- Heptane, above 20% CO₂: 7 self-extinguished, 0 burned out (100% self-extinction)\n- Methanol, no CO₂: 15 self-extinguished, 0 burned out (100% self-extinction)\n- Methanol, 0% to 10% CO₂: 8 self-extinguished, 0 burned out (100% self-extinction)\n- Methanol, 10% to 20% CO₂: 7 self-extinguished, 1 burned out (87.5% self-extinction)\n- Methanol, 20% to 30% CO₂: 2 self-extinguished, 2 burned out (50% self-extinction)\n\n**Safety note:** CO₂ at these concentrations is dangerous to breathe. Spacecraft use portable CO₂ or water-mist extinguishers aimed at the fire, not cabin flooding. This shows how dilution affected flames in NASA's tests; it is not an operating procedure.",
@@ -3149,7 +3256,7 @@
       "question": "Why can't Gravity Gap answer suppression for the lunar base?",
       "question_key": "why can t gravity gap answer suppression for the lunar base",
       "habitat": "lunar_base",
-      "fingerprint": "084be8c1e5c0df6479e0de7d1fcbdeaff482a35dc3c6efb55b344014bdf84a0a",
+      "fingerprint": "0223e1603fc348d9776b923bf75ce37f9d6eb684e1819faf0c618b880f042f54",
       "intent": "suppression",
       "mode_generated": "template",
       "answer_markdown": "Lunar base: 1.62 m/s² (0.165 g), 8.2 psia, 34% O₂, vent 10 cm/s, flame size 10 mm.\n\n**Carbon dioxide (CO2)** replacing nitrogen at the habitat's 34% O₂ and 8.2 psia [eng:suppression:co2]. The curve is the M1 chance that a droplet flame self-extinguishes before burnout, from the FLEX droplet tests [PSI-69].\n\n**No evidence at any CO₂ fraction above 0.** FLEX tested CO₂ dilution only between 14% and 24% O₂, and 34% O₂ is above that ceiling [eng:suppression:co2]. Every diluted point is outside tested conditions, so Gravity Gap gives no estimate, band or dose here (the chart shows gaps, never interpolated values).\n\n**Tested conditions:** FLEX tested CO₂ dilution only between 14% and 24% O₂ (0.69-3.05 atm); at 34% O₂ and 0.56 atm there is no evidence, so no number is shown for any CO₂ fraction. An answer here needs new dilution tests at this oxygen level. [eng:suppression:co2]\n\n**Dilution for 90% self-extinction:** not reached inside tested conditions [eng:suppression:co2].\n\n**Raw FLEX outcomes, O2 > 0.22** (counted from the test records, no model; bins mix pressures and droplet sizes, so they show direction, not magnitude) [eng:suppression_reference]:\n- Heptane, no CO₂: 0 self-extinguished, 1 burned out (0% self-extinction)\n- Heptane, 10% to 20% CO₂: 3 self-extinguished, 2 burned out (60% self-extinction)\n- Heptane, 20% to 30% CO₂: 3 self-extinguished, 0 burned out (100% self-extinction)\n- Methanol, no CO₂: 2 self-extinguished, 3 burned out (40% self-extinction)\n- Methanol, 10% to 20% CO₂: 3 self-extinguished, 1 burned out (75% self-extinction)\n- Methanol, 20% to 30% CO₂: 6 self-extinguished, 1 burned out (85.7% self-extinction)\n\n**Safety note:** CO₂ at these concentrations is dangerous to breathe. Spacecraft use portable CO₂ or water-mist extinguishers aimed at the fire, not cabin flooding. This shows how dilution affected flames in NASA's tests; it is not an operating procedure.",
@@ -3462,7 +3569,7 @@
       "question": "Does helium work better than CO₂?",
       "question_key": "does helium work better than co₂",
       "habitat": "iss",
-      "fingerprint": "d9e1429e1c42aba0f36d82c3c2c968f188725ee7fc4447345e61ee8ae3547ab5",
+      "fingerprint": "2e9790edec5d4bc7a0520f594e1729073c4f90375469aff89081f3fecf55a89e",
       "intent": "suppression",
       "mode_generated": "template",
       "answer_markdown": "ISS: 0 m/s² (0 g), 14.7 psia, 21% O₂, vent 10 cm/s, flame size 10 mm.\n\n**Carbon dioxide (CO2)** replacing nitrogen at the habitat's 21% O₂ and 14.7 psia [eng:suppression:co2]. The curve is the M1 chance that a droplet flame self-extinguishes before burnout, from the FLEX droplet tests [PSI-69].\n\n**Dilution for 90% self-extinction:** none needed in the model [eng:suppression:co2]. The M1 estimate is already at or above 90% with no dilution: in FLEX most droplet flames in this atmosphere went out on their own before burnout.\n\n**Estimates along the curve** [eng:suppression:co2]:\n- 5% CO₂: M1 estimate 94.6%, 90% band 84.5% to 98.4%; M2 extinction diameter 4.08 mm (90% band 2.63 mm to 4.38 mm)\n- 20% CO₂: M1 estimate 96.2%, 90% band 88.6% to 99.1%; M2 extinction diameter 4.31 mm (90% band 2.85 mm to 4.5 mm)\n- 40% CO₂: M1 estimate 97.7%, 90% band 92.6% to 99.6%; M2 extinction diameter 4.61 mm (90% band 3.15 mm to 4.65 mm)\n- 60% CO₂: M1 estimate 98.6%, 90% band 94.3% to 99.8%; M2 extinction diameter 4.81 mm (90% band 3.44 mm to 4.91 mm)\n\n**Tested conditions:** FLEX tested CO₂ dilution only between 14% and 24% O₂ (0.69-3.05 atm). This habitat (21% O₂, 1.00 atm) is close enough to those tests (distance <= 2, ADR-0006) for CO₂ fractions up to 60%; beyond that there is no evidence and the curve has a gap. Gravity does not change these numbers; it only widens the band (ADR-0005). [eng:suppression:co2]\n\n**Raw FLEX outcomes, 0.17 < O2 <= 0.22** (counted from the test records, no model; bins mix pressures and droplet sizes, so they show direction, not magnitude) [eng:suppression_reference]:\n- Heptane, no CO₂: 8 self-extinguished, 6 burned out (57.1% self-extinction)\n- Heptane, 0% to 10% CO₂: 5 self-extinguished, 0 burned out (100% self-extinction)\n- Heptane, 10% to 20% CO₂: 5 self-extinguished, 1 burned out (83.3% self-extinction)\n- Heptane, above 20% CO₂: 7 self-extinguished, 0 burned out (100% self-extinction)\n- Methanol, no CO₂: 15 self-extinguished, 0 burned out (100% self-extinction)\n- Methanol, 0% to 10% CO₂: 8 self-extinguished, 0 burned out (100% self-extinction)\n- Methanol, 10% to 20% CO₂: 7 self-extinguished, 1 burned out (87.5% self-extinction)\n- Methanol, 20% to 30% CO₂: 2 self-extinguished, 2 burned out (50% self-extinction)\n\n**Helium** replacing nitrogen at the habitat's 21% O₂ and 14.7 psia [eng:suppression:he]. The curve is the M1 chance that a droplet flame self-extinguishes before burnout, from the FLEX droplet tests [PSI-69].\n\n**Dilution for 90% self-extinction:** none needed in the model [eng:suppression:he]. The M1 estimate is already at or above 90% with no dilution: in FLEX most droplet flames in this atmosphere went out on their own before burnout.\n\n**Estimates along the curve** [eng:suppression:he]:\n- 3.21% helium: M1 estimate 94.5%, 90% band 84.4% to 98.4%; M2 extinction diameter 4.04 mm (90% band 2.55 mm to 4.37 mm)\n- 16.1% helium: M1 estimate 96.5%, 90% band 88.7% to 99%; M2 extinction diameter 4.18 mm (90% band 2.51 mm to 4.47 mm)\n- 28.9% helium: M1 estimate 97.8%, 90% band 91.4% to 99.5%; M2 extinction diameter 4.31 mm (90% band 2.48 mm to 4.58 mm)\n- 45% helium: M1 estimate 98.8%, 90% band 93.7% to 99.8%; M2 extinction diameter 4.49 mm (90% band 2.44 mm to 4.72 mm)\n\n**Tested conditions:** FLEX tested helium dilution only between 13% and 24% O₂ (0.69-1.01 atm). This habitat (21% O₂, 1.00 atm) is close enough to those tests (distance <= 2, ADR-0006) for helium fractions up to 45%. Gravity does not change these numbers; it only widens the band (ADR-0005). [eng:suppression:he]\n\n**Raw FLEX outcomes, 0.17 < O2 <= 0.22** (counted from the test records, no model; bins mix pressures and droplet sizes, so they show direction, not magnitude) [eng:suppression_reference]:\n- Heptane, no helium: 8 self-extinguished, 6 burned out (57.1% self-extinction)\n- Heptane, 0% to 20% helium: 3 self-extinguished, 3 burned out (50% self-extinction)\n- Heptane, 20% to 40% helium: 6 self-extinguished, 0 burned out (100% self-extinction)\n- Methanol, no helium: 15 self-extinguished, 0 burned out (100% self-extinction)\n- Methanol, 0% to 10% helium: 3 self-extinguished, 0 burned out (100% self-extinction)\n- Methanol, 10% to 30% helium: 5 self-extinguished, 0 burned out (100% self-extinction)\n- Methanol, 30% to 40% helium: 5 self-extinguished, 0 burned out (100% self-extinction)\n\n**CO₂ versus helium:** in these models both reach a 90% M1 estimate with no dilution, so the dose cannot tell them apart; compare the estimates along the two curves above instead [eng:suppression:co2] [eng:suppression:he]. This compares model curves inside tested conditions only; it is not a ranking of extinguishing agents.\n\n**Safety note:** CO₂ at these concentrations is dangerous to breathe. Spacecraft use portable CO₂ or water-mist extinguishers aimed at the fire, not cabin flooding. This shows how dilution affected flames in NASA's tests; it is not an operating procedure.",
@@ -4542,7 +4649,7 @@
       "question": "Could lunar dust trigger the smoke alarm?",
       "question_key": "could lunar dust trigger the smoke alarm",
       "habitat": "lunar_base",
-      "fingerprint": "9f92273d9bf62ed278b81ca255fe3305e0d79e1f680c3b6f6adba0627e28a0ac",
+      "fingerprint": "43e4a08ac29df33f72679d417c3612e3d687cc1d14fdb3be73a8ff985f88e76e",
       "intent": "detection",
       "mode_generated": "template",
       "answer_markdown": "**Short answer: these data cannot say.** The PSI files used here hold no lunar dust and no lunar dust simulant, and no data on which particle sizes a smoke detector responds to [eng:detection:lunar_dust] [eng:detection:detector_sensitivity].\n\n**What these data do not hold:**\n- No lunar dust or lunar dust simulant data exists in these PSI files. The only dust measured (DAFT) is Arizona Road Dust. So \"could lunar dust fool a smoke detector?\" is an open question here, not an answered one. [eng:detection:lunar_dust]\n- DAFT measured the total number and the total mass of dust particles, not their sizes. With no dust size distribution, smoke and dust sizes cannot be compared bin by bin, so no overlap is computed. [eng:detection:dust_sizes]\n- We have no cited source for which particle sizes ionization and light-scattering smoke detectors respond to, so the page does not show detector size ranges. [eng:detection:detector_sensitivity]\n\n**The one like-for-like comparison (diameter of average mass).** Both groups use the same size measure: total particle mass divided by total particle number, turned into the size of one ball. It is one number per test, not a size distribution, so it cannot show how much smoke and dust sizes overlap. Smoke from heated spacecraft materials (SAME-R): 88.7 to 1217 nm across test runs [eng:detection:same_r_runs_dam] [PSI-101]. Arizona Road Dust (DAFT): 1573 to 1716 nm across the dust bags [eng:detection:daft_ard_dam] [PSI-47]. The dust size assumes a density of 1 g/cm3 (water), as the DAFT workbook does (cell D20). Mineral dust is denser, so its real size is smaller than shown. The density of this dust is not in these files. [eng:detection:daft_ard_dam]\n\nThis test dust is Arizona Road Dust, not lunar dust, and a size number alone does not say whether an alarm would go off.\n\n**Scope:** Reduced scope. The planned chart of smoke sizes against dust sizes cannot be built: the dust experiment (DAFT) recorded only total dust number and mass, not sizes, and its dust is Arizona Road Dust. This page shows what the files do support: smoke size distributions, smoke sizes per test run, one like-for-like size comparison of smoke and dust, and a simulation of what gravity does to smoke. See ADR-0007. [eng:detection]",
@@ -4634,7 +4741,7 @@
       "question": "Is smoke in space different?",
       "question_key": "is smoke in space different",
       "habitat": "lunar_base",
-      "fingerprint": "b1fc02e2f39347225f947dffc8dbe70090efa0c9931bd447c4ad14dacba9e789",
+      "fingerprint": "89f69d52cee9682fcb03f1e9dc66a9acda3e77502435e65298d99b44092978af",
       "intent": "detection",
       "mode_generated": "template",
       "answer_markdown": "**Only a simulation speaks to this, and it uses a surrogate smoke.** PSI-115 is a computer model, not a measurement, with dibutyl phthalate as a stand-in (surrogate) for real smoke. In the simulation, microgravity keeps a larger share of particles above 20 µm than Earth gravity, in both cases:\n\n- Case 1 (8cm), Earth gravity (simulation, dibutyl phthalate surrogate, t = 7 s): 0.38% of the particle count above 20 µm, count median diameter 6116 nm [eng:detection:psi115_case1_earth]\n- Case 1 (8cm), microgravity (simulation, dibutyl phthalate surrogate, t = 7 s): 3.84% of the particle count above 20 µm, count median diameter 6710 nm [eng:detection:psi115_case1_micro]\n- Case 2 (10cm), Earth gravity (simulation, dibutyl phthalate surrogate, t = 7 s): 0.371% of the particle count above 20 µm, count median diameter 4907 nm [eng:detection:psi115_case2_earth]\n- Case 2 (10cm), microgravity (simulation, dibutyl phthalate surrogate, t = 7 s): 1.35% of the particle count above 20 µm, count median diameter 5695 nm [eng:detection:psi115_case2_micro]\n\n**What these data do not hold:**\n- The unit of the PSI-115 values could not be confirmed. Each simulated curve is shown as a share of its own count; totals are not compared. [eng:detection:simulation_units]\n- The PSI-115 model uses a stand-in smoke (dibutyl phthalate), not the SAME-R materials, and its particles are several micrometres across, much larger than most SAME-R smoke. It is shown on its own chart. [eng:detection:simulation_vs_experiment]\n\n**Measured smoke, on a different size measure.** For smoke from heated spacecraft materials (SAME-R), the per-material median of the middle size from instrument totals for unaged runs goes from 81.7 nm (Kapton) to 168 nm (Silicone) [eng:detection:same_r_runs_dg] [PSI-101]. That is a different size definition from the simulation's size classes, so the two are not compared number to number [eng:detection:size_definitions_disagree].\n\n**Scope:** Reduced scope. The planned chart of smoke sizes against dust sizes cannot be built: the dust experiment (DAFT) recorded only total dust number and mass, not sizes, and its dust is Arizona Road Dust. This page shows what the files do support: smoke size distributions, smoke sizes per test run, one like-for-like size comparison of smoke and dust, and a simulation of what gravity does to smoke. See ADR-0007. [eng:detection]",
@@ -4864,6 +4971,2721 @@
           },
           {
             "id": "PSI-115",
+            "resolved": true
+          }
+        ]
+      }
+    },
+    {
+      "question": "What changes between ISS and the lunar base?",
+      "question_key": "what changes between iss and the lunar base",
+      "habitat": "lunar_base",
+      "fingerprint": "3625b81faf55c1b1027c901c3bd6920013740e75b9b280e43db739ac12873809",
+      "intent": "compare",
+      "mode_generated": "template",
+      "answer_markdown": "**ISS vs Lunar base.** Moving from ISS to Lunar base changes gravity 0 m/s² → 1.62 m/s², pressure 14.7 psia → 8.2 psia and O₂ 21% → 34%. The flame regime changes from forced flow to mixed for every metric. M2, M4 and M5 lose their evidence at Lunar base (no estimate there). Where both sides have evidence, M1 goes from 93.9% to 20.1% and M3 goes from 97.2% to 87.2%. The 90% band is wider at Lunar base for M1 and M3. [eng:compare]\n\n**Metric by metric:**\n- **M1 – P(droplet flame self-extinguishes before burnout)** [eng:compare:M1]: ISS estimate 93.9%, 90% band 82.5% to 98.2%; Lunar base estimate 20.1%, 90% band 1.25% to 68.4%. Regime forced flow → mixed. Transfer confidence high → low.\n- **M2 – Extinction diameter** [eng:compare:M2]: ISS estimate 4 mm, 90% band 2.55 mm to 4.34 mm; Lunar base **no evidence** (outside every tested condition for this metric, so no number). Regime forced flow → mixed. No difference shown: Lunar base has no evidence for M2.\n- **M3 – P(gas flame self-extinguishes vs flow-terminated)** [eng:compare:M3]: ISS estimate 97.2%, 90% band 94.5% to 99.1%; Lunar base estimate 87.2%, 90% band 56% to 98.5%. Regime forced flow → mixed. Transfer confidence high → low.\n- **M4 – Solid material burn extent** [eng:compare:M4]: ISS outcome complete burn; Lunar base **no evidence** (outside every tested condition for this metric, so no number). Regime forced flow → mixed. No difference shown: Lunar base has no evidence for M4.\n- **M5 – Supported coflow window** [eng:compare:M5]: ISS estimate 100%, 90% band 0% to 100%; Lunar base **no evidence** (outside every tested condition for this metric, so no number). Regime forced flow → mixed. No difference shown: Lunar base has no evidence for M5.\n\n**How to read this:** for M1–M3 gravity never moves the estimate, because those tests had no flow variable; a change in those estimates comes from the cabin air (O₂ and pressure), and partial gravity only widens the 90% band. Where one side has no evidence, no difference is given.",
+      "citations": [
+        "eng:compare",
+        "eng:compare:M1",
+        "eng:compare:M2",
+        "eng:compare:M3",
+        "eng:compare:M4",
+        "eng:compare:M5"
+      ],
+      "numbers_used": [
+        0.0,
+        1.62,
+        14.7,
+        8.2,
+        21.0,
+        34.0,
+        93.9,
+        20.1,
+        97.2,
+        87.2,
+        90.0,
+        93.9,
+        90.0,
+        82.5,
+        98.2,
+        20.1,
+        90.0,
+        1.25,
+        68.4,
+        4.0,
+        90.0,
+        2.55,
+        4.34,
+        97.2,
+        90.0,
+        94.5,
+        99.1,
+        87.2,
+        90.0,
+        56.0,
+        98.5,
+        100.0,
+        90.0,
+        0.0,
+        100.0,
+        90.0
+      ],
+      "validated": true,
+      "validation": {
+        "ok": true,
+        "errors": [],
+        "numbers": [
+          {
+            "text": "0",
+            "value": 0.0,
+            "source": "physics.mc.regime_fractions.forced"
+          },
+          {
+            "text": "1.62",
+            "value": 1.62,
+            "source": "habitat.g_m_s2"
+          },
+          {
+            "text": "14.7",
+            "value": 14.7,
+            "source": "compare.a.p_psia"
+          },
+          {
+            "text": "8.2",
+            "value": 8.2,
+            "source": "habitat.p_psia"
+          },
+          {
+            "text": "21%",
+            "value": 21.0,
+            "source": "predictions.M5.reason~text"
+          },
+          {
+            "text": "34%",
+            "value": 34.0,
+            "source": "habitat.o2_percent"
+          },
+          {
+            "text": "93.9%",
+            "value": 93.9,
+            "source": "compare.summary~text"
+          },
+          {
+            "text": "20.1%",
+            "value": 20.1,
+            "source": "predictions.M4.reason~text"
+          },
+          {
+            "text": "97.2%",
+            "value": 97.2,
+            "source": "compare.summary~text"
+          },
+          {
+            "text": "87.2%",
+            "value": 87.2,
+            "source": "compare.summary~text"
+          },
+          {
+            "text": "90%",
+            "value": 90.0,
+            "source": "predictions.M1.transfer.basis~text"
+          },
+          {
+            "text": "93.9%",
+            "value": 93.9,
+            "source": "compare.summary~text"
+          },
+          {
+            "text": "90%",
+            "value": 90.0,
+            "source": "predictions.M1.transfer.basis~text"
+          },
+          {
+            "text": "82.5%",
+            "value": 82.5,
+            "source": "compare.metrics.M1.a.band90[0]"
+          },
+          {
+            "text": "98.2%",
+            "value": 98.2,
+            "source": "predictions.M3.band90[1]"
+          },
+          {
+            "text": "20.1%",
+            "value": 20.1,
+            "source": "predictions.M4.reason~text"
+          },
+          {
+            "text": "90%",
+            "value": 90.0,
+            "source": "predictions.M1.transfer.basis~text"
+          },
+          {
+            "text": "1.25%",
+            "value": 1.25,
+            "source": "predictions.M1.band90[0]"
+          },
+          {
+            "text": "68.4%",
+            "value": 68.4,
+            "source": "predictions.M1.band90[1]"
+          },
+          {
+            "text": "4",
+            "value": 4.0,
+            "source": "planner[3].rank"
+          },
+          {
+            "text": "90%",
+            "value": 90.0,
+            "source": "predictions.M1.transfer.basis~text"
+          },
+          {
+            "text": "2.55",
+            "value": 2.55,
+            "source": "compare.metrics.M2.a.band90[0]"
+          },
+          {
+            "text": "4.34",
+            "value": 4.34,
+            "source": "compare.metrics.M2.a.band90[1]"
+          },
+          {
+            "text": "97.2%",
+            "value": 97.2,
+            "source": "compare.summary~text"
+          },
+          {
+            "text": "90%",
+            "value": 90.0,
+            "source": "predictions.M1.transfer.basis~text"
+          },
+          {
+            "text": "94.5%",
+            "value": 94.5,
+            "source": "compare.metrics.M3.a.band90[0]"
+          },
+          {
+            "text": "99.1%",
+            "value": 99.1,
+            "source": "compare.metrics.M3.a.band90[1]"
+          },
+          {
+            "text": "87.2%",
+            "value": 87.2,
+            "source": "compare.summary~text"
+          },
+          {
+            "text": "90%",
+            "value": 90.0,
+            "source": "predictions.M1.transfer.basis~text"
+          },
+          {
+            "text": "56%",
+            "value": 56.0,
+            "source": "predictions.M1.inputs.p_atm"
+          },
+          {
+            "text": "98.5%",
+            "value": 98.5,
+            "source": "predictions.M3.band90[1]"
+          },
+          {
+            "text": "100%",
+            "value": 100.0,
+            "source": "planner[0].rationale~text"
+          },
+          {
+            "text": "90%",
+            "value": 90.0,
+            "source": "predictions.M1.transfer.basis~text"
+          },
+          {
+            "text": "0%",
+            "value": 0.0,
+            "source": "physics.mc.regime_fractions.forced"
+          },
+          {
+            "text": "100%",
+            "value": 100.0,
+            "source": "planner[0].rationale~text"
+          },
+          {
+            "text": "90%",
+            "value": 90.0,
+            "source": "predictions.M1.transfer.basis~text"
+          }
+        ],
+        "citations": [
+          {
+            "id": "eng:compare",
+            "resolved": true
+          },
+          {
+            "id": "eng:compare:M1",
+            "resolved": true
+          },
+          {
+            "id": "eng:compare:M2",
+            "resolved": true
+          },
+          {
+            "id": "eng:compare:M3",
+            "resolved": true
+          },
+          {
+            "id": "eng:compare:M4",
+            "resolved": true
+          },
+          {
+            "id": "eng:compare:M5",
+            "resolved": true
+          }
+        ]
+      }
+    },
+    {
+      "question": "Why is the lunar base band so wide?",
+      "question_key": "why is the lunar base band so wide",
+      "habitat": "lunar_base",
+      "fingerprint": "8a2f638a3110fe2cf99325f5d391cf00a66b8eee0f43068d4ed402b4048d657f",
+      "intent": "band",
+      "mode_generated": "template",
+      "answer_markdown": "Lunar base: 1.62 m/s² (0.165 g), 8.2 psia, 34% O₂, vent 10 cm/s, flame size 10 mm.\n\n**M1 – P(droplet flame self-extinguishes before burnout)**: estimate 20.1%, 90% band 1.25% to 68.4% [eng:M1]. The microgravity-only band is 3.9% to 48.2%. Transfer confidence: **low**.\n\n**What makes this band wide** [eng:drivers:M1]: the 90% band 1.25% to 68.4% split by source (rounded to 5%): Model uncertainty (limited tests): about 65% (from limited NASA tests); Gravity widening (honesty rule): about 25% (honesty rule for gravity); Buoyant velocity coefficient C_b: about 5% (engineering assumption, not PSI data); Flow-mixing coefficient k: 0% (it never reaches this band); Flame temperature rise dT/T: under 5% (engineering assumption, not PSI data); Flame size L: under 5% (engineering assumption, not PSI data); Not split between the inputs: under 5% (engineering assumption, not PSI data). **Biggest lever:** About 65% of this band comes from the model itself: 2 PSI-69 tests lie within the honesty-gate distance of this atmosphere. More tests near 34.0% O2 and 8.2 psia would shrink it the most. See Planner candidate #6. [eng:drivers:M1]\n\n**Why the band is wide (one input at a time):** The training tests had no buoyancy, so the band is widened ×1.64 for the 71.7% mixed and 28.3% buoyant share of flames. The largest atmosphere sensitivity is O₂ fraction: moving it from 0.31 to 0.37 moves the estimate from 35.3% to 10.4%. Among the physics constants, buoyancy coefficient C_b matters most: over 0.5 to 1.5 the band width goes from 62.6% to 75.2%. [eng:M1]\n\n**Regime: mixed.** For Lunar base the buoyant velocity is 25.5 cm/s against a vent flow of 10 cm/s, so the Richardson number Ri = u_b²/u_f² is 6.48 (forced Ri < 0.1, buoyant Ri > 10) [eng:physics]. Sampling the uncertain constants gives 0% forced, 71.7% mixed and 28.3% buoyant flames [eng:physics].\n\n**What would narrow it:** Planner rank 6: M1 at 3.71 m/s², 8.2 psia, 34% O₂, vent 20 cm/s (score 0.372) [eng:planner:6]. P(droplet flame self-extinguishes before burnout) at Mars gravity (0.378 g), 8.2 psia / 34% O2, vent 20 cm/s: the current 90% band is 0.64 wide, 93% of physics samples are in the mixed regime where neither 0 g nor 1 g data apply, and the atmosphere is close to the lunar/Mars base 8.2 psia / 34% O2 target (weight 1.00). It extends [PSI-69] [PSI-10] [PSI-159].\n\nNearest evidence [PSI-69]: Methanol, 34% O₂, 0.71 atm, completion [rec:PSI-69:FLEX:20]; Methanol, 30% O₂, 0.707 atm, completion [rec:PSI-69:FLEX:25]; Methanol, 30% O₂, 1.01 atm, completion [rec:PSI-69:FLEX:29].",
+      "citations": [
+        "eng:M1",
+        "eng:drivers:M1",
+        "eng:physics",
+        "eng:planner:6",
+        "PSI-69",
+        "PSI-10",
+        "PSI-159",
+        "rec:PSI-69:FLEX:20",
+        "rec:PSI-69:FLEX:25",
+        "rec:PSI-69:FLEX:29"
+      ],
+      "numbers_used": [
+        1.62,
+        0.165,
+        8.2,
+        34.0,
+        10.0,
+        10.0,
+        20.1,
+        90.0,
+        1.25,
+        68.4,
+        3.9,
+        48.2,
+        90.0,
+        1.25,
+        68.4,
+        5.0,
+        65.0,
+        25.0,
+        5.0,
+        0.0,
+        5.0,
+        5.0,
+        5.0,
+        65.0,
+        2.0,
+        34.0,
+        8.2,
+        6.0,
+        1.64,
+        71.7,
+        28.3,
+        0.31,
+        0.37,
+        35.3,
+        10.4,
+        0.5,
+        1.5,
+        62.6,
+        75.2,
+        25.5,
+        10.0,
+        6.48,
+        0.1,
+        10.0,
+        0.0,
+        71.7,
+        28.3,
+        6.0,
+        3.71,
+        8.2,
+        34.0,
+        20.0,
+        0.372,
+        0.378,
+        8.2,
+        34.0,
+        20.0,
+        90.0,
+        0.64,
+        93.0,
+        0.0,
+        1.0,
+        8.2,
+        34.0,
+        1.0,
+        34.0,
+        0.71,
+        30.0,
+        0.707,
+        30.0,
+        1.01
+      ],
+      "validated": true,
+      "validation": {
+        "ok": true,
+        "errors": [],
+        "numbers": [
+          {
+            "text": "1.62",
+            "value": 1.62,
+            "source": "habitat.g_m_s2"
+          },
+          {
+            "text": "0.165",
+            "value": 0.165,
+            "source": "habitat.g_over_g0"
+          },
+          {
+            "text": "8.2",
+            "value": 8.2,
+            "source": "habitat.p_psia"
+          },
+          {
+            "text": "34%",
+            "value": 34.0,
+            "source": "habitat.o2_percent"
+          },
+          {
+            "text": "10",
+            "value": 10.0,
+            "source": "habitat.u_cm_s"
+          },
+          {
+            "text": "10",
+            "value": 10.0,
+            "source": "habitat.u_cm_s"
+          },
+          {
+            "text": "20.1%",
+            "value": 20.1,
+            "source": "predictions.M4.reason~text"
+          },
+          {
+            "text": "90%",
+            "value": 90.0,
+            "source": "predictions.M1.transfer.basis~text"
+          },
+          {
+            "text": "1.25%",
+            "value": 1.25,
+            "source": "predictions.M1.band90[0]"
+          },
+          {
+            "text": "68.4%",
+            "value": 68.4,
+            "source": "predictions.M1.band90[1]"
+          },
+          {
+            "text": "3.9%",
+            "value": 3.9,
+            "source": "predictions.M1.ref_0g.band90[0]"
+          },
+          {
+            "text": "48.2%",
+            "value": 48.2,
+            "source": "predictions.M1.ref_0g.band90[1]"
+          },
+          {
+            "text": "90%",
+            "value": 90.0,
+            "source": "predictions.M1.transfer.basis~text"
+          },
+          {
+            "text": "1.25%",
+            "value": 1.25,
+            "source": "predictions.M1.band90[0]"
+          },
+          {
+            "text": "68.4%",
+            "value": 68.4,
+            "source": "predictions.M1.band90[1]"
+          },
+          {
+            "text": "5%",
+            "value": 5.0,
+            "source": "planner[4].rank"
+          },
+          {
+            "text": "65%",
+            "value": 65.0,
+            "source": "drivers.M1.sources[0].share_pct"
+          },
+          {
+            "text": "25%",
+            "value": 25.0,
+            "source": "drivers.M1.sources[1].share_pct"
+          },
+          {
+            "text": "5%",
+            "value": 5.0,
+            "source": "planner[4].rank"
+          },
+          {
+            "text": "0%",
+            "value": 0.0,
+            "source": "physics.mc.regime_fractions.forced"
+          },
+          {
+            "text": "5%",
+            "value": 5.0,
+            "source": "planner[4].rank"
+          },
+          {
+            "text": "5%",
+            "value": 5.0,
+            "source": "planner[4].rank"
+          },
+          {
+            "text": "5%",
+            "value": 5.0,
+            "source": "planner[4].rank"
+          },
+          {
+            "text": "65%",
+            "value": 65.0,
+            "source": "drivers.M1.sources[0].share_pct"
+          },
+          {
+            "text": "2",
+            "value": 2.0,
+            "source": "predictions.M1.transfer.basis~text"
+          },
+          {
+            "text": "34.0%",
+            "value": 34.0,
+            "source": "habitat.o2_percent"
+          },
+          {
+            "text": "8.2",
+            "value": 8.2,
+            "source": "habitat.p_psia"
+          },
+          {
+            "text": "6",
+            "value": 6.0,
+            "source": "predictions.M1.sensitivity[4].input_high"
+          },
+          {
+            "text": "1.64",
+            "value": 1.64,
+            "source": "predictions.M1.transfer.basis~text"
+          },
+          {
+            "text": "71.7%",
+            "value": 71.7,
+            "source": "predictions.M1.transfer.basis~text"
+          },
+          {
+            "text": "28.3%",
+            "value": 28.3,
+            "source": "physics.mc.regime_fractions.buoyant"
+          },
+          {
+            "text": "0.31",
+            "value": 0.31,
+            "source": "predictions.M1.sensitivity[0].input_low"
+          },
+          {
+            "text": "0.37",
+            "value": 0.37,
+            "source": "predictions.M1.sensitivity[0].input_high"
+          },
+          {
+            "text": "35.3%",
+            "value": 35.3,
+            "source": "predictions.M1.sensitivity[0].low"
+          },
+          {
+            "text": "10.4%",
+            "value": 10.4,
+            "source": "predictions.M1.sensitivity[0].high"
+          },
+          {
+            "text": "0.5",
+            "value": 0.5,
+            "source": "predictions.M1.sensitivity[2].input_low"
+          },
+          {
+            "text": "1.5",
+            "value": 1.5,
+            "source": "predictions.M1.sensitivity[2].input_high"
+          },
+          {
+            "text": "62.6%",
+            "value": 62.6,
+            "source": "predictions.M1.sensitivity[2].low"
+          },
+          {
+            "text": "75.2%",
+            "value": 75.2,
+            "source": "evidence[22].fuel~text"
+          },
+          {
+            "text": "25.5",
+            "value": 25.5,
+            "source": "physics.u_b_cm_s"
+          },
+          {
+            "text": "10",
+            "value": 10.0,
+            "source": "habitat.u_cm_s"
+          },
+          {
+            "text": "6.48",
+            "value": 6.48,
+            "source": "physics.ri"
+          },
+          {
+            "text": "0.1",
+            "value": 0.1,
+            "source": "design_implications[0]~text"
+          },
+          {
+            "text": "10",
+            "value": 10.0,
+            "source": "habitat.u_cm_s"
+          },
+          {
+            "text": "0%",
+            "value": 0.0,
+            "source": "physics.mc.regime_fractions.forced"
+          },
+          {
+            "text": "71.7%",
+            "value": 71.7,
+            "source": "predictions.M1.transfer.basis~text"
+          },
+          {
+            "text": "28.3%",
+            "value": 28.3,
+            "source": "physics.mc.regime_fractions.buoyant"
+          },
+          {
+            "text": "6",
+            "value": 6.0,
+            "source": "predictions.M1.sensitivity[4].input_high"
+          },
+          {
+            "text": "3.71",
+            "value": 3.71,
+            "source": "planner[2].g_m_s2"
+          },
+          {
+            "text": "8.2",
+            "value": 8.2,
+            "source": "habitat.p_psia"
+          },
+          {
+            "text": "34%",
+            "value": 34.0,
+            "source": "habitat.o2_percent"
+          },
+          {
+            "text": "20",
+            "value": 20.0,
+            "source": "predictions.M4.reason~text"
+          },
+          {
+            "text": "0.372",
+            "value": 0.372,
+            "source": "planner[5].score"
+          },
+          {
+            "text": "0.378",
+            "value": 0.378,
+            "source": "planner[2].rationale~text"
+          },
+          {
+            "text": "8.2",
+            "value": 8.2,
+            "source": "habitat.p_psia"
+          },
+          {
+            "text": "34%",
+            "value": 34.0,
+            "source": "habitat.o2_percent"
+          },
+          {
+            "text": "20",
+            "value": 20.0,
+            "source": "predictions.M4.reason~text"
+          },
+          {
+            "text": "90%",
+            "value": 90.0,
+            "source": "predictions.M1.transfer.basis~text"
+          },
+          {
+            "text": "0.64",
+            "value": 0.64,
+            "source": "planner[5].parts.band_width"
+          },
+          {
+            "text": "93%",
+            "value": 93.0,
+            "source": "planner[2].rationale~text"
+          },
+          {
+            "text": "0",
+            "value": 0.0,
+            "source": "physics.mc.regime_fractions.forced"
+          },
+          {
+            "text": "1",
+            "value": 1.0,
+            "source": "metrics.M4.label~text"
+          },
+          {
+            "text": "8.2",
+            "value": 8.2,
+            "source": "habitat.p_psia"
+          },
+          {
+            "text": "34%",
+            "value": 34.0,
+            "source": "habitat.o2_percent"
+          },
+          {
+            "text": "1.00",
+            "value": 1.0,
+            "source": "metrics.M4.label~text"
+          },
+          {
+            "text": "34%",
+            "value": 34.0,
+            "source": "habitat.o2_percent"
+          },
+          {
+            "text": "0.71",
+            "value": 0.71,
+            "source": "predictions.M1.sensitivity[5].high"
+          },
+          {
+            "text": "30%",
+            "value": 30.0,
+            "source": "evidence[8].fuel~text"
+          },
+          {
+            "text": "0.707",
+            "value": 0.707,
+            "source": "predictions.M1.sensitivity[5].high"
+          },
+          {
+            "text": "30%",
+            "value": 30.0,
+            "source": "evidence[8].fuel~text"
+          },
+          {
+            "text": "1.01",
+            "value": 1.01,
+            "source": "predictions.M2.reason~text"
+          }
+        ],
+        "citations": [
+          {
+            "id": "eng:M1",
+            "resolved": true
+          },
+          {
+            "id": "eng:drivers:M1",
+            "resolved": true
+          },
+          {
+            "id": "eng:physics",
+            "resolved": true
+          },
+          {
+            "id": "eng:planner:6",
+            "resolved": true
+          },
+          {
+            "id": "PSI-69",
+            "resolved": true
+          },
+          {
+            "id": "PSI-10",
+            "resolved": true
+          },
+          {
+            "id": "PSI-159",
+            "resolved": true
+          },
+          {
+            "id": "rec:PSI-69:FLEX:20",
+            "resolved": true
+          },
+          {
+            "id": "rec:PSI-69:FLEX:25",
+            "resolved": true
+          },
+          {
+            "id": "rec:PSI-69:FLEX:29",
+            "resolved": true
+          }
+        ]
+      }
+    },
+    {
+      "question": "How do you know it works?",
+      "question_key": "how do you know it works",
+      "habitat": "lunar_base",
+      "fingerprint": "528739f352d41a3f3a4ef3eaba41f9d33706d0baccafe0d72fb50d9243b7f04a",
+      "intent": "trust",
+      "mode_generated": "template",
+      "answer_markdown": "**How we check it: hide tests the model was trained on, then see if its bands catch them.** Each tested atmosphere is hidden in turn, the model is refitted without it, and the app is asked about that atmosphere with the refitted model (same honesty gate, same band). [eng:holdout]\n\n**Bands, one tested atmosphere hidden at a time:** the 90% band held for 208 of 222 (93.7%, 90% interval 90.4% to 95.9%) held-out groups; the target is 90% [eng:holdout]. That headline uses a lenient rule for small groups, so the strict rate and the pooled checks are next to it:\n- **M1 – P(droplet flame self-extinguishes before burnout)** (PSI-69): band held for 72 of 74 (97.3%, 90% interval 92.2% to 99.1%); strict rule 7 of 74 (9.46%, 90% interval 5.21% to 16.6%); pooled Brier score 0.0827 vs 0.115 for the training average (better); lower is better.\n- **M2 – Extinction diameter** (PSI-69): band held for 58 of 65 (89.2%, 90% interval 81.3% to 94.1%); single diameters inside their own band 134 of 158 (84.8%, 90% interval 79.5% to 88.9%).\n- **M3 – P(gas flame self-extinguishes vs flow-terminated)** (PSI-159): band held for 78 of 83 (94%, 90% interval 88.1% to 97%); strict rule 4 of 83 (4.82%, 90% interval 2.18% to 10.3%); pooled Brier score 0.175 vs 0.182 for the training average (better); lower is better.\n\n**Hit rule (M1, M3):** Observed share of self-extinctions with a 90% Wilson interval; hit when that interval overlaps the predicted 90% band (lenient for groups of 1-3 tests). strict_hit: the observed share itself is inside the band. [eng:holdout]\n\n**Is \"no evidence\" the right call?** One atmosphere at a time never tests that, because every hidden group still had a tested neighbour. The wide check does: Every tested atmosphere in the same 0.10-wide O2 band is hidden at once, so an atmosphere far from the rest loses its neighbours. This checks the 'no evidence' side of the gate, which the primary test (one atmosphere at a time) almost never reaches. [eng:holdout] It gave \"no evidence\" for 16 groups; for 1 of them the band, had it been shown, would have missed. So in these data the gate was cautious rather than wrong: it mostly held back bands that would have been right. Per metric:\n- **M1**: 67 covered, 7 no evidence, 0 skipped; band held for 63 of 67 (94%, 90% interval 87.4% to 97.3%); pooled Brier 0.0916 vs 0.116 for the training average (better).\n- **M2**: 63 covered, 2 no evidence, 0 skipped; band held for 49 of 63 (77.8%, 90% interval 68.1% to 85.1%); single diameters inside their band 112 of 156 (71.8%, 90% interval 65.5% to 77.3%).\n- **M3**: 9 covered, 7 no evidence, 67 skipped (too few remaining tests (or one outcome only) to refit); band held for 9 of 9 (100%, 90% interval 76.9% to 100%); pooled Brier 0.176 vs 0.1 for the training average (worse); **weak test**.\n\n**Worst misses (largest gap; all small groups):**\n- M1 at 18% O₂, 14.8 psia, helium 0.15: 0 of 2 self-extinguished (2 tests) vs band 68.8% to 91.9% [eng:holdout:M1-o2_0.180-p_1.01-co2_0.000-he_0.150] [rec:PSI-69:FLEX:233] [rec:PSI-69:FLEX:234]\n- M2 at 16% O₂, 14.8 psia, CO₂ 0.25: median observed diameter 1.52 mm (3 tests) vs band 1.77 to 2.74 mm [eng:holdout:M2-o2_0.160-p_1.01-co2_0.250-he_0.000] [rec:PSI-69:FLEX:158] [rec:PSI-69:FLEX:159] [rec:PSI-69:FLEX:160]\n- M3 at 35.4% O₂, 7.35 psia: 0 of 2 self-extinguished (2 tests) vs band 69.9% to 91.6% [eng:holdout:M3-o2_0.354-p_0.50] [rec:PSI-159:CFI-G_Normal_Flames:37] [rec:PSI-159:CFI-G_Normal_Flames:38]\n\n**Across investigations (SAFFIRE-II hindcast, M4):** 7 of 9 right [eng:holdout:saffire]. Not discriminative: the bridge scores 7/9, but the constant rule '1 g always burns more' also scores 7/9. It checks the direction of the gravity effect, not whether the bridge can tell samples apart. [eng:holdout:saffire]\n\n**Not changed by this test:** the bands and the gate stay as they are; any change needs its own decision record (ADR-0009). The full results are on the *Can I trust it?* page.",
+      "citations": [
+        "eng:holdout",
+        "eng:holdout:M1-o2_0.180-p_1.01-co2_0.000-he_0.150",
+        "rec:PSI-69:FLEX:233",
+        "rec:PSI-69:FLEX:234",
+        "eng:holdout:M2-o2_0.160-p_1.01-co2_0.250-he_0.000",
+        "rec:PSI-69:FLEX:158",
+        "rec:PSI-69:FLEX:159",
+        "rec:PSI-69:FLEX:160",
+        "eng:holdout:M3-o2_0.354-p_0.50",
+        "rec:PSI-159:CFI-G_Normal_Flames:37",
+        "rec:PSI-159:CFI-G_Normal_Flames:38",
+        "eng:holdout:saffire",
+        "PSI-69",
+        "PSI-159"
+      ],
+      "numbers_used": [
+        90.0,
+        208.0,
+        222.0,
+        93.7,
+        90.0,
+        90.4,
+        95.9,
+        90.0,
+        72.0,
+        74.0,
+        97.3,
+        90.0,
+        92.2,
+        99.1,
+        7.0,
+        74.0,
+        9.46,
+        90.0,
+        5.21,
+        16.6,
+        0.0827,
+        0.115,
+        58.0,
+        65.0,
+        89.2,
+        90.0,
+        81.3,
+        94.1,
+        134.0,
+        158.0,
+        84.8,
+        90.0,
+        79.5,
+        88.9,
+        78.0,
+        83.0,
+        94.0,
+        90.0,
+        88.1,
+        97.0,
+        4.0,
+        83.0,
+        4.82,
+        90.0,
+        2.18,
+        10.3,
+        0.175,
+        0.182,
+        90.0,
+        90.0,
+        1.0,
+        3.0,
+        0.1,
+        16.0,
+        1.0,
+        67.0,
+        7.0,
+        0.0,
+        63.0,
+        67.0,
+        94.0,
+        90.0,
+        87.4,
+        97.3,
+        0.0916,
+        0.116,
+        63.0,
+        2.0,
+        0.0,
+        49.0,
+        63.0,
+        77.8,
+        90.0,
+        68.1,
+        85.1,
+        112.0,
+        156.0,
+        71.8,
+        90.0,
+        65.5,
+        77.3,
+        9.0,
+        7.0,
+        67.0,
+        9.0,
+        9.0,
+        100.0,
+        90.0,
+        76.9,
+        100.0,
+        0.176,
+        0.1,
+        18.0,
+        14.8,
+        0.15,
+        0.0,
+        2.0,
+        2.0,
+        68.8,
+        91.9,
+        16.0,
+        14.8,
+        0.25,
+        1.52,
+        3.0,
+        1.77,
+        2.74,
+        35.4,
+        7.35,
+        0.0,
+        2.0,
+        2.0,
+        69.9,
+        91.6,
+        7.0,
+        9.0,
+        7.0,
+        9.0,
+        1.0,
+        7.0,
+        9.0
+      ],
+      "validated": true,
+      "validation": {
+        "ok": true,
+        "errors": [],
+        "numbers": [
+          {
+            "text": "90%",
+            "value": 90.0,
+            "source": "predictions.M1.transfer.basis~text"
+          },
+          {
+            "text": "208",
+            "value": 208.0,
+            "source": "holdout.overall.band_coverage.k"
+          },
+          {
+            "text": "222",
+            "value": 222.0,
+            "source": "holdout.overall.n_groups"
+          },
+          {
+            "text": "93.7%",
+            "value": 93.7,
+            "source": "holdout.overall.band_coverage.rate"
+          },
+          {
+            "text": "90%",
+            "value": 90.0,
+            "source": "predictions.M1.transfer.basis~text"
+          },
+          {
+            "text": "90.4%",
+            "value": 90.4,
+            "source": "predictions.M1.transfer.basis~text"
+          },
+          {
+            "text": "95.9%",
+            "value": 95.9,
+            "source": "planner[3].parts.band_width"
+          },
+          {
+            "text": "90%",
+            "value": 90.0,
+            "source": "predictions.M1.transfer.basis~text"
+          },
+          {
+            "text": "72",
+            "value": 72.0,
+            "source": "predictions.M1.transfer.basis~text"
+          },
+          {
+            "text": "74",
+            "value": 74.0,
+            "source": "holdout.metrics.M1.n_groups"
+          },
+          {
+            "text": "97.3%",
+            "value": 97.3,
+            "source": "holdout.metrics.M1.band_coverage.rate"
+          },
+          {
+            "text": "90%",
+            "value": 90.0,
+            "source": "predictions.M1.transfer.basis~text"
+          },
+          {
+            "text": "92.2%",
+            "value": 92.2,
+            "source": "rank[0].parts.n_tests"
+          },
+          {
+            "text": "99.1%",
+            "value": 99.1,
+            "source": "holdout.metrics.M1.band_coverage.interval90[1]"
+          },
+          {
+            "text": "7",
+            "value": 7.0,
+            "source": "holdout.metrics.M1.strict_coverage.k"
+          },
+          {
+            "text": "74",
+            "value": 74.0,
+            "source": "holdout.metrics.M1.n_groups"
+          },
+          {
+            "text": "9.46%",
+            "value": 9.46,
+            "source": "holdout.metrics.M1.strict_coverage.rate"
+          },
+          {
+            "text": "90%",
+            "value": 90.0,
+            "source": "predictions.M1.transfer.basis~text"
+          },
+          {
+            "text": "5.21%",
+            "value": 5.21,
+            "source": "holdout.metrics.M1.strict_coverage.interval90[0]"
+          },
+          {
+            "text": "16.6%",
+            "value": 16.6,
+            "source": "holdout.metrics.M1.strict_coverage.interval90[1]"
+          },
+          {
+            "text": "0.0827",
+            "value": 0.0827,
+            "source": "holdout.metrics.M1.brier_covered"
+          },
+          {
+            "text": "0.115",
+            "value": 0.115,
+            "source": "holdout.metrics.M1.brier_baseline_covered"
+          },
+          {
+            "text": "58",
+            "value": 58.0,
+            "source": "holdout.metrics.M2.band_coverage.k"
+          },
+          {
+            "text": "65",
+            "value": 65.0,
+            "source": "holdout.metrics.M2.n_groups"
+          },
+          {
+            "text": "89.2%",
+            "value": 89.2,
+            "source": "holdout.metrics.M2.band_coverage.rate"
+          },
+          {
+            "text": "90%",
+            "value": 90.0,
+            "source": "predictions.M1.transfer.basis~text"
+          },
+          {
+            "text": "81.3%",
+            "value": 81.3,
+            "source": "holdout.metrics.M2.band_coverage.interval90[0]"
+          },
+          {
+            "text": "94.1%",
+            "value": 94.1,
+            "source": "holdout.overall.band_coverage.rate"
+          },
+          {
+            "text": "134",
+            "value": 134.0,
+            "source": "holdout.metrics.M2.tests_inside_band_covered.k"
+          },
+          {
+            "text": "158",
+            "value": 158.0,
+            "source": "predictions.M2.n_train"
+          },
+          {
+            "text": "84.8%",
+            "value": 84.8,
+            "source": "records[1].conditions.o2_burner_stream[1]"
+          },
+          {
+            "text": "90%",
+            "value": 90.0,
+            "source": "predictions.M1.transfer.basis~text"
+          },
+          {
+            "text": "79.5%",
+            "value": 79.5,
+            "source": "holdout.metrics.M2.tests_inside_band_covered.interval90[0]"
+          },
+          {
+            "text": "88.9%",
+            "value": 88.9,
+            "source": "holdout.metrics.M2.band_coverage.rate"
+          },
+          {
+            "text": "78",
+            "value": 78.0,
+            "source": "holdout.metrics.M3.band_coverage.k"
+          },
+          {
+            "text": "83",
+            "value": 83.0,
+            "source": "holdout.metrics.M3.n_groups"
+          },
+          {
+            "text": "94%",
+            "value": 94.0,
+            "source": "holdout.overall.band_coverage.rate"
+          },
+          {
+            "text": "90%",
+            "value": 90.0,
+            "source": "predictions.M1.transfer.basis~text"
+          },
+          {
+            "text": "88.1%",
+            "value": 88.1,
+            "source": "predictions.M3.sensitivity[1].low"
+          },
+          {
+            "text": "97%",
+            "value": 97.0,
+            "source": "holdout.metrics.M1.band_coverage.rate"
+          },
+          {
+            "text": "4",
+            "value": 4.0,
+            "source": "planner[3].rank"
+          },
+          {
+            "text": "83",
+            "value": 83.0,
+            "source": "holdout.metrics.M3.n_groups"
+          },
+          {
+            "text": "4.82%",
+            "value": 4.82,
+            "source": "holdout.metrics.M3.strict_coverage.rate"
+          },
+          {
+            "text": "90%",
+            "value": 90.0,
+            "source": "predictions.M1.transfer.basis~text"
+          },
+          {
+            "text": "2.18%",
+            "value": 2.18,
+            "source": "holdout.metrics.M3.strict_coverage.interval90[0]"
+          },
+          {
+            "text": "10.3%",
+            "value": 10.3,
+            "source": "holdout.metrics.M1.worst_misses[1].atmosphere.p_psia"
+          },
+          {
+            "text": "0.175",
+            "value": 0.175,
+            "source": "holdout.metrics.M3.brier_covered"
+          },
+          {
+            "text": "0.182",
+            "value": 0.182,
+            "source": "planner[6].score"
+          },
+          {
+            "text": "90%",
+            "value": 90.0,
+            "source": "predictions.M1.transfer.basis~text"
+          },
+          {
+            "text": "90%",
+            "value": 90.0,
+            "source": "predictions.M1.transfer.basis~text"
+          },
+          {
+            "text": "1",
+            "value": 1.0,
+            "source": "metrics.M4.label~text"
+          },
+          {
+            "text": "3",
+            "value": 3.0,
+            "source": "predictions.M1.sensitivity[4].input_low"
+          },
+          {
+            "text": "0.10",
+            "value": 0.1,
+            "source": "design_implications[0]~text"
+          },
+          {
+            "text": "16",
+            "value": 16.0,
+            "source": "holdout.wide_check.overall.n_not_covered"
+          },
+          {
+            "text": "1",
+            "value": 1.0,
+            "source": "metrics.M4.label~text"
+          },
+          {
+            "text": "67",
+            "value": 67.0,
+            "source": "holdout.wide_check.overall.n_skipped"
+          },
+          {
+            "text": "7",
+            "value": 7.0,
+            "source": "holdout.metrics.M1.strict_coverage.k"
+          },
+          {
+            "text": "0",
+            "value": 0.0,
+            "source": "physics.mc.regime_fractions.forced"
+          },
+          {
+            "text": "63",
+            "value": 63.0,
+            "source": "holdout.wide_check.metrics.M1.band_coverage.k"
+          },
+          {
+            "text": "67",
+            "value": 67.0,
+            "source": "holdout.wide_check.overall.n_skipped"
+          },
+          {
+            "text": "94%",
+            "value": 94.0,
+            "source": "holdout.overall.band_coverage.rate"
+          },
+          {
+            "text": "90%",
+            "value": 90.0,
+            "source": "predictions.M1.transfer.basis~text"
+          },
+          {
+            "text": "87.4%",
+            "value": 87.4,
+            "source": "predictions.M3.estimate"
+          },
+          {
+            "text": "97.3%",
+            "value": 97.3,
+            "source": "holdout.metrics.M1.band_coverage.rate"
+          },
+          {
+            "text": "0.0916",
+            "value": 0.0916,
+            "source": "holdout.wide_check.metrics.M1.brier_covered"
+          },
+          {
+            "text": "0.116",
+            "value": 0.116,
+            "source": "holdout.wide_check.metrics.M1.brier_baseline_covered"
+          },
+          {
+            "text": "63",
+            "value": 63.0,
+            "source": "holdout.wide_check.metrics.M1.band_coverage.k"
+          },
+          {
+            "text": "2",
+            "value": 2.0,
+            "source": "predictions.M1.transfer.basis~text"
+          },
+          {
+            "text": "0",
+            "value": 0.0,
+            "source": "physics.mc.regime_fractions.forced"
+          },
+          {
+            "text": "49",
+            "value": 49.0,
+            "source": "holdout.wide_check.metrics.M2.band_coverage.k"
+          },
+          {
+            "text": "63",
+            "value": 63.0,
+            "source": "holdout.wide_check.metrics.M1.band_coverage.k"
+          },
+          {
+            "text": "77.8%",
+            "value": 77.8,
+            "source": "holdout.metrics.M3.band_coverage.k"
+          },
+          {
+            "text": "90%",
+            "value": 90.0,
+            "source": "predictions.M1.transfer.basis~text"
+          },
+          {
+            "text": "68.1%",
+            "value": 68.1,
+            "source": "predictions.M1.band90[1]"
+          },
+          {
+            "text": "85.1%",
+            "value": 85.1,
+            "source": "predictions.M5.transfer.basis~text"
+          },
+          {
+            "text": "112",
+            "value": 112.0,
+            "source": "holdout.wide_check.metrics.M2.tests_inside_band_covered.k"
+          },
+          {
+            "text": "156",
+            "value": 156.0,
+            "source": "holdout.wide_check.metrics.M2.tests_inside_band_covered.n"
+          },
+          {
+            "text": "71.8%",
+            "value": 71.8,
+            "source": "predictions.M1.transfer.basis~text"
+          },
+          {
+            "text": "90%",
+            "value": 90.0,
+            "source": "predictions.M1.transfer.basis~text"
+          },
+          {
+            "text": "65.5%",
+            "value": 65.5,
+            "source": "holdout.wide_check.metrics.M2.tests_inside_band_covered.interval90[0]"
+          },
+          {
+            "text": "77.3%",
+            "value": 77.3,
+            "source": "holdout.wide_check.metrics.M2.tests_inside_band_covered.interval90[1]"
+          },
+          {
+            "text": "9",
+            "value": 9.0,
+            "source": "predictions.M4.n_train"
+          },
+          {
+            "text": "7",
+            "value": 7.0,
+            "source": "holdout.metrics.M1.strict_coverage.k"
+          },
+          {
+            "text": "67",
+            "value": 67.0,
+            "source": "holdout.wide_check.overall.n_skipped"
+          },
+          {
+            "text": "9",
+            "value": 9.0,
+            "source": "predictions.M4.n_train"
+          },
+          {
+            "text": "9",
+            "value": 9.0,
+            "source": "predictions.M4.n_train"
+          },
+          {
+            "text": "100%",
+            "value": 100.0,
+            "source": "planner[0].rationale~text"
+          },
+          {
+            "text": "90%",
+            "value": 90.0,
+            "source": "predictions.M1.transfer.basis~text"
+          },
+          {
+            "text": "76.9%",
+            "value": 76.9,
+            "source": "holdout.wide_check.metrics.M3.band_coverage.interval90[0]"
+          },
+          {
+            "text": "100%",
+            "value": 100.0,
+            "source": "planner[0].rationale~text"
+          },
+          {
+            "text": "0.176",
+            "value": 0.176,
+            "source": "holdout.wide_check.metrics.M3.brier_covered"
+          },
+          {
+            "text": "0.1",
+            "value": 0.1,
+            "source": "design_implications[0]~text"
+          },
+          {
+            "text": "18%",
+            "value": 18.0,
+            "source": "records[1].conditions.o2[0]"
+          },
+          {
+            "text": "14.8",
+            "value": 14.8,
+            "source": "holdout.metrics.M1.worst_misses[0].atmosphere.p_psia"
+          },
+          {
+            "text": "0.15",
+            "value": 0.15,
+            "source": "evidence[30].o2_mole_fraction"
+          },
+          {
+            "text": "0",
+            "value": 0.0,
+            "source": "physics.mc.regime_fractions.forced"
+          },
+          {
+            "text": "2",
+            "value": 2.0,
+            "source": "predictions.M1.transfer.basis~text"
+          },
+          {
+            "text": "2",
+            "value": 2.0,
+            "source": "predictions.M1.transfer.basis~text"
+          },
+          {
+            "text": "68.8%",
+            "value": 68.8,
+            "source": "holdout.metrics.M1.worst_misses[0].band90[0]"
+          },
+          {
+            "text": "91.9%",
+            "value": 91.9,
+            "source": "holdout.metrics.M1.band_coverage.interval90[0]"
+          },
+          {
+            "text": "16%",
+            "value": 16.0,
+            "source": "holdout.wide_check.overall.n_not_covered"
+          },
+          {
+            "text": "14.8",
+            "value": 14.8,
+            "source": "holdout.metrics.M1.worst_misses[0].atmosphere.p_psia"
+          },
+          {
+            "text": "0.25",
+            "value": 0.25,
+            "source": "holdout.metrics.M2.worst_misses[0].atmosphere.co2"
+          },
+          {
+            "text": "1.52",
+            "value": 1.52,
+            "source": "evidence[29].extinction_diameter_mm"
+          },
+          {
+            "text": "3",
+            "value": 3.0,
+            "source": "predictions.M1.sensitivity[4].input_low"
+          },
+          {
+            "text": "1.77",
+            "value": 1.77,
+            "source": "holdout.metrics.M2.worst_misses[0].band90[0]"
+          },
+          {
+            "text": "2.74",
+            "value": 2.74,
+            "source": "holdout.metrics.M2.worst_misses[0].band90[1]"
+          },
+          {
+            "text": "35.4%",
+            "value": 35.4,
+            "source": "predictions.M1.sensitivity[0].low"
+          },
+          {
+            "text": "7.35",
+            "value": 7.35,
+            "source": "holdout.metrics.M3.worst_misses[0].atmosphere.p_psia"
+          },
+          {
+            "text": "0",
+            "value": 0.0,
+            "source": "physics.mc.regime_fractions.forced"
+          },
+          {
+            "text": "2",
+            "value": 2.0,
+            "source": "predictions.M1.transfer.basis~text"
+          },
+          {
+            "text": "2",
+            "value": 2.0,
+            "source": "predictions.M1.transfer.basis~text"
+          },
+          {
+            "text": "69.9%",
+            "value": 69.9,
+            "source": "planner[3].parts.habitat_weight"
+          },
+          {
+            "text": "91.6%",
+            "value": 91.6,
+            "source": "holdout.metrics.M1.worst_misses[0].band90[1]"
+          },
+          {
+            "text": "7",
+            "value": 7.0,
+            "source": "holdout.metrics.M1.strict_coverage.k"
+          },
+          {
+            "text": "9",
+            "value": 9.0,
+            "source": "predictions.M4.n_train"
+          },
+          {
+            "text": "7",
+            "value": 7.0,
+            "source": "holdout.metrics.M1.strict_coverage.k"
+          },
+          {
+            "text": "9",
+            "value": 9.0,
+            "source": "predictions.M4.n_train"
+          },
+          {
+            "text": "1",
+            "value": 1.0,
+            "source": "metrics.M4.label~text"
+          },
+          {
+            "text": "7",
+            "value": 7.0,
+            "source": "holdout.metrics.M1.strict_coverage.k"
+          },
+          {
+            "text": "9",
+            "value": 9.0,
+            "source": "predictions.M4.n_train"
+          }
+        ],
+        "citations": [
+          {
+            "id": "eng:holdout",
+            "resolved": true
+          },
+          {
+            "id": "eng:holdout:M1-o2_0.180-p_1.01-co2_0.000-he_0.150",
+            "resolved": true
+          },
+          {
+            "id": "rec:PSI-69:FLEX:233",
+            "resolved": true
+          },
+          {
+            "id": "rec:PSI-69:FLEX:234",
+            "resolved": true
+          },
+          {
+            "id": "eng:holdout:M2-o2_0.160-p_1.01-co2_0.250-he_0.000",
+            "resolved": true
+          },
+          {
+            "id": "rec:PSI-69:FLEX:158",
+            "resolved": true
+          },
+          {
+            "id": "rec:PSI-69:FLEX:159",
+            "resolved": true
+          },
+          {
+            "id": "rec:PSI-69:FLEX:160",
+            "resolved": true
+          },
+          {
+            "id": "eng:holdout:M3-o2_0.354-p_0.50",
+            "resolved": true
+          },
+          {
+            "id": "rec:PSI-159:CFI-G_Normal_Flames:37",
+            "resolved": true
+          },
+          {
+            "id": "rec:PSI-159:CFI-G_Normal_Flames:38",
+            "resolved": true
+          },
+          {
+            "id": "eng:holdout:saffire",
+            "resolved": true
+          },
+          {
+            "id": "PSI-69",
+            "resolved": true
+          },
+          {
+            "id": "PSI-159",
+            "resolved": true
+          }
+        ]
+      }
+    },
+    {
+      "question": "What should a lunar base designer know about fire?",
+      "question_key": "what should a lunar base designer know about fire",
+      "habitat": "lunar_base",
+      "fingerprint": "d7c147355e3c94d2fcb810d8070eb4b512933094aeebef0b5188e41da41c27e5",
+      "intent": "briefing",
+      "mode_generated": "template",
+      "answer_markdown": "**Fire-safety briefing: what the PSI data can and cannot say here.** Lunar base: gravity 1.62 m/s², pressure 8.2 psia, O₂ 34%, vent speed 10 cm/s (assumed), flame size 10 mm (assumed). [eng:briefing]\n\n**Verdict per pillar** (each follows a written rule, ADR-0010):\n- **Prevention: partial.** M3 (gas flame self-extinction) is covered at this habitat; M4 (SAFFIRE solid-material burn extent) has no evidence here. Transfer confidence is low for M3 (the engine's own rating of how well the tests carry over to this habitat; see each metric's transfer note). [eng:M3] [eng:M4] [PSI-159] [PSI-99]\n- **Flame behaviour: partial.** M1 (droplet flame self-extinction) is covered at this habitat; M2 (droplet extinction diameter) and M5 (SPICE coflow flame window) have no evidence here. Transfer confidence is low for M1 (the engine's own rating of how well the tests carry over to this habitat; see each metric's transfer note). [eng:M1] [eng:M2] [eng:M5] [PSI-107] [PSI-69]\n- **Detection: partial.** Smoke particle sizes from heated spacecraft materials were measured (SAME-R, PSI-101) and one smoke-versus-dust size comparison exists (Arizona Road Dust, DAFT, PSI-47), but there are no lunar dust data and no cited source for which particle sizes detectors respond to. This evidence does not depend on the habitat's pressure or O₂. Only the PSI-115 simulation is about gravity, and it covers only Earth gravity and microgravity; 1.62 m/s² lies between them and was not simulated. [eng:detection] [eng:detection:lunar_dust] [eng:detection:detector_sensitivity] [PSI-101] [PSI-47] [PSI-115]\n- **Suppression: no evidence.** No CO₂ or helium dilution point has evidence at this atmosphere: FLEX tested dilution only at lower O₂ levels. [eng:suppression:co2] [eng:suppression:he] [PSI-69]\n\n**Numbers the evidence supports** (covered metrics only):\n- M1 P(droplet flame self-extinguishes before burnout): 20.1% (90% band 1.25% to 68.4%); transfer confidence low. [eng:M1] [PSI-69]\n- M3 P(gas flame self-extinguishes vs flow-terminated): 87.2% (90% band 56% to 98.5%); transfer confidence low. [eng:M3] [PSI-159]\n\n**What drives the uncertainty:**\n- About 65% of this band comes from the model itself: 2 PSI-69 tests lie within the honesty-gate distance of this atmosphere. More tests near 34.0% O2 and 8.2 psia would shrink it the most. See Planner candidate #6. [eng:drivers:M1] [eng:planner:6]\n- About 60% of this band comes from the model itself: 37 PSI-159 tests lie within the honesty-gate distance of this atmosphere. More tests near 34.0% O2 and 8.2 psia would shrink it the most. See Planner candidate #10. [eng:drivers:M3] [eng:planner:10]\n\n**Known gaps** (no number is given for these):\n- M2 Extinction diameter: no evidence at this habitat. Nearest tested atmosphere: 30% O₂ at 14.8 psia (PSI-69, 2 tests), atmosphere distance 2.14. Rule: Covered when the habitat is within distance 2 of a tested point in O2, pressure, CO2 and helium (about +/-0.10 O2 mole fraction, a factor of ~1.8 in pressure, or +/-0.20 CO2 or helium mole fraction). A CO2- or helium-diluted habitat is compared only with tests that used that diluent. Habitat air has no CO2 or helium unless a diluent is chosen (ADR-0006). [eng:M2] [PSI-69]\n- M4 Solid material burn extent: no evidence at this habitat. Nearest tested atmosphere: 22.1% O₂ at 14.7 psia (PSI-99, 6 tests), atmosphere distance 3.07. That point is partly assumed: pressure not in the PSI table; ~1 atm assumed. Rule: Covered only inside the SAFFIRE-II tested box (O2 20-24%, 0.9-1.1 atm). [eng:M4] [PSI-99]\n- M5 Supported coflow window: no evidence at this habitat. Nearest tested atmosphere: 21% O₂ at 14.7 psia (PSI-107, 431 tests), atmosphere distance 3.25. That point is partly assumed: SPICE table records no atmosphere; ISS cabin air (~21% O2, ~1 atm) assumed. Rule: Covered only inside ISS-cabin-like air (O2 19-23.5%, 0.9-1.1 atm). [eng:M5] [PSI-107]\n- No lunar dust or lunar dust simulant data exists in these PSI files. The only dust measured (DAFT) is Arizona Road Dust. So \"could lunar dust fool a smoke detector?\" is an open question here, not an answered one. [eng:detection:lunar_dust]\n- We have no cited source for which particle sizes ionization and light-scattering smoke detectors respond to, so the page does not show detector size ranges. [eng:detection:detector_sensitivity]\n- FLEX tested CO₂ dilution only between 14% and 24% O₂ (0.69-3.05 atm); at 34% O₂ and 0.56 atm there is no evidence, so no number is shown for any CO₂ fraction. An answer here needs new dilution tests at this oxygen level. [eng:suppression:co2] [PSI-69] CO₂ at these concentrations is dangerous to breathe. Spacecraft use portable CO₂ or water-mist extinguishers aimed at the fire, not cabin flooding. This shows how dilution affected flames in NASA's tests; it is not an operating procedure.\n- FLEX tested helium dilution only between 13% and 24% O₂ (0.69-1.01 atm); at 34% O₂ and 0.56 atm there is no evidence, so no number is shown for any helium fraction. An answer here needs new dilution tests at this oxygen level. [eng:suppression:he] [PSI-69] Changing a cabin's gas mix changes what the crew breathes. This shows how helium dilution affected flames in NASA's FLEX tests; it is not an operating procedure or extinguisher guidance.\n\n**Recommended next tests:**\n- Planner candidate #1: M2 atmosphere test at 1.62 m/s², 8.2 psia, 34% O₂, vent 20 cm/s [eng:planner:1]\n- Planner candidate #2: M1 dilution test at 1.62 m/s², 8.2 psia, 34% O₂, vent 20 cm/s, with 40% CO₂ replacing nitrogen [eng:planner:2]\n- Planner candidate #5: M1 dilution test at 1.62 m/s², 8.2 psia, 34% O₂, vent 10 cm/s, with 20% CO₂ replacing nitrogen [eng:planner:5]\n\n**History check:** No replayed incident atmosphere is close to this habitat (the closest, Artemis II smoke alarm, is 21% O₂ at 14.7 psia, distance 3.25). [eng:incident:artemis2]\n\n**How far to trust this:** Honesty test (ADR-0009): hiding one tested atmosphere at a time and refitting, the 90% band held for 72 of 74 M1 atmospheres and 78 of 83 M3 atmospheres under the overlap rule, which is lenient for groups of 1-3 tests. Under the strict rule (observed share inside the band) it held for 7 of 74 (M1) and 4 of 83 (M3). In the wide check (a whole 0.10 O₂ band hidden at once) M3 had only 9 covered groups, a weak test. The test ran in microgravity (0 g), so the gravity widening of partial-gravity bands is not tested by it. [eng:holdout]\n\n*Not an operating procedure. This briefing summarises what NASA's PSI test data can and cannot say about fires in this habitat; it is not a design certification or crew guidance.* The full one-page version is on the *Briefing* page.",
+      "citations": [
+        "eng:briefing",
+        "eng:M3",
+        "eng:M4",
+        "PSI-159",
+        "PSI-99",
+        "eng:M1",
+        "eng:M2",
+        "eng:M5",
+        "PSI-107",
+        "PSI-69",
+        "eng:detection",
+        "eng:detection:lunar_dust",
+        "eng:detection:detector_sensitivity",
+        "PSI-101",
+        "PSI-47",
+        "PSI-115",
+        "eng:suppression:co2",
+        "eng:suppression:he",
+        "eng:drivers:M1",
+        "eng:planner:6",
+        "eng:drivers:M3",
+        "eng:planner:10",
+        "eng:planner:1",
+        "eng:planner:2",
+        "eng:planner:5",
+        "eng:incident:artemis2",
+        "eng:holdout"
+      ],
+      "numbers_used": [
+        1.62,
+        8.2,
+        34.0,
+        10.0,
+        10.0,
+        1.62,
+        20.1,
+        90.0,
+        1.25,
+        68.4,
+        87.2,
+        90.0,
+        56.0,
+        98.5,
+        65.0,
+        2.0,
+        34.0,
+        8.2,
+        6.0,
+        60.0,
+        37.0,
+        34.0,
+        8.2,
+        10.0,
+        30.0,
+        14.8,
+        2.0,
+        2.14,
+        2.0,
+        0.1,
+        1.8,
+        0.2,
+        22.1,
+        14.7,
+        6.0,
+        3.07,
+        1.0,
+        20.0,
+        24.0,
+        0.9,
+        1.1,
+        21.0,
+        14.7,
+        431.0,
+        3.25,
+        21.0,
+        1.0,
+        19.0,
+        23.5,
+        0.9,
+        1.1,
+        14.0,
+        24.0,
+        0.69,
+        3.05,
+        34.0,
+        0.56,
+        13.0,
+        24.0,
+        0.69,
+        1.01,
+        34.0,
+        0.56,
+        1.0,
+        1.62,
+        8.2,
+        34.0,
+        20.0,
+        2.0,
+        1.62,
+        8.2,
+        34.0,
+        20.0,
+        40.0,
+        5.0,
+        1.62,
+        8.2,
+        34.0,
+        10.0,
+        20.0,
+        21.0,
+        14.7,
+        3.25,
+        90.0,
+        72.0,
+        74.0,
+        78.0,
+        83.0,
+        1.0,
+        3.0,
+        7.0,
+        74.0,
+        4.0,
+        83.0,
+        0.1,
+        9.0,
+        0.0
+      ],
+      "validated": true,
+      "validation": {
+        "ok": true,
+        "errors": [],
+        "numbers": [
+          {
+            "text": "1.62",
+            "value": 1.62,
+            "source": "habitat.g_m_s2"
+          },
+          {
+            "text": "8.2",
+            "value": 8.2,
+            "source": "habitat.p_psia"
+          },
+          {
+            "text": "34%",
+            "value": 34.0,
+            "source": "habitat.o2_percent"
+          },
+          {
+            "text": "10",
+            "value": 10.0,
+            "source": "habitat.u_cm_s"
+          },
+          {
+            "text": "10",
+            "value": 10.0,
+            "source": "habitat.u_cm_s"
+          },
+          {
+            "text": "1.62",
+            "value": 1.62,
+            "source": "habitat.g_m_s2"
+          },
+          {
+            "text": "20.1%",
+            "value": 20.1,
+            "source": "predictions.M4.reason~text"
+          },
+          {
+            "text": "90%",
+            "value": 90.0,
+            "source": "predictions.M1.transfer.basis~text"
+          },
+          {
+            "text": "1.25%",
+            "value": 1.25,
+            "source": "briefing.key_numbers[0].text~text"
+          },
+          {
+            "text": "68.4%",
+            "value": 68.4,
+            "source": "briefing.key_numbers[0].text~text"
+          },
+          {
+            "text": "87.2%",
+            "value": 87.2,
+            "source": "briefing.key_numbers[1].text~text"
+          },
+          {
+            "text": "90%",
+            "value": 90.0,
+            "source": "predictions.M1.transfer.basis~text"
+          },
+          {
+            "text": "56%",
+            "value": 56.0,
+            "source": "briefing.key_numbers[1].text~text"
+          },
+          {
+            "text": "98.5%",
+            "value": 98.5,
+            "source": "briefing.key_numbers[1].text~text"
+          },
+          {
+            "text": "65%",
+            "value": 65.0,
+            "source": "briefing.drivers[0].text~text"
+          },
+          {
+            "text": "2",
+            "value": 2.0,
+            "source": "predictions.M1.transfer.basis~text"
+          },
+          {
+            "text": "34.0%",
+            "value": 34.0,
+            "source": "habitat.o2_percent"
+          },
+          {
+            "text": "8.2",
+            "value": 8.2,
+            "source": "habitat.p_psia"
+          },
+          {
+            "text": "6",
+            "value": 6.0,
+            "source": "predictions.M1.sensitivity[4].input_high"
+          },
+          {
+            "text": "60%",
+            "value": 60.0,
+            "source": "briefing.drivers[1].text~text"
+          },
+          {
+            "text": "37",
+            "value": 37.0,
+            "source": "briefing.drivers[1].text~text"
+          },
+          {
+            "text": "34.0%",
+            "value": 34.0,
+            "source": "habitat.o2_percent"
+          },
+          {
+            "text": "8.2",
+            "value": 8.2,
+            "source": "habitat.p_psia"
+          },
+          {
+            "text": "10",
+            "value": 10.0,
+            "source": "habitat.u_cm_s"
+          },
+          {
+            "text": "30%",
+            "value": 30.0,
+            "source": "evidence[8].fuel~text"
+          },
+          {
+            "text": "14.8",
+            "value": 14.8,
+            "source": "briefing.gaps[0].nearest_point.p_psia"
+          },
+          {
+            "text": "2",
+            "value": 2.0,
+            "source": "predictions.M1.transfer.basis~text"
+          },
+          {
+            "text": "2.14",
+            "value": 2.14,
+            "source": "predictions.M2.reason~text"
+          },
+          {
+            "text": "2",
+            "value": 2.0,
+            "source": "predictions.M1.transfer.basis~text"
+          },
+          {
+            "text": "0.10",
+            "value": 0.1,
+            "source": "design_implications[0]~text"
+          },
+          {
+            "text": "1.8",
+            "value": 1.8,
+            "source": "briefing.gaps[0].text~text"
+          },
+          {
+            "text": "0.20",
+            "value": 0.2,
+            "source": "predictions.M1.estimate"
+          },
+          {
+            "text": "22.1%",
+            "value": 22.1,
+            "source": "predictions.M4.reason~text"
+          },
+          {
+            "text": "14.7",
+            "value": 14.7,
+            "source": "briefing.gaps[1].nearest_point.p_psia"
+          },
+          {
+            "text": "6",
+            "value": 6.0,
+            "source": "predictions.M1.sensitivity[4].input_high"
+          },
+          {
+            "text": "3.07",
+            "value": 3.07,
+            "source": "briefing.gaps[1].nearest_distance"
+          },
+          {
+            "text": "1",
+            "value": 1.0,
+            "source": "metrics.M4.label~text"
+          },
+          {
+            "text": "20",
+            "value": 20.0,
+            "source": "predictions.M4.reason~text"
+          },
+          {
+            "text": "24%",
+            "value": 24.0,
+            "source": "predictions.M4.reason~text"
+          },
+          {
+            "text": "0.9",
+            "value": 0.9,
+            "source": "predictions.M4.reason~text"
+          },
+          {
+            "text": "1.1",
+            "value": 1.1,
+            "source": "predictions.M4.reason~text"
+          },
+          {
+            "text": "21%",
+            "value": 21.0,
+            "source": "predictions.M5.reason~text"
+          },
+          {
+            "text": "14.7",
+            "value": 14.7,
+            "source": "briefing.gaps[1].nearest_point.p_psia"
+          },
+          {
+            "text": "431",
+            "value": 431.0,
+            "source": "briefing.gaps[2].nearest_point.n"
+          },
+          {
+            "text": "3.25",
+            "value": 3.25,
+            "source": "evidence[4].size_mm"
+          },
+          {
+            "text": "21%",
+            "value": 21.0,
+            "source": "predictions.M5.reason~text"
+          },
+          {
+            "text": "1",
+            "value": 1.0,
+            "source": "metrics.M4.label~text"
+          },
+          {
+            "text": "19",
+            "value": 19.0,
+            "source": "predictions.M5.reason~text"
+          },
+          {
+            "text": "23.5%",
+            "value": 23.5,
+            "source": "predictions.M5.reason~text"
+          },
+          {
+            "text": "0.9",
+            "value": 0.9,
+            "source": "predictions.M4.reason~text"
+          },
+          {
+            "text": "1.1",
+            "value": 1.1,
+            "source": "predictions.M4.reason~text"
+          },
+          {
+            "text": "14%",
+            "value": 14.0,
+            "source": "planner[1].rationale~text"
+          },
+          {
+            "text": "24%",
+            "value": 24.0,
+            "source": "predictions.M4.reason~text"
+          },
+          {
+            "text": "0.69",
+            "value": 0.69,
+            "source": "rank[0].score"
+          },
+          {
+            "text": "3.05",
+            "value": 3.05,
+            "source": "records[0].conditions.pressure_atm[1]"
+          },
+          {
+            "text": "34%",
+            "value": 34.0,
+            "source": "habitat.o2_percent"
+          },
+          {
+            "text": "0.56",
+            "value": 0.56,
+            "source": "predictions.M1.inputs.p_atm"
+          },
+          {
+            "text": "13%",
+            "value": 13.0,
+            "source": "briefing.gaps[6].text~text"
+          },
+          {
+            "text": "24%",
+            "value": 24.0,
+            "source": "predictions.M4.reason~text"
+          },
+          {
+            "text": "0.69",
+            "value": 0.69,
+            "source": "rank[0].score"
+          },
+          {
+            "text": "1.01",
+            "value": 1.01,
+            "source": "predictions.M2.reason~text"
+          },
+          {
+            "text": "34%",
+            "value": 34.0,
+            "source": "habitat.o2_percent"
+          },
+          {
+            "text": "0.56",
+            "value": 0.56,
+            "source": "predictions.M1.inputs.p_atm"
+          },
+          {
+            "text": "1",
+            "value": 1.0,
+            "source": "metrics.M4.label~text"
+          },
+          {
+            "text": "1.62",
+            "value": 1.62,
+            "source": "habitat.g_m_s2"
+          },
+          {
+            "text": "8.2",
+            "value": 8.2,
+            "source": "habitat.p_psia"
+          },
+          {
+            "text": "34%",
+            "value": 34.0,
+            "source": "habitat.o2_percent"
+          },
+          {
+            "text": "20",
+            "value": 20.0,
+            "source": "predictions.M4.reason~text"
+          },
+          {
+            "text": "2",
+            "value": 2.0,
+            "source": "predictions.M1.transfer.basis~text"
+          },
+          {
+            "text": "1.62",
+            "value": 1.62,
+            "source": "habitat.g_m_s2"
+          },
+          {
+            "text": "8.2",
+            "value": 8.2,
+            "source": "habitat.p_psia"
+          },
+          {
+            "text": "34%",
+            "value": 34.0,
+            "source": "habitat.o2_percent"
+          },
+          {
+            "text": "20",
+            "value": 20.0,
+            "source": "predictions.M4.reason~text"
+          },
+          {
+            "text": "40%",
+            "value": 40.0,
+            "source": "planner[1].rationale~text"
+          },
+          {
+            "text": "5",
+            "value": 5.0,
+            "source": "planner[4].rank"
+          },
+          {
+            "text": "1.62",
+            "value": 1.62,
+            "source": "habitat.g_m_s2"
+          },
+          {
+            "text": "8.2",
+            "value": 8.2,
+            "source": "habitat.p_psia"
+          },
+          {
+            "text": "34%",
+            "value": 34.0,
+            "source": "habitat.o2_percent"
+          },
+          {
+            "text": "10",
+            "value": 10.0,
+            "source": "habitat.u_cm_s"
+          },
+          {
+            "text": "20%",
+            "value": 20.0,
+            "source": "predictions.M4.reason~text"
+          },
+          {
+            "text": "21%",
+            "value": 21.0,
+            "source": "predictions.M5.reason~text"
+          },
+          {
+            "text": "14.7",
+            "value": 14.7,
+            "source": "briefing.gaps[1].nearest_point.p_psia"
+          },
+          {
+            "text": "3.25",
+            "value": 3.25,
+            "source": "evidence[4].size_mm"
+          },
+          {
+            "text": "90%",
+            "value": 90.0,
+            "source": "predictions.M1.transfer.basis~text"
+          },
+          {
+            "text": "72",
+            "value": 72.0,
+            "source": "predictions.M1.transfer.basis~text"
+          },
+          {
+            "text": "74",
+            "value": 74.0,
+            "source": "briefing.trust.text~text"
+          },
+          {
+            "text": "78",
+            "value": 78.0,
+            "source": "briefing.trust.text~text"
+          },
+          {
+            "text": "83",
+            "value": 83.0,
+            "source": "briefing.trust.text~text"
+          },
+          {
+            "text": "1",
+            "value": 1.0,
+            "source": "metrics.M4.label~text"
+          },
+          {
+            "text": "3",
+            "value": 3.0,
+            "source": "predictions.M1.sensitivity[4].input_low"
+          },
+          {
+            "text": "7",
+            "value": 7.0,
+            "source": "briefing.trust.text~text"
+          },
+          {
+            "text": "74",
+            "value": 74.0,
+            "source": "briefing.trust.text~text"
+          },
+          {
+            "text": "4",
+            "value": 4.0,
+            "source": "planner[3].rank"
+          },
+          {
+            "text": "83",
+            "value": 83.0,
+            "source": "briefing.trust.text~text"
+          },
+          {
+            "text": "0.10",
+            "value": 0.1,
+            "source": "design_implications[0]~text"
+          },
+          {
+            "text": "9",
+            "value": 9.0,
+            "source": "predictions.M4.n_train"
+          },
+          {
+            "text": "0",
+            "value": 0.0,
+            "source": "physics.mc.regime_fractions.forced"
+          }
+        ],
+        "citations": [
+          {
+            "id": "eng:briefing",
+            "resolved": true
+          },
+          {
+            "id": "eng:M3",
+            "resolved": true
+          },
+          {
+            "id": "eng:M4",
+            "resolved": true
+          },
+          {
+            "id": "PSI-159",
+            "resolved": true
+          },
+          {
+            "id": "PSI-99",
+            "resolved": true
+          },
+          {
+            "id": "eng:M1",
+            "resolved": true
+          },
+          {
+            "id": "eng:M2",
+            "resolved": true
+          },
+          {
+            "id": "eng:M5",
+            "resolved": true
+          },
+          {
+            "id": "PSI-107",
+            "resolved": true
+          },
+          {
+            "id": "PSI-69",
+            "resolved": true
+          },
+          {
+            "id": "eng:detection",
+            "resolved": true
+          },
+          {
+            "id": "eng:detection:lunar_dust",
+            "resolved": true
+          },
+          {
+            "id": "eng:detection:detector_sensitivity",
+            "resolved": true
+          },
+          {
+            "id": "PSI-101",
+            "resolved": true
+          },
+          {
+            "id": "PSI-47",
+            "resolved": true
+          },
+          {
+            "id": "PSI-115",
+            "resolved": true
+          },
+          {
+            "id": "eng:suppression:co2",
+            "resolved": true
+          },
+          {
+            "id": "eng:suppression:he",
+            "resolved": true
+          },
+          {
+            "id": "eng:drivers:M1",
+            "resolved": true
+          },
+          {
+            "id": "eng:planner:6",
+            "resolved": true
+          },
+          {
+            "id": "eng:drivers:M3",
+            "resolved": true
+          },
+          {
+            "id": "eng:planner:10",
+            "resolved": true
+          },
+          {
+            "id": "eng:planner:1",
+            "resolved": true
+          },
+          {
+            "id": "eng:planner:2",
+            "resolved": true
+          },
+          {
+            "id": "eng:planner:5",
+            "resolved": true
+          },
+          {
+            "id": "eng:incident:artemis2",
+            "resolved": true
+          },
+          {
+            "id": "eng:holdout",
+            "resolved": true
+          }
+        ]
+      }
+    },
+    {
+      "question": "What cabin air does the evidence support?",
+      "question_key": "what cabin air does the evidence support",
+      "habitat": "lunar_base",
+      "fingerprint": "073661ca4082ba82c9b5f0dd51b913e634847b0145e984d5190ed72890a67c1b",
+      "intent": "atmosphere_map",
+      "mode_generated": "template",
+      "answer_markdown": "**Gravity Gap does not rank cabin atmospheres or pick one.** It maps where NASA's PSI fire tests give evidence across a grid of O₂ fractions and total pressures, and leaves the rest marked \"no evidence\". The map never ranks atmospheres; it shows evidence (ADR-0011). [eng:atmosphere_map:M1]\n\n**How much of the map has evidence:**\n- **M1 – P(droplet flame self-extinguishes before burnout)** (PSI-69): evidence in 370 of 520 map cells (71.2%); **no evidence in 28.8% of the map** [eng:atmosphere_map:M1]. Lunar base is inside the evidence.\n- **M2 – Extinction diameter** (PSI-69): evidence in 284 of 520 map cells (54.6%); **no evidence in 45.4% of the map** [eng:atmosphere_map:M2]. Lunar base is outside it (distance 2.14 to the nearest test; the gate is 2).\n- **M3 – P(gas flame self-extinguishes vs flow-terminated)** (PSI-159): evidence in 489 of 520 map cells (94%); **no evidence in 5.96% of the map** [eng:atmosphere_map:M3]. Lunar base is inside the evidence.\n\n**Gravity:** The estimate depends only on O₂ and pressure (and the default fuel options), not on gravity: the tests flew in microgravity with no imposed flow (ADR-0005). Gravity only widens the band, by one factor for the whole map, so the covered cells and the estimates are the same in every gravity file; only band90 changes. [eng:atmosphere_map:M1]\n\nEach metric measures a different thing (droplet or gas flames going out on their own, or the size a droplet flame goes out at), so the coloured cells say what the tests show there, not which air is preferable.\n\n**Crew limits are a separate question.** Crew and materials limits from cited NASA documents, drawn by each entry's map_rule. They say nothing about how a fire would behave and are not a ranking of atmospheres. The map draws them as lines from cited NASA documents:\n- Mild hypoxia lower limit, PIO2 127 mmHg (1-h time-weighted average) (limit): NASA-STD-3001 Volume 2, 6.0 Natural and Induced Environments (Table 6.2-1, Inspired Oxygen Partial Pressure Exposure Ranges) [eng:crew_limit:pio2_mild_hypoxia_lower_limit]\n- Absolute hypoxia floor, PIO2 122 mmHg (limit): NASA-STD-3001 Volume 2, 6.0 Natural and Induced Environments (Table 6.2-1 footnote ****) [eng:crew_limit:pio2_absolute_hypoxia_floor]\n- Normoxia target range lower edge, PIO2 145 mmHg (range 145-155) (target, not a limit): NASA-STD-3001 Volume 2, 6.0 Natural and Induced Environments (Table 6.2-1) [eng:crew_limit:pio2_normoxia_target_low]\n- Total pressure lower bound for indefinite crew exposure, > 5 psia (limit): NASA-STD-3001 Volume 2, 6.0 Natural and Induced Environments [eng:crew_limit:total_pressure_min_indefinite]\n- 34% O2 maximum, Lunar Surface Access Module (2007 Constellation baseline) (program baseline): Oxygen Concentration Flammability Thresholds of Selected Aerospace Materials Considered for the Constellation Program (Hirsch, Williams, Harper, Beeson, Pedley; 2nd IAASS Conference, 2007) [eng:crew_limit:o2_max_lsam_2007_baseline]\n- 30% O2 maximum, Orion crew module (2007 Constellation baseline) (program baseline): Oxygen Concentration Flammability Thresholds of Selected Aerospace Materials Considered for the Constellation Program [eng:crew_limit:o2_max_orion_2007_baseline]\n- ISS nominal maximum O2 concentration 24.1% (context): Oxygen Concentration Flammability Thresholds of Selected Aerospace Materials Considered for the Constellation Program [eng:crew_limit:o2_max_iss_nominal]\n- ~25.6% O2 at 14.7 psia: highest O2 that keeps 30%/10.2-psia material certification valid (illustration): Selected Parametric Effects on Materials Flammability Limits (Hirsch, Juarez, Peyton, Harper, Olson) [eng:crew_limit:o2_max_at_14p7_from_30pct_cert]\nNot drawn: O2 at most 70% (cabin must hold at least 30% diluent gas), outside the map's O₂ range (0.15-0.40); not drawn [eng:crew_limit:o2_max_from_min_diluent].\n\nThe *Air map* page shows the cells, the tested points and these lines; clicking a cell loads that atmosphere into the habitat bar.",
+      "citations": [
+        "eng:atmosphere_map:M1",
+        "eng:atmosphere_map:M2",
+        "eng:atmosphere_map:M3",
+        "eng:crew_limit:pio2_mild_hypoxia_lower_limit",
+        "eng:crew_limit:pio2_absolute_hypoxia_floor",
+        "eng:crew_limit:pio2_normoxia_target_low",
+        "eng:crew_limit:total_pressure_min_indefinite",
+        "eng:crew_limit:o2_max_lsam_2007_baseline",
+        "eng:crew_limit:o2_max_orion_2007_baseline",
+        "eng:crew_limit:o2_max_iss_nominal",
+        "eng:crew_limit:o2_max_at_14p7_from_30pct_cert",
+        "eng:crew_limit:o2_max_from_min_diluent",
+        "PSI-69",
+        "PSI-159"
+      ],
+      "numbers_used": [
+        370.0,
+        520.0,
+        71.2,
+        28.8,
+        284.0,
+        520.0,
+        54.6,
+        45.4,
+        2.14,
+        2.0,
+        489.0,
+        520.0,
+        94.0,
+        5.96,
+        127.0,
+        1.0,
+        2.0,
+        6.0,
+        6.2,
+        1.0,
+        122.0,
+        2.0,
+        6.0,
+        6.2,
+        1.0,
+        145.0,
+        145.0,
+        155.0,
+        2.0,
+        6.0,
+        6.2,
+        1.0,
+        5.0,
+        2.0,
+        6.0,
+        34.0,
+        2007.0,
+        2.0,
+        2007.0,
+        30.0,
+        2007.0,
+        24.1,
+        25.6,
+        14.7,
+        30.0,
+        10.2,
+        70.0,
+        30.0,
+        0.15,
+        0.4
+      ],
+      "validated": true,
+      "validation": {
+        "ok": true,
+        "errors": [],
+        "numbers": [
+          {
+            "text": "370",
+            "value": 370.0,
+            "source": "atmosphere_map.metrics.M1.summary.n_covered"
+          },
+          {
+            "text": "520",
+            "value": 520.0,
+            "source": "atmosphere_map.metrics.M1.summary.n_cells"
+          },
+          {
+            "text": "71.2%",
+            "value": 71.2,
+            "source": "atmosphere_map.metrics.M1.reading~text"
+          },
+          {
+            "text": "28.8%",
+            "value": 28.8,
+            "source": "atmosphere_map.metrics.M1.summary.no_evidence_share"
+          },
+          {
+            "text": "284",
+            "value": 284.0,
+            "source": "atmosphere_map.metrics.M2.summary.n_covered"
+          },
+          {
+            "text": "520",
+            "value": 520.0,
+            "source": "atmosphere_map.metrics.M1.summary.n_cells"
+          },
+          {
+            "text": "54.6%",
+            "value": 54.6,
+            "source": "atmosphere_map.metrics.M2.summary.evidence_share"
+          },
+          {
+            "text": "45.4%",
+            "value": 45.4,
+            "source": "atmosphere_map.metrics.M2.summary.no_evidence_share"
+          },
+          {
+            "text": "2.14",
+            "value": 2.14,
+            "source": "predictions.M2.reason~text"
+          },
+          {
+            "text": "2",
+            "value": 2.0,
+            "source": "predictions.M1.transfer.basis~text"
+          },
+          {
+            "text": "489",
+            "value": 489.0,
+            "source": "atmosphere_map.metrics.M3.summary.n_covered"
+          },
+          {
+            "text": "520",
+            "value": 520.0,
+            "source": "atmosphere_map.metrics.M1.summary.n_cells"
+          },
+          {
+            "text": "94%",
+            "value": 94.0,
+            "source": "atmosphere_map.metrics.M3.reading~text"
+          },
+          {
+            "text": "5.96%",
+            "value": 5.96,
+            "source": "atmosphere_map.metrics.M3.summary.no_evidence_share"
+          },
+          {
+            "text": "127",
+            "value": 127.0,
+            "source": "atmosphere_map.crew_limits.drawn[0].label~text"
+          },
+          {
+            "text": "1",
+            "value": 1.0,
+            "source": "metrics.M4.label~text"
+          },
+          {
+            "text": "2",
+            "value": 2.0,
+            "source": "predictions.M1.transfer.basis~text"
+          },
+          {
+            "text": "6.0",
+            "value": 6.0,
+            "source": "predictions.M1.sensitivity[4].input_high"
+          },
+          {
+            "text": "6.2",
+            "value": 6.2,
+            "source": "atmosphere_map.crew_limits.drawn[0].source.title~text"
+          },
+          {
+            "text": "1",
+            "value": 1.0,
+            "source": "metrics.M4.label~text"
+          },
+          {
+            "text": "122",
+            "value": 122.0,
+            "source": "design_implications[2]~text"
+          },
+          {
+            "text": "2",
+            "value": 2.0,
+            "source": "predictions.M1.transfer.basis~text"
+          },
+          {
+            "text": "6.0",
+            "value": 6.0,
+            "source": "predictions.M1.sensitivity[4].input_high"
+          },
+          {
+            "text": "6.2",
+            "value": 6.2,
+            "source": "atmosphere_map.crew_limits.drawn[0].source.title~text"
+          },
+          {
+            "text": "1",
+            "value": 1.0,
+            "source": "metrics.M4.label~text"
+          },
+          {
+            "text": "145",
+            "value": 145.0,
+            "source": "atmosphere_map.crew_limits.drawn[2].label~text"
+          },
+          {
+            "text": "145",
+            "value": 145.0,
+            "source": "atmosphere_map.crew_limits.drawn[2].label~text"
+          },
+          {
+            "text": "155",
+            "value": 155.0,
+            "source": "atmosphere_map.crew_limits.drawn[2].label~text"
+          },
+          {
+            "text": "2",
+            "value": 2.0,
+            "source": "predictions.M1.transfer.basis~text"
+          },
+          {
+            "text": "6.0",
+            "value": 6.0,
+            "source": "predictions.M1.sensitivity[4].input_high"
+          },
+          {
+            "text": "6.2",
+            "value": 6.2,
+            "source": "atmosphere_map.crew_limits.drawn[0].source.title~text"
+          },
+          {
+            "text": "1",
+            "value": 1.0,
+            "source": "metrics.M4.label~text"
+          },
+          {
+            "text": "5",
+            "value": 5.0,
+            "source": "planner[4].rank"
+          },
+          {
+            "text": "2",
+            "value": 2.0,
+            "source": "predictions.M1.transfer.basis~text"
+          },
+          {
+            "text": "6.0",
+            "value": 6.0,
+            "source": "predictions.M1.sensitivity[4].input_high"
+          },
+          {
+            "text": "34%",
+            "value": 34.0,
+            "source": "habitat.o2_percent"
+          },
+          {
+            "text": "2007",
+            "value": 2007.0,
+            "source": "atmosphere_map.crew_limits.drawn[4].label~text"
+          },
+          {
+            "text": "2",
+            "value": 2.0,
+            "source": "predictions.M1.transfer.basis~text"
+          },
+          {
+            "text": "2007",
+            "value": 2007.0,
+            "source": "atmosphere_map.crew_limits.drawn[4].label~text"
+          },
+          {
+            "text": "30%",
+            "value": 30.0,
+            "source": "evidence[8].fuel~text"
+          },
+          {
+            "text": "2007",
+            "value": 2007.0,
+            "source": "atmosphere_map.crew_limits.drawn[4].label~text"
+          },
+          {
+            "text": "24.1%",
+            "value": 24.1,
+            "source": "predictions.M4.reason~text"
+          },
+          {
+            "text": "25.6%",
+            "value": 25.6,
+            "source": "atmosphere_map.crew_limits.drawn[7].label~text"
+          },
+          {
+            "text": "14.7",
+            "value": 14.7,
+            "source": "atmosphere_map.metrics.M1.presets[0].p_psia"
+          },
+          {
+            "text": "30%",
+            "value": 30.0,
+            "source": "evidence[8].fuel~text"
+          },
+          {
+            "text": "10.2",
+            "value": 10.2,
+            "source": "planner[3].p_psia"
+          },
+          {
+            "text": "70%",
+            "value": 70.0,
+            "source": "atmosphere_map.crew_limits.not_drawn[0].label~text"
+          },
+          {
+            "text": "30%",
+            "value": 30.0,
+            "source": "evidence[8].fuel~text"
+          },
+          {
+            "text": "0.15",
+            "value": 0.15,
+            "source": "atmosphere_map.crew_limits.not_drawn[0].reason~text"
+          },
+          {
+            "text": "0.40",
+            "value": 0.4,
+            "source": "predictions.M3.sensitivity[4].low"
+          }
+        ],
+        "citations": [
+          {
+            "id": "eng:atmosphere_map:M1",
+            "resolved": true
+          },
+          {
+            "id": "eng:atmosphere_map:M2",
+            "resolved": true
+          },
+          {
+            "id": "eng:atmosphere_map:M3",
+            "resolved": true
+          },
+          {
+            "id": "eng:crew_limit:pio2_mild_hypoxia_lower_limit",
+            "resolved": true
+          },
+          {
+            "id": "eng:crew_limit:pio2_absolute_hypoxia_floor",
+            "resolved": true
+          },
+          {
+            "id": "eng:crew_limit:pio2_normoxia_target_low",
+            "resolved": true
+          },
+          {
+            "id": "eng:crew_limit:total_pressure_min_indefinite",
+            "resolved": true
+          },
+          {
+            "id": "eng:crew_limit:o2_max_lsam_2007_baseline",
+            "resolved": true
+          },
+          {
+            "id": "eng:crew_limit:o2_max_orion_2007_baseline",
+            "resolved": true
+          },
+          {
+            "id": "eng:crew_limit:o2_max_iss_nominal",
+            "resolved": true
+          },
+          {
+            "id": "eng:crew_limit:o2_max_at_14p7_from_30pct_cert",
+            "resolved": true
+          },
+          {
+            "id": "eng:crew_limit:o2_max_from_min_diluent",
+            "resolved": true
+          },
+          {
+            "id": "PSI-69",
+            "resolved": true
+          },
+          {
+            "id": "PSI-159",
             "resolved": true
           }
         ]

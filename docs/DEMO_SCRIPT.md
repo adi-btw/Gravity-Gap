@@ -55,6 +55,40 @@ M4 and M5 at the lunar base are also "no evidence" (SAFFIRE-II and SPICE were ru
 - If a number on screen differs from this table, read the screen, not this table, and tell the team afterwards.
 - Do not open `/data` or `/explore` in the timed run: `/data` needs the live API and `/explore` ranking needs `POST /rank`.
 
+## 1b. Round 3 additions (compare, briefing, trust, air map)
+
+Extra tabs to open during setup:
+
+| Tab | URL (localhost:3000) |
+|---|---|
+| 7 | `/compare?a=iss&b=lunar_base` |
+| 8 | `/briefing?habitat=lunar_base` |
+| 9 | `/trust` |
+| 10 | `/atmospheres` |
+
+**Opening contrast (replaces 0:12–0:22 if time allows, +10 s):** Tab 7. "Same tool, ISS on the left, lunar base on
+the right. The flame regime changes from forced flow to mixed, three of five metrics lose their evidence, and the
+droplet self-extinction chance drops from 94% to 20% with a wider band." Source: `engine/compare.py` summary
+(POST `/compare`).
+
+**New ending (replaces 1:43–2:00):** Tab 8. "Everything Gravity Gap can tell a lunar base designer, on one printable
+page: prevention partial, flame behaviour partial, detection partial, suppression no evidence. Each chip follows a
+written rule, each number is cited, and the gaps say which NASA test is nearest and how far away. The next test to run
+is on the page too." Point at the four chips and "Print / save as PDF". Source: `artifacts/briefing/lunar_base.json`.
+
+**Judge Q&A material**
+
+| Question | Show | Point at |
+|---|---|---|
+| "How do you know it works?" | Tab 9, `/trust` | Lenient: band held for 208 of 222 hidden test atmospheres; strict: 7 of 74 (M1) and 4 of 83 (M3); weak-test badges; worst misses with PSI rows; SAFFIRE 7 of 9 with its caveat (`artifacts/holdout.json`) |
+| "What should NASA test next?" | Tab 4, Bounds M1, "What makes this band wide" | About 65% of the band is model uncertainty (few tests near 34% O₂), lever links to Planner #6 (`artifacts/uncertainty/lunar_base.json`) |
+| "Which cabin air does the evidence support?" | Tab 10, Air map | Evidence covers 71% (M1), 55% (M2) and 94% (M3) of the map; crew limits drawn from NASA-STD-3001 with sources; the map never ranks atmospheres (`artifacts/atmosphere_map/`) |
+| "Could lunar dust set off the smoke alarm?" | `/detection` | The lunar dust gap: no lunar dust data in PSI; only Arizona Road Dust vs smoke on one size measure |
+
+Offline: tabs 7–10 work for presets from the bundled artifacts; a custom habitat shows "needs the live API".
+
+---
+
 ## 2. Offline-mode fallback (API down, no network)
 
 Decide at setup: if `curl http://localhost:8000/health` fails or venue Wi-Fi is bad, run offline. The web app falls

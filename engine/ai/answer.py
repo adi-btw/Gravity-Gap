@@ -322,7 +322,14 @@ def _design_id(pack: dict, text: str) -> str:
 
 
 def _narrow_par(pack: dict, metric: str) -> str:
-    items = _planner_items(pack, metric, pack["habitat"]["g_m_s2"])
+    # Same rule as the drivers lever (engine.uncertainty.nearest_planner_candidate), so the band answer and the
+    # "What makes this band wide" panel always name the same Planner test; fall back to the same-gravity filter.
+    from engine.uncertainty import nearest_planner_candidate
+
+    h = pack["habitat"]
+    near = nearest_planner_candidate(metric, h["g_m_s2"], h["p_psia"], h["o2"], h["u_cm_s"])
+    items = [i for i in pack.get("planner") or [] if near and i.get("rank") == near["rank"]]
+    items = items or _planner_items(pack, metric, h["g_m_s2"])
     if items:
         return "**What would narrow it:** " + _planner_par(pack, items[0])
     h = pack["habitat"]

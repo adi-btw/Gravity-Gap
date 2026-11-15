@@ -1,12 +1,60 @@
 {
   "version": 1,
-  "generated_at": "2026-11-15T00:26:58+00:00",
+  "generated_at": "2026-11-15T13:27:51+00:00",
   "generated_by": "scripts/build_manifest.py",
-  "artifact_set_sha256": "2e978155f341403e7bf0f3f9f6d5b795ec3c76da66a766fdab2ccce90c7b524f",
+  "artifact_set_sha256": "b172fdbba5ea22bdbf490f5f6f83a3b85a9185e0a61ed755550614f017bad1da",
   "files": {
     "ai_cache.json": {
-      "sha256": "cb485fdce4e5b014d4be31fb0985cb52eb7b5360a5ed6af6fc303a6eeaab5dee",
-      "bytes": 155082
+      "sha256": "5f71c0610b9ba120aac9bc47b701f1cda669ca99eae24ca128665901f8a074c0",
+      "bytes": 247747
+    },
+    "atmosphere_map/M1_earth.json": {
+      "sha256": "7a264f2cdfc08165585061801b007b573755235c4397aee15a296d1d53f6dfb7",
+      "bytes": 88640
+    },
+    "atmosphere_map/M1_lunar.json": {
+      "sha256": "ed722069de20b315b383c3fc28e223679e254650b892e986c636fda05c2ba90a",
+      "bytes": 88575
+    },
+    "atmosphere_map/M1_mars.json": {
+      "sha256": "4a21b0f21d7c0e13c3816bd7b635ae7e9ab42f2e27bf0816217d75f614a91b1a",
+      "bytes": 88613
+    },
+    "atmosphere_map/M1_orbit.json": {
+      "sha256": "9937df927a9fe5de087aee787917a0954601a7e5ce22dacda75688ffedd688dc",
+      "bytes": 88447
+    },
+    "atmosphere_map/M2_earth.json": {
+      "sha256": "af7f5e67f2c9f3a5deb26522cfb0258e44f68c0fe971f0b5ed0c0602474bb26c",
+      "bytes": 85241
+    },
+    "atmosphere_map/M2_lunar.json": {
+      "sha256": "70b5a8765029c087e22d4cb2216aebecad50255b2111174517aea5902cd64919",
+      "bytes": 85290
+    },
+    "atmosphere_map/M2_mars.json": {
+      "sha256": "dc07a5a3168b33fa770b1ea4c161cd977cced1b49b4b7028cc75a294be73c689",
+      "bytes": 85250
+    },
+    "atmosphere_map/M2_orbit.json": {
+      "sha256": "8afe3af54a988497bbd9ba6e3554189a1762378378b07bb8cbac17ca4b07585d",
+      "bytes": 85379
+    },
+    "atmosphere_map/M3_earth.json": {
+      "sha256": "e4c8e607b5e43de528a4b6517ea229be27883fd162e66527eea33bf9f52f7550",
+      "bytes": 87674
+    },
+    "atmosphere_map/M3_lunar.json": {
+      "sha256": "0b48d10d99a6ed762acda8e54c512b199a9845b77c5c327a01612c8a91b12533",
+      "bytes": 87673
+    },
+    "atmosphere_map/M3_mars.json": {
+      "sha256": "e88e6e549bbb7a3b47bf256da9aabc23d785b74ceddd510a94f097aa48657e5b",
+      "bytes": 87662
+    },
+    "atmosphere_map/M3_orbit.json": {
+      "sha256": "9694d2331442b4250e1a67f2aadcf7e15752f31bb1bf2cdb2065ec33f3100059",
+      "bytes": 87657
     },
     "bounds/earth_M1.json": {
       "sha256": "2a2e5ae1373eea62f08eae0c1648a62a990bae097d408d2e0424d1965329829d",
@@ -128,6 +176,30 @@
       "sha256": "ce46add9062a5d461d7d69064b4bdf8b5a0907cfbccc90ee57a36be8e3b5602c",
       "bytes": 4179
     },
+    "briefing/earth.json": {
+      "sha256": "07ec9f2379578b5863d9ba4b7b9cc527005e7f3968add338b3a177f8fef1c27f",
+      "bytes": 17038
+    },
+    "briefing/exploration.json": {
+      "sha256": "ff4a9179340293e90f87af9c9632efa0c6a479555b32c8fcbeeab8951869a696",
+      "bytes": 18036
+    },
+    "briefing/iss.json": {
+      "sha256": "87be624d3072aef17910f64da50ae11f42662f1124e4fdb384fb31498da0aa8e",
+      "bytes": 16550
+    },
+    "briefing/lunar_base.json": {
+      "sha256": "5a43f5e2f4e5fa63befdd69cf837b5300fb8a6c68549c17d859489b0d8ad572d",
+      "bytes": 17490
+    },
+    "briefing/lunar_rover.json": {
+      "sha256": "27b244bb85873fc666598026770ebd206889c5347502f2378fed8f2d2903f4fd",
+      "bytes": 17496
+    },
+    "briefing/mars_base.json": {
+      "sha256": "012a9d9f8b42418c44cdc199cb1a1825d78f934f761bba9d06514df1bb182a78",
+      "bytes": 17490
+    },
     "catalog.json": {
       "sha256": "e4536fdc54d6fec03bf61075459f9bf3e1cbb137973d3fa25ae3ea2c3c60bbb9",
       "bytes": 175085
@@ -159,6 +231,10 @@
     "hindcast_saffire.json": {
       "sha256": "1a583b7fb4d4c0199826cde6142ec413ed8c00248eb3c3fe4cfb83c68af7e801",
       "bytes": 49702
+    },
+    "holdout.json": {
+      "sha256": "f153ec9848406ac3a9927dd2a11b37bd55d5d5bd1fa4ff17578010fddfa4574f",
+      "bytes": 1083740
     },
     "incidents.json": {
       "sha256": "cf9f5c1a2df76c2f507856cea0bf4e977504e7c2f41a46c2bf38722d57bb2a79",
@@ -228,9 +304,33 @@
       "sha256": "78dc657d4263f97c73f1ad5d0ad1f5808cc67ebe3be936ac63df71771dfc1ac4",
       "bytes": 60114
     },
+    "uncertainty/earth.json": {
+      "sha256": "96637d04de705e5ab9095c09216cdc5c169e3e8d182c86ad531a5062daefdd69",
+      "bytes": 15054
+    },
+    "uncertainty/exploration.json": {
+      "sha256": "fe525eddf97d4ae0e4288277164e08f6c61d99f9175af31ddc3beb629a7a938f",
+      "bytes": 15520
+    },
+    "uncertainty/iss.json": {
+      "sha256": "9ad07dc7d99ff21fb25ec0ea16083c21f1cb301567e10c61431e90c1a234868d",
+      "bytes": 15060
+    },
+    "uncertainty/lunar_base.json": {
+      "sha256": "2c7173a7dcf7f45c228baf09566cfe16cafbc24d70e84aa6d3cf573ed4ca0d96",
+      "bytes": 11065
+    },
+    "uncertainty/lunar_rover.json": {
+      "sha256": "9e5a6cb3d7ecf197c2107486a4066313c13fdaf78cefff2fc37238c1c8ecb58b",
+      "bytes": 11062
+    },
+    "uncertainty/mars_base.json": {
+      "sha256": "f856cd69ae61eca8e66bae0dc62767c2aed82a3a7e1143009dcab3f232bbaf50",
+      "bytes": 11083
+    },
     "validation_report.md": {
-      "sha256": "972999b9959f7e2a6e25b9dd77f28546bcf562f5756ef36ba40e878f5bf02324",
-      "bytes": 7578
+      "sha256": "9d72dbc95aa4d7cbffcf7f4e8fd556864b6949e61d64a7611699c2c6eecb1e43",
+      "bytes": 13042
     },
     "validation_saffire.md": {
       "sha256": "ddd1dccd66f4c577aecf18858988c19ec98ffbf2b5642d6d76bfa34beb95ef49",
