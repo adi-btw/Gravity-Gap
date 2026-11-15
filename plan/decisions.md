@@ -73,3 +73,23 @@ Back to [overview](00-overview.md). One entry per decision that is hard to rever
   - Preset results (undiluted queries) are unchanged: no applicable/estimate/band flip in `artifacts/bounds/`. Only the evidence lists and nearest-test text changed; exploration M1/M2 nearest distance grew (0.50 -> 0.70 / 1.30) because the nearest test was CO2-diluted.
   - ISS air: CO2 covered up to 0.60, He up to 0.45. Exploration air: CO2 up to 0.50. Lunar/Mars base (34% O2): every CO2 or He fraction > 0 is gated, which feeds the planner as a "dilution at high O2" candidate.
   - Out-of-fold M1 discrimination on CO2-diluted rows is weak (AUC ~0.55, `artifacts/validation_report.md`); the curve is a trend, not a dose-response measurement.
+
+## ADR-0007: Detection pillar ships in reduced scope; dust is Arizona Road Dust, not lunar dust
+- **Status:** accepted (round 2, R3)
+- **Context:** Plan 13 R3 asked "would a smoke detector see this fire, and could lunar dust fool it?", with an overlap chart and an overlap metric (share of smoke counts in size bins where dust is also present). Its go rule was "SAME-R binned sizes **and** DAFT dust sizes on one diameter axis". The spike (`plan/14-detection-spike.md`) returned PARTIAL:
+  - SAME-R (PSI-101) has real binned smoke sizes from microscope images (3 runs downloaded) and per-run integrated moments for 100 runs of 5 materials.
+  - DAFT (PSI-47) flew a particle counter (total number) and a mass monitor (total mass). There are no dust size bins. The only dust size is one diameter of average mass per bag (3 bags), computed with an assumed density of 1.0 g/cm^3.
+  - The DAFT dust is Arizona Road Dust (ARD Fine), per the DAFT experimental table. No lunar regolith or simulant appears in PSI-47, 101, 102 or 115 files.
+  - PSI-115 gives six simulated size distributions (dibutyl phthalate surrogate, t = 7 s) in Earth gravity and microgravity, in a value unit we could not confirm.
+  - No cited source for ionization vs photoelectric detector size sensitivity is in the repo. The SAME-R results workbook has detector voltages per run, but one column is empty, one is all zero, and the offset/baseline meaning is not documented.
+- **Decision:**
+  - Ship a "Detection evidence" page (`artifacts/detection.json`, contract "Round 2 · R3 Detection evidence addendum"), not the overlap page. It shows: smoke size distributions per material (TEM, full sheet and the authors' "big only" cut); per-run smoke moments per material, aged and unaged kept apart; one like-for-like comparison (diameter of average mass of smoke per run vs the same quantity for 3 DAFT dust bags); and PSI-115 gravity vs microgravity curves, normalised to a share of count per size node.
+  - **No overlap metric** and **no detector sensitivity ranges.** Detector voltages are not shown.
+  - The dust is always labelled "Arizona Road Dust (DAFT)", with the density-1.0 assumption stated next to it. "Lunar dust" appears only in an explicit gap: the question "could lunar dust fool a smoke detector?" is stated as unanswered by these data.
+  - Every series carries one `size_definition` and a `source {investigation_id, file, sheet, rows}`. Different size definitions (TEM image diameter, moment-method diameter, diameter of average mass, simulation node) never share a series, because the spike showed they disagree for the same smoke (lampwick run 54: 192 nm vs 72 nm).
+  - The artifact is built from committed data files only, and records their manifest hashes in `generated_from`.
+- **Consequences:**
+  - The page answers a smaller question: how big smoke particles from heated spacecraft materials are, how that compares with one test dust on one size measure, and what gravity does to a simulated smoke. It does not say whether a detector would alarm, or whether lunar dust would trigger it.
+  - The smoke-vs-dust comparison is weak by design: one number per dust bag, with an assumed density. Mineral dust is denser than 1.0 g/cm^3, so the real dust diameter is smaller than shown (ARD density is not in these files).
+  - The catalog's detection evidence for PSI-101, PSI-47 and PSI-115 now names the data files used; PSI-102 points only to its 8-row sample table.
+  - Reopening the overlap chart needs new data: a dust size distribution (or a lunar simulant measurement) and a cited detector sensitivity source. The AI answers must state the same gaps.

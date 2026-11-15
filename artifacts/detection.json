@@ -1,0 +1,3325 @@
+{
+ "schema_version": 1,
+ "generated_at": "2026-11-15T00:04:03+00:00",
+ "engine_version": "0.1.0",
+ "generated_by": "engine/detection.py",
+ "title": "Detection evidence",
+ "verdict": "partial",
+ "scope_note": "Reduced scope. The planned chart of smoke sizes against dust sizes cannot be built: the dust experiment (DAFT) recorded only total dust number and mass, not sizes, and its dust is Arizona Road Dust. This page shows what the files do support: smoke size distributions, smoke sizes per test run, one like-for-like size comparison of smoke and dust, and a simulation of what gravity does to smoke. See ADR-0007.",
+ "generated_from": [
+  {
+   "file": "data/detection/raw/PSI-101/PSI-101_Analyzed_Data_54_lampwick_binneddatacorr_from_GWM.xlsx",
+   "sha256": "3a264eda40cb49eb37f6817425eec11594a1ae0c24bad29aac2f3c784613deca",
+   "bytes": 241661
+  },
+  {
+   "file": "data/detection/raw/PSI-101/PSI-101_Analyzed_Data_60_silicone.xlsx",
+   "sha256": "6987ebfe9e209cb1b35a68c3dcba6ea4e689a07a3eed755065e8e5f4c4b10b5f",
+   "bytes": 423378
+  },
+  {
+   "file": "data/detection/raw/PSI-101/PSI-101_Analyzed_Data_62_Kapton_unaged.xlsx",
+   "sha256": "e621db68f06276e0600147181c065e5f18f750f761f5014b0d0db49f2e8e470d",
+   "bytes": 425564
+  },
+  {
+   "file": "data/detection/raw/PSI-101/PSI-101_Analyzed_Data_SAME,_SAME-R_Results.xlsx",
+   "sha256": "6d3a539ccf425b1fa8edc19cc75d828f57d650c7ce734d4e7aa686fea9593218",
+   "bytes": 4061669
+  },
+  {
+   "file": "data/detection/raw/PSI-47/PSI-47_Analyzed_Data_DAFT_Retrieved_Data_Summary.xls",
+   "sha256": "a5c23d302f076de6e2c5477b9f0a06eb90698a3650a48ec34a3b8431abec3c02",
+   "bytes": 1004032
+  },
+  {
+   "file": "data/detection/raw/PSI-47/PSI-47_Experimental_table_DAFT.csv",
+   "sha256": "d9d1a436c6e7bbc410b433e04575fe7dedaff763b5237d688089929b7393b5c0",
+   "bytes": 518
+  },
+  {
+   "file": "data/detection/raw/PSI-115/PSI-115_Analyzed_Data_nodeDiameters.dat",
+   "sha256": "9c190a7e0d884f6e8a1c74a924552d663c981ea1f6f418b0c6de90db6f88e482",
+   "bytes": 1059
+  },
+  {
+   "file": "data/detection/raw/PSI-115/PSI-115_Analyzed_Data_8cmGravityPSD.dat",
+   "sha256": "ef90fed1159c851566687c892d889d0b845d96b2b206fbcdf31199d5e9082f5a",
+   "bytes": 1716
+  },
+  {
+   "file": "data/detection/raw/PSI-115/PSI-115_Analyzed_Data_8cmNoGravityPSD.dat",
+   "sha256": "80a3e6a37912d474c38ee3d49ea8af58dd8da31fc809470e202c7a396a2588d2",
+   "bytes": 1716
+  },
+  {
+   "file": "data/detection/raw/PSI-115/PSI-115_Analyzed_Data_8cmGravityNS_PSD.dat",
+   "sha256": "9bdaac8bbd2d663f8db0f78fed4cbb290e0b6d2a3e4fa3fb8818a9f75bdacee1",
+   "bytes": 1755
+  },
+  {
+   "file": "data/detection/raw/PSI-115/PSI-115_Analyzed_Data_8cmNoGravityNoTF_PSD.dat",
+   "sha256": "2fcee7dc9098fa0a700bfe4f73c7267b9dcd1b25744e846e54391c6faef2fcde",
+   "bytes": 1755
+  },
+  {
+   "file": "data/detection/raw/PSI-115/PSI-115_Analyzed_Data_10cmGravityPSD.dat",
+   "sha256": "f67f2ff614eff26a3b0e75db967820b55727c889d0d063d05ac289f16af8f0a2",
+   "bytes": 1716
+  },
+  {
+   "file": "data/detection/raw/PSI-115/PSI-115_Analyzed_Data_10cmNoGravityPSD.dat",
+   "sha256": "32f39f6a51baef37f2e5c770965e17037647aae72f77133e0b227bb4709ecdf1",
+   "bytes": 1716
+  }
+ ],
+ "gaps": [
+  {
+   "id": "lunar_dust",
+   "text": "No lunar dust or lunar dust simulant data exists in these PSI files. The only dust measured (DAFT) is Arizona Road Dust. So \"could lunar dust fool a smoke detector?\" is an open question here, not an answered one."
+  },
+  {
+   "id": "dust_sizes",
+   "text": "DAFT measured the total number and the total mass of dust particles, not their sizes. With no dust size distribution, smoke and dust sizes cannot be compared bin by bin, so no overlap is computed."
+  },
+  {
+   "id": "detector_sensitivity",
+   "text": "We have no cited source for which particle sizes ionization and light-scattering smoke detectors respond to, so the page does not show detector size ranges."
+  },
+  {
+   "id": "detector_signals",
+   "text": "The SAME-R results workbook lists smoke detector and ionization chamber voltages per run. One column is empty, one is all zero, and the offsets and baselines are not explained, so these signals are not shown."
+  },
+  {
+   "id": "size_definitions_disagree",
+   "text": "Different methods give different sizes for the same smoke, so they are never mixed in one series. Example: cotton lamp wick run 54 is 192 nm on microscope images and 72 nm from instrument totals. The cause was not investigated."
+  },
+  {
+   "id": "tem_coverage",
+   "text": "Microscope size distributions are available here for one run each of Kapton, cotton lamp wick and silicone. Pyrell and Teflon have per-run instrument totals only."
+  },
+  {
+   "id": "simulation_units",
+   "text": "The unit of the PSI-115 values could not be confirmed. Each simulated curve is shown as a share of its own count; totals are not compared."
+  },
+  {
+   "id": "simulation_vs_experiment",
+   "text": "The PSI-115 model uses a stand-in smoke (dibutyl phthalate), not the SAME-R materials, and its particles are several micrometres across, much larger than most SAME-R smoke. It is shown on its own chart."
+  },
+  {
+   "id": "daft_bag_mapping",
+   "text": "Which DAFT instrument log belongs to which dust bag is not confirmed. Only the per-bag averages from the DAFT summary workbook are used."
+  },
+  {
+   "id": "same_files",
+   "text": "No SAME (PSI-102) measurement files are in this repository; only its 8-row sample list is used, in the catalog."
+  }
+ ],
+ "size_definitions": {
+  "tem_image_diameter": {
+   "label": "Size on microscope images",
+   "note": "Smoke was collected on small grids and photographed with an electron microscope (TEM). Each particle was measured on the images and counted into size bins."
+  },
+  "moment_geometric_mean": {
+   "label": "Middle size from instrument totals",
+   "note": "Worked out by the SAME-R team from three instrument totals (particle number, an ionization chamber signal and particle mass), assuming a lognormal size spread. No particles were sized one by one."
+  },
+  "diameter_of_average_mass": {
+   "label": "Diameter of average mass",
+   "note": "The size of a ball that has the average particle mass: total mass divided by total number. It needs a material density."
+  },
+  "simulation_node_diameter": {
+   "label": "Size class in the simulation",
+   "note": "The PSI-115 computer model sorts particles into 44 size classes; this is the size of each class."
+  }
+ },
+ "smoke_bins": [
+  {
+   "id": "tem_lampwick_54_all",
+   "label": "Cotton lamp wick smoke, run 54: all particles counted",
+   "material": "Lampwick",
+   "material_label": "Cotton lamp wick",
+   "run": "54",
+   "variant": "all",
+   "variant_label": "All particles counted",
+   "size_definition": "tem_image_diameter",
+   "note": "Share of counted particles in each size bin, from microscope images of one test run. This version keeps every particle, including a group of very small ones.",
+   "source": {
+    "investigation_id": "PSI-101",
+    "file": "PSI-101_Analyzed_Data_54_lampwick_binneddatacorr_from_GWM.xlsx",
+    "sheet": "Binned data",
+    "rows": "15-44"
+   },
+   "diameter_nm": [
+    9.918535496352737,
+    11.795348737570263,
+    14.02870066986452,
+    16.683250949385197,
+    19.840102714434018,
+    23.59666241606142,
+    28.061689383731068,
+    33.37160133854396,
+    39.69023862442583,
+    47.20053744069736,
+    56.13195616615931,
+    66.76007878943095,
+    79.39260905590046,
+    94.41550230316587,
+    112.29229841989901,
+    133.5405636137588,
+    158.80948543413385,
+    188.87875079050866,
+    224.6189203547153,
+    267.12194553466566,
+    317.699281270221,
+    377.81523468214317,
+    449.3199776278045,
+    534.3629442571818,
+    635.4956712128385,
+    755.7686259320521,
+    898.8132472150845,
+    1068.921290243947,
+    1271.2237255926466,
+    1511.8287337314127
+   ],
+   "count": [
+    0.0,
+    20.0,
+    0.0,
+    10.0,
+    0.0,
+    11.0,
+    8.0,
+    6.0,
+    3.0,
+    7.0,
+    8.0,
+    16.0,
+    16.0,
+    9.0,
+    21.0,
+    32.0,
+    26.0,
+    46.0,
+    39.0,
+    62.0,
+    56.0,
+    64.0,
+    48.0,
+    36.0,
+    16.0,
+    8.0,
+    6.0,
+    1.0,
+    1.0,
+    0.0
+   ],
+   "fraction": [
+    0.0,
+    0.034722222222222224,
+    0.0,
+    0.017361111111111112,
+    0.0,
+    0.019097222222222224,
+    0.013888888888888888,
+    0.010416666666666666,
+    0.005208333333333333,
+    0.012152777777777778,
+    0.013888888888888888,
+    0.027777777777777776,
+    0.027777777777777776,
+    0.015625,
+    0.036458333333333336,
+    0.05555555555555555,
+    0.04513888888888889,
+    0.0798611111111111,
+    0.06770833333333333,
+    0.1076388888888889,
+    0.09722222222222222,
+    0.1111111111111111,
+    0.08333333333333333,
+    0.0625,
+    0.027777777777777776,
+    0.013888888888888888,
+    0.010416666666666666,
+    0.001736111111111111,
+    0.001736111111111111,
+    0.0
+   ],
+   "dlnD": 0.17330000000000023,
+   "stats": {
+    "count_median_diameter_nm": 251.89566056689122,
+    "geometric_mean_diameter_nm": 191.7360004678057,
+    "geometric_std": 2.712337111939137,
+    "particle_count": 576.0
+   },
+   "workbook_reported": {
+    "geometric_mean_diameter_nm": 191.73600046780552,
+    "geometric_std": 2.712337111939137,
+    "cells": "I9, J9"
+   }
+  },
+  {
+   "id": "tem_lampwick_54_big_only",
+   "label": "Cotton lamp wick smoke, run 54: larger particles only (cut made by the authors)",
+   "material": "Lampwick",
+   "material_label": "Cotton lamp wick",
+   "run": "54",
+   "variant": "big_only",
+   "variant_label": "Larger particles only (cut made by the authors)",
+   "size_definition": "tem_image_diameter",
+   "note": "Share of counted particles in each size bin, from microscope images of one test run. The workbook authors left out the smallest particles in this version.",
+   "source": {
+    "investigation_id": "PSI-101",
+    "file": "PSI-101_Analyzed_Data_54_lampwick_binneddatacorr_from_GWM.xlsx",
+    "sheet": "Binned data big only",
+    "rows": "25-44"
+   },
+   "diameter_nm": [
+    56.13195616615931,
+    66.76007878943095,
+    79.39260905590046,
+    94.41550230316587,
+    112.29229841989901,
+    133.5405636137588,
+    158.80948543413385,
+    188.87875079050866,
+    224.6189203547153,
+    267.12194553466566,
+    317.699281270221,
+    377.81523468214317,
+    449.3199776278045,
+    534.3629442571818,
+    635.4956712128385,
+    755.7686259320521,
+    898.8132472150845,
+    1068.921290243947,
+    1271.2237255926466,
+    1511.8287337314127
+   ],
+   "count": [
+    8.0,
+    16.0,
+    16.0,
+    9.0,
+    21.0,
+    32.0,
+    26.0,
+    46.0,
+    39.0,
+    62.0,
+    56.0,
+    64.0,
+    48.0,
+    36.0,
+    16.0,
+    8.0,
+    6.0,
+    1.0,
+    1.0,
+    0.0
+   ],
+   "fraction": [
+    0.015655577299412915,
+    0.03131115459882583,
+    0.03131115459882583,
+    0.01761252446183953,
+    0.0410958904109589,
+    0.06262230919765166,
+    0.050880626223091974,
+    0.09001956947162426,
+    0.07632093933463796,
+    0.12133072407045009,
+    0.1095890410958904,
+    0.12524461839530332,
+    0.09393346379647749,
+    0.07045009784735812,
+    0.03131115459882583,
+    0.015655577299412915,
+    0.011741682974559686,
+    0.0019569471624266144,
+    0.0019569471624266144,
+    0.0
+   ],
+   "dlnD": 0.17330000000000023,
+   "stats": {
+    "count_median_diameter_nm": 275.8573565475321,
+    "geometric_mean_diameter_nm": 253.9657233047751,
+    "geometric_std": 1.8712084773119193,
+    "particle_count": 511.0
+   },
+   "workbook_reported": {
+    "geometric_mean_diameter_nm": 253.96572330477514,
+    "geometric_std": 1.8712084773119193,
+    "cells": "I9, J9"
+   }
+  },
+  {
+   "id": "tem_silicone_60_all",
+   "label": "Silicone smoke, run 60: all particles counted",
+   "material": "Silicone",
+   "material_label": "Silicone",
+   "run": "60",
+   "variant": "all",
+   "variant_label": "All particles counted",
+   "size_definition": "tem_image_diameter",
+   "note": "Share of counted particles in each size bin, from microscope images of one test run. This version keeps every particle, including a group of very small ones.",
+   "source": {
+    "investigation_id": "PSI-101",
+    "file": "PSI-101_Analyzed_Data_60_silicone.xlsx",
+    "sheet": "Binned data",
+    "rows": "15-39"
+   },
+   "diameter_nm": [
+    4.607821929992752,
+    5.857689713335622,
+    7.446583070924344,
+    9.466462401710324,
+    12.034232284723775,
+    15.298507566725519,
+    19.4482147453854,
+    24.723526470339397,
+    31.42976201836771,
+    39.955058260653914,
+    50.792833864898505,
+    64.5703468931685,
+    82.0849986238988,
+    104.35048475476503,
+    132.6554650801217,
+    168.63814726859556,
+    214.381101426978,
+    272.53179303401265,
+    346.4558103300575,
+    440.43165450599935,
+    559.8983665654022,
+    711.7703227626098,
+    904.8374180359597,
+    1150.2737988572273,
+    1462.2845894342247
+   ],
+   "count": [
+    0.0,
+    38.0,
+    27.0,
+    19.0,
+    34.0,
+    26.0,
+    28.0,
+    61.0,
+    53.0,
+    85.0,
+    83.0,
+    98.0,
+    97.0,
+    101.0,
+    81.0,
+    74.0,
+    43.0,
+    16.0,
+    5.0,
+    4.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "fraction": [
+    0.0,
+    0.03905447070914697,
+    0.02774922918807811,
+    0.019527235354573486,
+    0.03494347379239465,
+    0.02672147995889003,
+    0.02877697841726619,
+    0.06269270298047276,
+    0.05447070914696814,
+    0.08735868448098665,
+    0.08530318602261049,
+    0.10071942446043165,
+    0.09969167523124357,
+    0.10380267214799589,
+    0.08324768756423433,
+    0.07605344295991778,
+    0.044193216855087356,
+    0.01644398766700925,
+    0.0051387461459403904,
+    0.0041109969167523125,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "dlnD": 0.2400000000000002,
+   "stats": {
+    "count_median_diameter_nm": 62.01319070463184,
+    "geometric_mean_diameter_nm": 53.67820630631941,
+    "geometric_std": 2.67628625140303,
+    "particle_count": 973.0
+   },
+   "workbook_reported": {
+    "geometric_mean_diameter_nm": 53.678206306319375,
+    "geometric_std": 2.6762862514030306,
+    "cells": "I9, J9"
+   }
+  },
+  {
+   "id": "tem_silicone_60_big_only",
+   "label": "Silicone smoke, run 60: larger particles only (cut made by the authors)",
+   "material": "Silicone",
+   "material_label": "Silicone",
+   "run": "60",
+   "variant": "big_only",
+   "variant_label": "Larger particles only (cut made by the authors)",
+   "size_definition": "tem_image_diameter",
+   "note": "Share of counted particles in each size bin, from microscope images of one test run. The workbook authors left out the smallest particles in this version.",
+   "source": {
+    "investigation_id": "PSI-101",
+    "file": "PSI-101_Analyzed_Data_60_silicone.xlsx",
+    "sheet": "Binned data big only",
+    "rows": "26-39"
+   },
+   "diameter_nm": [
+    64.5703468931685,
+    82.0849986238988,
+    104.35048475476503,
+    132.6554650801217,
+    168.63814726859556,
+    214.381101426978,
+    272.53179303401265,
+    346.4558103300575,
+    440.43165450599935,
+    559.8983665654022,
+    711.7703227626098,
+    904.8374180359597,
+    1150.2737988572273,
+    1462.2845894342247
+   ],
+   "count": [
+    98.0,
+    97.0,
+    101.0,
+    81.0,
+    74.0,
+    43.0,
+    16.0,
+    5.0,
+    4.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "fraction": [
+    0.18882466281310212,
+    0.18689788053949905,
+    0.19460500963391136,
+    0.15606936416184972,
+    0.14258188824662812,
+    0.08285163776493257,
+    0.030828516377649325,
+    0.009633911368015413,
+    0.007707129094412331,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "dlnD": 0.2400000000000002,
+   "stats": {
+    "count_median_diameter_nm": 107.88033523150202,
+    "geometric_mean_diameter_nm": 113.3032007335571,
+    "geometric_std": 1.547317032705149,
+    "particle_count": 519.0
+   },
+   "workbook_reported": {
+    "geometric_mean_diameter_nm": 113.30320073355719,
+    "geometric_std": 1.547317032705149,
+    "cells": "I9, J9"
+   }
+  },
+  {
+   "id": "tem_kapton_62_all",
+   "label": "Kapton smoke, run 62: all particles counted",
+   "material": "Kapton",
+   "material_label": "Kapton",
+   "run": "62",
+   "variant": "all",
+   "variant_label": "All particles counted",
+   "size_definition": "tem_image_diameter",
+   "note": "Share of counted particles in each size bin, from microscope images of one test run. This version keeps every particle, including a group of very small ones.",
+   "source": {
+    "investigation_id": "PSI-101",
+    "file": "PSI-101_Analyzed_Data_62_Kapton_unaged.xlsx",
+    "sheet": "Binned data (2)",
+    "rows": "15-49"
+   },
+   "diameter_nm": [
+    10.796319391713986,
+    12.454789889260118,
+    14.366588663644238,
+    16.57350405624753,
+    19.11752166101715,
+    22.05424893914214,
+    25.439555834457344,
+    29.347438816736112,
+    33.85562903325122,
+    39.05243690132989,
+    45.051454909989914,
+    51.9668117363151,
+    59.94966413158225,
+    69.1518823488747,
+    79.7746096473474,
+    92.02914119213726,
+    106.1555295859285,
+    122.46255122746761,
+    141.2604400257776,
+    162.96008263110303,
+    187.97430519268391,
+    216.8498717767981,
+    250.1611421912785,
+    288.56064706387593,
+    332.8877276683603,
+    383.9856872022,
+    442.9670016881466,
+    510.98757711678746,
+    589.4590659545444,
+    679.9812872096311,
+    784.3970072529706,
+    904.855514965289,
+    1043.8115860071748,
+    1204.109151295876,
+    1389.0082454448782
+   ],
+   "count": [
+    184.0,
+    0.0,
+    0.0,
+    82.0,
+    0.0,
+    38.0,
+    33.0,
+    49.0,
+    29.0,
+    22.0,
+    40.0,
+    33.0,
+    33.0,
+    63.0,
+    63.0,
+    64.0,
+    110.0,
+    107.0,
+    147.0,
+    128.0,
+    131.0,
+    131.0,
+    104.0,
+    88.0,
+    61.0,
+    29.0,
+    20.0,
+    9.0,
+    3.0,
+    2.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "fraction": [
+    0.10205213533000555,
+    0.0,
+    0.0,
+    0.04547975596228508,
+    0.0,
+    0.02107598447032723,
+    0.018302828618968387,
+    0.027176927343316695,
+    0.01608430393788131,
+    0.012201885745978924,
+    0.022185246810870772,
+    0.018302828618968387,
+    0.018302828618968387,
+    0.03494176372712146,
+    0.03494176372712146,
+    0.03549639489739324,
+    0.06100942872989462,
+    0.059345535219079315,
+    0.08153078202995008,
+    0.07099278979478647,
+    0.07265668330560178,
+    0.07265668330560178,
+    0.057681641708264,
+    0.048807542983915694,
+    0.03383250138657792,
+    0.01608430393788131,
+    0.011092623405435386,
+    0.004991680532445923,
+    0.0016638935108153079,
+    0.0011092623405435386,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "dlnD": 0.14290000000000003,
+   "stats": {
+    "count_median_diameter_nm": 123.27966980915619,
+    "geometric_mean_diameter_nm": 89.2674911771591,
+    "geometric_std": 2.9311631623433025,
+    "particle_count": 1803.0
+   },
+   "workbook_reported": {
+    "geometric_mean_diameter_nm": 89.26749117715906,
+    "geometric_std": 2.9311631623433025,
+    "cells": "I9, J9"
+   }
+  },
+  {
+   "id": "tem_kapton_62_big_only",
+   "label": "Kapton smoke, run 62: larger particles only (cut made by the authors)",
+   "material": "Kapton",
+   "material_label": "Kapton",
+   "run": "62",
+   "variant": "big_only",
+   "variant_label": "Larger particles only (cut made by the authors)",
+   "size_definition": "tem_image_diameter",
+   "note": "Share of counted particles in each size bin, from microscope images of one test run. The workbook authors left out the smallest particles in this version.",
+   "source": {
+    "investigation_id": "PSI-101",
+    "file": "PSI-101_Analyzed_Data_62_Kapton_unaged.xlsx",
+    "sheet": "Binned data big only (2)",
+    "rows": "15-37"
+   },
+   "diameter_nm": [
+    59.949664131582225,
+    69.1518823488747,
+    79.7746096473474,
+    92.02914119213726,
+    106.1555295859285,
+    122.46255122746756,
+    141.26044002577757,
+    162.960082631103,
+    187.9743051926839,
+    216.84987177679804,
+    250.16114219127843,
+    288.5606470638759,
+    332.8877276683602,
+    383.98568720219987,
+    442.96700168814647,
+    510.98757711678735,
+    589.4590659545441,
+    679.981287209631,
+    784.3970072529705,
+    904.8555149652889,
+    1043.8115860071746,
+    1204.1091512958758,
+    1389.008245444878
+   ],
+   "count": [
+    33.0,
+    63.0,
+    63.0,
+    64.0,
+    110.0,
+    107.0,
+    147.0,
+    128.0,
+    131.0,
+    131.0,
+    104.0,
+    88.0,
+    61.0,
+    29.0,
+    20.0,
+    9.0,
+    3.0,
+    2.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "fraction": [
+    0.025522041763341066,
+    0.048723897911832945,
+    0.048723897911832945,
+    0.04949729311678268,
+    0.08507347254447023,
+    0.08275328692962104,
+    0.1136890951276102,
+    0.09899458623356536,
+    0.10131477184841454,
+    0.10131477184841454,
+    0.08043310131477185,
+    0.06805877803557618,
+    0.04717710750193349,
+    0.02242846094354215,
+    0.015467904098994586,
+    0.0069605568445475635,
+    0.002320185614849188,
+    0.0015467904098994587,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "dlnD": 0.14289999999999958,
+   "stats": {
+    "count_median_diameter_nm": 162.13968368301616,
+    "geometric_mean_diameter_nm": 161.5949239691901,
+    "geometric_std": 1.6427889356610224,
+    "particle_count": 1293.0
+   },
+   "workbook_reported": {
+    "geometric_mean_diameter_nm": 161.5949239691901,
+    "geometric_std": 1.6427889356610221,
+    "cells": "I9, J9"
+   }
+  }
+ ],
+ "smoke_runs": {
+  "id": "same_r_runs_dg",
+  "label": "Smoke middle size per test run (SAME-R)",
+  "size_definition": "moment_geometric_mean",
+  "note": "One dot per test run. Test conditions (heating, air flow, aging time) differ between runs. Aged runs measured the same smoke again after it had been held for a while.",
+  "source": {
+   "investigation_id": "PSI-101",
+   "file": "PSI-101_Analyzed_Data_SAME,_SAME-R_Results.xlsx",
+   "sheet": "SAME R Results",
+   "rows": "3-121"
+  },
+  "materials": [
+   "Kapton",
+   "Lampwick",
+   "Pyrell",
+   "Silicone",
+   "Teflon"
+  ],
+  "material_labels": {
+   "Kapton": "Kapton",
+   "Lampwick": "Cotton lamp wick",
+   "Pyrell": "Pyrell",
+   "Silicone": "Silicone",
+   "Teflon": "Teflon"
+  },
+  "points": [
+   {
+    "material": "Silicone",
+    "aged": false,
+    "run": "48",
+    "row": 3,
+    "description": "Low Temp",
+    "value_nm": 179.4970908990223,
+    "geometric_std": 2.1878400054141345
+   },
+   {
+    "material": "Lampwick",
+    "aged": false,
+    "run": "49",
+    "row": 4,
+    "description": "Baseline High RT/R0",
+    "value_nm": 107.93353093663659,
+    "geometric_std": 2.239121787030124
+   },
+   {
+    "material": "Teflon",
+    "aged": false,
+    "run": "50",
+    "row": 5,
+    "description": "Baseline High RT/R0",
+    "value_nm": 113.30560179039686,
+    "geometric_std": 2.0786515528876603
+   },
+   {
+    "material": "Kapton",
+    "aged": false,
+    "run": "51",
+    "row": 6,
+    "description": "Baseline new formula",
+    "value_nm": 42.95167596178432,
+    "geometric_std": 2.090599137468832
+   },
+   {
+    "material": "Kapton",
+    "aged": true,
+    "run": "51a",
+    "row": 7,
+    "description": "Baseline new formula",
+    "value_nm": 50.818958542366076,
+    "geometric_std": 2.0955623370880416
+   },
+   {
+    "material": "Pyrell",
+    "aged": false,
+    "run": "52",
+    "row": 8,
+    "description": "Baseline",
+    "value_nm": 149.07474019917848,
+    "geometric_std": 2.262475756453556
+   },
+   {
+    "material": "Silicone",
+    "aged": false,
+    "run": "53",
+    "row": 9,
+    "description": "HighTemp",
+    "value_nm": 169.2908570902574,
+    "geometric_std": 2.421852687022607
+   },
+   {
+    "material": "Lampwick",
+    "aged": false,
+    "run": "54",
+    "row": 11,
+    "description": "Baseline",
+    "value_nm": 72.22916871386114,
+    "geometric_std": 2.492996586982887
+   },
+   {
+    "material": "Lampwick",
+    "aged": false,
+    "run": "55",
+    "row": 12,
+    "description": "High RT/R0 test aging",
+    "value_nm": 75.62831576885375,
+    "geometric_std": 2.527847124693362
+   },
+   {
+    "material": "Lampwick",
+    "aged": true,
+    "run": "55a",
+    "row": 13,
+    "description": "aged",
+    "value_nm": 101.54688893994044,
+    "geometric_std": 2.399623149808362
+   },
+   {
+    "material": "Teflon",
+    "aged": false,
+    "run": "56",
+    "row": 14,
+    "description": "Baseline",
+    "value_nm": 111.43717188099855,
+    "geometric_std": 1.785741217437197
+   },
+   {
+    "material": "Lampwick",
+    "aged": false,
+    "run": "57",
+    "row": 15,
+    "description": "High RT/R0 reburn sample",
+    "value_nm": 54.742886305248774,
+    "geometric_std": 2.5624075603162524
+   },
+   {
+    "material": "Teflon",
+    "aged": false,
+    "run": "58",
+    "row": 16,
+    "description": "Baseline aging",
+    "value_nm": 31.687885565052866,
+    "geometric_std": 2.7638822532432576
+   },
+   {
+    "material": "Teflon",
+    "aged": true,
+    "run": "58a",
+    "row": 17,
+    "description": "aged",
+    "value_nm": 70.20807722496909,
+    "geometric_std": 2.4420805206174716
+   },
+   {
+    "material": "Silicone",
+    "aged": false,
+    "run": "59",
+    "row": 18,
+    "description": "Baseline aging",
+    "value_nm": 124.95285816934184,
+    "geometric_std": 2.5302410110434193
+   },
+   {
+    "material": "Silicone",
+    "aged": true,
+    "run": "59a",
+    "row": 19,
+    "description": "aged",
+    "value_nm": 250.71783710999912,
+    "geometric_std": 2.166748376099798
+   },
+   {
+    "material": "Silicone",
+    "aged": false,
+    "run": "60",
+    "row": 20,
+    "description": "Htemp aging",
+    "value_nm": 161.67200637296847,
+    "geometric_std": 2.439743219733047
+   },
+   {
+    "material": "Silicone",
+    "aged": true,
+    "run": "60a",
+    "row": 21,
+    "description": "aged",
+    "value_nm": 369.6947766498185,
+    "geometric_std": 1.985238345650711
+   },
+   {
+    "material": "Kapton",
+    "aged": false,
+    "run": "61",
+    "row": 23,
+    "description": "Baseline Aging",
+    "value_nm": 43.567499587897025,
+    "geometric_std": 2.1588164423810263
+   },
+   {
+    "material": "Kapton",
+    "aged": true,
+    "run": "61a",
+    "row": 24,
+    "description": "aged",
+    "value_nm": 89.3412433001711,
+    "geometric_std": 1.872054177134579
+   },
+   {
+    "material": "Kapton",
+    "aged": false,
+    "run": "62",
+    "row": 25,
+    "description": "High Temp aging",
+    "value_nm": 113.99613592531087,
+    "geometric_std": 2.0661708170425976
+   },
+   {
+    "material": "Kapton",
+    "aged": true,
+    "run": "62a",
+    "row": 26,
+    "description": "aged",
+    "value_nm": 193.71224071885487,
+    "geometric_std": 1.9621025940506183
+   },
+   {
+    "material": "Pyrell",
+    "aged": false,
+    "run": "63",
+    "row": 27,
+    "description": "Baseline Aging",
+    "value_nm": 150.53410372740143,
+    "geometric_std": 2.2219783573112184
+   },
+   {
+    "material": "Pyrell",
+    "aged": true,
+    "run": "63a",
+    "row": 28,
+    "description": "aged",
+    "value_nm": 292.97297716135125,
+    "geometric_std": 1.8922142617359956
+   },
+   {
+    "material": "Pyrell",
+    "aged": false,
+    "run": "64",
+    "row": 29,
+    "description": "High Temp aging",
+    "value_nm": 191.76797520354046,
+    "geometric_std": 2.1145436150408896
+   },
+   {
+    "material": "Pyrell",
+    "aged": true,
+    "run": "64a",
+    "row": 30,
+    "description": "aged",
+    "value_nm": 384.88711959034435,
+    "geometric_std": 1.7501057221171064
+   },
+   {
+    "material": "Silicone",
+    "aged": false,
+    "run": "65",
+    "row": 31,
+    "description": "Baseline long Aging",
+    "value_nm": 126.84219726451437,
+    "geometric_std": 2.5299320831158894
+   },
+   {
+    "material": "Silicone",
+    "aged": true,
+    "run": "65a",
+    "row": 32,
+    "description": "aged",
+    "value_nm": 373.97453500803454,
+    "geometric_std": 1.9165718859067358
+   },
+   {
+    "material": "Silicone",
+    "aged": false,
+    "run": "66",
+    "row": 33,
+    "description": "High Temp aging",
+    "value_nm": 160.53012786342268,
+    "geometric_std": 2.480035062107834
+   },
+   {
+    "material": "Silicone",
+    "aged": true,
+    "run": "66a",
+    "row": 34,
+    "description": "aged",
+    "value_nm": 350.6767159616607,
+    "geometric_std": 2.05618424901036
+   },
+   {
+    "material": "Silicone",
+    "aged": false,
+    "run": "67",
+    "row": 36,
+    "description": "High temp aged STS det",
+    "value_nm": 292.34312166121146,
+    "geometric_std": 2.10047181170929
+   },
+   {
+    "material": "Lampwick",
+    "aged": false,
+    "run": "68",
+    "row": 37,
+    "description": "High temp aged STS det",
+    "value_nm": 179.67517541300185,
+    "geometric_std": 2.019859695422917
+   },
+   {
+    "material": "Kapton",
+    "aged": false,
+    "run": "70",
+    "row": 39,
+    "description": "High temp aged STS det",
+    "value_nm": 141.61754256505463,
+    "geometric_std": 1.6596009485865952
+   },
+   {
+    "material": "Pyrell",
+    "aged": false,
+    "run": "71",
+    "row": 40,
+    "description": "High temp aged STS det",
+    "value_nm": 276.33385905082264,
+    "geometric_std": 1.7305341707926598
+   },
+   {
+    "material": "Silicone",
+    "aged": false,
+    "run": "72",
+    "row": 41,
+    "description": "Baseline STS det",
+    "value_nm": 120.19478746766346,
+    "geometric_std": 2.4907181987680542
+   },
+   {
+    "material": "Kapton",
+    "aged": false,
+    "run": "73",
+    "row": 43,
+    "description": "Baseline Aging",
+    "value_nm": 47.84228852649191,
+    "geometric_std": 1.8998345130936856
+   },
+   {
+    "material": "Kapton",
+    "aged": true,
+    "run": "73a",
+    "row": 44,
+    "description": "aged",
+    "value_nm": 83.76624808810354,
+    "geometric_std": 1.6693044569636455
+   },
+   {
+    "material": "Pyrell",
+    "aged": false,
+    "run": "74",
+    "row": 45,
+    "description": "Baseline Aging",
+    "value_nm": 147.49653543696306,
+    "geometric_std": 2.148722604077893
+   },
+   {
+    "material": "Pyrell",
+    "aged": true,
+    "run": "74a",
+    "row": 46,
+    "description": "aged",
+    "value_nm": 326.015777987165,
+    "geometric_std": 1.731148221373688
+   },
+   {
+    "material": "Kapton",
+    "aged": true,
+    "run": "75a",
+    "row": 48,
+    "description": "aged",
+    "value_nm": 103.84234859058263,
+    "geometric_std": 1.657324570926319
+   },
+   {
+    "material": "Pyrell",
+    "aged": false,
+    "run": "76",
+    "row": 49,
+    "description": "High Temp aging",
+    "value_nm": 293.60858690347516,
+    "geometric_std": 1.843342080682528
+   },
+   {
+    "material": "Pyrell",
+    "aged": true,
+    "run": "76a",
+    "row": 50,
+    "description": "aged",
+    "value_nm": 370.0213105845219,
+    "geometric_std": 1.834502046916247
+   },
+   {
+    "material": "Kapton",
+    "aged": false,
+    "run": "77",
+    "row": 51,
+    "description": "High Temp aging",
+    "value_nm": 80.50930415793981,
+    "geometric_std": 1.54086692028052
+   },
+   {
+    "material": "Kapton",
+    "aged": true,
+    "run": "77a",
+    "row": 52,
+    "description": "aged",
+    "value_nm": 126.33107642464864,
+    "geometric_std": 1.5272346903307832
+   },
+   {
+    "material": "Lampwick",
+    "aged": false,
+    "run": "78",
+    "row": 54,
+    "description": "Baseline aging",
+    "value_nm": 91.00164783979632,
+    "geometric_std": 2.324494786421839
+   },
+   {
+    "material": "Lampwick",
+    "aged": true,
+    "run": "78a",
+    "row": 55,
+    "description": "aged",
+    "value_nm": 177.32588253993828,
+    "geometric_std": 1.9747194096960874
+   },
+   {
+    "material": "Teflon",
+    "aged": false,
+    "run": "79",
+    "row": 56,
+    "description": "Baseline aging",
+    "value_nm": 149.53653401481964,
+    "geometric_std": 1.5111289946801014
+   },
+   {
+    "material": "Lampwick",
+    "aged": false,
+    "run": "80",
+    "row": 58,
+    "description": "High temp  aging",
+    "value_nm": 81.45173139020089,
+    "geometric_std": 2.507810768323902
+   },
+   {
+    "material": "Lampwick",
+    "aged": true,
+    "run": "80a",
+    "row": 59,
+    "description": "aged",
+    "value_nm": 198.87188478739722,
+    "geometric_std": 2.0122138995127745
+   },
+   {
+    "material": "Teflon",
+    "aged": false,
+    "run": "81",
+    "row": 60,
+    "description": "High temp  aging",
+    "value_nm": 189.73641212359584,
+    "geometric_std": 1.541820614289457
+   },
+   {
+    "material": "Lampwick",
+    "aged": false,
+    "run": "82",
+    "row": 62,
+    "description": "Mid temp aging",
+    "value_nm": 96.18818545266336,
+    "geometric_std": 2.356992697809274
+   },
+   {
+    "material": "Lampwick",
+    "aged": true,
+    "run": "82a",
+    "row": 63,
+    "description": "aged",
+    "value_nm": 177.80742294482295,
+    "geometric_std": 2.0505944091004547
+   },
+   {
+    "material": "Teflon",
+    "aged": false,
+    "run": "83",
+    "row": 64,
+    "description": "Mid temp aging",
+    "value_nm": 113.80087707932458,
+    "geometric_std": 1.9014741902301655
+   },
+   {
+    "material": "Pyrell",
+    "aged": false,
+    "run": "84",
+    "row": 67,
+    "description": "Mid Temp aging retry",
+    "value_nm": 174.77172905433233,
+    "geometric_std": 2.13094001657288
+   },
+   {
+    "material": "Pyrell",
+    "aged": true,
+    "run": "84a",
+    "row": 68,
+    "description": "aged",
+    "value_nm": 289.43758364257053,
+    "geometric_std": 1.8926021618490523
+   },
+   {
+    "material": "Kapton",
+    "aged": true,
+    "run": "85a",
+    "row": 70,
+    "description": "aged",
+    "value_nm": 90.20925073854234,
+    "geometric_std": 1.93579348413426
+   },
+   {
+    "material": "Silicone",
+    "aged": false,
+    "run": "86",
+    "row": 71,
+    "description": "Mid temp aging",
+    "value_nm": 166.7110710643826,
+    "geometric_std": 2.403818538602768
+   },
+   {
+    "material": "Silicone",
+    "aged": true,
+    "run": "86a",
+    "row": 72,
+    "description": "aged",
+    "value_nm": 314.6468778931178,
+    "geometric_std": 2.0513213994146504
+   },
+   {
+    "material": "Pyrell",
+    "aged": false,
+    "run": "87",
+    "row": 73,
+    "description": "Baseline STS det",
+    "value_nm": 158.60028133077586,
+    "geometric_std": 2.240797282137971
+   },
+   {
+    "material": "Lampwick",
+    "aged": false,
+    "run": "88",
+    "row": 74,
+    "description": "Baseline STS det",
+    "value_nm": 88.91754897424661,
+    "geometric_std": 2.299174889501581
+   },
+   {
+    "material": "Teflon",
+    "aged": false,
+    "run": "89",
+    "row": 75,
+    "description": "Baseline STS det",
+    "value_nm": 33.23823985693733,
+    "geometric_std": 2.732534317487376
+   },
+   {
+    "material": "Silicone",
+    "aged": false,
+    "run": "91",
+    "row": 79,
+    "description": "Baseline STS det",
+    "value_nm": 116.87532926820664,
+    "geometric_std": 2.621960580186387
+   },
+   {
+    "material": "Kapton",
+    "aged": false,
+    "run": "92",
+    "row": 80,
+    "description": "Baseline STS det",
+    "value_nm": 32.60273409594507,
+    "geometric_std": 2.466511623736183
+   },
+   {
+    "material": "Kapton",
+    "aged": false,
+    "run": "93",
+    "row": 81,
+    "description": "Mid Temp aging run 75 repeat",
+    "value_nm": 51.70625617025402,
+    "geometric_std": 1.9372165118252334
+   },
+   {
+    "material": "Kapton",
+    "aged": true,
+    "run": "93a",
+    "row": 82,
+    "description": "aged",
+    "value_nm": 86.57813234429214,
+    "geometric_std": 1.8636959275172889
+   },
+   {
+    "material": "Kapton",
+    "aged": false,
+    "run": "94",
+    "row": 83,
+    "description": "Mid Temp aging run mid high",
+    "value_nm": 81.68800542053994,
+    "geometric_std": 1.6262491679176359
+   },
+   {
+    "material": "Kapton",
+    "aged": true,
+    "run": "94a",
+    "row": 84,
+    "description": "aged",
+    "value_nm": 118.846493917783,
+    "geometric_std": 1.6688963150865648
+   },
+   {
+    "material": "Pyrell",
+    "aged": false,
+    "run": "95",
+    "row": 85,
+    "description": "No flow run w/ aging",
+    "value_nm": 63.37826223645457,
+    "geometric_std": 3.521400486109984
+   },
+   {
+    "material": "Pyrell",
+    "aged": true,
+    "run": "95a",
+    "row": 86,
+    "description": "aged",
+    "value_nm": 235.07946326104442,
+    "geometric_std": 2.516274556399013
+   },
+   {
+    "material": "Lampwick",
+    "aged": false,
+    "run": "96",
+    "row": 87,
+    "description": "No flow run w/aging",
+    "value_nm": 122.515264945568,
+    "geometric_std": 2.4751813854914384
+   },
+   {
+    "material": "Lampwick",
+    "aged": true,
+    "run": "96a",
+    "row": 88,
+    "description": "aged",
+    "value_nm": 171.67454583651138,
+    "geometric_std": 2.231834447303629
+   },
+   {
+    "material": "Pyrell",
+    "aged": false,
+    "run": "97",
+    "row": 91,
+    "description": "No flow run w/ aging",
+    "value_nm": 124.06932130264109,
+    "geometric_std": 3.1669271081639283
+   },
+   {
+    "material": "Pyrell",
+    "aged": true,
+    "run": "97a",
+    "row": 92,
+    "description": "aged",
+    "value_nm": 212.65730431399044,
+    "geometric_std": 2.707388644393232
+   },
+   {
+    "material": "Lampwick",
+    "aged": false,
+    "run": "98",
+    "row": 93,
+    "description": "No flow run w/ aging",
+    "value_nm": 108.7553899042086,
+    "geometric_std": 2.5457404617536565
+   },
+   {
+    "material": "Lampwick",
+    "aged": true,
+    "run": "98a",
+    "row": 94,
+    "description": "aged",
+    "value_nm": 121.94909540707573,
+    "geometric_std": 2.502796527833057
+   },
+   {
+    "material": "Silicone",
+    "aged": false,
+    "run": "99",
+    "row": 95,
+    "description": "No flow run w/ aging",
+    "value_nm": 310.913499167893,
+    "geometric_std": 2.186053330493048
+   },
+   {
+    "material": "Silicone",
+    "aged": true,
+    "run": "99a",
+    "row": 96,
+    "description": "aged",
+    "value_nm": 425.29415595640967,
+    "geometric_std": 1.956951529924229
+   },
+   {
+    "material": "Teflon",
+    "aged": false,
+    "run": "100",
+    "row": 97,
+    "description": "No flow run w/ aging",
+    "value_nm": 164.96080616084328,
+    "geometric_std": 1.8127147982276335
+   },
+   {
+    "material": "Teflon",
+    "aged": true,
+    "run": "100a",
+    "row": 98,
+    "description": "aged",
+    "value_nm": 198.3381292780996,
+    "geometric_std": 1.7238191080253453
+   },
+   {
+    "material": "Kapton",
+    "aged": false,
+    "run": "101",
+    "row": 99,
+    "description": "No flow run w/ aging",
+    "value_nm": 179.54783605894735,
+    "geometric_std": 1.9359452843564022
+   },
+   {
+    "material": "Kapton",
+    "aged": true,
+    "run": "101a",
+    "row": 100,
+    "description": "aged",
+    "value_nm": 190.60510757829098,
+    "geometric_std": 1.8933755883208117
+   },
+   {
+    "material": "Kapton",
+    "aged": false,
+    "run": "102",
+    "row": 101,
+    "description": "No flow run w/ aging",
+    "value_nm": 250.65793411164245,
+    "geometric_std": 1.8633066199621118
+   },
+   {
+    "material": "Kapton",
+    "aged": true,
+    "run": "102a",
+    "row": 102,
+    "description": "aged",
+    "value_nm": 279.04323668687664,
+    "geometric_std": 1.7812740254848882
+   },
+   {
+    "material": "Silicone",
+    "aged": false,
+    "run": "103",
+    "row": 104,
+    "description": "low flow run w/ aging",
+    "value_nm": 257.78438811066695,
+    "geometric_std": 2.48148429808569
+   },
+   {
+    "material": "Silicone",
+    "aged": true,
+    "run": "103a",
+    "row": 105,
+    "description": "aged",
+    "value_nm": 315.38457450106336,
+    "geometric_std": 2.282947223112446
+   },
+   {
+    "material": "Silicone",
+    "aged": false,
+    "run": "104",
+    "row": 106,
+    "description": "No flow run w/ aging",
+    "value_nm": 826.017647128337,
+    "geometric_std": 1.6623278381210085
+   },
+   {
+    "material": "Silicone",
+    "aged": true,
+    "run": "104a",
+    "row": 107,
+    "description": "aged",
+    "value_nm": 1056.3943322697535,
+    "geometric_std": 1.3400747238642703
+   },
+   {
+    "material": "Teflon",
+    "aged": false,
+    "run": "105",
+    "row": 108,
+    "description": "No flow run w/ aging",
+    "value_nm": 129.4514250758422,
+    "geometric_std": 2.1318850131134703
+   },
+   {
+    "material": "Teflon",
+    "aged": true,
+    "run": "105a",
+    "row": 109,
+    "description": "aged",
+    "value_nm": 114.7214226436763,
+    "geometric_std": 2.2978156464703408
+   },
+   {
+    "material": "Lampwick",
+    "aged": false,
+    "run": "106",
+    "row": 110,
+    "description": "No flow run w/ aging",
+    "value_nm": 380.0194295769551,
+    "geometric_std": 1.7355361204504993
+   },
+   {
+    "material": "Lampwick",
+    "aged": true,
+    "run": "106a",
+    "row": 111,
+    "description": "aged",
+    "value_nm": 330.94590122441167,
+    "geometric_std": 1.8717880227738097
+   },
+   {
+    "material": "Pyrell",
+    "aged": false,
+    "run": "107",
+    "row": 112,
+    "description": "Low flow run w/ aging",
+    "value_nm": 137.55039317404683,
+    "geometric_std": 3.084427230286784
+   },
+   {
+    "material": "Pyrell",
+    "aged": true,
+    "run": "107a",
+    "row": 113,
+    "description": "aged",
+    "value_nm": 155.0864455231203,
+    "geometric_std": 2.9854989123444
+   },
+   {
+    "material": "Kapton",
+    "aged": false,
+    "run": "108",
+    "row": 114,
+    "description": "Low flow run w/ aging",
+    "value_nm": 84.32489020675428,
+    "geometric_std": 2.631706244035774
+   },
+   {
+    "material": "Kapton",
+    "aged": true,
+    "run": "108a",
+    "row": 115,
+    "description": "aged",
+    "value_nm": 93.1831056784055,
+    "geometric_std": 2.56091480574732
+   },
+   {
+    "material": "Silicone",
+    "aged": false,
+    "run": "109",
+    "row": 117,
+    "description": "low flow run w STS",
+    "value_nm": 176.69506280256948,
+    "geometric_std": 2.376276920513776
+   },
+   {
+    "material": "Lampwick",
+    "aged": false,
+    "run": "110",
+    "row": 118,
+    "description": "low flow run w STS",
+    "value_nm": 230.8623369659521,
+    "geometric_std": 2.0102241523207525
+   },
+   {
+    "material": "Teflon",
+    "aged": false,
+    "run": "111",
+    "row": 119,
+    "description": "low flow run w STS",
+    "value_nm": 240.59568656859386,
+    "geometric_std": 1.680419088152735
+   },
+   {
+    "material": "Kapton",
+    "aged": false,
+    "run": "112",
+    "row": 120,
+    "description": "low flow run w STS",
+    "value_nm": 155.43771805529164,
+    "geometric_std": 1.8941825311333986
+   },
+   {
+    "material": "Pyrell",
+    "aged": false,
+    "run": "113",
+    "row": 121,
+    "description": "low flow run w STS",
+    "value_nm": 303.1045822146713,
+    "geometric_std": 2.040543467392175
+   }
+  ],
+  "by_material": [
+   {
+    "material": "Kapton",
+    "material_label": "Kapton",
+    "aged": false,
+    "n_runs": 13,
+    "dg_nm": {
+     "median": 81.68800542053994,
+     "min": 32.60273409594507,
+     "max": 250.65793411164245
+    },
+    "geometric_std_median": 1.9359452843564022,
+    "diameter_of_average_mass_nm_median": 116.46654330236112
+   },
+   {
+    "material": "Kapton",
+    "material_label": "Kapton",
+    "aged": true,
+    "n_runs": 12,
+    "dg_nm": {
+     "median": 98.51272713449407,
+     "min": 50.818958542366076,
+     "max": 279.04323668687664
+    },
+    "geometric_std_median": 1.867875052325934,
+    "diameter_of_average_mass_nm_median": 169.44280515245384
+   },
+   {
+    "material": "Lampwick",
+    "material_label": "Cotton lamp wick",
+    "aged": false,
+    "n_runs": 13,
+    "dg_nm": {
+     "median": 96.18818545266336,
+     "min": 54.742886305248774,
+     "max": 380.0194295769551
+    },
+    "geometric_std_median": 2.356992697809274,
+    "diameter_of_average_mass_nm_median": 289.45017623069236
+   },
+   {
+    "material": "Lampwick",
+    "material_label": "Cotton lamp wick",
+    "aged": true,
+    "n_runs": 7,
+    "dg_nm": {
+     "median": 177.32588253993828,
+     "min": 101.54688893994044,
+     "max": 330.94590122441167
+    },
+    "geometric_std_median": 2.0505944091004547,
+    "diameter_of_average_mass_nm_median": 414.0788322281281
+   },
+   {
+    "material": "Pyrell",
+    "material_label": "Pyrell",
+    "aged": false,
+    "n_runs": 12,
+    "dg_nm": {
+     "median": 154.56719252908863,
+     "min": 63.37826223645457,
+     "max": 303.1045822146713
+    },
+    "geometric_std_median": 2.185350480694556,
+    "diameter_of_average_mass_nm_median": 439.2969193897831
+   },
+   {
+    "material": "Pyrell",
+    "material_label": "Pyrell",
+    "aged": true,
+    "n_runs": 8,
+    "dg_nm": {
+     "median": 291.20528040196086,
+     "min": 155.0864455231203,
+     "max": 384.88711959034435
+    },
+    "geometric_std_median": 1.892408211792524,
+    "diameter_of_average_mass_nm_median": 629.2602209846224
+   },
+   {
+    "material": "Silicone",
+    "material_label": "Silicone",
+    "aged": false,
+    "n_runs": 14,
+    "dg_nm": {
+     "median": 168.00096407732,
+     "min": 116.87532926820664,
+     "max": 826.017647128337
+    },
+    "geometric_std_median": 2.430797953377827,
+    "diameter_of_average_mass_nm_median": 538.351703407573
+   },
+   {
+    "material": "Silicone",
+    "material_label": "Silicone",
+    "aged": true,
+    "n_runs": 8,
+    "dg_nm": {
+     "median": 360.1857463057396,
+     "min": 250.71783710999912,
+     "max": 1056.3943322697535
+    },
+    "geometric_std_median": 2.0182798725326805,
+    "diameter_of_average_mass_nm_median": 756.518455958685
+   },
+   {
+    "material": "Teflon",
+    "material_label": "Teflon",
+    "aged": false,
+    "n_runs": 10,
+    "dg_nm": {
+     "median": 121.62615107758339,
+     "min": 31.687885565052866,
+     "max": 240.59568656859386
+    },
+    "geometric_std_median": 1.8570944942288996,
+    "diameter_of_average_mass_nm_median": 231.38860111305627
+   },
+   {
+    "material": "Teflon",
+    "material_label": "Teflon",
+    "aged": true,
+    "n_runs": 3,
+    "dg_nm": {
+     "median": 114.7214226436763,
+     "min": 70.20807722496909,
+     "max": 198.3381292780996
+    },
+    "geometric_std_median": 2.2978156464703408,
+    "diameter_of_average_mass_nm_median": 309.4395246694208
+   }
+  ]
+ },
+ "average_mass_comparison": {
+  "size_definition": "diameter_of_average_mass",
+  "note": "Both groups use the same size measure: total particle mass divided by total particle number, turned into the size of one ball. It is one number per test, not a size distribution, so it cannot show how much smoke and dust sizes overlap.",
+  "smoke": {
+   "id": "same_r_runs_dam",
+   "label": "Smoke from heated spacecraft materials (SAME-R)",
+   "source": {
+    "investigation_id": "PSI-101",
+    "file": "PSI-101_Analyzed_Data_SAME,_SAME-R_Results.xlsx",
+    "sheet": "SAME R Results",
+    "rows": "3-121"
+   },
+   "points": [
+    {
+     "material": "Silicone",
+     "aged": false,
+     "run": "48",
+     "row": 3,
+     "value_nm": 450.1551400693799
+    },
+    {
+     "material": "Lampwick",
+     "aged": false,
+     "run": "49",
+     "row": 4,
+     "value_nm": 286.05155365931773
+    },
+    {
+     "material": "Teflon",
+     "aged": false,
+     "run": "50",
+     "row": 5,
+     "value_nm": 252.95421677328306
+    },
+    {
+     "material": "Kapton",
+     "aged": false,
+     "run": "51",
+     "row": 6,
+     "value_nm": 97.10821323096016
+    },
+    {
+     "material": "Kapton",
+     "aged": true,
+     "run": "51a",
+     "row": 7,
+     "value_nm": 115.5004273698627
+    },
+    {
+     "material": "Pyrell",
+     "aged": false,
+     "run": "52",
+     "row": 8,
+     "value_nm": 405.19053314258844
+    },
+    {
+     "material": "Silicone",
+     "aged": false,
+     "run": "53",
+     "row": 9,
+     "value_nm": 547.4196807379078
+    },
+    {
+     "material": "Lampwick",
+     "aged": false,
+     "run": "54",
+     "row": 11,
+     "value_nm": 252.52933607121358
+    },
+    {
+     "material": "Lampwick",
+     "aged": false,
+     "run": "55",
+     "row": 12,
+     "value_nm": 274.7462311844157
+    },
+    {
+     "material": "Lampwick",
+     "aged": true,
+     "run": "55a",
+     "row": 13,
+     "value_nm": 320.46610714872395
+    },
+    {
+     "material": "Teflon",
+     "aged": false,
+     "run": "56",
+     "row": 14,
+     "value_nm": 184.52250171432627
+    },
+    {
+     "material": "Lampwick",
+     "aged": false,
+     "run": "57",
+     "row": 15,
+     "value_nm": 206.58667883299123
+    },
+    {
+     "material": "Teflon",
+     "aged": false,
+     "run": "58",
+     "row": 16,
+     "value_nm": 149.34491754394455
+    },
+    {
+     "material": "Teflon",
+     "aged": true,
+     "run": "58a",
+     "row": 17,
+     "value_nm": 232.11570631965313
+    },
+    {
+     "material": "Silicone",
+     "aged": false,
+     "run": "59",
+     "row": 18,
+     "value_nm": 455.13242180855787
+    },
+    {
+     "material": "Silicone",
+     "aged": true,
+     "run": "59a",
+     "row": 19,
+     "value_nm": 614.7093367763035
+    },
+    {
+     "material": "Silicone",
+     "aged": false,
+     "run": "60",
+     "row": 20,
+     "value_nm": 533.1371830040863
+    },
+    {
+     "material": "Silicone",
+     "aged": true,
+     "run": "60a",
+     "row": 21,
+     "value_nm": 748.4726480887384
+    },
+    {
+     "material": "Kapton",
+     "aged": false,
+     "run": "61",
+     "row": 23,
+     "value_nm": 105.91592684287916
+    },
+    {
+     "material": "Kapton",
+     "aged": true,
+     "run": "61a",
+     "row": 24,
+     "value_nm": 161.13218439894052
+    },
+    {
+     "material": "Kapton",
+     "aged": false,
+     "run": "62",
+     "row": 25,
+     "value_nm": 251.16720161368244
+    },
+    {
+     "material": "Kapton",
+     "aged": true,
+     "run": "62a",
+     "row": 26,
+     "value_nm": 382.91821556498303
+    },
+    {
+     "material": "Pyrell",
+     "aged": false,
+     "run": "63",
+     "row": 27,
+     "value_nm": 391.64217089803753
+    },
+    {
+     "material": "Pyrell",
+     "aged": true,
+     "run": "63a",
+     "row": 28,
+     "value_nm": 539.2415362765651
+    },
+    {
+     "material": "Pyrell",
+     "aged": false,
+     "run": "64",
+     "row": 29,
+     "value_nm": 444.71159033705635
+    },
+    {
+     "material": "Pyrell",
+     "aged": true,
+     "run": "64a",
+     "row": 30,
+     "value_nm": 615.7285904964299
+    },
+    {
+     "material": "Silicone",
+     "aged": false,
+     "run": "65",
+     "row": 31,
+     "value_nm": 461.85714375132125
+    },
+    {
+     "material": "Silicone",
+     "aged": true,
+     "run": "65a",
+     "row": 32,
+     "value_nm": 705.5569307920524
+    },
+    {
+     "material": "Silicone",
+     "aged": false,
+     "run": "66",
+     "row": 33,
+     "value_nm": 553.3111925741597
+    },
+    {
+     "material": "Silicone",
+     "aged": true,
+     "run": "66a",
+     "row": 34,
+     "value_nm": 764.5642638286315
+    },
+    {
+     "material": "Silicone",
+     "aged": false,
+     "run": "67",
+     "row": 36,
+     "value_nm": 667.8975673976701
+    },
+    {
+     "material": "Lampwick",
+     "aged": false,
+     "run": "68",
+     "row": 37,
+     "value_nm": 377.1048633840024
+    },
+    {
+     "material": "Kapton",
+     "aged": false,
+     "run": "70",
+     "row": 39,
+     "value_nm": 208.1087380738461
+    },
+    {
+     "material": "Pyrell",
+     "aged": false,
+     "run": "71",
+     "row": 40,
+     "value_nm": 433.8822484425099
+    },
+    {
+     "material": "Silicone",
+     "aged": false,
+     "run": "72",
+     "row": 41,
+     "value_nm": 419.17675488054465
+    },
+    {
+     "material": "Kapton",
+     "aged": false,
+     "run": "73",
+     "row": 43,
+     "value_nm": 88.73965455558951
+    },
+    {
+     "material": "Kapton",
+     "aged": true,
+     "run": "73a",
+     "row": 44,
+     "value_nm": 124.19732499439016
+    },
+    {
+     "material": "Pyrell",
+     "aged": false,
+     "run": "74",
+     "row": 45,
+     "value_nm": 354.7282337387934
+    },
+    {
+     "material": "Pyrell",
+     "aged": true,
+     "run": "74a",
+     "row": 46,
+     "value_nm": 512.1886831044689
+    },
+    {
+     "material": "Kapton",
+     "aged": true,
+     "run": "75a",
+     "row": 48,
+     "value_nm": 152.28007114746612
+    },
+    {
+     "material": "Pyrell",
+     "aged": false,
+     "run": "76",
+     "row": 49,
+     "value_nm": 514.5502341662288
+    },
+    {
+     "material": "Pyrell",
+     "aged": true,
+     "run": "76a",
+     "row": 50,
+     "value_nm": 642.7918514728149
+    },
+    {
+     "material": "Kapton",
+     "aged": false,
+     "run": "77",
+     "row": 51,
+     "value_nm": 106.56512563679277
+    },
+    {
+     "material": "Kapton",
+     "aged": true,
+     "run": "77a",
+     "row": 52,
+     "value_nm": 165.31983107175492
+    },
+    {
+     "material": "Lampwick",
+     "aged": false,
+     "run": "78",
+     "row": 54,
+     "value_nm": 264.5744987929001
+    },
+    {
+     "material": "Lampwick",
+     "aged": true,
+     "run": "78a",
+     "row": 55,
+     "value_nm": 355.12120146580975
+    },
+    {
+     "material": "Teflon",
+     "aged": false,
+     "run": "79",
+     "row": 56,
+     "value_nm": 193.10173093440534
+    },
+    {
+     "material": "Lampwick",
+     "aged": false,
+     "run": "80",
+     "row": 58,
+     "value_nm": 289.45017623069236
+    },
+    {
+     "material": "Lampwick",
+     "aged": true,
+     "run": "80a",
+     "row": 59,
+     "value_nm": 414.0788322281281
+    },
+    {
+     "material": "Teflon",
+     "aged": false,
+     "run": "81",
+     "row": 60,
+     "value_nm": 251.34398476976682
+    },
+    {
+     "material": "Lampwick",
+     "aged": false,
+     "run": "82",
+     "row": 62,
+     "value_nm": 289.73711732419514
+    },
+    {
+     "material": "Lampwick",
+     "aged": true,
+     "run": "82a",
+     "row": 63,
+     "value_nm": 385.3941144913613
+    },
+    {
+     "material": "Teflon",
+     "aged": false,
+     "run": "83",
+     "row": 64,
+     "value_nm": 211.4332174563457
+    },
+    {
+     "material": "Pyrell",
+     "aged": false,
+     "run": "84",
+     "row": 67,
+     "value_nm": 412.42836954407977
+    },
+    {
+     "material": "Pyrell",
+     "aged": true,
+     "run": "84a",
+     "row": 68,
+     "value_nm": 532.9433429871261
+    },
+    {
+     "material": "Kapton",
+     "aged": true,
+     "run": "85a",
+     "row": 70,
+     "value_nm": 173.56577923315274
+    },
+    {
+     "material": "Silicone",
+     "aged": false,
+     "run": "86",
+     "row": 71,
+     "value_nm": 528.5353550796859
+    },
+    {
+     "material": "Silicone",
+     "aged": true,
+     "run": "86a",
+     "row": 72,
+     "value_nm": 682.512090894394
+    },
+    {
+     "material": "Pyrell",
+     "aged": false,
+     "run": "87",
+     "row": 73,
+     "value_nm": 421.092805007946
+    },
+    {
+     "material": "Lampwick",
+     "aged": false,
+     "run": "88",
+     "row": 74,
+     "value_nm": 251.49410867769555
+    },
+    {
+     "material": "Teflon",
+     "aged": false,
+     "run": "89",
+     "row": 75,
+     "value_nm": 151.32510528359467
+    },
+    {
+     "material": "Silicone",
+     "aged": false,
+     "run": "91",
+     "row": 79,
+     "value_nm": 470.9854740749636
+    },
+    {
+     "material": "Kapton",
+     "aged": false,
+     "run": "92",
+     "row": 80,
+     "value_nm": 110.7174056889626
+    },
+    {
+     "material": "Kapton",
+     "aged": false,
+     "run": "93",
+     "row": 81,
+     "value_nm": 99.62970889104605
+    },
+    {
+     "material": "Kapton",
+     "aged": true,
+     "run": "93a",
+     "row": 82,
+     "value_nm": 154.844539147029
+    },
+    {
+     "material": "Kapton",
+     "aged": false,
+     "run": "94",
+     "row": 83,
+     "value_nm": 116.46654330236112
+    },
+    {
+     "material": "Kapton",
+     "aged": true,
+     "run": "94a",
+     "row": 84,
+     "value_nm": 176.14338692128538
+    },
+    {
+     "material": "Pyrell",
+     "aged": false,
+     "run": "95",
+     "row": 85,
+     "value_nm": 682.8048281760063
+    },
+    {
+     "material": "Pyrell",
+     "aged": true,
+     "run": "95a",
+     "row": 86,
+     "value_nm": 843.2019480180419
+    },
+    {
+     "material": "Lampwick",
+     "aged": false,
+     "run": "96",
+     "row": 87,
+     "value_nm": 420.0368161556266
+    },
+    {
+     "material": "Lampwick",
+     "aged": true,
+     "run": "96a",
+     "row": 88,
+     "value_nm": 451.41620220360807
+    },
+    {
+     "material": "Pyrell",
+     "aged": false,
+     "run": "97",
+     "row": 91,
+     "value_nm": 910.6238689087143
+    },
+    {
+     "material": "Pyrell",
+     "aged": true,
+     "run": "97a",
+     "row": 92,
+     "value_nm": 941.6746822921217
+    },
+    {
+     "material": "Lampwick",
+     "aged": false,
+     "run": "98",
+     "row": 93,
+     "value_nm": 402.951696787217
+    },
+    {
+     "material": "Lampwick",
+     "aged": true,
+     "run": "98a",
+     "row": 94,
+     "value_nm": 430.9800667605548
+    },
+    {
+     "material": "Silicone",
+     "aged": false,
+     "run": "99",
+     "row": 95,
+     "value_nm": 778.2362611831063
+    },
+    {
+     "material": "Silicone",
+     "aged": true,
+     "run": "99a",
+     "row": 96,
+     "value_nm": 836.2467048108946
+    },
+    {
+     "material": "Teflon",
+     "aged": false,
+     "run": "100",
+     "row": 97,
+     "value_nm": 280.46085669391255
+    },
+    {
+     "material": "Teflon",
+     "aged": true,
+     "run": "100a",
+     "row": 98,
+     "value_nm": 309.4395246694208
+    },
+    {
+     "material": "Kapton",
+     "aged": false,
+     "run": "101",
+     "row": 99,
+     "value_nm": 345.5100526973016
+    },
+    {
+     "material": "Kapton",
+     "aged": true,
+     "run": "101a",
+     "row": 100,
+     "value_nm": 351.2370805709563
+    },
+    {
+     "material": "Kapton",
+     "aged": false,
+     "run": "102",
+     "row": 101,
+     "value_nm": 448.1255556582994
+    },
+    {
+     "material": "Kapton",
+     "aged": true,
+     "run": "102a",
+     "row": 102,
+     "value_nm": 460.047454751769
+    },
+    {
+     "material": "Silicone",
+     "aged": false,
+     "run": "103",
+     "row": 104,
+     "value_nm": 889.9406686029644
+    },
+    {
+     "material": "Silicone",
+     "aged": true,
+     "run": "103a",
+     "row": 105,
+     "value_nm": 876.4564673637772
+    },
+    {
+     "material": "Silicone",
+     "aged": false,
+     "run": "104",
+     "row": 106,
+     "value_nm": 1216.8804592172662
+    },
+    {
+     "material": "Silicone",
+     "aged": true,
+     "run": "104a",
+     "row": 107,
+     "value_nm": 1201.2873282774046
+    },
+    {
+     "material": "Teflon",
+     "aged": false,
+     "run": "105",
+     "row": 108,
+     "value_nm": 305.78863797657755
+    },
+    {
+     "material": "Teflon",
+     "aged": true,
+     "run": "105a",
+     "row": 109,
+     "value_nm": 323.99896662237217
+    },
+    {
+     "material": "Lampwick",
+     "aged": false,
+     "run": "106",
+     "row": 110,
+     "value_nm": 599.5305843841361
+    },
+    {
+     "material": "Lampwick",
+     "aged": true,
+     "run": "106a",
+     "row": 111,
+     "value_nm": 596.7207855751843
+    },
+    {
+     "material": "Pyrell",
+     "aged": false,
+     "run": "107",
+     "row": 112,
+     "value_nm": 922.4570514134482
+    },
+    {
+     "material": "Pyrell",
+     "aged": true,
+     "run": "107a",
+     "row": 113,
+     "value_nm": 933.0619825160229
+    },
+    {
+     "material": "Kapton",
+     "aged": false,
+     "run": "108",
+     "row": 114,
+     "value_nm": 343.4857976820815
+    },
+    {
+     "material": "Kapton",
+     "aged": true,
+     "run": "108a",
+     "row": 115,
+     "value_nm": 351.0731617196234
+    },
+    {
+     "material": "Silicone",
+     "aged": false,
+     "run": "109",
+     "row": 117,
+     "value_nm": 543.5662238110599
+    },
+    {
+     "material": "Lampwick",
+     "aged": false,
+     "run": "110",
+     "row": 118,
+     "value_nm": 479.6915507933273
+    },
+    {
+     "material": "Teflon",
+     "aged": false,
+     "run": "111",
+     "row": 119,
+     "value_nm": 360.4043772501847
+    },
+    {
+     "material": "Kapton",
+     "aged": false,
+     "run": "112",
+     "row": 120,
+     "value_nm": 286.66637066468905
+    },
+    {
+     "material": "Pyrell",
+     "aged": false,
+     "run": "113",
+     "row": 121,
+     "value_nm": 650.0789886706958
+    }
+   ],
+   "range_nm": {
+    "min": 88.73965455558951,
+    "max": 1216.8804592172662
+   }
+  },
+  "dust": {
+   "id": "daft_ard_dam",
+   "label": "Arizona Road Dust (DAFT)",
+   "material_text": "Arizona Road Dust (ARD Fine) in combination with ISS GN2 to create an aerosol for measurement purposes.",
+   "source": {
+    "investigation_id": "PSI-47",
+    "file": "PSI-47_Analyzed_Data_DAFT_Retrieved_Data_Summary.xls",
+    "sheet": "Logged Data Summary",
+    "rows": "5, 9, 20"
+   },
+   "material_source": {
+    "investigation_id": "PSI-47",
+    "file": "PSI-47_Experimental_table_DAFT.csv",
+    "sheet": null,
+    "rows": "2-3"
+   },
+   "assumed_density_g_per_cm3": 1.0,
+   "density_note": "The dust size assumes a density of 1 g/cm3 (water), as the DAFT workbook does (cell D20). Mineral dust is denser, so its real size is smaller than shown. The density of this dust is not in these files [verify].",
+   "points": [
+    {
+     "bag": 1,
+     "value_nm": 1716.3916680577474,
+     "workbook_reported_nm": 1716.391677817242,
+     "number_per_cm3": 17236.2660944206,
+     "mass_mg_per_m3": 45.63425925925927
+    },
+    {
+     "bag": 2,
+     "value_nm": 1573.465998610738,
+     "workbook_reported_nm": 1573.4660075575493,
+     "number_per_cm3": 16589.36170212766,
+     "mass_mg_per_m3": 33.83766498740553
+    },
+    {
+     "bag": 3,
+     "value_nm": 1651.2093791771454,
+     "workbook_reported_nm": 1651.20938856601,
+     "number_per_cm3": 26577.984084880638,
+     "mass_mg_per_m3": 62.650869080779884
+    }
+   ],
+   "range_nm": {
+    "min": 1573.465998610738,
+    "max": 1716.3916680577474
+   }
+  }
+ },
+ "simulation": [
+  {
+   "id": "psi115_case1_earth",
+   "label": "Case 1 (8cm), Earth gravity (simulation, dibutyl phthalate surrogate, t = 7 s)",
+   "case": "1",
+   "case_label": "8cm",
+   "gravity": "earth",
+   "variant": "base",
+   "surrogate": "dibutyl phthalate",
+   "time_s": 7,
+   "is_simulation": true,
+   "size_definition": "simulation_node_diameter",
+   "note": "A computer model, not a measurement. It uses dibutyl phthalate as a stand-in smoke, not the SAME-R materials. Each curve is the share of its own particle count per size class, so only shapes can be compared; the raw unit is [verify].",
+   "source": {
+    "investigation_id": "PSI-115",
+    "file": "PSI-115_Analyzed_Data_8cmGravityPSD.dat",
+    "sheet": null,
+    "rows": "1-44"
+   },
+   "diameter_nm": [
+    1.2403579607441422,
+    1.625328725679354,
+    2.129783135292339,
+    2.79080541167432,
+    3.656989632778546,
+    4.792012054407764,
+    6.27931217626722,
+    8.228226673751726,
+    10.782027122417471,
+    14.12845239660125,
+    18.51351001594139,
+    24.25956102543931,
+    31.789017892352813,
+    41.65539753586813,
+    54.584012307238446,
+    71.5252902577938,
+    93.72464445570327,
+    122.81402769128651,
+    160.9319030800361,
+    210.8804500253324,
+    276.33156230539447,
+    362.0967819300812,
+    474.48101255699794,
+    621.7460151871379,
+    814.7177593426828,
+    1067.582278253245,
+    1398.92853417106,
+    1833.114958521036,
+    2402.060126069801,
+    3147.589201884885,
+    4124.50865667233,
+    5404.635283657054,
+    7082.075704240992,
+    9280.144477512746,
+    12160.429388228371,
+    15934.670334542228,
+    20880.32507440367,
+    27360.96612351383,
+    35853.008252720014,
+    46980.731417408286,
+    61562.173777906115,
+    80669.26856862004,
+    105706.64568916861,
+    138514.8910002888
+   ],
+   "fraction": [
+    3.425825072923031e-33,
+    6.490282076694944e-14,
+    3.9182761943069563e-13,
+    3.407720182351413e-11,
+    2.693047070588424e-12,
+    2.52037875322691e-12,
+    3.2968711011384175e-12,
+    4.439126388965472e-12,
+    6.007661582814218e-12,
+    8.109333348763145e-12,
+    1.0900868393860105e-11,
+    1.4599504819994214e-11,
+    1.950625942021411e-11,
+    2.604601637161606e-11,
+    3.483652651772342e-11,
+    4.6809709330285656e-11,
+    6.343302662835679e-11,
+    8.728648854886774e-11,
+    1.2252224642114756e-10,
+    1.7511593279624244e-10,
+    2.5290816780827715e-10,
+    3.6982699568360466e-10,
+    6.97003000232777e-10,
+    9.37402271967166e-09,
+    6.591044996712905e-07,
+    4.9315412014969625e-05,
+    0.0013555799902098232,
+    0.012442044688921013,
+    0.04316358888152152,
+    0.07274112190680003,
+    0.12665973763809932,
+    0.2544920066952895,
+    0.2776683052750792,
+    0.1494582977493638,
+    0.04710610775213104,
+    0.01106489927956554,
+    0.0036801099920576188,
+    0.00011801634915753928,
+    1.97825206611243e-07,
+    1.0364944970075488e-10,
+    1.5590687629312246e-14,
+    6.79917445678628e-19,
+    8.800705179108995e-24,
+    3.4482678987168826e-29
+   ],
+   "stats": {
+    "count_median_diameter_nm": 6115.522398247688,
+    "geometric_mean_diameter_nm": 5897.398284353845,
+    "geometric_std": 1.5344973347969433,
+    "peak_diameter_nm": 7082.075704240992,
+    "share_of_count_above_20um": 0.00379832427008681
+   }
+  },
+  {
+   "id": "psi115_case1_micro",
+   "label": "Case 1 (8cm), microgravity (simulation, dibutyl phthalate surrogate, t = 7 s)",
+   "case": "1",
+   "case_label": "8cm",
+   "gravity": "micro",
+   "variant": "base",
+   "surrogate": "dibutyl phthalate",
+   "time_s": 7,
+   "is_simulation": true,
+   "size_definition": "simulation_node_diameter",
+   "note": "A computer model, not a measurement. It uses dibutyl phthalate as a stand-in smoke, not the SAME-R materials. Each curve is the share of its own particle count per size class, so only shapes can be compared; the raw unit is [verify].",
+   "source": {
+    "investigation_id": "PSI-115",
+    "file": "PSI-115_Analyzed_Data_8cmNoGravityPSD.dat",
+    "sheet": null,
+    "rows": "1-44"
+   },
+   "diameter_nm": [
+    1.2403579607441422,
+    1.625328725679354,
+    2.129783135292339,
+    2.79080541167432,
+    3.656989632778546,
+    4.792012054407764,
+    6.27931217626722,
+    8.228226673751726,
+    10.782027122417471,
+    14.12845239660125,
+    18.51351001594139,
+    24.25956102543931,
+    31.789017892352813,
+    41.65539753586813,
+    54.584012307238446,
+    71.5252902577938,
+    93.72464445570327,
+    122.81402769128651,
+    160.9319030800361,
+    210.8804500253324,
+    276.33156230539447,
+    362.0967819300812,
+    474.48101255699794,
+    621.7460151871379,
+    814.7177593426828,
+    1067.582278253245,
+    1398.92853417106,
+    1833.114958521036,
+    2402.060126069801,
+    3147.589201884885,
+    4124.50865667233,
+    5404.635283657054,
+    7082.075704240992,
+    9280.144477512746,
+    12160.429388228371,
+    15934.670334542228,
+    20880.32507440367,
+    27360.96612351383,
+    35853.008252720014,
+    46980.731417408286,
+    61562.173777906115,
+    80669.26856862004,
+    105706.64568916861,
+    138514.8910002888
+   ],
+   "fraction": [
+    9.702429048253762e-14,
+    8.695218142826372e-14,
+    9.205099071271205e-13,
+    8.589897709188549e-11,
+    1.184882897826234e-11,
+    1.0745156772945571e-11,
+    1.4002853666385884e-11,
+    1.8840230171522925e-11,
+    2.5524143699961113e-11,
+    3.453505112811194e-11,
+    4.659157851979516e-11,
+    6.26908656211013e-11,
+    8.416850823752804e-11,
+    1.1290588134967135e-10,
+    1.5190864812608545e-10,
+    2.0609870767327844e-10,
+    2.8330553108630607e-10,
+    3.963632280658237e-10,
+    5.67314334360157e-10,
+    8.3472172351472e-10,
+    1.265955941552507e-09,
+    1.99156627480879e-09,
+    3.3264764148555926e-09,
+    6.1449557141345965e-09,
+    1.4023744525786217e-08,
+    6.92658201175063e-08,
+    1.064637877620078e-06,
+    3.279842844986621e-05,
+    0.0010171717310338225,
+    0.01602479666104224,
+    0.10431817912796827,
+    0.28029461752774304,
+    0.32720952701390243,
+    0.17534307057483955,
+    0.0459414931099625,
+    0.011441147527996008,
+    0.014957230142776218,
+    0.01509800362851809,
+    0.006772755815046323,
+    0.0014011628793691494,
+    0.00013975258123053626,
+    6.950474520808943e-06,
+    1.76808354303958e-07,
+    2.362281565789619e-09
+   ],
+   "stats": {
+    "count_median_diameter_nm": 6710.192475202798,
+    "geometric_mean_diameter_nm": 6981.810468627209,
+    "geometric_std": 1.5009448110558241,
+    "peak_diameter_nm": 7082.075704240992,
+    "share_of_count_above_20um": 0.038376034692096994
+   }
+  },
+  {
+   "id": "psi115_case1_earth_no_settling",
+   "label": "Case 1 (8cm), Earth gravity, settling switched off (simulation, dibutyl phthalate surrogate, t = 7 s)",
+   "case": "1",
+   "case_label": "8cm",
+   "gravity": "earth",
+   "variant": "no_settling",
+   "surrogate": "dibutyl phthalate",
+   "time_s": 7,
+   "is_simulation": true,
+   "size_definition": "simulation_node_diameter",
+   "note": "A computer model, not a measurement. It uses dibutyl phthalate as a stand-in smoke, not the SAME-R materials. Each curve is the share of its own particle count per size class, so only shapes can be compared; the raw unit is [verify]. Settling was switched off in this run.",
+   "source": {
+    "investigation_id": "PSI-115",
+    "file": "PSI-115_Analyzed_Data_8cmGravityNS_PSD.dat",
+    "sheet": null,
+    "rows": "2-45"
+   },
+   "diameter_nm": [
+    1.2403579607441422,
+    1.625328725679354,
+    2.129783135292339,
+    2.79080541167432,
+    3.656989632778546,
+    4.792012054407764,
+    6.27931217626722,
+    8.228226673751726,
+    10.782027122417471,
+    14.12845239660125,
+    18.51351001594139,
+    24.25956102543931,
+    31.789017892352813,
+    41.65539753586813,
+    54.584012307238446,
+    71.5252902577938,
+    93.72464445570327,
+    122.81402769128651,
+    160.9319030800361,
+    210.8804500253324,
+    276.33156230539447,
+    362.0967819300812,
+    474.48101255699794,
+    621.7460151871379,
+    814.7177593426828,
+    1067.582278253245,
+    1398.92853417106,
+    1833.114958521036,
+    2402.060126069801,
+    3147.589201884885,
+    4124.50865667233,
+    5404.635283657054,
+    7082.075704240992,
+    9280.144477512746,
+    12160.429388228371,
+    15934.670334542228,
+    20880.32507440367,
+    27360.96612351383,
+    35853.008252720014,
+    46980.731417408286,
+    61562.173777906115,
+    80669.26856862004,
+    105706.64568916861,
+    138514.8910002888
+   ],
+   "fraction": [
+    4.149705846004491e-15,
+    6.565288874515016e-14,
+    3.686553396886994e-13,
+    7.565964856489074e-09,
+    1.9849285063077287e-09,
+    2.359353526945485e-09,
+    3.143457683986115e-09,
+    4.277660873949833e-09,
+    5.824778596124576e-09,
+    7.89916084969e-09,
+    1.0665694398752545e-08,
+    1.4355813575428317e-08,
+    1.929772854124199e-08,
+    2.596838266164886e-08,
+    3.5083899509285636e-08,
+    4.7760869384557644e-08,
+    6.581077378987112e-08,
+    9.229131991991773e-08,
+    1.3257489616439496e-07,
+    1.9652248031282445e-07,
+    3.032101498027824e-07,
+    4.9222460701726e-07,
+    8.544148382081135e-07,
+    1.6349259602804369e-06,
+    4.708783830836618e-06,
+    8.679054849392561e-05,
+    0.0016555850901185981,
+    0.011971826630759134,
+    0.03731905883481911,
+    0.07955110815955406,
+    0.19155524372068586,
+    0.31918559329799323,
+    0.24982586130167184,
+    0.08964700457223493,
+    0.015640760944760197,
+    0.001470781148235105,
+    0.00031974483695435197,
+    0.0006382701877505303,
+    0.0006958679830654083,
+    0.0003397717122742891,
+    7.851049463538587e-05,
+    9.005781326386837e-06,
+    5.310540718601532e-07,
+    1.6753608115415002e-08
+   ],
+   "stats": {
+    "count_median_diameter_nm": 5488.856708415881,
+    "geometric_mean_diameter_nm": 5370.228066820621,
+    "geometric_std": 1.4583929926201245,
+    "peak_diameter_nm": 5404.635283657054,
+    "share_of_count_above_20um": 0.002081718803686328
+   }
+  },
+  {
+   "id": "psi115_case1_micro_no_thermophoresis",
+   "label": "Case 1 (8cm), microgravity, thermophoresis switched off (simulation, dibutyl phthalate surrogate, t = 7 s)",
+   "case": "1",
+   "case_label": "8cm",
+   "gravity": "micro",
+   "variant": "no_thermophoresis",
+   "surrogate": "dibutyl phthalate",
+   "time_s": 7,
+   "is_simulation": true,
+   "size_definition": "simulation_node_diameter",
+   "note": "A computer model, not a measurement. It uses dibutyl phthalate as a stand-in smoke, not the SAME-R materials. Each curve is the share of its own particle count per size class, so only shapes can be compared; the raw unit is [verify]. Thermophoresis (particles pushed away from hot gas) was switched off in this run.",
+   "source": {
+    "investigation_id": "PSI-115",
+    "file": "PSI-115_Analyzed_Data_8cmNoGravityNoTF_PSD.dat",
+    "sheet": null,
+    "rows": "2-45"
+   },
+   "diameter_nm": [
+    1.2403579607441422,
+    1.625328725679354,
+    2.129783135292339,
+    2.79080541167432,
+    3.656989632778546,
+    4.792012054407764,
+    6.27931217626722,
+    8.228226673751726,
+    10.782027122417471,
+    14.12845239660125,
+    18.51351001594139,
+    24.25956102543931,
+    31.789017892352813,
+    41.65539753586813,
+    54.584012307238446,
+    71.5252902577938,
+    93.72464445570327,
+    122.81402769128651,
+    160.9319030800361,
+    210.8804500253324,
+    276.33156230539447,
+    362.0967819300812,
+    474.48101255699794,
+    621.7460151871379,
+    814.7177593426828,
+    1067.582278253245,
+    1398.92853417106,
+    1833.114958521036,
+    2402.060126069801,
+    3147.589201884885,
+    4124.50865667233,
+    5404.635283657054,
+    7082.075704240992,
+    9280.144477512746,
+    12160.429388228371,
+    15934.670334542228,
+    20880.32507440367,
+    27360.96612351383,
+    35853.008252720014,
+    46980.731417408286,
+    61562.173777906115,
+    80669.26856862004,
+    105706.64568916861,
+    138514.8910002888
+   ],
+   "fraction": [
+    1.828860382616802e-30,
+    2.2397159951900405e-19,
+    3.48797246362785e-18,
+    2.285238283062771e-14,
+    6.213425770513061e-13,
+    5.97664369884623e-13,
+    7.775397642991278e-13,
+    1.0471972710803201e-12,
+    1.4188808670589912e-12,
+    1.9187867274267277e-12,
+    2.5859976877541835e-12,
+    3.475714674182729e-12,
+    4.666206494576474e-12,
+    6.2709387381172165e-12,
+    8.45967119807214e-12,
+    1.1495874738941633e-11,
+    1.5804437346522378e-11,
+    2.209687415173252e-11,
+    3.1610107097773206e-11,
+    4.658482556440397e-11,
+    7.130075332851606e-11,
+    1.145873391832161e-10,
+    1.969750631328789e-10,
+    3.761133326146932e-10,
+    8.62306268973202e-10,
+    3.5263888413020407e-09,
+    3.898589900488553e-07,
+    5.456870999320236e-05,
+    0.0024623552611230917,
+    0.034678292173222165,
+    0.17143906910997334,
+    0.33803613672077687,
+    0.2944232320341246,
+    0.12219912349939983,
+    0.02560340611843392,
+    0.0032006489577001544,
+    0.0019360581411057634,
+    0.0030845827541649265,
+    0.002144819986614468,
+    0.0006431263115017259,
+    8.820288424915006e-05,
+    5.790739669002565e-06,
+    1.8829360774570198e-07,
+    3.1382234163281766e-09
+   ],
+   "stats": {
+    "count_median_diameter_nm": 5960.126828352647,
+    "geometric_mean_diameter_nm": 6069.538795620933,
+    "geometric_std": 1.3966218053659336,
+    "peak_diameter_nm": 5404.635283657054,
+    "share_of_count_above_20um": 0.007902772249136198
+   }
+  },
+  {
+   "id": "psi115_case2_earth",
+   "label": "Case 2 (10cm), Earth gravity (simulation, dibutyl phthalate surrogate, t = 7 s)",
+   "case": "2",
+   "case_label": "10cm",
+   "gravity": "earth",
+   "variant": "base",
+   "surrogate": "dibutyl phthalate",
+   "time_s": 7,
+   "is_simulation": true,
+   "size_definition": "simulation_node_diameter",
+   "note": "A computer model, not a measurement. It uses dibutyl phthalate as a stand-in smoke, not the SAME-R materials. Each curve is the share of its own particle count per size class, so only shapes can be compared; the raw unit is [verify].",
+   "source": {
+    "investigation_id": "PSI-115",
+    "file": "PSI-115_Analyzed_Data_10cmGravityPSD.dat",
+    "sheet": null,
+    "rows": "1-44"
+   },
+   "diameter_nm": [
+    1.2403579607441422,
+    1.625328725679354,
+    2.129783135292339,
+    2.79080541167432,
+    3.656989632778546,
+    4.792012054407764,
+    6.27931217626722,
+    8.228226673751726,
+    10.782027122417471,
+    14.12845239660125,
+    18.51351001594139,
+    24.25956102543931,
+    31.789017892352813,
+    41.65539753586813,
+    54.584012307238446,
+    71.5252902577938,
+    93.72464445570327,
+    122.81402769128651,
+    160.9319030800361,
+    210.8804500253324,
+    276.33156230539447,
+    362.0967819300812,
+    474.48101255699794,
+    621.7460151871379,
+    814.7177593426828,
+    1067.582278253245,
+    1398.92853417106,
+    1833.114958521036,
+    2402.060126069801,
+    3147.589201884885,
+    4124.50865667233,
+    5404.635283657054,
+    7082.075704240992,
+    9280.144477512746,
+    12160.429388228371,
+    15934.670334542228,
+    20880.32507440367,
+    27360.96612351383,
+    35853.008252720014,
+    46980.731417408286,
+    61562.173777906115,
+    80669.26856862004,
+    105706.64568916861,
+    138514.8910002888
+   ],
+   "fraction": [
+    5.569732147537264e-16,
+    5.863439245587328e-16,
+    8.087960983445275e-15,
+    9.907114176737523e-08,
+    9.491378042999118e-08,
+    1.281190566525602e-07,
+    1.7779272748328148e-07,
+    2.460194654734709e-07,
+    3.375681088979827e-07,
+    4.5935775316737176e-07,
+    6.208994443087154e-07,
+    8.352682086933713e-07,
+    1.1207240182445136e-06,
+    1.5034001425517022e-06,
+    2.0218540918823513e-06,
+    2.7348883215680607e-06,
+    3.73506151418773e-06,
+    5.171987377539961e-06,
+    7.29233563154582e-06,
+    1.0508423413413905e-05,
+    1.551695772410687e-05,
+    2.3511145237171064e-05,
+    3.657980189229587e-05,
+    5.845524262663112e-05,
+    9.567869530199433e-05,
+    0.00015947065122100953,
+    0.00027473853421774026,
+    0.0009700651827689541,
+    0.01572843200181106,
+    0.12032332129199974,
+    0.3155742616531062,
+    0.32806507569901844,
+    0.1587009916674949,
+    0.04415935112548045,
+    0.009432695906964026,
+    0.0026344456496644013,
+    0.003200977539500032,
+    0.000509204684119613,
+    1.3886572973001764e-07,
+    1.991330911769346e-11,
+    1.168558267645488e-15,
+    2.647032976651006e-20,
+    2.0985076174632947e-25,
+    5.446424042512325e-31
+   ],
+   "stats": {
+    "count_median_diameter_nm": 4906.608134978432,
+    "geometric_mean_diameter_nm": 4974.081066630518,
+    "geometric_std": 1.385785176508977,
+    "peak_diameter_nm": 5404.635283657054,
+    "share_of_count_above_20um": 0.003710321109263853
+   }
+  },
+  {
+   "id": "psi115_case2_micro",
+   "label": "Case 2 (10cm), microgravity (simulation, dibutyl phthalate surrogate, t = 7 s)",
+   "case": "2",
+   "case_label": "10cm",
+   "gravity": "micro",
+   "variant": "base",
+   "surrogate": "dibutyl phthalate",
+   "time_s": 7,
+   "is_simulation": true,
+   "size_definition": "simulation_node_diameter",
+   "note": "A computer model, not a measurement. It uses dibutyl phthalate as a stand-in smoke, not the SAME-R materials. Each curve is the share of its own particle count per size class, so only shapes can be compared; the raw unit is [verify].",
+   "source": {
+    "investigation_id": "PSI-115",
+    "file": "PSI-115_Analyzed_Data_10cmNoGravityPSD.dat",
+    "sheet": null,
+    "rows": "1-44"
+   },
+   "diameter_nm": [
+    1.2403579607441422,
+    1.625328725679354,
+    2.129783135292339,
+    2.79080541167432,
+    3.656989632778546,
+    4.792012054407764,
+    6.27931217626722,
+    8.228226673751726,
+    10.782027122417471,
+    14.12845239660125,
+    18.51351001594139,
+    24.25956102543931,
+    31.789017892352813,
+    41.65539753586813,
+    54.584012307238446,
+    71.5252902577938,
+    93.72464445570327,
+    122.81402769128651,
+    160.9319030800361,
+    210.8804500253324,
+    276.33156230539447,
+    362.0967819300812,
+    474.48101255699794,
+    621.7460151871379,
+    814.7177593426828,
+    1067.582278253245,
+    1398.92853417106,
+    1833.114958521036,
+    2402.060126069801,
+    3147.589201884885,
+    4124.50865667233,
+    5404.635283657054,
+    7082.075704240992,
+    9280.144477512746,
+    12160.429388228371,
+    15934.670334542228,
+    20880.32507440367,
+    27360.96612351383,
+    35853.008252720014,
+    46980.731417408286,
+    61562.173777906115,
+    80669.26856862004,
+    105706.64568916861,
+    138514.8910002888
+   ],
+   "fraction": [
+    1.5578403515252187e-38,
+    7.314623206273304e-29,
+    3.43590063894397e-28,
+    2.9244808008753338e-27,
+    1.2158869102834114e-13,
+    1.1633991425946116e-13,
+    1.5014570997185637e-13,
+    2.0192668962265436e-13,
+    2.7379414288923654e-13,
+    3.7105139979460356e-13,
+    5.018121896531353e-13,
+    6.778285514064058e-13,
+    9.162693054048291e-13,
+    1.242929935379327e-12,
+    1.69808248394479e-12,
+    2.3475122717057892e-12,
+    3.30424237952796e-12,
+    4.773609700256605e-12,
+    7.153575220580448e-12,
+    1.1280249691713512e-11,
+    1.9111592820485817e-11,
+    3.5996271468065776e-11,
+    8.029425630476756e-11,
+    2.3746312670162295e-10,
+    1.3499138629974734e-09,
+    5.8729112639951694e-08,
+    4.459043338218798e-06,
+    0.00023342768889678968,
+    0.005635515625369982,
+    0.05365398100904431,
+    0.20523503525125789,
+    0.33921996679408223,
+    0.2600450316815584,
+    0.09767867527428353,
+    0.019397314489625634,
+    0.0053493385198107495,
+    0.006519014281197427,
+    0.0049841754753251885,
+    0.0017342176949289836,
+    0.0002856089510810676,
+    2.3197778508268225e-05,
+    9.590537030094708e-07,
+    2.0663427243328715e-08,
+    2.3753843983716057e-10
+   ],
+   "stats": {
+    "count_median_diameter_nm": 5694.796057917175,
+    "geometric_mean_diameter_nm": 5832.2982072006225,
+    "geometric_std": 1.4304018585323561,
+    "peak_diameter_nm": 5404.635283657054,
+    "share_of_count_above_20um": 0.013547194135709628
+   }
+  }
+ ]
+}

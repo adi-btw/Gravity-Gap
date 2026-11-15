@@ -28,6 +28,9 @@ Rules (all transparent, documented per field in the record's ``*_basis`` keys)
   combustion tables (all of which are PSI combustion experiments).
 - ``hazard_pillars``: keyword rule over title + objective + impacts + design
   keywords (``PILLAR_PATTERNS``); the matched words are kept in ``pillar_evidence``.
+- ``pillar_data``: curated pointer to the data actually parsed for a pillar
+  (``DETECTION_DATA``, R3 / ADR-0007): what it holds, the files (only those in
+  data/detection/manifest.json) and the artifact; {} when none.
 - ``ground_reference``: True only when the investigation has normal-gravity
   (1-g) columns in the clean data, i.e. psi_saffire_ug_vs_1g.csv (SAFFIRE-II).
 - ``gravity_levels``: ["normal_gravity"] for PSI "Ground Investigation" studies,
@@ -57,12 +60,13 @@ ROOT = Path(__file__).resolve().parents[1]
 META_DIR = ROOT / "data" / "psi_metadata"
 CLEAN_DIR = ROOT / "data" / "clean"
 OUT = ROOT / "artifacts" / "catalog.json"
-CATALOG_VERSION = "1.1.0"
+CATALOG_VERSION = "1.2.0"
 
 # investigation -> (fuel_phase, evidence regex over metadata JSON text, basis note)
 FUEL_PHASE_OVERRIDES: dict[str, tuple[str, str, str]] = {
     "PSI-47": ("aerosol", r"Arizona Red Dust|aerosoli[sz]ed",
-               "DAFT aerosolised a test dust (Arizona Red Dust) to check smoke/particle "
+               "DAFT aerosolised a test dust (Arizona Road Dust, ARD Fine, per the DAFT experimental "
+               "table; the metadata writes 'Arizona Red Dust') to check smoke/particle "
                "instruments; nothing was burned, so this is not a fuel (fuel_realism 0)"),
     "PSI-101": ("solid", r"pyrolyzing|Teflon|Kapton|Pyrell",
                 "SAME-R smoke came from heated (pyrolysing/smouldering) solid spacecraft "
@@ -78,6 +82,39 @@ PILLAR_PATTERNS: dict[str, str] = {
     "prevention": r"flammab|material|flame spread|ignit",
     "detection": r"smoke|soot|aerosol|particle|detect",
     "suppression": r"extingu|suppress|dilut|helium|co2",
+}
+
+# R3 (ADR-0007): detection-pillar data actually parsed into artifacts/detection.json, per investigation.
+# Files are listed only if data/detection/manifest.json has them (see _pillar_data).
+DETECTION_MANIFEST = ROOT / "data" / "detection" / "manifest.json"
+DETECTION_DATA: dict[str, tuple[str | None, str, list[str]]] = {
+    # investigation -> (artifact or None, what the data holds, files under data/detection/raw/)
+    "PSI-101": ("artifacts/detection.json",
+                ("Smoke particle sizes counted on microscope images (cotton lamp wick run 54, silicone run 60, "
+                 "Kapton run 62) and per-run smoke sizes from instrument totals (100 runs, 5 materials)."),
+                ["PSI-101/PSI-101_Analyzed_Data_54_lampwick_binneddatacorr_from_GWM.xlsx",
+                 "PSI-101/PSI-101_Analyzed_Data_60_silicone.xlsx",
+                 "PSI-101/PSI-101_Analyzed_Data_62_Kapton_unaged.xlsx",
+                 "PSI-101/PSI-101_Analyzed_Data_SAME,_SAME-R_Results.xlsx"]),
+    "PSI-102": (None,
+                ("Sample list only (8 rows: material, air flow, weight loss rate, aging time). "
+                 "No SAME measurement files are in this repository."),
+                ["PSI-102/PSI-102_Experimental_table_SAME.csv"]),
+    "PSI-47": ("artifacts/detection.json",
+               ("Arizona Road Dust, total particle number and total mass only (no sizes). One derived "
+                "diameter of average mass per dust bag, assuming a density of 1.0 g/cm3."),
+               ["PSI-47/PSI-47_Analyzed_Data_DAFT_Retrieved_Data_Summary.xls",
+                "PSI-47/PSI-47_Experimental_table_DAFT.csv"]),
+    "PSI-115": ("artifacts/detection.json",
+                ("Simulated smoke size distributions, Earth gravity vs microgravity "
+                 "(dibutyl phthalate surrogate, t = 7 s; value unit [verify], shapes only)."),
+                ["PSI-115/PSI-115_Analyzed_Data_nodeDiameters.dat",
+                 "PSI-115/PSI-115_Analyzed_Data_8cmGravityPSD.dat",
+                 "PSI-115/PSI-115_Analyzed_Data_8cmNoGravityPSD.dat",
+                 "PSI-115/PSI-115_Analyzed_Data_8cmGravityNS_PSD.dat",
+                 "PSI-115/PSI-115_Analyzed_Data_8cmNoGravityNoTF_PSD.dat",
+                 "PSI-115/PSI-115_Analyzed_Data_10cmGravityPSD.dat",
+                 "PSI-115/PSI-115_Analyzed_Data_10cmNoGravityPSD.dat"]),
 }
 
 # ground re-analysis study -> (flight investigations reused, evidence regex)
@@ -208,6 +245,17 @@ def _pillars(text: str) -> tuple[list[str], dict[str, list[str]]]:
     return pillars, evidence
 
 
+def _pillar_data(inv: str, manifest_files: set[str]) -> dict:
+    """{"detection": {...}} for investigations whose detection data is parsed (R3), else {}."""
+    if inv not in DETECTION_DATA:
+        return {}
+    artifact, holds, files = DETECTION_DATA[inv]
+    listed = [f"data/detection/raw/{f}" for f in files if f"data/detection/raw/{f}" in manifest_files]
+    if not listed:
+        return {}
+    return {"detection": {"holds": holds, "files": listed, "artifact": artifact}}
+
+
 def _infer_phase(text: str) -> str | None:
     for phase, rx in (("liquid", _LIQUID_FUEL), ("gas", _GAS_FUEL), ("solid", _SOLID_FUEL)):
         if rx.search(text):
@@ -243,6 +291,8 @@ def build_catalog() -> dict:
     days = pd.read_csv(CLEAN_DIR / "psi_test_day_summaries.csv")
     saffire = pd.read_csv(CLEAN_DIR / "psi_saffire_ug_vs_1g.csv")
     meta_all = load_metadata()
+    detection_files = (set(json.loads(DETECTION_MANIFEST.read_text(encoding="utf-8"))["files"])
+                       if DETECTION_MANIFEST.exists() else set())
 
     ground_ref_ids = {f.split("_", 1)[0] for f in saffire["source_file"].dropna()}
     test_ids = set(tests["investigation_id"].dropna())
@@ -360,6 +410,7 @@ def build_catalog() -> dict:
             "outcomes_available": outcomes,
             "hazard_pillars": pillars,
             "pillar_evidence": evidence,
+            "pillar_data": _pillar_data(inv, detection_files),
             "objective": f["objective"],
             "hypothesis": f["hypothesis"],
             "impacts": f["impacts"],
@@ -413,6 +464,7 @@ def build_catalog() -> dict:
                           "o2 = ambient rows only, burner-stream O2 in o2_burner_stream",
             "fuel_phase_overrides": {k: v[0] for k, v in FUEL_PHASE_OVERRIDES.items()},
             "ground_reference": "true only when 1-g columns exist in the clean data (SAFFIRE-II)",
+            "pillar_data": "curated DETECTION_DATA, files checked against data/detection/manifest.json",
         },
         "investigations": [records[i] for i in ids],
     }

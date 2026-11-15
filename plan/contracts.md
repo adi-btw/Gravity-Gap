@@ -249,3 +249,131 @@ disruptions, extinction_rate}` with record ids. Used to check the model curve's 
 interpolated), M2 curve, the dose marker, the empirical reference dots, a "tested conditions" chart (diluent fraction × O₂
 of the FLEX tests with the habitat's O₂ as a line), and an always-visible **warn-tone** safety note. Offline: preset
 artifacts `artifacts/suppression/{preset}_{diluent}.json`; custom habitats need the live API.
+
+# Round 2 · R3 Detection evidence addendum (see plan/13-round-2-features.md §R3, plan/14-detection-spike.md, ADR-0007)
+
+**Reduced scope.** The spike returned PARTIAL. DAFT holds no dust size distribution, and none of the files hold lunar
+dust. So the planned smoke-vs-dust overlap chart and the overlap metric are **dropped**. The page is called "Detection
+evidence". It does not answer "could lunar dust fool a smoke detector?"; that question is listed as a gap.
+
+## Ownership (R3)
+| Role | Owns |
+|---|---|
+| TL | `engine/detection.py` (`build()`, `main()`), `artifacts/detection.json`, `tests/test_detection.py`, `plan/decisions.md` (ADR-0007), this section |
+| DE | `scripts/fetch_detection.py`, `data/detection/**`, `engine/catalog.py` (`DETECTION_DATA`), `artifacts/catalog.json`, `tests/test_detection_spike.py` |
+| AI | `api/**`, `engine/ai/**`, `tests/test_api.py`, `tests/test_ai.py` |
+| FE | `web/**` |
+Nobody commits. Team lead rebuilds the AI cache and MANIFEST at the end.
+
+## `artifacts/detection.json` (TL, `python -m engine.detection`)
+Built only from the committed files in `data/detection/raw/`, never from the git-ignored reference documents. Every
+number comes from a parser in `engine/detection.py`; nothing is typed in. Written with `allow_nan=False`, UTF-8.
+```
+{
+  "schema_version": 1, "generated_at": "ISO-8601", "engine_version": "0.1.0", "generated_by": "engine/detection.py",
+  "title": "Detection evidence", "verdict": "partial",
+  "scope_note": str,                          # reduced scope and why (plain language)
+  "generated_from": [{"file": "data/detection/raw/<PSI>/<name>", "sha256": hex, "bytes": int}],
+                                              # hashes from data/detection/manifest.json, re-checked on build
+  "gaps": [{"id": str, "text": str}],         # ids below; always shown on the page
+  "size_definitions": {<key>: {"label": str, "note": str}},   # legend for every size_definition used below
+  "smoke_bins": [BinSeries],                  # 6: 3 runs x {all, big_only}
+  "smoke_runs": RunSeries,                    # moment-method middle size per run, 5 materials, aged kept apart
+  "average_mass_comparison": {...},           # the one like-for-like smoke vs dust comparison
+  "simulation": [SimSeries]                   # 6 PSI-115 curves
+}
+
+BinSeries (smoke_bins[i]):
+{ "id": "tem_lampwick_54_all", "label": str, "material": "Lampwick", "material_label": "Cotton lamp wick",
+  "run": "54", "variant": "all" | "big_only", "variant_label": str,
+  "size_definition": "tem_image_diameter", "note": str,
+  "source": {"investigation_id": "PSI-101", "file": str, "sheet": str, "rows": "15-44"},
+  "diameter_nm": [float],            # geometric bin centre, strictly increasing
+  "count": [float],                  # particles counted in the bin (>= 0)
+  "fraction": [float],               # count / particle_count, sums to 1
+  "dlnD": float | null,              # bin width in ln(d), workbook cell C8
+  "stats": {"count_median_diameter_nm", "geometric_mean_diameter_nm", "geometric_std", "particle_count"},
+  "workbook_reported": {"geometric_mean_diameter_nm", "geometric_std", "cells": "I9, J9"} }
+
+RunSeries (smoke_runs):
+{ "id": "same_r_runs_dg", "label": str, "size_definition": "moment_geometric_mean", "note": str,
+  "source": {"investigation_id": "PSI-101", "file": str, "sheet": "SAME R Results", "rows": "3-121"},
+  "materials": ["Kapton", "Lampwick", "Pyrell", "Silicone", "Teflon"],
+  "material_labels": {"Lampwick": "Cotton lamp wick", ...},
+  "points": [{"material", "aged": bool, "run": "60a", "row": int, "description": str,
+              "value_nm": float, "geometric_std": float}],           # one dot per run (strip chart)
+  "by_material": [{"material", "material_label", "aged": bool, "n_runs": int,
+                   "dg_nm": {"median", "min", "max"}, "geometric_std_median": float,
+                   "diameter_of_average_mass_nm_median": float}] }  # 10 rows: 5 materials x unaged/aged
+
+average_mass_comparison:
+{ "size_definition": "diameter_of_average_mass", "note": str,
+  "smoke": {"id": "same_r_runs_dam", "label": "Smoke from heated spacecraft materials (SAME-R)",
+            "source": {... same file and sheet as smoke_runs ...},
+            "points": [{"material", "aged", "run", "row", "value_nm"}], "range_nm": {"min", "max"}},
+  "dust":  {"id": "daft_ard_dam", "label": "Arizona Road Dust (DAFT)", "material_text": str,   # quoted from the DAFT CSV
+            "source": {"investigation_id": "PSI-47", "file": str, "sheet": "Logged Data Summary", "rows": "5, 9, 20"},
+            "material_source": {"investigation_id": "PSI-47", "file": "PSI-47_Experimental_table_DAFT.csv",
+                                "sheet": null, "rows": "2-3"},
+            "assumed_density_g_per_cm3": 1.0, "density_note": str,
+            "points": [{"bag": 1, "value_nm", "workbook_reported_nm", "number_per_cm3", "mass_mg_per_m3"}],
+            "range_nm": {"min", "max"}} }
+
+SimSeries (simulation[i]):
+{ "id": "psi115_case1_earth", "label": str,   # always ends "(simulation, dibutyl phthalate surrogate, t = 7 s)"
+  "case": "1" | "2", "case_label": "8cm" | "10cm", "gravity": "earth" | "micro",
+  "variant": "base" | "no_settling" | "no_thermophoresis",
+  "surrogate": "dibutyl phthalate", "time_s": 7, "is_simulation": true,
+  "size_definition": "simulation_node_diameter", "note": str,
+  "source": {"investigation_id": "PSI-115", "file": str, "sheet": null, "rows": "1-44"},
+  "diameter_nm": [float],            # size-node diameter, strictly increasing
+  "fraction": [float],               # share of this curve's own count per node, sums to 1 (raw unit is [verify])
+  "stats": {"count_median_diameter_nm", "geometric_mean_diameter_nm", "geometric_std",
+            "peak_diameter_nm", "share_of_count_above_20um"} }
+```
+Ids of simulation series: `psi115_case1_earth`, `psi115_case1_micro`, `psi115_case1_earth_no_settling`,
+`psi115_case1_micro_no_thermophoresis`, `psi115_case2_earth`, `psi115_case2_micro`.
+
+**Gap ids** (all present, in this order): `lunar_dust`, `dust_sizes`, `detector_sensitivity`, `detector_signals`,
+`size_definitions_disagree`, `tem_coverage`, `simulation_units`, `simulation_vs_experiment`, `daft_bag_mapping`,
+`same_files`.
+
+**Size definitions** (keys of `size_definitions`): `tem_image_diameter` (measured on microscope images of collected
+particles), `moment_geometric_mean` (worked out from three instrument totals, assuming a lognormal shape),
+`diameter_of_average_mass` (size of a sphere with the average particle mass; needs a density),
+`simulation_node_diameter` (size class in the PSI-115 model).
+
+## Rules
+- **Provenance:** every series (each item of `smoke_bins` and `simulation`, `smoke_runs`, `average_mass_comparison.smoke`
+  and `.dust`) has `source: {investigation_id, file, sheet, rows}`; per-run points also carry `row`.
+- **One size definition per series.** Series with different `size_definition` never share one line or one set of dots;
+  the FE puts them on separate charts or clearly separate panels.
+- **Wording:** the dust is always "Arizona Road Dust (DAFT)". No series `id`, `label`, `material` or `material_label`
+  contains "lunar". "Lunar dust" appears only in the `lunar_dust` gap. The density-1.0 assumption is stated wherever a
+  dust diameter is shown. No overlap metric. No ionization vs photoelectric sensitivity ranges (no cited source).
+  Detector voltages are not shown (gap `detector_signals`). Plain language, short sentences, no hype.
+- **Simulation:** shapes only (`fraction`); never compare simulation totals and never draw simulation curves on the
+  experiment charts.
+
+## Catalog (DE, `python -m engine.catalog`, version 1.2.0)
+Every record gains `pillar_data: {}` or `{"detection": {"holds": str, "files": ["data/detection/raw/..."], "artifact":
+"artifacts/detection.json" | null}}` for PSI-101, PSI-102 (sample table only, `artifact: null`), PSI-47 and PSI-115.
+`pillar_evidence` (metadata keywords) is unchanged. The FE investigation card may show `holds` under the detection pillar.
+
+## API (AI)
+| Method | Path | Response |
+|---|---|---|
+| GET | `/detection` | `artifacts/detection.json` unchanged; 503 problem if missing or not valid JSON (as `/suppression/reference`) |
+
+## Web (FE)
+`/detection` page "Detection evidence" (hand-rolled SVG, log-scale diameter axis in nm):
+1. `scope_note` at the top (info tone) and the `gaps` list always visible (`lunar_dust` first, warn tone).
+2. Smoke size distributions: one chart per run, `fraction` vs `diameter_nm`; "all" and "big only" of the same run may
+   share a chart (same size definition); `stats` as a small table; the series `note`.
+3. Per-run smoke sizes: strip/dot chart of `smoke_runs.points` (`value_nm`, log axis) grouped by material, unaged and
+   aged in two colours; `by_material` as a table.
+4. Like-for-like: `average_mass_comparison.smoke.points` and `.dust.points` as dots on one log axis (same size
+   definition), with the comparison `note`, and the dust `density_note` next to the dust dots.
+5. Simulation: Earth vs microgravity per case (`fraction` vs `diameter_nm`) on its own chart, titled from `label`;
+   `share_of_count_above_20um` shown as a number per curve; the two variants behind a secondary toggle.
+6. Every chart shows its source file / sheet / rows (from `source`).
