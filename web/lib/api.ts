@@ -37,6 +37,26 @@ import type {
 /** Backend base URL (FastAPI, plan/contracts.md). */
 export const API_URL = (process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8000").replace(/\/+$/, "");
 
+const LOCAL_HOSTS = new Set(["localhost", "127.0.0.1", "[::1]", "::1"]);
+
+/**
+ * Website-only deployments (docs/DEPLOY.md, "Website only"): skip the live API entirely and serve the bundled
+ * artifacts, instead of waiting for a timeout on every call. True when NEXT_PUBLIC_API_URL is "off"/"none"/empty,
+ * or when the page is served from a real host while the API URL still points at this machine (a judge's browser
+ * cannot reach the developer's localhost, and some browsers block such requests).
+ */
+export function liveDisabled(apiUrl: string, pageHost?: string): boolean {
+  const v = apiUrl.trim().toLowerCase();
+  if (v === "" || v === "off" || v === "none") return true;
+  const host = pageHost ?? (typeof window !== "undefined" ? window.location.hostname : undefined);
+  if (!host || LOCAL_HOSTS.has(host) || host.endsWith(".localhost")) return false;
+  try {
+    return LOCAL_HOSTS.has(new URL(apiUrl).hostname);
+  } catch {
+    return true;
+  }
+}
+
 export type DataSource = "api" | "offline";
 
 export interface Sourced<T> {
@@ -69,7 +89,8 @@ export class ApiError extends Error {
 /** Network failure, timeout, 404 (endpoint not deployed yet) or 5xx: the live path is unavailable. */
 class LiveUnavailable extends Error {}
 
-export const OFFLINE_NOTE = "offline data: the live API is unreachable, showing precomputed artifacts";
+export const OFFLINE_NOTE =
+  "offline data: showing the engine outputs saved with this build (the live API is not connected)";
 export const CUSTOM_HABITAT_NOTE =
   "Live API needed for custom habitats: precomputed bounds exist only for the six presets.";
 export const CUSTOM_SUPPRESSION_NOTE =
@@ -265,6 +286,7 @@ export function createClient(opts: ClientOptions = {}) {
   const timeoutMs = opts.timeoutMs ?? 2500;
 
   async function live(path: string, init?: RequestInit, ms = timeoutMs): Promise<Response> {
+    if (liveDisabled(apiUrl)) throw new LiveUnavailable("live API disabled for this deployment");
     const ctrl = new AbortController();
     const timer = setTimeout(() => ctrl.abort(), ms);
     let res: Response;

@@ -5,6 +5,7 @@ import {
   OfflineUnavailableError,
   STATIC_METRICS,
   createClient,
+  liveDisabled,
   matchCachedAnswer,
   normalizeAiCache,
   normalizeMetrics,
@@ -174,5 +175,32 @@ describe("offline Ask cache", () => {
     const hit = await c.ask("What should LUCI test first?", ROVER);
     expect(hit).toMatchObject({ source: "offline", data: { answer_markdown: "x", mode: "cached" } });
     await expect(c.ask("Explain quantum gravity", ROVER)).rejects.toThrow(/live API is needed/);
+  });
+});
+
+describe("liveDisabled (website-only deployments)", () => {
+  it("is off when NEXT_PUBLIC_API_URL is off, none or empty", () => {
+    for (const v of ["off", "none", "", "  OFF "]) expect(liveDisabled(v, "gravity-gap.vercel.app")).toBe(true);
+  });
+  it("skips a localhost API when the page is served from a real host", () => {
+    expect(liveDisabled("http://localhost:8000", "gravity-gap.vercel.app")).toBe(true);
+    expect(liveDisabled("http://127.0.0.1:8000", "example.org")).toBe(true);
+  });
+  it("keeps the live API for local development and for a real API host", () => {
+    expect(liveDisabled("http://localhost:8000", "localhost")).toBe(false);
+    expect(liveDisabled("http://localhost:8000", "127.0.0.1")).toBe(false);
+    expect(liveDisabled("https://gravity-gap-api.onrender.com", "gravity-gap.vercel.app")).toBe(false);
+  });
+  it("falls back to bundled data without calling fetch when disabled", async () => {
+    const urls: string[] = [];
+    const impl = (async (url: string) => {
+      urls.push(String(url));
+      throw new Error("network down");
+    }) as unknown as typeof fetch;
+    const c = createClient({ apiUrl: "off", fetchImpl: impl, staticBase: "/artifacts" });
+    await c.planner().catch(() => undefined);
+    // Only the bundled artifact is requested; nothing goes to the live API.
+    expect(urls.length).toBeGreaterThan(0);
+    expect(urls.every((u) => u.startsWith("/artifacts/"))).toBe(true);
   });
 });

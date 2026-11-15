@@ -7,6 +7,35 @@ Three ways to run the app, from simplest to hosted. All commands run from the re
 | A. Local, no Docker | Development, the demo laptop | Python 3.13, Node 22 |
 | B. `docker compose up` | One-command local stack; the **R13 fallback** if hosting fails at judging time | Docker Desktop |
 | C. Render (API) + Vercel (web) | Public URL for judges | Render and Vercel accounts |
+| **W. Website only on Vercel** | **Fastest public URL for judges (about 10 minutes)** | A Vercel account |
+
+## W. Website only on Vercel (recommended for submission)
+
+The web app ships every engine output it needs (`web/public/artifacts`, copied at build time), so it runs as a
+static site with no backend. In this mode the six habitat presets, Compare, Briefing, Trust, Air map,
+Detection, Planner, Ledger and the story page all work; the Ask drawer answers the saved demo questions only, and a
+custom habitat (one that matches no preset) shows "needs the live API". Every page shows an "offline data" chip.
+
+1. Sign up at vercel.com with **Continue with GitHub** (you do this).
+2. **Add New > Project**, import `adi-btw/NASA-Hackathon-2026`. Vercel can deploy a private repo; the site it
+   makes is public either way.
+3. **Root Directory: `web`** (click Edit next to Root Directory). Framework preset: Next.js (auto-detected).
+   Leave the build and install commands at their defaults.
+4. **Environment Variables:** add `NEXT_PUBLIC_API_URL` with the value `off`. This tells the site not to look for
+   an API, so pages load straight from the bundled data. (If you forget it, the site still detects that the API
+   address points at `localhost` and skips it.)
+5. **Deploy.** In the build log, check for `[copy-artifacts] copied N file(s)` and `Compiled successfully`.
+6. Open the URL it gives you (for example `https://nasa-hackathon-2026.vercel.app`) in a **private window**, logged
+   out, and click through `/`, `/bounds`, `/briefing?habitat=lunar_base` and `/trust`.
+7. Optional, recommended by Space Apps: request a FortiGuard web filter classification for the URL so judges'
+   networks do not block it (Category: Education or Web-based Application; Company Name: N/A).
+
+Checked locally before handing over: `NEXT_PUBLIC_API_URL=off npx next build` prerenders every route as static
+content, and the built site loads `/`, Bounds, Compare, Briefing, Trust, Air map, Detection, Planner and Ledger in
+about 1.5 s each with zero requests to an API.
+
+To add the live API later (custom habitats, live AI answers), follow C below and change `NEXT_PUBLIC_API_URL` to
+the Render URL, then redeploy.
 
 > **You do this part yourself.** Nothing in this repo creates accounts, stores credentials, or deploys
 > anything. Someone on the team must sign up for Render and Vercel, connect the GitHub repo, paste the
